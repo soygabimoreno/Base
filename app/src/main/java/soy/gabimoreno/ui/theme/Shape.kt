@@ -10,4 +10,4 @@ val Shapes = Shapes(
     large = RoundedCornerShape(0.dp)
 )
 
-// Check the protection correctly
+// Check
