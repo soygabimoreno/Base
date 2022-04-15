@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "255565103328",
+    "project_id": "base-e82d4",
+    "storage_bucket": "base-e82d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255565103328:android:4b25e2abad3621ac9f9085",
+        "android_client_info": {
+          "package_name": "soy.gabimoreno"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255565103328-6ika1lb4gi6i8lp640asfduln31pcivq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "soy.gabimoreno",
+            "certificate_hash": "b53fd050b38c1cf279893295989c7fb9af1875dd"
+          }
+        },
+        {
+          "client_id": "255565103328-5022089nbls7ikcg2co8h9uff4p8forc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwAeLh_JSSh-p8VEbl5qqsO8oJSeRjs90"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255565103328-5022089nbls7ikcg2co8h9uff4p8forc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
