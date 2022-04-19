@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 rootProject.name = "Base"
 include ':app'
 include ':bike'
+
+include ':modules:framework'
