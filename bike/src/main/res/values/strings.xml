@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Bike</string>
-    <string name="initialized">Initialized</string>
     <string name="device_does_not_support_bluetooth">This device does not support Bluetooth</string>
+    <string name="scanning">Scanning…</string>
 </resources>
