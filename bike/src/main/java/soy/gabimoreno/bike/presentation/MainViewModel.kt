@@ -16,7 +16,7 @@ class MainViewModel @Inject constructor(
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    private val _viewEvents = MutableStateFlow<ViewEvent>(ViewEvent.InitialState)
+    private val _viewEvents = MutableStateFlow<ViewEvent>(ViewEvent.ShowInitialState)
     val viewEvents: StateFlow<ViewEvent> = _viewEvents.asStateFlow()
 
     fun onNullBluetoothAdapter() {
@@ -25,8 +25,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun startScan() {
+        viewModelScope.launch(dispatcher) {
+            _viewEvents.value = ViewEvent.StartScan
+        }
+    }
+
     sealed class ViewEvent {
-        object InitialState : ViewEvent()
+        object ShowInitialState : ViewEvent()
         object ShowDeviceDoesNotSupportBluetooth : ViewEvent()
+        object StartScan : ViewEvent()
     }
 }
