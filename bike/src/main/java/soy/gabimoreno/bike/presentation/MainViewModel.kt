@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    private val _viewEvents = MutableStateFlow<ViewEvent>(ViewEvent.InitBle(bleManager))
+    private val _viewEvents = MutableStateFlow<ViewEvent>(ViewEvent.CheckPermissionsAndInitBle(bleManager))
     val viewEvents: StateFlow<ViewEvent> = _viewEvents.asStateFlow()
 
     fun onNullBluetoothAdapter() {
@@ -54,7 +54,12 @@ class MainViewModel @Inject constructor(
                     }
 
                     override fun onScanFinished(scanResultList: MutableList<BleDevice>?) {
-                        _viewEvents.value = ViewEvent.Foo
+                        scanResultList?.forEach { bleDevice ->
+                            if (bleDevice.name == DEVICE_NAME) {
+                                _viewEvents.value = ViewEvent.ShowDeviceName(bleDevice.name)
+                                return@forEach
+                            }
+                        }
                     }
                 }
             )
@@ -63,9 +68,12 @@ class MainViewModel @Inject constructor(
 
     sealed class ViewEvent {
         object Foo : ViewEvent()
-        data class InitBle(val bleManager: BleManager) : ViewEvent()
+        data class CheckPermissionsAndInitBle(val bleManager: BleManager) : ViewEvent()
         object ShowDeviceDoesNotSupportBluetooth : ViewEvent()
         object ShowDeviceDoesNotSupportBle : ViewEvent()
         object ShowTurnOnBluetooth : ViewEvent()
+        data class ShowDeviceName(val deviceName: String) : ViewEvent()
     }
 }
+
+private const val DEVICE_NAME = "BIKE"

@@ -4,4 +4,8 @@
     <string name="device_does_not_support_ble">This device does not support Bluetooth Low Energy</string>
     <string name="turn_on_bluetooth">Please, turn on the Bluetooth on the device</string>
     <string name="scanning">Scanning…</string>
+    <string name="permission_bluetooth_scan_rationale">Bluetooth scan permission must be granted to use the app</string>
+    <string name="permission_bluetooth_scan_denied">Bluetooth scan permission has been denied.\n It can be granted from app settings to use the app</string>
+    <string name="permission_bluetooth_connect_rationale">Bluetooth connect permission must be granted to use the app</string>
+    <string name="permission_bluetooth_connect_denied">Bluetooth connect permission has been denied.\n It can be granted from app settings to use the app</string>
 </resources>
