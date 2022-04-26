@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -64,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     LaunchedEffect(true) { collectViewEvents() }
-                    MainScreen()
+                    MainScreen(viewModel)
                 }
             }
         }
@@ -80,11 +82,16 @@ class MainActivity : ComponentActivity() {
 
         viewModel.viewEvents.collect { viewEvent ->
             when (viewEvent) {
+                MainViewModel.ViewEvent.Error.ShowDeviceDoesNotSupportBluetooth -> showDeviceDoesNotSupportBluetooth()
+                MainViewModel.ViewEvent.Error.ShowDeviceDoesNotSupportBle -> showDeviceDoesNotSupportBle()
+                MainViewModel.ViewEvent.Error.ShowTurnOnBluetooth -> showTurnOnBluetooth()
+                MainViewModel.ViewEvent.Error.ShowConnectionFailed -> showConnectionFailed()
+                MainViewModel.ViewEvent.Error.ShowNullDeviceConnected -> showNullDeviceConnected()
+                MainViewModel.ViewEvent.Error.ShowDisconnected -> showDisconnected()
+                MainViewModel.ViewEvent.Error.ShowReadFailure -> showReadFailure()
+                MainViewModel.ViewEvent.Error.ShowNotLoadedDevice -> showNotLoadedDevice()
                 MainViewModel.ViewEvent.Foo -> foo()
                 is MainViewModel.ViewEvent.CheckPermissionsAndInitBle -> checkPermissionsAndInitBle(viewEvent.bleManager)
-                MainViewModel.ViewEvent.ShowDeviceDoesNotSupportBluetooth -> showDeviceDoesNotSupportBluetooth()
-                MainViewModel.ViewEvent.ShowDeviceDoesNotSupportBle -> showDeviceDoesNotSupportBle()
-                MainViewModel.ViewEvent.ShowTurnOnBluetooth -> showTurnOnBluetooth()
                 is MainViewModel.ViewEvent.ShowDeviceName -> showDeviceName(viewEvent.deviceName)
             }
         }
@@ -122,7 +129,7 @@ class MainActivity : ComponentActivity() {
             .setSplitWriteNum(SPLIT_WRITE_NUM)
             .setConnectOverTime(CONNECT_OVER_TIME_IN_MILLIS)
             .operateTimeout = OPERATE_TIME_OUT
-        viewModel.startScan()
+        viewModel.startConnection()
     }
 
     private fun showDeviceDoesNotSupportBluetooth() {
@@ -133,12 +140,52 @@ class MainActivity : ComponentActivity() {
         toast(R.string.device_does_not_support_ble)
     }
 
+    private fun showConnectionFailed() {
+        toast(R.string.connection_failed)
+    }
+
+    private fun showNullDeviceConnected() {
+        toast(R.string.problem_with_connected_device)
+    }
+
+    private fun showDisconnected() {
+        toast(R.string.disconnected)
+    }
+
+    private fun showReadFailure() {
+        toast(R.string.read_failure)
+    }
+
+    private fun showNotLoadedDevice() {
+        toast(R.string.not_loaded_device)
+    }
+
     private fun showTurnOnBluetooth() {
         toast(R.string.turn_on_bluetooth)
     }
 
     private fun showDeviceName(deviceName: String) {
         toast("Connected to $deviceName")
+        object : CountDownTimer(
+            60 * 1000,
+            1000
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                Log.d(
+                    "FOO",
+                    "MainActivity, millisUntilFinished: $millisUntilFinished"
+                )
+                viewModel.onReadData()
+            }
+
+            override fun onFinish() {
+                Log.d(
+                    "FOO",
+                    "Finish"
+                )
+                // Do nothing
+            }
+        }.start()
     }
 }
 
