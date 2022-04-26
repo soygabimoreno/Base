@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothManager
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -167,22 +166,14 @@ class MainActivity : ComponentActivity() {
     private fun showDeviceName(deviceName: String) {
         toast("Connected to $deviceName")
         object : CountDownTimer(
-            60 * 1000,
+            60 * 60 * 1000,
             1000
         ) {
             override fun onTick(millisUntilFinished: Long) {
-                Log.d(
-                    "FOO",
-                    "MainActivity, millisUntilFinished: $millisUntilFinished"
-                )
                 viewModel.onReadData()
             }
 
             override fun onFinish() {
-                Log.d(
-                    "FOO",
-                    "Finish"
-                )
                 // Do nothing
             }
         }.start()
