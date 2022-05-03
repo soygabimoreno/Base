@@ -18,3 +18,4 @@ include ':gabimoreno'
 include ':bike'
 
 include ':modules:framework'
+include ':modules:player'
