@@ -52,6 +52,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":modules:player"))
+
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.compose.ui:ui:${rootProject.extra["version_compose"]}")
     implementation("androidx.compose.material:material:${rootProject.extra["version_compose"]}")
@@ -64,6 +66,9 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:${rootProject.extra["version_hilt"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")
+
+    implementation("com.google.android.exoplayer:exoplayer-core:${rootProject.extra["version_exo_player"]}")
+    implementation("com.google.android.exoplayer:exoplayer-ui:${rootProject.extra["version_exo_player"]}")
 
     testImplementation("junit:junit:4.13.2")
 

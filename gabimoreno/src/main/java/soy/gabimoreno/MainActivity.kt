@@ -10,11 +10,26 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import soy.gabimoreno.domain.Audio
+import soy.gabimoreno.framework.service.PlayerService
 import soy.gabimoreno.ui.theme.BaseTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        PlayerService.start(
+            this, Audio(
+                id = 1L,
+                artist = "Foo Artist",
+                filename = "Temporary file name",
+                name = "Audio name",
+                description = "Foo Description",
+                thumbnailUrl = "https://gabinimble.com/wp-content/uploads/2019/03/Portada-GABI-NIMBLE-94-98-400x400.png",
+                audioUrl = "https://gabinimble.com/wp-content/uploads/2019/03/GABI-NIMBLE-94-98.mp3"
+            )
+        )
+
         setContent {
             BaseTheme {
                 Surface(
