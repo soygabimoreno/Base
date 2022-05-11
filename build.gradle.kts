@@ -9,6 +9,7 @@ buildscript {
         set("version_hilt_navigation_compose", "1.0.0")
         set("version_detekt", "1.19.0")
         set("version_coroutines", "1.6.1")
+        set("version_exo_player", "2.17.1")
     }
 
     dependencies {
