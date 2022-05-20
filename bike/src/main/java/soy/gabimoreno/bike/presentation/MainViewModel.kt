@@ -1,7 +1,6 @@
 package soy.gabimoreno.bike.presentation
 
 import android.bluetooth.BluetoothGatt
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.clj.fastble.BleManager
@@ -9,7 +8,6 @@ import com.clj.fastble.callback.BleGattCallback
 import com.clj.fastble.callback.BleReadCallback
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.exception.BleException
-import com.clj.fastble.utils.HexUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import soy.gabimoreno.bike.di.IO
+import soy.gabimoreno.bike.domain.toDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -104,6 +103,12 @@ class MainViewModel @Inject constructor(
 //                val uuidService = characteristic.service.uuid.toString()
 //                val uuidRead = characteristic.uuid.toString()
 
+                // Default behavior is to arrive 0s, if it is a 1, it is because some handlebar has been taken
+                // Characteristic 0: Left handlebar
+                // Characteristic 2: Right handlebar
+
+                // Velocity
+                // Characteristic 1: Pedals
 
                 bleManager.read(
                     bleDevice,
@@ -111,16 +116,8 @@ class MainViewModel @Inject constructor(
                     DEVICE_UUID_READ,
                     object : BleReadCallback() {
                         override fun onReadSuccess(data: ByteArray?) {
-                            val dataString = HexUtil.formatHexString(
-                                data,
-                                true
-                            )
-                            Log.d(
-                                "FOO",
-                                "ViewModel, dataString: $dataString"
-                            )
                             _viewState.value = ViewState.Content(
-                                dataString = dataString,
+                                dataString = data.toDecimal(),
                                 bleDevice = bleDevice
                             )
                         }
