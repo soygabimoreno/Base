@@ -165,9 +165,10 @@ class MainActivity : ComponentActivity() {
 
     private fun showDeviceName(deviceName: String) {
         toast("Connected to $deviceName")
+        // TODO: Change CountDownTimer by a Timer
         object : CountDownTimer(
             60 * 60 * 1000,
-            1000
+            COUNTDOWN_INTERVAL_IN_MILLIS
         ) {
             override fun onTick(millisUntilFinished: Long) {
                 viewModel.onReadData()
@@ -185,3 +186,4 @@ private const val RECONNECT_INTERVAL_IN_MILLIS = 5_000L
 private const val SPLIT_WRITE_NUM = 20
 private const val CONNECT_OVER_TIME_IN_MILLIS = 10_000L
 private const val OPERATE_TIME_OUT = 5_000
+private const val COUNTDOWN_INTERVAL_IN_MILLIS = 200L
