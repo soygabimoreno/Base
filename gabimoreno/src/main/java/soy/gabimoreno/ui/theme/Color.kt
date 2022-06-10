@@ -2,7 +2,9 @@ package soy.gabimoreno.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val PurpleDark = Color(0xFF1A1A36)
+val PurpleLight = Color(0xFF323263)
+val Green = Color(0xFFFCD6CE)
+val Orange = Color(0xFFFA967D)
+val White = Color(0xFFFFFFFF)
+val Black = Color(0xFF000000)

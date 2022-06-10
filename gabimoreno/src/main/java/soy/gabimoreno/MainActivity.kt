@@ -2,56 +2,90 @@ package soy.gabimoreno
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import soy.gabimoreno.domain.Audio
-import soy.gabimoreno.framework.service.PlayerService
-import soy.gabimoreno.ui.theme.BaseTheme
+import androidx.core.view.WindowCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
+import com.google.accompanist.insets.ProvideWindowInsets
+import dagger.hilt.android.AndroidEntryPoint
+import soy.gabimoreno.ui.common.ProvideMultiViewModel
+import soy.gabimoreno.ui.navigation.Destination
+import soy.gabimoreno.ui.navigation.Navigator
+import soy.gabimoreno.ui.navigation.ProvideNavHostController
+import soy.gabimoreno.ui.screen.home.HomeScreen
+import soy.gabimoreno.ui.screen.podcast.PodcastBottomBar
+import soy.gabimoreno.ui.screen.podcast.PodcastDetailScreen
+import soy.gabimoreno.ui.screen.podcast.PodcastPlayerScreen
+import soy.gabimoreno.ui.theme.GabiMorenoTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_GabiMoreno)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        var startDestination = Destination.home
 
-        PlayerService.start(
-            this, Audio(
-                id = 1L,
-                artist = "Foo Artist",
-                filename = "Temporary file name",
-                name = "Audio name",
-                description = "Foo Description",
-                thumbnailUrl = "https://gabinimble.com/wp-content/uploads/2019/03/Portada-GABI-NIMBLE-94-98-400x400.png",
-                audioUrl = "https://gabinimble.com/wp-content/uploads/2019/03/GABI-NIMBLE-94-98.mp3"
-            )
-        )
+        // TODO: Remove ???
+//        if (intent?.action == ACTION_PODCAST_NOTIFICATION_CLICK) {
+//            startDestination = Destination.home
+//        }
 
         setContent {
-            BaseTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
-            }
+            GabiMorenoApp(
+                startDestination = startDestination,
+                backDispatcher = onBackPressedDispatcher
+            )
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+fun GabiMorenoApp(
+    startDestination: String = Destination.home,
+    backDispatcher: OnBackPressedDispatcher
+) {
+    GabiMorenoTheme {
+        ProvideWindowInsets {
+            ProvideMultiViewModel {
+                ProvideNavHostController {
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        NavHost(Navigator.current, startDestination) {
+                            // TODO: Remove this
+//                            composable(Destination.welcome) {
+//                                WelcomeScreen()
+//                            }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    BaseTheme {
-        Greeting("Android")
+                            composable(Destination.home) {
+                                HomeScreen()
+                            }
+
+                            composable(
+                                Destination.podcast,
+                                deepLinks = listOf(navDeepLink { uriPattern = "https://www.listennotes.com/e/{id}" })
+                            ) { backStackEntry ->
+                                PodcastDetailScreen(
+                                    podcastId = backStackEntry.arguments?.getString("id")!!,
+                                )
+                            }
+                        }
+                        PodcastBottomBar(
+                            modifier = Modifier.align(Alignment.BottomCenter)
+                        )
+                        PodcastPlayerScreen(backDispatcher)
+                    }
+                }
+            }
+        }
     }
 }
