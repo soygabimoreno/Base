@@ -1,31 +1,31 @@
 package soy.gabimoreno.data.network.mapper
 
-import soy.gabimoreno.data.network.model.ItemApiModel
-import soy.gabimoreno.data.network.model.RssApiModel
+import com.prof.rssparser.Article
+import com.prof.rssparser.Channel
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.domain.model.PodcastSearch
 import java.util.*
 
-fun RssApiModel.toDomain(): PodcastSearch {
-    val numberOfEpisodes = channel!!.items!!.size.toLong()
+fun Channel.toDomain(): PodcastSearch {
+    val numberOfEpisodes = articles.size.toLong()
     return PodcastSearch(
         count = numberOfEpisodes,
         total = numberOfEpisodes,
-        results = channel!!.items!!.toDomain()
+        results = articles.toDomain()
     )
 }
 
-fun List<ItemApiModel>.toDomain(): List<Episode> {
+fun List<Article>.toDomain(): List<Episode> {
     return map { it.toDomain() }
 }
 
-fun ItemApiModel.toDomain(): Episode {
+fun Article.toDomain(): Episode {
     return Episode(
-        id = "", // TODO
-        link = link, // TODO: ???
-        audio = enclosure!!.url,
-        image = image!!.href,
+        id = guid!!.replace("https://www.ivoox.com/", ""),
+        link = link,
+        audio = audio!!,
+        image = itunesArticleData?.image ?: "",
         podcast = Podcast(
             id = "1234",  // TODO: Will be required ???
             image = "", // TODO: Fill these properties
@@ -34,12 +34,12 @@ fun ItemApiModel.toDomain(): Episode {
             listennotesURL = "",
             publisherOriginal = ""
         ),
-        thumbnail = image!!.href,
+        thumbnail = itunesArticleData?.image ?: "",
         pubDateMS = Date(pubDate).time,
-        titleOriginal = title,
-        listennotesURL = link, // TODO: ???
-        audioLengthSec = duration!!.text,
-        explicitContent = explicit!!.text.toBoolean(),
-        descriptionOriginal = description
+        titleOriginal = title ?: "",
+        listennotesURL = link ?: "",
+        audioLengthSec = itunesArticleData?.duration?.toLong() ?: 0,
+        explicitContent = itunesArticleData?.explicit.toBoolean(),
+        descriptionOriginal = description ?: ""
     )
 }

@@ -1,6 +1,7 @@
 package soy.gabimoreno.di
 
 import android.content.Context
+import com.prof.rssparser.Parser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +22,12 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
+    fun provideRSSParser(@ApplicationContext context: Context): Parser = Parser.Builder()
+        .context(context)
+        .cacheExpirationMillis(24L * 60L * 60L * 100L)
+        .build()
+
+    @Provides
     fun provideHttpClient(): OkHttpClient = APIClient.createHttpClient()
 
     @Provides
@@ -39,8 +46,9 @@ object AppModule {
     @Singleton
     fun providePodcastRepository(
         service: PodcastService,
-        dataStore: PodcastDataStore
-    ): PodcastRepository = PodcastRepositoryImpl(service, dataStore)
+        dataStore: PodcastDataStore,
+        rssParser: Parser
+    ): PodcastRepository = PodcastRepositoryImpl(service, dataStore, rssParser)
 
     @Provides
     @Singleton

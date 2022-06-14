@@ -13,8 +13,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = 23
         targetSdk = 32
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -80,6 +80,8 @@ dependencies {
         exclude(group = "stax", module = "stax-api")
         exclude(group = "stax", module = "stax")
     }
+
+    implementation("com.prof18.rssparser:rssparser:4.0.2")
 
     implementation("androidx.datastore:datastore-preferences:${rootProject.extra["version_data_store"]}")
 
