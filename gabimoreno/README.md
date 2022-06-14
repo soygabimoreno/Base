@@ -1,3 +1,3 @@
 # App Gabi Moreno
 
-Crece profesionalmente como Desarrollador Android.
+Te ayudo a CRECER en tu carrera profesional como DESARROLLADOR ANDROID. 💪🏼
