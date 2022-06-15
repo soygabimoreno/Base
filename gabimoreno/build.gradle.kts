@@ -55,7 +55,6 @@ dependencies {
 //    implementation(project(":modules:player")) // TODO: Add when moved all player files to this module
 
     implementation("androidx.core:core-ktx:1.7.0")
-//    implementation("androidx.appcompat:appcompat:1.3.0") // TODO: Remove ???
     implementation("com.google.android.material:material:1.3.0")
 
     implementation("androidx.compose.ui:ui:${rootProject.extra["version_compose"]}")
@@ -75,15 +74,8 @@ dependencies {
 
     implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["version_retrofit"]}")
     implementation("com.squareup.retrofit2:converter-gson:${rootProject.extra["version_retrofit"]}")
-    implementation("com.squareup.retrofit2:converter-simplexml:${rootProject.extra["version_retrofit"]}") {
-        exclude(group = "xpp3", module = "xpp3")
-        exclude(group = "stax", module = "stax-api")
-        exclude(group = "stax", module = "stax")
-    }
 
     implementation("com.prof18.rssparser:rssparser:4.0.2")
-
-    implementation("androidx.datastore:datastore-preferences:${rootProject.extra["version_data_store"]}")
 
     implementation("com.google.android.exoplayer:exoplayer:${rootProject.extra["version_exo_player"]}")
     implementation("com.google.android.exoplayer:extension-mediasession:${rootProject.extra["version_exo_player"]}")

@@ -1,9 +1,7 @@
 package soy.gabimoreno.domain.repository
 
 import com.prof.rssparser.Parser
-import soy.gabimoreno.data.datastore.PodcastDataStore
 import soy.gabimoreno.data.network.mapper.toDomain
-import soy.gabimoreno.data.network.service.PodcastService
 import soy.gabimoreno.domain.model.PodcastSearch
 import soy.gabimoreno.error.Failure
 import soy.gabimoreno.util.Either
@@ -11,8 +9,6 @@ import soy.gabimoreno.util.left
 import soy.gabimoreno.util.right
 
 class PodcastRepositoryImpl(
-    private val service: PodcastService,
-    private val dataStore: PodcastDataStore,
     private val rssParser: Parser
 ) : PodcastRepository {
 
@@ -22,15 +18,9 @@ class PodcastRepositoryImpl(
 
     override suspend fun getPodcast(): Either<Failure, PodcastSearch> {
         return try {
-//            val canFetchAPI = dataStore.canFetchAPI()
-//            if (canFetchAPI) {
             val channel = rssParser.getChannel(PODCAST_URL)
             val result = channel.toDomain()
-//                dataStore.storePodcastSearchResult(result)
             right(result)
-//            } else {
-//                right(dataStore.readLastPodcastSearchResult())
-//            }
         } catch (e: Exception) {
             left(Failure.UnexpectedFailure)
         }

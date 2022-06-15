@@ -11,7 +11,6 @@ buildscript {
         set("version_coroutines", "1.6.1")
         set("version_exo_player", "2.15.0")
         set("version_glide", "4.12.0")
-        set("version_data_store", "1.0.0-beta02")
         set("version_retrofit", "2.9.0")
         set("version_accompanist", "0.12.0")
     }

@@ -32,16 +32,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_GabiMoreno)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        var startDestination = Destination.home
-
-        // TODO: Remove ???
-//        if (intent?.action == ACTION_PODCAST_NOTIFICATION_CLICK) {
-//            startDestination = Destination.home
-//        }
-
         setContent {
             GabiMorenoApp(
-                startDestination = startDestination,
+                startDestination = Destination.home,
                 backDispatcher = onBackPressedDispatcher
             )
         }
@@ -61,11 +54,6 @@ fun GabiMorenoApp(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         NavHost(Navigator.current, startDestination) {
-                            // TODO: Remove this
-//                            composable(Destination.welcome) {
-//                                WelcomeScreen()
-//                            }
-
                             composable(Destination.home) {
                                 HomeScreen()
                             }
