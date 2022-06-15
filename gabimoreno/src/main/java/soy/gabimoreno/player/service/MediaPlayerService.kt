@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -56,12 +55,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
     override fun onCreate() {
         super.onCreate()
-        // TODO: Remove all the logs
-        Log.i(TAG, "onCreate called")
         val activityPendingIntent = Intent(this, MainActivity::class.java)
-            .apply {
-                action = ACTION_PODCAST_NOTIFICATION_CLICK
-            }
             .let {
                 PendingIntent.getActivity(
                     this,
@@ -135,7 +129,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         parentId: String,
         result: Result<MutableList<MediaBrowserCompat.MediaItem>>
     ) {
-        Log.i(TAG, "onLoadChildren called")
         when (parentId) {
             MEDIA_ROOT_ID -> {
                 val resultsSent = mediaSource.whenReady { isInitialized ->
@@ -176,7 +169,6 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     }
 }
 
-const val ACTION_PODCAST_NOTIFICATION_CLICK = "ACTION_PODCAST_NOTIFICATION_CLICK"
 const val MEDIA_ROOT_ID = "TUVESUFfUk9PVF9JRA" // TODO: change it
 const val START_MEDIA_PLAYBACK_ACTION = "START_MEDIA_PLAYBACK_ACTION"
 const val REFRESH_MEDIA_BROWSER_CHILDREN = "REFRESH_MEDIA_BROWSER_CHILDREN"

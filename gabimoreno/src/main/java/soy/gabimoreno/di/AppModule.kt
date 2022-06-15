@@ -8,7 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import soy.gabimoreno.data.datastore.PodcastDataStore
 import soy.gabimoreno.data.network.client.APIClient
 import soy.gabimoreno.data.network.service.PodcastService
 import soy.gabimoreno.domain.repository.PodcastRepository
@@ -24,7 +23,7 @@ object AppModule {
     @Provides
     fun provideRSSParser(@ApplicationContext context: Context): Parser = Parser.Builder()
         .context(context)
-        .cacheExpirationMillis(24L * 60L * 60L * 100L)
+        .cacheExpirationMillis(ONE_DAY_IN_MILLIS)
         .build()
 
     @Provides
@@ -38,17 +37,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePodcastDataStore(
-        @ApplicationContext context: Context
-    ): PodcastDataStore = PodcastDataStore(context)
-
-    @Provides
-    @Singleton
     fun providePodcastRepository(
-        service: PodcastService,
-        dataStore: PodcastDataStore,
         rssParser: Parser
-    ): PodcastRepository = PodcastRepositoryImpl(service, dataStore, rssParser)
+    ): PodcastRepository = PodcastRepositoryImpl(rssParser)
 
     @Provides
     @Singleton
@@ -57,3 +48,5 @@ object AppModule {
         mediaSource: PodcastMediaSource
     ): MediaPlayerServiceConnection = MediaPlayerServiceConnection(context, mediaSource)
 }
+
+private const val ONE_DAY_IN_MILLIS = 24L * 60L * 60L * 1000L

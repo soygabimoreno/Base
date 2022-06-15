@@ -1,10 +1,10 @@
 package soy.gabimoreno.data.network.service
 
 import retrofit2.http.GET
-import soy.gabimoreno.data.network.model.RssApiModel
 
+// TODO: To reuse for other purposes
 interface PodcastService {
 
     @GET("74bc02a4/podcast/rss")
-    suspend fun getPodcast(): RssApiModel
+    suspend fun getPodcast(): Any
 }

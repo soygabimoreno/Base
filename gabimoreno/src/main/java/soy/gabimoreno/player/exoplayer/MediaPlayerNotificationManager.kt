@@ -57,24 +57,6 @@ class MediaPlayerNotificationManager(
                 setUsePreviousActionInCompactView(true)
                 setControlDispatcher(DefaultControlDispatcher(0L, 0L))
             }
-
-        // TODO: Remove
-//        return PlayerNotificationManager.createWithNotificationChannel(
-//            context,
-//            PLAYBACK_NOTIFICATION_CHANNEL_ID,
-//            R.string.playback_notification_channel_name,
-//            R.string.playback_notification_channel_description,
-//            PLAYBACK_NOTIFICATION_ID,
-//            DescriptionAdapter(mediaController),
-//            notificationListener
-//        ).apply {
-//            setSmallIcon(R.drawable.ic_stat_name)
-//            setMediaSessionToken(sessionToken)
-//            setUseStopAction(true)
-//            setUseNextActionInCompactView(true)
-//            setUsePreviousActionInCompactView(true)
-//            setControlDispatcher(DefaultControlDispatcher(0L, 0L))
-//        }
     }
 
     private inner class DescriptionAdapter(
