@@ -4,6 +4,7 @@ plugins {
     id("com.google.gms.google-services")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -13,8 +14,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = 23
         targetSdk = 32
-        versionCode = 2
-        versionName = "0.2.0"
+        versionCode = 3
+        versionName = "0.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -53,6 +54,7 @@ android {
 
 dependencies {
 //    implementation(project(":modules:player")) // TODO: Add when moved all player files to this module
+    implementation(project(":modules:framework"))
 
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("com.google.android.material:material:1.3.0")
@@ -68,6 +70,7 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:29.2.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
 
     implementation("com.google.dagger:hilt-android:${rootProject.extra["version_hilt"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")

@@ -1,6 +1,7 @@
 package soy.gabimoreno.di
 
 import android.content.Context
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.prof.rssparser.Parser
 import dagger.Module
 import dagger.Provides
@@ -10,6 +11,8 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import soy.gabimoreno.data.network.client.APIClient
 import soy.gabimoreno.data.network.service.PodcastService
+import soy.gabimoreno.data.tracker.DefaultTracker
+import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.domain.repository.PodcastRepository
 import soy.gabimoreno.domain.repository.PodcastRepositoryImpl
 import soy.gabimoreno.player.exoplayer.PodcastMediaSource
@@ -47,6 +50,15 @@ object AppModule {
         @ApplicationContext context: Context,
         mediaSource: PodcastMediaSource
     ): MediaPlayerServiceConnection = MediaPlayerServiceConnection(context, mediaSource)
+
+    @Provides
+    @Singleton
+    fun provideTracker(firebaseAnalytics: FirebaseAnalytics): Tracker = DefaultTracker(firebaseAnalytics)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics =
+        FirebaseAnalytics.getInstance(context)
 }
 
 private const val ONE_DAY_IN_MILLIS = 24L * 60L * 60L * 1000L
