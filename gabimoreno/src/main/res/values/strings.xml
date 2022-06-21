@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Gabi Moreno</string>
-    <string name="playback_notification_channel_name">Podcast</string>
-    <string name="playback_notification_channel_description">Playback notification for listening podcast</string>
+    <string name="playback_notification_channel_name">Gabi Moreno</string>
+    <string name="playback_notification_channel_description">Te ayudo a CRECER en tu carrera profesional como DESARROLLADOR ANDROID. 💪🏼</string>
     <string name="unexpected_error">An unexpected error occurred\nPlease try again</string>
     <string name="share_podcast_content">Take a look at this podcast: %1$s %2$s</string>
     <string name="trending_now">Trending Now</string>

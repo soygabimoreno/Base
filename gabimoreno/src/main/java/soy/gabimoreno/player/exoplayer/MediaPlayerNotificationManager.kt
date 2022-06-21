@@ -27,14 +27,14 @@ class MediaPlayerNotificationManager(
     init {
         val mediaController = MediaControllerCompat(context, sessionToken)
         notificationManager =
-            createNotificationManger(mediaController, sessionToken, notificationListener)
+            createNotificationManager(mediaController, sessionToken, notificationListener)
     }
 
     fun showNotification(player: Player) {
         notificationManager.setPlayer(player)
     }
 
-    private fun createNotificationManger(
+    private fun createNotificationManager(
         mediaController: MediaControllerCompat,
         sessionToken: MediaSessionCompat.Token,
         notificationListener: PlayerNotificationManager.NotificationListener
@@ -42,9 +42,9 @@ class MediaPlayerNotificationManager(
         return PlayerNotificationManager.Builder(
             context,
             PLAYBACK_NOTIFICATION_ID,
-            PLAYBACK_NOTIFICATION_CHANNEL_ID,
-            DescriptionAdapter(mediaController)
+            PLAYBACK_NOTIFICATION_CHANNEL_ID
         )
+            .setMediaDescriptionAdapter(DescriptionAdapter(mediaController))
             .setNotificationListener(notificationListener)
             .setChannelNameResourceId(R.string.playback_notification_channel_name)
             .setChannelDescriptionResourceId(R.string.playback_notification_channel_description)
@@ -97,5 +97,5 @@ class MediaPlayerNotificationManager(
     }
 }
 
-private const val PLAYBACK_NOTIFICATION_CHANNEL_ID = "UEBWUJBQ0tfTk9USUZJQ0FUSU9OX0NIQU5ORUxfSUQ" // TODO: Change it
-const val PLAYBACK_NOTIFICATION_ID = 115234045 // TODO: Change it
+private const val PLAYBACK_NOTIFICATION_CHANNEL_ID = "PLAYBACK_NOTIFICATION_CHANNEL_ID"
+const val PLAYBACK_NOTIFICATION_ID = 20220615
