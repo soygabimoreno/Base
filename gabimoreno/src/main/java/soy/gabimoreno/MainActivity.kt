@@ -20,9 +20,9 @@ import soy.gabimoreno.ui.navigation.Destination
 import soy.gabimoreno.ui.navigation.Navigator
 import soy.gabimoreno.ui.navigation.ProvideNavHostController
 import soy.gabimoreno.ui.screen.home.HomeScreen
-import soy.gabimoreno.ui.screen.podcast.PodcastBottomBar
-import soy.gabimoreno.ui.screen.podcast.PodcastDetailScreen
-import soy.gabimoreno.ui.screen.podcast.PodcastPlayerScreen
+import soy.gabimoreno.ui.screen.podcast.AudioBottomBar
+import soy.gabimoreno.ui.screen.podcast.DetailScreen
+import soy.gabimoreno.ui.screen.podcast.PlayerScreen
 import soy.gabimoreno.ui.theme.GabiMorenoTheme
 
 @AndroidEntryPoint
@@ -62,15 +62,15 @@ fun GabiMorenoApp(
                                 Destination.podcast,
                                 deepLinks = listOf(navDeepLink { uriPattern = "https://www.listennotes.com/e/{id}" })
                             ) { backStackEntry ->
-                                PodcastDetailScreen(
+                                DetailScreen(
                                     podcastId = backStackEntry.arguments?.getString("id")!!,
                                 )
                             }
                         }
-                        PodcastBottomBar(
+                        AudioBottomBar(
                             modifier = Modifier.align(Alignment.BottomCenter)
                         )
-                        PodcastPlayerScreen(backDispatcher)
+                        PlayerScreen(backDispatcher)
                     }
                 }
             }

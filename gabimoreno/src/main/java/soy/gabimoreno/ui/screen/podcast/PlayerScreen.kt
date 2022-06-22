@@ -47,8 +47,8 @@ import soy.gabimoreno.ui.common.ViewModelProvider
 import kotlin.math.roundToInt
 
 @Composable
-fun PodcastPlayerScreen(backDispatcher: OnBackPressedDispatcher) {
-    val podcastPlayer = ViewModelProvider.podcastPlayer
+fun PlayerScreen(backDispatcher: OnBackPressedDispatcher) {
+    val podcastPlayer = ViewModelProvider.playerViewModel
     val episode = podcastPlayer.currentPlayingEpisode.value
 
     AnimatedVisibility(
@@ -72,7 +72,7 @@ fun PodcastPlayerBody(
     episode: Episode,
     backDispatcher: OnBackPressedDispatcher
 ) {
-    val podcastPlayer = ViewModelProvider.podcastPlayer
+    val podcastPlayer = ViewModelProvider.playerViewModel
     val swipeableState = rememberSwipeableState(0)
     val endAnchor = LocalConfiguration.current.screenHeightDp * LocalDensity.current.density
     val anchors = mapOf(

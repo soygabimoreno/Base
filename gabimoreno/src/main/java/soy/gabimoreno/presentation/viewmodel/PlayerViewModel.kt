@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModel
 import androidx.palette.graphics.Palette
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.domain.model.Episode
+import soy.gabimoreno.framework.KLog
 import soy.gabimoreno.player.extension.currentPosition
 import soy.gabimoreno.player.extension.isPlayEnabled
 import soy.gabimoreno.player.extension.isPlaying
@@ -24,9 +26,15 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class PodcastPlayerViewModel @Inject constructor(
-    private val serviceConnection: MediaPlayerServiceConnection
+class PlayerViewModel @Inject constructor(
+    private val serviceConnection: MediaPlayerServiceConnection,
+    private val tracker: Tracker
 ) : ViewModel() {
+
+    init {
+        // TODO
+//        tracker.trackEvent(PlayerTrackerEvent.ScreenPlayer(mapOf("ExampleKey" to "ExampleValue")))
+    }
 
     val currentPlayingEpisode = serviceConnection.currentPlayingEpisode
 
@@ -46,10 +54,16 @@ class PodcastPlayerViewModel @Inject constructor(
         }
 
     val currentPlaybackFormattedPosition: String
-        get() = formatLong(currentPlaybackPosition)
+        get() = run {
+            KLog.d("currentPlaybackPosition: $currentPlaybackPosition, ${formatLong(currentPlaybackPosition)}")
+            formatLong(currentPlaybackPosition)
+        }
 
     val currentEpisodeFormattedDuration: String
-        get() = formatLong(currentEpisodeDuration)
+        get() = run {
+            KLog.d("currentEpisodeDuration: $currentEpisodeDuration, ${formatLong(currentEpisodeDuration)}")
+            formatLong(currentEpisodeDuration)
+        }
 
     private val playbackState = serviceConnection.playbackState
 
@@ -127,6 +141,7 @@ class PodcastPlayerViewModel @Inject constructor(
 
     private fun formatLong(value: Long): String {
         val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        dateFormat.timeZone = TimeZone.getTimeZone("GMT+0")
         return dateFormat.format(value)
     }
 

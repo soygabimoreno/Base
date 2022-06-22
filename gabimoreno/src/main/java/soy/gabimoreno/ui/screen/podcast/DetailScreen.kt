@@ -26,13 +26,13 @@ import soy.gabimoreno.util.formatMillisecondsAsDate
 import soy.gabimoreno.util.toDurationMinutes
 
 @Composable
-fun PodcastDetailScreen(
+fun DetailScreen(
     podcastId: String,
 ) {
     val scrollState = rememberScrollState()
-    val podcastSearchViewModel = ViewModelProvider.podcastSearch
-    val detailViewModel = ViewModelProvider.podcastDetail
-    val playerViewModel = ViewModelProvider.podcastPlayer
+    val podcastSearchViewModel = ViewModelProvider.homeViewModel
+    val detailViewModel = ViewModelProvider.detailViewModel
+    val playerViewModel = ViewModelProvider.playerViewModel
     val podcast = podcastSearchViewModel.getPodcastDetail(podcastId)
     val currentContext = LocalContext.current
 
@@ -59,7 +59,7 @@ fun PodcastDetailScreen(
                         .padding(bottom = if (playerViewModel.currentPlayingEpisode.value != null) 64.dp else 0.dp)
 
                 ) {
-                    PodcastImage(
+                    EpisodeImage(
                         url = podcast.image,
                         modifier = Modifier.height(120.dp)
                     )
