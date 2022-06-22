@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.main.MainTrackerEvent
+import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.PodcastSearch
 import soy.gabimoreno.domain.repository.PodcastRepository
@@ -16,16 +16,16 @@ import soy.gabimoreno.util.Resource
 import javax.inject.Inject
 
 @HiltViewModel
-class PodcastSearchViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val repository: PodcastRepository,
-    tracker: Tracker
+    private val tracker: Tracker
 ) : ViewModel() {
 
     var podcastSearch by mutableStateOf<Resource<PodcastSearch>>(Resource.Loading)
         private set
 
     init {
-        tracker.trackEvent(MainTrackerEvent.ScreenMain(mapOf("ExampleKey" to "ExampleValue")))
+        tracker.trackEvent(HomeTrackerEvent.ScreenHome(mapOf("ExampleKey" to "ExampleValue")))
         searchPodcasts()
     }
 
@@ -50,5 +50,9 @@ class PodcastSearchViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    fun onEpisodeClicked(id: String) {
+        tracker.trackEvent(HomeTrackerEvent.ClickEpisode(mapOf("id" to id)))
     }
 }

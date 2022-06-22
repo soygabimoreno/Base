@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.ui.common.PreviewContent
 import soy.gabimoreno.ui.common.StaggeredVerticalGrid
@@ -23,20 +24,24 @@ import soy.gabimoreno.util.Resource
 fun HomeScreen() {
     val scrollState = rememberLazyListState()
     val navController = Navigator.current
-    val podcastSearchViewModel = ViewModelProvider.podcastSearch
-    val podcastSearch = podcastSearchViewModel.podcastSearch
+    val homeViewModel = ViewModelProvider.homeViewModel
+    val podcastSearch = homeViewModel.podcastSearch
 
     Surface {
         LazyColumn(state = scrollState) {
             item {
-                LargeTitle()
+                Box(
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .padding(8.dp)
+                )
             }
 
             when (podcastSearch) {
                 is Resource.Error -> {
                     item {
                         ErrorView(text = podcastSearch.failure.translate()) {
-                            podcastSearchViewModel.searchPodcasts()
+                            homeViewModel.searchPodcasts()
                         }
                     }
                 }
@@ -53,10 +58,11 @@ fun HomeScreen() {
                             modifier = Modifier.padding(horizontal = 16.dp)
                         ) {
                             podcastSearch.data.results.forEach { podcast ->
-                                PodcastView(
+                                EpisodeView(
                                     podcast = podcast,
                                     modifier = Modifier.padding(bottom = 16.dp)
                                 ) {
+                                    homeViewModel.onEpisodeClicked(podcast.id)
                                     openPodcastDetail(navController, podcast)
                                 }
                             }
@@ -70,7 +76,7 @@ fun HomeScreen() {
                     modifier = Modifier
                         .navigationBarsPadding()
                         .padding(bottom = 32.dp)
-                        .padding(bottom = if (ViewModelProvider.podcastPlayer.currentPlayingEpisode.value != null) 64.dp else 0.dp)
+                        .padding(bottom = if (ViewModelProvider.playerViewModel.currentPlayingEpisode.value != null) 64.dp else 0.dp)
                 )
             }
         }

@@ -21,7 +21,7 @@ import com.google.accompanist.imageloading.ImageLoadState
 import soy.gabimoreno.R
 
 @Composable
-fun PodcastImage(
+fun EpisodeImage(
     url: String,
     modifier: Modifier = Modifier,
     aspectRatio: Float = 1f,

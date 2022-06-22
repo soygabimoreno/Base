@@ -4,38 +4,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.viewmodel.compose.viewModel
-import soy.gabimoreno.presentation.viewmodel.PodcastDetailViewModel
-import soy.gabimoreno.presentation.viewmodel.PodcastPlayerViewModel
-import soy.gabimoreno.presentation.viewmodel.PodcastSearchViewModel
+import soy.gabimoreno.presentation.viewmodel.DetailViewModel
+import soy.gabimoreno.presentation.viewmodel.HomeViewModel
+import soy.gabimoreno.presentation.viewmodel.PlayerViewModel
 
 object ViewModelProvider {
-    val podcastSearch: PodcastSearchViewModel
+    val homeViewModel: HomeViewModel
         @Composable
-        get() = LocalPodcastSearchViewModel.current
+        get() = LocalHomeViewModel.current
 
-    val podcastDetail: PodcastDetailViewModel
+    val detailViewModel: DetailViewModel
         @Composable
-        get() = LocalPodcastDetailViewModel.current
+        get() = LocalDetailViewModel.current
 
-    val podcastPlayer: PodcastPlayerViewModel
+    val playerViewModel: PlayerViewModel
         @Composable
-        get() = LocalPodcastPlayerViewModel.current
+        get() = LocalPlayerViewModel.current
 }
 
 @Composable
 fun ProvideMultiViewModel(content: @Composable () -> Unit) {
-    val podcastSearchViewModel: PodcastSearchViewModel = viewModel()
-    val podcastDetailViewModel: PodcastDetailViewModel = viewModel()
-    val podcastPlayerViewModel: PodcastPlayerViewModel = viewModel()
+    val homeViewModel: HomeViewModel = viewModel()
+    val detailViewModel: DetailViewModel = viewModel()
+    val playerViewModel: PlayerViewModel = viewModel()
 
     CompositionLocalProvider(
-        LocalPodcastSearchViewModel provides podcastSearchViewModel,
+        LocalHomeViewModel provides homeViewModel,
     ) {
         CompositionLocalProvider(
-            LocalPodcastDetailViewModel provides podcastDetailViewModel,
+            LocalDetailViewModel provides detailViewModel,
         ) {
             CompositionLocalProvider(
-                LocalPodcastPlayerViewModel provides podcastPlayerViewModel,
+                LocalPlayerViewModel provides playerViewModel,
             ) {
                 content()
             }
@@ -43,14 +43,14 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     }
 }
 
-private val LocalPodcastSearchViewModel = staticCompositionLocalOf<PodcastSearchViewModel> {
+private val LocalHomeViewModel = staticCompositionLocalOf<HomeViewModel> {
     error("No PodcastSearchViewModel provided")
 }
 
-private val LocalPodcastDetailViewModel = staticCompositionLocalOf<PodcastDetailViewModel> {
+private val LocalDetailViewModel = staticCompositionLocalOf<DetailViewModel> {
     error("No PodcastDetailViewModel provided")
 }
 
-private val LocalPodcastPlayerViewModel = staticCompositionLocalOf<PodcastPlayerViewModel> {
+private val LocalPlayerViewModel = staticCompositionLocalOf<PlayerViewModel> {
     error("No PodcastPlayerViewModel provided")
 }

@@ -11,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import soy.gabimoreno.domain.model.Episode
-import soy.gabimoreno.ui.screen.podcast.PodcastImage
+import soy.gabimoreno.ui.screen.podcast.EpisodeImage
 
 @Composable
-fun PodcastView(
+fun EpisodeView(
     podcast: Episode,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
@@ -25,7 +25,7 @@ fun PodcastView(
             .background(MaterialTheme.colors.background)
             .clickable(onClick = onClick),
     ) {
-        PodcastImage(
+        EpisodeImage(
             url = podcast.thumbnail,
             aspectRatio = 1f
         )

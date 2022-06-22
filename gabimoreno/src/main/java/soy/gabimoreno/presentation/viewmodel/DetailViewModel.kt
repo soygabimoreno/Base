@@ -6,11 +6,19 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import soy.gabimoreno.R
+import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.domain.model.Episode
 import javax.inject.Inject
 
 @HiltViewModel
-class PodcastDetailViewModel @Inject constructor() : ViewModel() {
+class DetailViewModel @Inject constructor(
+    private val tracker: Tracker
+) : ViewModel() {
+
+    init {
+        // TODO
+//        tracker.trackEvent(DetailTrackerEvent.ScreenDetail(mapOf("ExampleKey" to "ExampleValue")))
+    }
 
     fun sharePodcastEpisode(
         context: Context,

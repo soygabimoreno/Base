@@ -39,26 +39,26 @@ import soy.gabimoreno.ui.common.ViewModelProvider
 import kotlin.math.roundToInt
 
 @Composable
-fun PodcastBottomBar(
+fun AudioBottomBar(
     modifier: Modifier = Modifier
 ) {
-    val episode = ViewModelProvider.podcastPlayer.currentPlayingEpisode.value
+    val episode = ViewModelProvider.playerViewModel.currentPlayingEpisode.value
 
     AnimatedVisibility(
         visible = episode != null,
         modifier = modifier
     ) {
         if (episode != null) {
-            PodcastBottomBarContent(episode)
+            AudioBottomBarContent(episode)
         }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PodcastBottomBarContent(episode: Episode) {
+fun AudioBottomBarContent(episode: Episode) {
     val swipeableState = rememberSwipeableState(0)
-    val podcastPlayer = ViewModelProvider.podcastPlayer
+    val podcastPlayer = ViewModelProvider.playerViewModel
 
     val endAnchor = LocalConfiguration.current.screenWidthDp * LocalDensity.current.density
     val anchors = mapOf(
@@ -85,7 +85,7 @@ fun PodcastBottomBarContent(episode: Episode) {
             }
         }
 
-        PodcastBottomBarStatelessContent(
+        AudioBottomBarStatelessContent(
             episode = episode,
             xOffset = swipeableState.offset.value.roundToInt(),
             darkTheme = isSystemInDarkTheme(),
@@ -100,7 +100,7 @@ fun PodcastBottomBarContent(episode: Episode) {
 }
 
 @Composable
-fun PodcastBottomBarStatelessContent(
+fun AudioBottomBarStatelessContent(
     episode: Episode,
     xOffset: Int,
     darkTheme: Boolean,
@@ -175,9 +175,9 @@ fun PodcastBottomBarStatelessContent(
 
 @Preview(name = "Bottom Bar")
 @Composable
-fun PodcastBottomBarPreview() {
+fun AudioBottomBarPreview() {
     PreviewContent(darkTheme = true) {
-        PodcastBottomBarStatelessContent(
+        AudioBottomBarStatelessContent(
             episode = Episode(
                 "1",
                 "",
