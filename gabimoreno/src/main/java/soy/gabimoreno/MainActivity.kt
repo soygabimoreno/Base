@@ -15,15 +15,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import com.google.accompanist.insets.ProvideWindowInsets
 import dagger.hilt.android.AndroidEntryPoint
-import soy.gabimoreno.ui.common.ProvideMultiViewModel
-import soy.gabimoreno.ui.navigation.Destination
-import soy.gabimoreno.ui.navigation.Navigator
-import soy.gabimoreno.ui.navigation.ProvideNavHostController
-import soy.gabimoreno.ui.screen.home.HomeScreen
-import soy.gabimoreno.ui.screen.podcast.AudioBottomBar
-import soy.gabimoreno.ui.screen.podcast.DetailScreen
-import soy.gabimoreno.ui.screen.podcast.PlayerScreen
-import soy.gabimoreno.ui.theme.GabiMorenoTheme
+import soy.gabimoreno.presentation.navigation.Destination
+import soy.gabimoreno.presentation.navigation.Navigator
+import soy.gabimoreno.presentation.navigation.ProvideNavHostController
+import soy.gabimoreno.presentation.screen.ProvideMultiViewModel
+import soy.gabimoreno.presentation.screen.detail.DetailScreen
+import soy.gabimoreno.presentation.screen.home.HomeScreen
+import soy.gabimoreno.presentation.screen.player.PlayerScreen
+import soy.gabimoreno.presentation.theme.GabiMorenoTheme
+import soy.gabimoreno.presentation.ui.AudioBottomBar
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -59,7 +59,7 @@ fun GabiMorenoApp(
                             }
 
                             composable(
-                                Destination.podcast,
+                                Destination.detail,
                                 deepLinks = listOf(navDeepLink { uriPattern = "https://www.listennotes.com/e/{id}" })
                             ) { backStackEntry ->
                                 DetailScreen(

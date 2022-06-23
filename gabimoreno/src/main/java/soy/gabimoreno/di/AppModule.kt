@@ -15,6 +15,7 @@ import soy.gabimoreno.data.tracker.DefaultTracker
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.domain.repository.PodcastRepository
 import soy.gabimoreno.domain.repository.PodcastRepositoryImpl
+import soy.gabimoreno.domain.usecase.GetTrackingEventNameUseCase
 import soy.gabimoreno.player.exoplayer.PodcastMediaSource
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
 import javax.inject.Singleton
@@ -53,7 +54,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTracker(firebaseAnalytics: FirebaseAnalytics): Tracker = DefaultTracker(firebaseAnalytics)
+    fun provideTracker(
+        firebaseAnalytics: FirebaseAnalytics,
+        getTrackingEventNameUseCase: GetTrackingEventNameUseCase
+    ): Tracker = DefaultTracker(
+        firebaseAnalytics,
+        getTrackingEventNameUseCase
+    )
 
     @Provides
     @Singleton

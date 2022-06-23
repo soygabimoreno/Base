@@ -6,6 +6,6 @@ sealed class HomeTrackerEvent(
     override val parameters: Map<String, Any> = mapOf()
 ) : TrackerEvent {
 
-    data class ScreenHome(override val parameters: Map<String, Any>) : HomeTrackerEvent()
+    data class ViewScreen(override val parameters: Map<String, Any>) : HomeTrackerEvent()
     data class ClickEpisode(override val parameters: Map<String, Any>) : HomeTrackerEvent()
 }
