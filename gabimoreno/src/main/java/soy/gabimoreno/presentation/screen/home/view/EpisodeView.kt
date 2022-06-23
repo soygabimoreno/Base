@@ -26,11 +26,11 @@ fun EpisodeView(
             .clickable(onClick = onClick),
     ) {
         EpisodeImage(
-            url = episode.thumbnail,
+            url = episode.thumbnailUrl,
             aspectRatio = 1f
         )
         Text(
-            episode.titleOriginal,
+            episode.title,
             style = MaterialTheme.typography.body1,
             modifier = Modifier.padding(8.dp)
         )

@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
@@ -66,14 +68,14 @@ fun DetailScreen(
 
                 ) {
                     EpisodeImage(
-                        url = podcast.image,
+                        url = podcast.imageUrl,
                         modifier = Modifier.height(120.dp)
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Text(
-                        podcast.titleOriginal,
+                        podcast.title,
                         style = MaterialTheme.typography.h4
                     )
                     Spacer(modifier = Modifier.height(24.dp))
@@ -84,7 +86,7 @@ fun DetailScreen(
                     )
 
                     EmphasisText(
-                        text = "${podcast.pubDateMS.formatMillisecondsAsDate("MMM dd")} • ${podcast.audioLengthSec.toDurationMinutes()}"
+                        text = "${podcast.pubDateMillis.formatMillisecondsAsDate("MMM dd")} • ${podcast.audioLengthSeconds.toDurationMinutes()}"
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -120,7 +122,12 @@ fun DetailScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    EmphasisText(text = podcast.descriptionOriginal)
+                    EmphasisText(
+                        text = HtmlCompat.fromHtml(
+                            podcast.description,
+                            FROM_HTML_MODE_COMPACT
+                        ).toString()
+                    )
                 }
             }
         }

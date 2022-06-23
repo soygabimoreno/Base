@@ -2,15 +2,13 @@ package soy.gabimoreno.domain.model
 
 data class Episode(
     val id: String,
-    val link: String?,
-    val audio: String,
-    val image: String,
+    val url: String,
+    val audioUrl: String,
+    val imageUrl: String,
     val podcast: Podcast,
-    val thumbnail: String,
-    val pubDateMS: Long,
-    val titleOriginal: String,
-    val listennotesURL: String,
-    val audioLengthSec: Long,
-    val explicitContent: Boolean,
-    val descriptionOriginal: String,
+    val thumbnailUrl: String,
+    val pubDateMillis: Long,
+    val title: String,
+    val audioLengthSeconds: Int,
+    val description: String
 )

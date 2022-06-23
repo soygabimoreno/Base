@@ -124,7 +124,7 @@ fun AudioBottomBarStatelessContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = rememberCoilPainter(episode.thumbnail),
+                painter = rememberCoilPainter(episode.thumbnailUrl),
                 contentDescription = stringResource(R.string.podcast_thumbnail),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(64.dp),
@@ -138,7 +138,7 @@ fun AudioBottomBarStatelessContent(
                     .padding(8.dp),
             ) {
                 Text(
-                    episode.titleOriginal,
+                    episode.title,
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.onBackground,
                     maxLines = 1,
@@ -178,18 +178,16 @@ fun AudioBottomBarPreview() {
     PreviewContent(darkTheme = true) {
         AudioBottomBarStatelessContent(
             episode = Episode(
-                "1",
-                "",
-                "",
-                "https://picsum.photos/200",
-                Podcast("", "", "", "This is podcast title", "", "This is publisher"),
-                "https://picsum.photos/200",
-                0,
-                "This is a title",
-                "",
-                2700,
-                false,
-                "This is a description"
+                id = "1",
+                url = "",
+                audioUrl = "",
+                imageUrl = "https://picsum.photos/200",
+                podcast = Podcast("", "", "", "This is podcast title", "", "This is publisher"),
+                thumbnailUrl = "https://picsum.photos/200",
+                pubDateMillis = 0,
+                title = "This is a title",
+                audioLengthSeconds = 2700,
+                description = "This is a description"
             ),
             xOffset = 0,
             darkTheme = true,
