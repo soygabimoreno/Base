@@ -53,7 +53,7 @@ class PodcastMediaSource @Inject constructor() {
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_TITLE,
-                    episode.titleOriginal
+                    episode.title
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
@@ -61,11 +61,11 @@ class PodcastMediaSource @Inject constructor() {
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
-                    episode.audio
+                    episode.audioUrl
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,
-                    episode.image
+                    episode.imageUrl
                 )
                 .build()
         }

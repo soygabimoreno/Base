@@ -31,12 +31,12 @@ class DetailViewModel @Inject constructor(
     ) {
         val text = context.getString(
             R.string.share_podcast_content,
-            episode.titleOriginal,
-            episode.listennotesURL
+            episode.title,
+            episode.url
         )
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TITLE, episode.titleOriginal)
+            putExtra(Intent.EXTRA_TITLE, episode.title)
             putExtra(Intent.EXTRA_TEXT, text)
             type = "text/plain"
         }
@@ -49,7 +49,7 @@ class DetailViewModel @Inject constructor(
         context: Context,
         episode: Episode
     ) {
-        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(episode.link))
+        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(episode.url))
         context.startActivity(webIntent)
     }
 }

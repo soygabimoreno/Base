@@ -99,7 +99,7 @@ fun PodcastPlayerBody(
     }
 
     val imageRequest = ImageRequest.Builder(LocalContext.current)
-        .data(episode.image)
+        .data(episode.imageUrl)
         .target {
             podcastPlayer.calculateColorPalette(it) { color ->
                 gradientColor = color
@@ -266,7 +266,7 @@ fun PodcastPlayerStatelessContent(
                         }
 
                         Text(
-                            episode.titleOriginal,
+                            episode.title,
                             style = MaterialTheme.typography.h5,
                             color = MaterialTheme.colors.onBackground,
                             maxLines = 1,
@@ -358,18 +358,16 @@ fun PodcastPlayerPreview() {
     PreviewContent(darkTheme = true) {
         PodcastPlayerStatelessContent(
             episode = Episode(
-                "1",
-                "",
-                "",
-                "",
-                Podcast("", "", "", "This is podcast title", "", "This is publisher"),
-                "",
-                0,
-                "This is a title",
-                "",
-                2700,
-                false,
-                "This is a description"
+                id = "1",
+                url = "",
+                audioUrl = "",
+                imageUrl = "",
+                podcast = Podcast("", "", "", "This is podcast title", "", "This is publisher"),
+                thumbnailUrl = "",
+                pubDateMillis = 0,
+                title = "This is a title",
+                audioLengthSeconds = 2700,
+                description = "This is a description"
             ),
             imagePainter = painterResource(id = R.drawable.ic_baseline_mic_24),
             gradientColor = Color.DarkGray,
