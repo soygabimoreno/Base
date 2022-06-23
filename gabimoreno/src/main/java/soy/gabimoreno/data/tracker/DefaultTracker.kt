@@ -1,29 +1,20 @@
 package soy.gabimoreno.data.tracker
 
-import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
+import soy.gabimoreno.domain.usecase.GetTrackingEventNameUseCase
 import soy.gabimoreno.framework.KLog
-import soy.gabimoreno.framework.camelToSnakeUpperCase
+import soy.gabimoreno.framework.mapToBundle
 import javax.inject.Inject
 
 class DefaultTracker @Inject constructor(
-    private val firebaseAnalytics: FirebaseAnalytics
+    private val firebaseAnalytics: FirebaseAnalytics,
+    private val getTrackingEventNameUseCase: GetTrackingEventNameUseCase
 ) : Tracker {
 
     override fun trackEvent(trackerEvent: TrackerEvent) {
-        val name = trackerEvent.javaClass.simpleName.toString().camelToSnakeUpperCase()
+        val name = getTrackingEventNameUseCase(trackerEvent)
         val parameters = trackerEvent.parameters
-        val bundle = Bundle()
-        parameters.forEach { entry: Map.Entry<String, Any> ->
-            val (key, value) = entry
-            when (value) {
-                is Int -> bundle.putInt(key, value)
-                is String -> bundle.putString(key, value)
-                is Double -> bundle.putDouble(key, value)
-                is Float -> bundle.putFloat(key, value)
-                is Boolean -> bundle.putBoolean(key, value)
-            }
-        }
+        val bundle = parameters.mapToBundle()
         firebaseAnalytics.logEvent(name, bundle)
         KLog.d("$name: $bundle")
     }

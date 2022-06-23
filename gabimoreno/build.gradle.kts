@@ -55,6 +55,8 @@ android {
 dependencies {
 //    implementation(project(":modules:player")) // TODO: Add when moved all player files to this module
     implementation(project(":modules:framework"))
+    implementation(project(":modules:core"))
+    implementation(project(":modules:core-testing"))
 
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("com.google.android.material:material:1.3.0")
@@ -91,6 +93,9 @@ dependencies {
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.amshove.kluent:kluent-android:1.68")
+    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("org.robolectric:robolectric:4.8.1")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")

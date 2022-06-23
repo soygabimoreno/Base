@@ -19,3 +19,5 @@ include(":bike")
 
 include(":modules:framework")
 include(":modules:player")
+include(":modules:core")
+include(":modules:core-testing")
