@@ -2,17 +2,16 @@
     <string name="app_name">Gabi Moreno</string>
     <string name="playback_notification_channel_name">Gabi Moreno</string>
     <string name="playback_notification_channel_description">Te ayudo a CRECER en tu carrera profesional como DESARROLLADOR ANDROID. 💪🏼</string>
-    <string name="unexpected_error">An unexpected error occurred\nPlease try again</string>
-    <string name="share_podcast_content">Take a look at this podcast: %1$s %2$s</string>
-    <string name="trending_now">Trending Now</string>
-    <string name="try_again">Try again</string>
-    <string name="podcast_thumbnail">Podcast thumbnail</string>
-    <string name="back">back</string>
+    <string name="unexpected_error">Ha sucedido un error. Please, inténtalo de nuevo más tarde</string>
+    <string name="share_podcast_content">Pégale una oída a esto 🎧️: %1$s %2$s</string>
+    <string name="try_again">Prueba de nuevo</string>
+    <string name="podcast_thumbnail">Carátula del episodio</string>
+    <string name="back">Atrás</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
-    <string name="close">Close</string>
-    <string name="share">Share</string>
-    <string name="source_web">Listen Notes URL</string>
-    <string name="replay_10_seconds">Replay 10 seconds</string>
-    <string name="forward_10_seconds">Forward 10 seconds</string>
+    <string name="close">Cerrar</string>
+    <string name="share">Compartir</string>
+    <string name="source_web">Fuente web</string>
+    <string name="replay_10_seconds">Retroceder 10 segundos</string>
+    <string name="forward_10_seconds">Avanzar 10 segundos</string>
 </resources>

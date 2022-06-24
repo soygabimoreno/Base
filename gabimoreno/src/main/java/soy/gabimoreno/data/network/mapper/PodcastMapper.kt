@@ -2,7 +2,6 @@ package soy.gabimoreno.data.network.mapper
 
 import com.prof.rssparser.Article
 import com.prof.rssparser.Channel
-import soy.gabimoreno.core.findUrl
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.domain.model.PodcastSearch
@@ -26,8 +25,7 @@ fun Article.toDomain(): Episode {
         val description = description?.removeAnchorMessage() ?: ""
         Episode(
             id = guid!!.replace("https://www.ivoox.com/", ""),
-//            url = description.getEpisodeUrl(), // TODO: OutOfMemoryError
-            url = "https://gabimoreno.soy",
+            url = "https://gabimoreno.soy", // TODO: Get the proper Deep Link
             audioUrl = audio!!,
             imageUrl = itunesArticleData?.image ?: "",
             podcast = Podcast(
@@ -48,8 +46,6 @@ fun Article.toDomain(): Episode {
 }
 
 private fun String.removeAnchorMessage() = replace(ANCHOR_MESSAGE, "")
-
-private fun String.getEpisodeUrl() = findUrl()
 
 internal const val ANCHOR_MESSAGE =
     "\n\n" +
