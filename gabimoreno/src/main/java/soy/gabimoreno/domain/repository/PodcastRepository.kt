@@ -6,5 +6,5 @@ import soy.gabimoreno.util.Either
 
 interface PodcastRepository {
 
-    suspend fun getPodcast(): Either<Failure, PodcastSearch> // TODO: Change this Either by the Arrow one
+    suspend fun getEpisodes(): Either<Failure, PodcastSearch> // TODO: Change this Either by the Arrow one
 }

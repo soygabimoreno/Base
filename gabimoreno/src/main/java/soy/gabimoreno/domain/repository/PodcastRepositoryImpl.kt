@@ -16,7 +16,7 @@ class PodcastRepositoryImpl(
         private const val TAG = "PodcastRepository"
     }
 
-    override suspend fun getPodcast(): Either<Failure, PodcastSearch> {
+    override suspend fun getEpisodes(): Either<Failure, PodcastSearch> {
         return try {
             val channel = rssParser.getChannel(PODCAST_URL)
             val result = channel.toDomain()
