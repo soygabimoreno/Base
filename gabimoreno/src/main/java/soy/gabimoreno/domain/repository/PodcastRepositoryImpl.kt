@@ -1,12 +1,9 @@
 package soy.gabimoreno.domain.repository
 
+import arrow.core.Either
 import com.prof.rssparser.Parser
 import soy.gabimoreno.data.network.mapper.toDomain
 import soy.gabimoreno.domain.model.PodcastSearch
-import soy.gabimoreno.error.Failure
-import soy.gabimoreno.util.Either
-import soy.gabimoreno.util.left
-import soy.gabimoreno.util.right
 
 class PodcastRepositoryImpl(
     private val rssParser: Parser
@@ -16,13 +13,10 @@ class PodcastRepositoryImpl(
         private const val TAG = "PodcastRepository"
     }
 
-    override suspend fun getEpisodes(): Either<Failure, PodcastSearch> {
-        return try {
+    override suspend fun getEpisodes(): Either<Throwable, PodcastSearch> {
+        return Either.catch {
             val channel = rssParser.getChannel(PODCAST_URL)
-            val result = channel.toDomain()
-            right(result)
-        } catch (e: Exception) {
-            left(Failure.UnexpectedFailure)
+            channel.toDomain()
         }
     }
 }
