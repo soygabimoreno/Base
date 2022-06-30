@@ -6,7 +6,7 @@ import org.junit.Test
 class ToDecimalKtTest {
 
     @Test
-    fun `GIVEN WHEN THEN `() {
+    fun `GIVEN a ByteArray WHEN toDecimal THEN get the expected number`() {
         val bytes = byteArrayOf(101)
 
         val result = bytes.toDecimal()

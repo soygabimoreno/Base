@@ -10,11 +10,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
+import soy.gabimoreno.R
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.presentation.navigation.Destination
 import soy.gabimoreno.presentation.navigation.Navigator
@@ -42,7 +44,7 @@ fun HomeScreen() {
             Text(
                 homeViewModel.appVersionName, modifier = Modifier
                     .statusBarsPadding()
-                    .padding(start = 16.dp)
+                    .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
             )
             LazyColumn(state = scrollState) {
                 item {
@@ -55,7 +57,7 @@ fun HomeScreen() {
                 when (podcastSearch) {
                     is Resource.Error -> {
                         item {
-                            ErrorView(text = podcastSearch.failure.translate()) {
+                            ErrorView(text = stringResource(R.string.unexpected_error)) {
                                 homeViewModel.searchPodcasts()
                             }
                         }

@@ -14,8 +14,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = 23
         targetSdk = 32
-        versionCode = 7
-        versionName = "0.7.0"
+        versionCode = 8
+        versionName = "0.8.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -91,6 +91,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-coil:${rootProject.extra["version_accompanist"]}")
 
     implementation("androidx.palette:palette-ktx:1.0.0")
+
+    implementation("io.arrow-kt:arrow-core:1.0.1")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.amshove.kluent:kluent-android:1.68")
