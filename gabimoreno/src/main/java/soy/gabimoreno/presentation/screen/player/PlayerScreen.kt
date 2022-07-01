@@ -10,7 +10,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -136,7 +135,6 @@ fun PodcastPlayerBody(
 
         PodcastPlayerStatelessContent(
             episode = episode,
-            darkTheme = isSystemInDarkTheme(),
             imagePainter = imagePainter,
             gradientColor = gradientColor,
             yOffset = swipeableState.offset.value.roundToInt(),
@@ -190,7 +188,6 @@ fun PodcastPlayerStatelessContent(
     playbackProgress: Float,
     currentTime: String,
     totalTime: String,
-    darkTheme: Boolean,
     onRewind: () -> Unit,
     onForward: () -> Unit,
     onTooglePlayback: () -> Unit,
@@ -198,24 +195,12 @@ fun PodcastPlayerStatelessContent(
     onSliderChangeFinished: () -> Unit,
     onClose: () -> Unit
 ) {
-    val gradientColors = if (darkTheme) {
-        listOf(gradientColor, MaterialTheme.colors.background)
-    } else {
-        listOf(MaterialTheme.colors.background, MaterialTheme.colors.background)
-    }
+    val gradientColors = listOf(gradientColor, MaterialTheme.colors.background)
 
-    val sliderColors = if (darkTheme) {
-        SliderDefaults.colors(
-            thumbColor = MaterialTheme.colors.onBackground,
-            activeTrackColor = MaterialTheme.colors.onBackground,
-            inactiveTrackColor = MaterialTheme.colors.onBackground.copy(
-                alpha = IndicatorBackgroundOpacity
-            ),
-        )
-    } else SliderDefaults.colors(
-        thumbColor = gradientColor,
-        activeTrackColor = gradientColor,
-        inactiveTrackColor = gradientColor.copy(
+    val sliderColors = SliderDefaults.colors(
+        thumbColor = MaterialTheme.colors.onBackground,
+        activeTrackColor = MaterialTheme.colors.onBackground,
+        inactiveTrackColor = MaterialTheme.colors.onBackground.copy(
             alpha = IndicatorBackgroundOpacity
         ),
     )
@@ -355,7 +340,7 @@ fun PodcastPlayerStatelessContent(
 @Preview(name = "Player")
 @Composable
 fun PodcastPlayerPreview() {
-    PreviewContent(darkTheme = true) {
+    PreviewContent {
         PodcastPlayerStatelessContent(
             episode = Episode(
                 id = "1",
@@ -376,7 +361,6 @@ fun PodcastPlayerPreview() {
             playbackProgress = 0f,
             currentTime = "0:00",
             totalTime = "10:00",
-            darkTheme = true,
             onClose = { },
             onForward = { },
             onRewind = { },

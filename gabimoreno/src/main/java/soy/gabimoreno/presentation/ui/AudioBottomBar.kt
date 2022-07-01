@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -87,7 +86,6 @@ fun AudioBottomBarContent(episode: Episode) {
         AudioBottomBarStatelessContent(
             episode = episode,
             xOffset = swipeableState.offset.value.roundToInt(),
-            darkTheme = isSystemInDarkTheme(),
             icon = iconResId,
             onTooglePlaybackState = {
                 podcastPlayer.togglePlaybackState()
@@ -102,7 +100,6 @@ fun AudioBottomBarContent(episode: Episode) {
 fun AudioBottomBarStatelessContent(
     episode: Episode,
     xOffset: Int,
-    darkTheme: Boolean,
     @DrawableRes icon: Int,
     onTooglePlaybackState: () -> Unit,
     onTap: (Offset) -> Unit,
@@ -110,7 +107,7 @@ fun AudioBottomBarStatelessContent(
     Box(
         modifier = Modifier
             .offset { IntOffset(xOffset, 0) }
-            .background(if (darkTheme) Color(0xFF343434) else Color(0xFFF1F1F1))
+            .background(Color(0xFF343434))
             .navigationBarsPadding()
             .height(64.dp)
             .fillMaxWidth()
@@ -175,7 +172,7 @@ fun AudioBottomBarStatelessContent(
 @Preview(name = "Bottom Bar")
 @Composable
 fun AudioBottomBarPreview() {
-    PreviewContent(darkTheme = true) {
+    PreviewContent {
         AudioBottomBarStatelessContent(
             episode = Episode(
                 id = "1",
@@ -190,7 +187,6 @@ fun AudioBottomBarPreview() {
                 description = "This is a description"
             ),
             xOffset = 0,
-            darkTheme = true,
             icon = R.drawable.ic_baseline_play_arrow_24,
             onTooglePlaybackState = { },
             onTap = { }

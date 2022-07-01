@@ -7,10 +7,9 @@ import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 
 @Composable
 fun PreviewContent(
-    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    GabiMorenoTheme(darkTheme = darkTheme) {
+    GabiMorenoTheme {
         ProvideWindowInsets {
             ProvideNavHostController {
                 content()
