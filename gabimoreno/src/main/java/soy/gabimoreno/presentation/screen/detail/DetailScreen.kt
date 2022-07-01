@@ -81,7 +81,7 @@ fun DetailScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
-                        podcast.podcast.publisherOriginal,
+                        podcast.podcast.author,
                         style = MaterialTheme.typography.body1
                     )
 

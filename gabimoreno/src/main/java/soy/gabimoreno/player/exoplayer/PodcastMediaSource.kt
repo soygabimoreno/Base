@@ -49,7 +49,7 @@ class PodcastMediaSource @Inject constructor() {
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_ARTIST,
-                    episode.podcast.publisherOriginal
+                    episode.podcast.author
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_TITLE,
@@ -57,7 +57,7 @@ class PodcastMediaSource @Inject constructor() {
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                    episode.podcast.titleOriginal
+                    episode.podcast.title
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
