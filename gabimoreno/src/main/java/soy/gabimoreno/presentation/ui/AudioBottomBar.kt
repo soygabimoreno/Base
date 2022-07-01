@@ -146,7 +146,7 @@ fun AudioBottomBarStatelessContent(
                 )
 
                 Text(
-                    episode.podcast.titleOriginal,
+                    episode.podcast.title,
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.onBackground,
                     maxLines = 1,
@@ -182,7 +182,7 @@ fun AudioBottomBarPreview() {
                 url = "",
                 audioUrl = "",
                 imageUrl = "https://picsum.photos/200",
-                podcast = Podcast("", "", "", "This is podcast title", "", "This is publisher"),
+                podcast = Podcast("This is publisher", "This is podcast title"),
                 thumbnailUrl = "https://picsum.photos/200",
                 pubDateMillis = 0,
                 title = "This is a title",

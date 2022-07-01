@@ -19,21 +19,24 @@ class PodcastMapperKtTest {
         result.total shouldBe numberOfEpisodes
 
         val episode = result.results[0]
-        episode.id shouldBe "guid"
-        episode.url shouldBe "https://gabimoreno.soy"
-        episode.audioUrl shouldBe "audio"
-        episode.imageUrl shouldBe "image"
-//        episode.podcast TODO ???
-        episode.thumbnailUrl shouldBe "image"
-        episode.pubDateMillis shouldBeEqualTo Date(PUB_DATE).time
-        episode.title shouldBe "title"
-        episode.audioLengthSeconds shouldBeEqualTo AUDIO_LENGTH_IN_SECONDS
-        episode.description shouldBe "description"
+        episode.id shouldBeEqualTo EPISODE_ID
+        episode.url shouldBe EPISODE_URL
+        episode.audioUrl shouldBe EPISODE_AUDIO_URL
+        episode.imageUrl shouldBe EPISODE_IMAGE_URL
+        episode.thumbnailUrl shouldBe EPISODE_IMAGE_URL
+        episode.pubDateMillis shouldBeEqualTo Date(EPISODE_PUB_DATE).time
+        episode.title shouldBe EPISODE_TITLE
+        episode.audioLengthSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_IN_SECONDS
+        episode.description shouldBeEqualTo EPISODE_DESCRIPTION
+
+        val podcast = episode.podcast
+        podcast.title shouldBe PODCAST_TITLE
+        podcast.author shouldBeEqualTo PODCAST_TITLE.uppercase()
     }
 
     private fun buildChannel(): Channel {
         return Channel(
-            "title",
+            PODCAST_TITLE,
             "link",
             "description",
             Image(
@@ -46,26 +49,26 @@ class PodcastMapperKtTest {
             "updatePeriod",
             listOf(
                 Article(
-                    "guid",
-                    "title",
+                    "$EPISODE_ID$IVOOX_URL",
+                    EPISODE_TITLE,
                     "author",
                     "link",
-                    PUB_DATE,
-                    "description",
+                    EPISODE_PUB_DATE,
+                    "$EPISODE_DESCRIPTION$ANCHOR_MESSAGE",
                     "content",
-                    "image",
-                    "audio",
+                    null,
+                    EPISODE_AUDIO_URL,
                     "video",
                     "sourceName",
                     "sourceUrl",
                     listOf("categories"),
                     ItunesArticleData(
                         "author",
-                        AUDIO_LENGTH_IN_SECONDS.toString(),
+                        EPISODE_AUDIO_LENGTH_IN_SECONDS.toString(),
                         "episode",
                         "episodeType",
                         "explicit",
-                        "image",
+                        EPISODE_IMAGE_URL,
                         listOf("keywords"),
                         "subtitle",
                         "summary"
@@ -77,7 +80,7 @@ class PodcastMapperKtTest {
                 listOf("categories"),
                 "2000",
                 "explicit",
-                "image",
+                "channelImage",
                 listOf("keywords"),
                 "newsFeedUrl",
                 ItunesOwner(
@@ -92,5 +95,13 @@ class PodcastMapperKtTest {
     }
 }
 
-private const val AUDIO_LENGTH_IN_SECONDS = 896
-private const val PUB_DATE = "Mon, 27 Jun 2022 04:00:33 GMT"
+private const val EPISODE_ID = "guid"
+private const val EPISODE_URL = "https://gabimoreno.soy"
+private const val EPISODE_AUDIO_URL = "audio"
+private const val EPISODE_IMAGE_URL = "image"
+private const val EPISODE_TITLE = "title"
+private const val EPISODE_AUDIO_LENGTH_IN_SECONDS = 896
+private const val EPISODE_PUB_DATE = "Mon, 27 Jun 2022 04:00:33 GMT"
+private const val EPISODE_DESCRIPTION = "description"
+
+private const val PODCAST_TITLE = "podcastTitle"

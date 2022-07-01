@@ -274,7 +274,7 @@ fun PodcastPlayerStatelessContent(
                         )
 
                         Text(
-                            episode.podcast.titleOriginal,
+                            episode.podcast.title,
                             style = MaterialTheme.typography.subtitle1,
                             color = MaterialTheme.colors.onBackground,
                             maxLines = 1,
@@ -362,7 +362,7 @@ fun PodcastPlayerPreview() {
                 url = "",
                 audioUrl = "",
                 imageUrl = "",
-                podcast = Podcast("", "", "", "This is podcast title", "", "This is publisher"),
+                podcast = Podcast("This is publisher", "This is podcast title"),
                 thumbnailUrl = "",
                 pubDateMillis = 0,
                 title = "This is a title",
