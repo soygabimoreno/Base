@@ -119,7 +119,7 @@ fun HomeScreenPreview() {
 @Composable
 @Preview(name = "Home (Dark)")
 fun HomeScreenDarkPreview() {
-    PreviewContent(darkTheme = true) {
+    PreviewContent {
         HomeScreen()
     }
 }
