@@ -20,6 +20,7 @@ import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
+import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.ui.BackButton
 import soy.gabimoreno.presentation.ui.EmphasisText
@@ -37,11 +38,13 @@ fun DetailScreen(
     val podcastSearchViewModel = ViewModelProvider.homeViewModel
     val detailViewModel = ViewModelProvider.detailViewModel
     val playerViewModel = ViewModelProvider.playerViewModel
-    val podcast = podcastSearchViewModel.getPodcastDetail(podcastId)
+    val episode = podcastSearchViewModel.getPodcastDetail(podcastId)
     val currentContext = LocalContext.current
 
     LaunchedEffect(Unit) {
-        detailViewModel.onViewScreen()
+        episode?.let {
+            detailViewModel.onViewScreen(episode)
+        }
     }
 
     Surface {
@@ -53,11 +56,11 @@ fun DetailScreen(
                 BackButton()
             }
 
-            if (podcast != null) {
+            if (episode != null) {
+                val isPlaying = playerViewModel.podcastIsPlaying &&
+                    playerViewModel.currentPlayingEpisode.value?.id == episode.id
                 val playButtonText =
-                    if (playerViewModel.podcastIsPlaying &&
-                        playerViewModel.currentPlayingEpisode.value?.id == podcast.id
-                    ) stringResource(R.string.pause) else stringResource(R.string.play)
+                    if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play)
 
                 Column(
                     modifier = Modifier
@@ -68,25 +71,25 @@ fun DetailScreen(
 
                 ) {
                     EpisodeImage(
-                        url = podcast.imageUrl,
+                        url = episode.imageUrl,
                         modifier = Modifier.height(120.dp)
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Text(
-                        podcast.title,
+                        episode.title,
                         style = MaterialTheme.typography.h4
                     )
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
-                        podcast.podcast.author,
+                        episode.podcast.author,
                         style = MaterialTheme.typography.body1
                     )
 
                     EmphasisText(
-                        text = "${podcast.pubDateMillis.formatMillisecondsAsDate("MMM dd")} • ${podcast.audioLengthSeconds.toDurationMinutes()}"
+                        text = "${episode.pubDateMillis.formatMillisecondsAsDate("MMM dd")} • ${episode.audioLengthSeconds.toDurationMinutes()}"
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -96,10 +99,10 @@ fun DetailScreen(
                             text = playButtonText,
                             height = 48.dp
                         ) {
-                            detailViewModel.onPlayPauseClicked()
+                            detailViewModel.onPlayPauseClicked(episode, isPlaying.toPlayPause())
                             playerViewModel.playPauseEpisode(
                                 (podcastSearchViewModel.podcastSearch as Resource.Success).data.results,
-                                podcast
+                                episode
                             )
                         }
 
@@ -109,14 +112,14 @@ fun DetailScreen(
                             imageVector = Icons.Rounded.Share,
                             contentDescription = stringResource(R.string.share)
                         ) {
-                            detailViewModel.sharePodcastEpisode(currentContext, podcast)
+                            detailViewModel.onShareClicked(currentContext, episode)
                         }
 
                         soy.gabimoreno.presentation.ui.IconButton(
                             imageVector = Icons.Rounded.Info,
                             contentDescription = stringResource(R.string.source_web)
                         ) {
-                            detailViewModel.openListenNotesURL(currentContext, podcast)
+                            detailViewModel.onInfoClicked(currentContext, episode)
                         }
                     }
 
@@ -124,7 +127,7 @@ fun DetailScreen(
 
                     EmphasisText(
                         text = HtmlCompat.fromHtml(
-                            podcast.description,
+                            episode.description,
                             FROM_HTML_MODE_COMPACT
                         ).toString()
                     )

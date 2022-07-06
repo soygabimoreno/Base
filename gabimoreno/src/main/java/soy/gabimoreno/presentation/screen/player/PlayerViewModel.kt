@@ -13,7 +13,10 @@ import androidx.palette.graphics.Palette
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.PLAY_PAUSE
+import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent.*
+import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.framework.KLog
 import soy.gabimoreno.player.extension.currentPosition
@@ -32,20 +35,22 @@ class PlayerViewModel @Inject constructor(
     private val tracker: Tracker
 ) : ViewModel() {
 
-    fun onViewScreen() {
-        tracker.trackEvent(ViewScreen(mapOf("ExampleKey" to "ExampleValue")))
+    fun onViewScreen(episode: Episode) {
+        tracker.trackEvent(ViewScreen(episode.toMap()))
     }
 
-    private fun onPlay(episodeId: String) {
-        tracker.trackEvent(Play(mapOf(EPISODE to episodeId)))
+    private fun onPlay(episode: Episode) {
+        tracker.trackEvent(
+            Play(episode.toMap())
+        )
     }
 
-    private fun onPause(episodeId: String) {
-        tracker.trackEvent(Pause(mapOf(EPISODE to episodeId)))
+    private fun onPause(episode: Episode) {
+        tracker.trackEvent(Pause(episode.toMap()))
     }
 
-    private fun onPlayFromMediaId(episodeId: String) {
-        tracker.trackEvent(PlayFromMediaId(mapOf(EPISODE to episodeId)))
+    private fun onPlayFromMediaId(episode: Episode) {
+        tracker.trackEvent(PlayFromMediaId(episode.toMap()))
     }
 
     val currentPlayingEpisode = serviceConnection.currentPlayingEpisode
@@ -89,14 +94,14 @@ class PlayerViewModel @Inject constructor(
         serviceConnection.playPodcast(episodes)
         if (currentEpisode.id == currentPlayingEpisode.value?.id) {
             if (podcastIsPlaying) {
-                onPause(currentEpisode.id)
+                onPause(currentEpisode)
                 serviceConnection.transportControls.pause()
             } else {
-                onPlay(currentEpisode.id)
+                onPlay(currentEpisode)
                 serviceConnection.transportControls.play()
             }
         } else {
-            onPlayFromMediaId(currentEpisode.id)
+            onPlayFromMediaId(currentEpisode)
             serviceConnection.transportControls.playFromMediaId(currentEpisode.id, null)
         }
     }
@@ -110,6 +115,20 @@ class PlayerViewModel @Inject constructor(
                 serviceConnection.transportControls.play()
             }
         }
+    }
+
+    fun onPlayPauseClicked(
+        episode: Episode,
+        playPause: PlayPause
+    ) {
+        tracker.trackEvent(
+            ClickPlayPause(
+                episode.toMap() +
+                    mapOf(
+                        PLAY_PAUSE to playPause.toString()
+                    )
+            )
+        )
     }
 
     fun stopPlayback() {
@@ -169,4 +188,3 @@ class PlayerViewModel @Inject constructor(
 }
 
 private const val PLAYBACK_POSITION_UPDATE_INTERVAL = 1000L
-private const val EPISODE = "episode"

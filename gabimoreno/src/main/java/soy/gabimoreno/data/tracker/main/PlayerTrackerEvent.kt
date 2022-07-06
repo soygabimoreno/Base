@@ -10,4 +10,5 @@ sealed class PlayerTrackerEvent(
     data class Play(override val parameters: Map<String, Any>) : PlayerTrackerEvent()
     data class Pause(override val parameters: Map<String, Any>) : PlayerTrackerEvent()
     data class PlayFromMediaId(override val parameters: Map<String, Any>) : PlayerTrackerEvent()
+    data class ClickPlayPause(override val parameters: Map<String, Any>) : DetailTrackerEvent()
 }
