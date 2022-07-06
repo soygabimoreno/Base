@@ -9,6 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.EPISODE_ID
+import soy.gabimoreno.data.tracker.domain.EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent.ClickEpisode
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent.ViewScreen
 import soy.gabimoreno.di.IO
@@ -53,11 +55,21 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onViewScreen() {
-        tracker.trackEvent(ViewScreen(mapOf("ExampleKey" to "ExampleValue")))
+        tracker.trackEvent(ViewScreen)
     }
 
-    fun onEpisodeClicked(id: String) {
-        tracker.trackEvent(ClickEpisode(mapOf("id" to id)))
+    fun onEpisodeClicked(
+        episodeId: String,
+        episodeTitle: String
+    ) {
+        tracker.trackEvent(
+            ClickEpisode(
+                mapOf(
+                    EPISODE_ID to episodeId,
+                    EPISODE_TITLE to episodeTitle,
+                )
+            )
+        )
     }
 
     fun getPodcastDetail(id: String): Episode? {

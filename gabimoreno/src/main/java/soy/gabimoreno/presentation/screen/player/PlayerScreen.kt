@@ -38,6 +38,7 @@ import coil.request.ImageRequest
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.systemBarsPadding
 import soy.gabimoreno.R
+import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
@@ -52,7 +53,9 @@ fun PlayerScreen(backDispatcher: OnBackPressedDispatcher) {
 
     val showPlayerFullScreen = playerViewModel.showPlayerFullScreen
     if (showPlayerFullScreen) {
-        playerViewModel.onViewScreen()
+        episode?.let {
+            playerViewModel.onViewScreen(episode)
+        }
     }
 
     AnimatedVisibility(
@@ -76,7 +79,7 @@ fun PodcastPlayerBody(
     episode: Episode,
     backDispatcher: OnBackPressedDispatcher
 ) {
-    val podcastPlayer = ViewModelProvider.playerViewModel
+    val playerViewModel = ViewModelProvider.playerViewModel
     val swipeableState = rememberSwipeableState(0)
     val endAnchor = LocalConfiguration.current.screenHeightDp * LocalDensity.current.density
     val anchors = mapOf(
@@ -87,7 +90,7 @@ fun PodcastPlayerBody(
     val backCallback = remember {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                podcastPlayer.showPlayerFullScreen = false
+                playerViewModel.showPlayerFullScreen = false
             }
         }
     }
@@ -100,7 +103,7 @@ fun PodcastPlayerBody(
     val imageRequest = ImageRequest.Builder(LocalContext.current)
         .data(episode.imageUrl)
         .target {
-            podcastPlayer.calculateColorPalette(it) { color ->
+            playerViewModel.calculateColorPalette(it) { color ->
                 gradientColor = color
             }
         }
@@ -108,14 +111,15 @@ fun PodcastPlayerBody(
 
     val imagePainter = rememberCoilPainter(request = imageRequest)
 
+    val isPlaying = playerViewModel.podcastIsPlaying
     val iconResId =
-        if (podcastPlayer.podcastIsPlaying) R.drawable.ic_baseline_pause_24 else R.drawable.ic_baseline_play_arrow_24
+        if (isPlaying) R.drawable.ic_baseline_pause_24 else R.drawable.ic_baseline_play_arrow_24
 
     var sliderIsChanging by remember { mutableStateOf(false) }
 
     var localSliderValue by remember { mutableStateOf(0f) }
 
-    val sliderProgress = if (sliderIsChanging) localSliderValue else podcastPlayer.currentEpisodeProgress
+    val sliderProgress = if (sliderIsChanging) localSliderValue else playerViewModel.currentEpisodeProgress
 
     Box(
         modifier = Modifier
@@ -129,7 +133,7 @@ fun PodcastPlayerBody(
     ) {
         if (swipeableState.currentValue >= 1) {
             LaunchedEffect("key") {
-                podcastPlayer.showPlayerFullScreen = false
+                playerViewModel.showPlayerFullScreen = false
             }
         }
 
@@ -140,32 +144,33 @@ fun PodcastPlayerBody(
             yOffset = swipeableState.offset.value.roundToInt(),
             playPauseIcon = iconResId,
             playbackProgress = sliderProgress,
-            currentTime = podcastPlayer.currentPlaybackFormattedPosition,
-            totalTime = podcastPlayer.currentEpisodeFormattedDuration,
+            currentTime = playerViewModel.currentPlaybackFormattedPosition,
+            totalTime = playerViewModel.currentEpisodeFormattedDuration,
             onRewind = {
-                podcastPlayer.rewind()
+                playerViewModel.rewind()
             },
             onForward = {
-                podcastPlayer.fastForward()
+                playerViewModel.fastForward()
             },
             onTooglePlayback = {
-                podcastPlayer.togglePlaybackState()
+                playerViewModel.onPlayPauseClicked(episode, isPlaying.toPlayPause())
+                playerViewModel.togglePlaybackState()
             },
             onSliderChange = { newPosition ->
                 localSliderValue = newPosition
                 sliderIsChanging = true
             },
             onSliderChangeFinished = {
-                podcastPlayer.seekToFraction(localSliderValue)
+                playerViewModel.seekToFraction(localSliderValue)
                 sliderIsChanging = false
             }
         ) {
-            podcastPlayer.showPlayerFullScreen = false
+            playerViewModel.showPlayerFullScreen = false
         }
     }
 
     LaunchedEffect("playbackPosition") {
-        podcastPlayer.updateCurrentPlaybackPosition()
+        playerViewModel.updateCurrentPlaybackPosition()
     }
 
     DisposableEffect(backDispatcher) {
@@ -173,7 +178,7 @@ fun PodcastPlayerBody(
 
         onDispose {
             backCallback.remove()
-            podcastPlayer.showPlayerFullScreen = false
+            playerViewModel.showPlayerFullScreen = false
         }
     }
 }

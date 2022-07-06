@@ -79,7 +79,7 @@ fun HomeScreen() {
                                         episode = episode,
                                         modifier = Modifier.padding(bottom = 16.dp)
                                     ) {
-                                        homeViewModel.onEpisodeClicked(episode.id)
+                                        homeViewModel.onEpisodeClicked(episode.id, episode.title)
                                         openDetail(navController, episode)
                                     }
                                 }

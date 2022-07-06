@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.main.DetailTrackerEvent.ClickPlayPause
-import soy.gabimoreno.data.tracker.main.DetailTrackerEvent.ViewScreen
+import soy.gabimoreno.data.tracker.domain.PLAY_PAUSE
+import soy.gabimoreno.data.tracker.domain.PlayPause
+import soy.gabimoreno.data.tracker.main.DetailTrackerEvent.*
+import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.Episode
 import javax.inject.Inject
 
@@ -17,18 +19,29 @@ class DetailViewModel @Inject constructor(
     private val tracker: Tracker
 ) : ViewModel() {
 
-    fun onViewScreen() {
-        tracker.trackEvent(ViewScreen(mapOf()))
+    fun onViewScreen(episode: Episode) {
+        tracker.trackEvent(ViewScreen(episode.toMap()))
     }
 
-    fun onPlayPauseClicked() {
-        tracker.trackEvent(ClickPlayPause(mapOf()))
+    fun onPlayPauseClicked(
+        episode: Episode,
+        playPause: PlayPause
+    ) {
+        tracker.trackEvent(
+            ClickPlayPause(
+                episode.toMap() +
+                    mapOf(
+                        PLAY_PAUSE to playPause.toString()
+                    )
+            )
+        )
     }
 
-    fun sharePodcastEpisode(
+    fun onShareClicked(
         context: Context,
         episode: Episode
     ) {
+        tracker.trackEvent(ClickShare(episode.toMap()))
         val text = context.getString(
             R.string.share_podcast_content,
             episode.title,
@@ -45,10 +58,11 @@ class DetailViewModel @Inject constructor(
         context.startActivity(shareIntent)
     }
 
-    fun openListenNotesURL(
+    fun onInfoClicked(
         context: Context,
         episode: Episode
     ) {
+        tracker.trackEvent(ClickInfo(episode.toMap()))
         val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(episode.url))
         context.startActivity(webIntent)
     }

@@ -18,7 +18,7 @@ import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 @ExperimentalCoroutinesApi
 class HomeViewModelTest {
 
-    private val podcastRepository: PodcastRepository = mockk()
+    private val podcastRepository: PodcastRepository = relaxedMockk()
     private val tracker: Tracker = mockk()
     private val getAppVersionNameUseCase: GetAppVersionNameUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()

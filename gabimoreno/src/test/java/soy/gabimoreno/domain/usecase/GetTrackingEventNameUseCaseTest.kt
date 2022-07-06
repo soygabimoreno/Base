@@ -16,7 +16,7 @@ class GetTrackingEventNameUseCaseTest {
 
     @Test
     fun `GIVEN TrackerEvent WHEN invoke THEN get the expected text`() {
-        val trackerEvent = HomeTrackerEvent.ViewScreen(mapOf())
+        val trackerEvent = HomeTrackerEvent.ViewScreen
 
         val result = useCase(trackerEvent)
 
