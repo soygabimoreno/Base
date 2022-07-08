@@ -30,7 +30,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.Theme_GabiMoreno)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             GabiMorenoApp(
