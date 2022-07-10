@@ -41,6 +41,7 @@ import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.Podcast
+import soy.gabimoreno.framework.calculatePaletteColor
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.ui.EmphasisText
 import soy.gabimoreno.presentation.ui.PreviewContent
@@ -103,7 +104,7 @@ fun PodcastPlayerBody(
     val imageRequest = ImageRequest.Builder(LocalContext.current)
         .data(episode.imageUrl)
         .target {
-            playerViewModel.calculateColorPalette(it) { color ->
+            calculatePaletteColor(it) { color ->
                 gradientColor = color
             }
         }
@@ -153,7 +154,7 @@ fun PodcastPlayerBody(
                 playerViewModel.fastForward()
             },
             onTooglePlayback = {
-                playerViewModel.onPlayPauseClicked(episode, isPlaying.toPlayPause())
+                playerViewModel.onPlayPauseClickedFromPlayer(episode, isPlaying.toPlayPause())
                 playerViewModel.togglePlaybackState()
             },
             onSliderChange = { newPosition ->
