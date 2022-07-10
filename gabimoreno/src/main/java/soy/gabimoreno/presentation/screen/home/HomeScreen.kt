@@ -2,15 +2,22 @@ package soy.gabimoreno.presentation.screen.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -27,6 +34,7 @@ import soy.gabimoreno.presentation.screen.home.view.LoadingPlaceholder
 import soy.gabimoreno.presentation.ui.PreviewContent
 import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 import soy.gabimoreno.util.Resource
+import java.util.*
 
 @Composable
 fun HomeScreen() {
@@ -39,12 +47,24 @@ fun HomeScreen() {
         homeViewModel.onViewScreen()
     }
 
+    val searchTextState = remember { mutableStateOf(TextFieldValue("")) }
+
     Surface {
         Column {
             Text(
                 homeViewModel.appVersionName, modifier = Modifier
                     .statusBarsPadding()
                     .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
+            )
+            TextField(
+                value = searchTextState.value,
+                onValueChange = { value ->
+                    searchTextState.value = value
+                },
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
             )
             LazyColumn(state = scrollState) {
                 item {
@@ -74,7 +94,18 @@ fun HomeScreen() {
                                 spacing = 16.dp,
                                 modifier = Modifier.padding(horizontal = 16.dp)
                             ) {
-                                podcastSearch.data.results.forEach { episode ->
+                                val searchText = searchTextState.value.text
+                                val episodes = podcastSearch.data.results
+                                val filteredEpisodes = if (searchText.isBlank()) {
+                                    episodes
+                                } else {
+                                    episodes.filter { episode ->
+                                        val lowerCaseTitle = episode.title.lowercase(Locale.US)
+                                        val lowerSearchText = searchText.lowercase(Locale.US)
+                                        lowerCaseTitle.contains(lowerSearchText)
+                                    }
+                                }
+                                filteredEpisodes.forEach { episode ->
                                     EpisodeView(
                                         episode = episode,
                                         modifier = Modifier.padding(bottom = 16.dp)
