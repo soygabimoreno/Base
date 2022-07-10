@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.navigationBarsPadding
 import soy.gabimoreno.R
+import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
@@ -56,7 +57,7 @@ fun AudioBottomBar(
 @Composable
 fun AudioBottomBarContent(episode: Episode) {
     val swipeableState = rememberSwipeableState(0)
-    val podcastPlayer = ViewModelProvider.playerViewModel
+    val playerViewModel = ViewModelProvider.playerViewModel
 
     val endAnchor = LocalConfiguration.current.screenWidthDp * LocalDensity.current.density
     val anchors = mapOf(
@@ -64,8 +65,9 @@ fun AudioBottomBarContent(episode: Episode) {
         endAnchor to 1
     )
 
+    val isPlaying = playerViewModel.podcastIsPlaying
     val iconResId =
-        if (podcastPlayer.podcastIsPlaying) R.drawable.ic_baseline_pause_24 else R.drawable.ic_baseline_play_arrow_24
+        if (isPlaying) R.drawable.ic_baseline_pause_24 else R.drawable.ic_baseline_play_arrow_24
 
     Box(
         modifier = Modifier
@@ -79,7 +81,8 @@ fun AudioBottomBarContent(episode: Episode) {
     ) {
         if (swipeableState.currentValue >= 1) {
             LaunchedEffect("key") {
-                podcastPlayer.stopPlayback()
+                playerViewModel.onAudioBottomBarSwiped()
+                playerViewModel.stopPlayback()
             }
         }
 
@@ -88,10 +91,11 @@ fun AudioBottomBarContent(episode: Episode) {
             xOffset = swipeableState.offset.value.roundToInt(),
             icon = iconResId,
             onTooglePlaybackState = {
-                podcastPlayer.togglePlaybackState()
+                playerViewModel.onPlayPauseClickedFromAudioBottomBar(episode, isPlaying.toPlayPause())
+                playerViewModel.togglePlaybackState()
             }
         ) {
-            podcastPlayer.showPlayerFullScreen = true
+            playerViewModel.showPlayerFullScreen = true
         }
     }
 }

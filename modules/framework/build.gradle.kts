@@ -41,6 +41,9 @@ dependencies {
     implementation("com.google.dagger:hilt-android:${rootProject.extra["version_hilt"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")
 
+    implementation("androidx.compose.ui:ui:${rootProject.extra["version_compose"]}")
+    implementation("androidx.palette:palette-ktx:1.0.0")
+
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.amshove.kluent:kluent-android:1.68")
     testImplementation("io.mockk:mockk:1.12.4")

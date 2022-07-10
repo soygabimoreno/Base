@@ -90,8 +90,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:${rootProject.extra["version_accompanist"]}")
     implementation("com.google.accompanist:accompanist-coil:${rootProject.extra["version_accompanist"]}")
 
-    implementation("androidx.palette:palette-ktx:1.0.0")
-
     implementation("io.arrow-kt:arrow-core:1.0.1")
 
     testImplementation("junit:junit:4.13.2")

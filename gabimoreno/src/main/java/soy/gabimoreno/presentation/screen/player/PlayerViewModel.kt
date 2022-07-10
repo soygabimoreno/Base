@@ -1,15 +1,10 @@
 package soy.gabimoreno.presentation.screen.player
 
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import androidx.palette.graphics.Palette
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import soy.gabimoreno.data.tracker.Tracker
@@ -33,6 +28,8 @@ class PlayerViewModel @Inject constructor(
     private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
     private val tracker: Tracker
 ) : ViewModel() {
+
+    private val playbackState = mediaPlayerServiceConnection.playbackState
 
     val currentPlayingEpisode = mediaPlayerServiceConnection.currentPlayingEpisode
 
@@ -62,8 +59,6 @@ class PlayerViewModel @Inject constructor(
             KLog.d("currentEpisodeDuration: $currentEpisodeDuration, ${formatLong(currentEpisodeDuration)}")
             formatLong(currentEpisodeDuration)
         }
-
-    private val playbackState = mediaPlayerServiceConnection.playbackState
 
     private val currentEpisodeDuration: Long
         get() = MediaPlayerService.currentDuration
@@ -97,40 +92,39 @@ class PlayerViewModel @Inject constructor(
 
     fun togglePlaybackState() {
         when {
-            playbackState.value?.isPlaying == true -> {
-                mediaPlayerServiceConnection.transportControls.pause()
-            }
-            playbackState.value?.isPlayEnabled == true -> {
-                mediaPlayerServiceConnection.transportControls.play()
-            }
+            playbackState.value?.isPlaying == true -> onPause()
+            playbackState.value?.isPlayEnabled == true -> onPlay()
         }
     }
 
-    fun onPlayPauseClicked(
+    fun onPlayPauseClickedFromPlayer(
         episode: Episode,
         playPause: PlayPause
     ) {
         val parameters = episode.toMap()
         when (playPause) {
-            PlayPause.PLAY -> tracker.trackEvent(PlayerTrackerEvent.ClickPlay(parameters))
-            PlayPause.PAUSE -> tracker.trackEvent(PlayerTrackerEvent.ClickPause(parameters))
+            PlayPause.PLAY -> tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromPlayer(parameters))
+            PlayPause.PAUSE -> tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromPlayer(parameters))
         }
+    }
+
+    fun onPlayPauseClickedFromAudioBottomBar(
+        episode: Episode,
+        playPause: PlayPause
+    ) {
+        val parameters = episode.toMap()
+        when (playPause) {
+            PlayPause.PLAY -> tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromAudioBottomBar(parameters))
+            PlayPause.PAUSE -> tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromAudioBottomBar(parameters))
+        }
+    }
+
+    fun onAudioBottomBarSwiped() {
+        tracker.trackEvent(PlayerTrackerEvent.Stop(getParameters()))
     }
 
     fun stopPlayback() {
         mediaPlayerServiceConnection.transportControls.stop()
-    }
-
-    fun calculateColorPalette(
-        drawable: Drawable,
-        onFinished: (Color) -> Unit
-    ) {
-        val bitmap = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
-        Palette.from(bitmap).generate { palette ->
-            palette?.darkVibrantSwatch?.rgb?.let { colorValue ->
-                onFinished(Color(colorValue))
-            }
-        }
     }
 
     fun fastForward() {
