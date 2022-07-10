@@ -148,10 +148,10 @@ fun PodcastPlayerBody(
             currentTime = playerViewModel.currentPlaybackFormattedPosition,
             totalTime = playerViewModel.currentEpisodeFormattedDuration,
             onRewind = {
-                playerViewModel.rewind()
+                playerViewModel.clickRewind()
             },
             onForward = {
-                playerViewModel.fastForward()
+                playerViewModel.clickFastForward()
             },
             onTooglePlayback = {
                 playerViewModel.onPlayPauseClickedFromPlayer(episode, isPlaying.toPlayPause())
@@ -162,6 +162,7 @@ fun PodcastPlayerBody(
                 sliderIsChanging = true
             },
             onSliderChangeFinished = {
+                playerViewModel.onSliderChangeFinished(localSliderValue)
                 playerViewModel.seekToFraction(localSliderValue)
                 sliderIsChanging = false
             }

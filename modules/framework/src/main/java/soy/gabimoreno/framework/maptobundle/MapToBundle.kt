@@ -1,4 +1,4 @@
-package soy.gabimoreno.framework
+package soy.gabimoreno.framework.maptobundle
 
 import android.os.Bundle
 
