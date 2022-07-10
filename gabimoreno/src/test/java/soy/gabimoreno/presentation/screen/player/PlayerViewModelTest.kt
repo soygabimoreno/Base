@@ -71,8 +71,8 @@ class PlayerViewModelTest {
 
         viewModel.onPlayPauseClickedFromPlayer(episode, playPause)
 
-        val map = episode.toMap()
-        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromPlayer(map)) }
+        val parameters = episode.toMap()
+        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromPlayer(parameters)) }
     }
 
     @Test
@@ -82,8 +82,8 @@ class PlayerViewModelTest {
 
         viewModel.onPlayPauseClickedFromPlayer(episode, playPause)
 
-        val map = episode.toMap()
-        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromPlayer(map)) }
+        val parameters = episode.toMap()
+        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromPlayer(parameters)) }
     }
 
     @Test
@@ -93,8 +93,8 @@ class PlayerViewModelTest {
 
         viewModel.onPlayPauseClickedFromAudioBottomBar(episode, playPause)
 
-        val map = episode.toMap()
-        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromAudioBottomBar(map)) }
+        val parameters = episode.toMap()
+        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromAudioBottomBar(parameters)) }
     }
 
     @Test
@@ -104,8 +104,8 @@ class PlayerViewModelTest {
 
         viewModel.onPlayPauseClickedFromAudioBottomBar(episode, playPause)
 
-        val map = episode.toMap()
-        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromAudioBottomBar(map)) }
+        val parameters = episode.toMap()
+        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromAudioBottomBar(parameters)) }
     }
 
     @Test
@@ -121,7 +121,54 @@ class PlayerViewModelTest {
 
         viewModel.onAudioBottomBarSwiped()
 
-        val map = currentPlayingEpisode.toMap()
-        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.Stop(map)) }
+        val parameters = currentPlayingEpisode.toMap()
+        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.Stop(parameters)) }
+    }
+
+    @Test
+    fun `WHEN clickFastForward THEN track the corresponding event`() {
+        val currentPlayingEpisode = buildEpisode()
+        every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
+
+        viewModel.clickFastForward()
+
+        val parameters = currentPlayingEpisode.toMap()
+        verifyOnce {
+            mediaPlayerServiceConnection.fastForward()
+            tracker.trackEvent(PlayerTrackerEvent.ClickFastForward(parameters))
+        }
+    }
+
+    @Test
+    fun `WHEN clickRewind THEN track the corresponding event`() {
+        val currentPlayingEpisode = buildEpisode()
+        every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
+
+        viewModel.clickRewind()
+
+        val parameters = currentPlayingEpisode.toMap()
+        verifyOnce {
+            mediaPlayerServiceConnection.rewind()
+            tracker.trackEvent(PlayerTrackerEvent.ClickRewind(parameters))
+        }
+    }
+
+    @Test
+    fun `WHEN onSliderChangeFinished THEN track the corresponding event`() {
+
+        // TODO
+//        val currentPlayingEpisode = buildEpisode()
+//        every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
+//
+//        mockkStatic(MediaPlayerService::class)
+//        every { MediaPlayerService.currentDuration } returns 0L
+//        val localSliderValue = 0f
+//
+//        viewModel.onSliderChangeFinished(localSliderValue)
+//
+//        val parameters = currentPlayingEpisode.toMap() + mapOf(
+//            EPISODE_PLAYBACK_POSITION to "0"
+//        )
+//        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.SeekTo(parameters)) }
     }
 }

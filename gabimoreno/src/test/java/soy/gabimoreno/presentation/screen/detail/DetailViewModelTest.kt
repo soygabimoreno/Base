@@ -58,8 +58,8 @@ class DetailViewModelTest {
 
         viewModel.onPlayPauseClicked(episode, playPause)
 
-        val map = episode.toMap()
-        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPlay(map)) }
+        val parameters = episode.toMap()
+        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPlay(parameters)) }
     }
 
     @Test
@@ -69,8 +69,8 @@ class DetailViewModelTest {
 
         viewModel.onPlayPauseClicked(episode, playPause)
 
-        val map = episode.toMap()
-        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPause(map)) }
+        val parameters = episode.toMap()
+        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPause(parameters)) }
     }
 
     @Test

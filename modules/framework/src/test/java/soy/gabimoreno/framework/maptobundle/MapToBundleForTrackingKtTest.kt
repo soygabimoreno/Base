@@ -1,4 +1,4 @@
-package soy.gabimoreno.framework
+package soy.gabimoreno.framework.maptobundle
 
 import android.os.Bundle
 import org.amshove.kluent.shouldBeEqualTo
@@ -7,10 +7,10 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class MapToBundleKtTest {
+class MapToBundleForTrackingKtTest {
 
     @Test
-    fun `GIVEN a map WHEN call THEN get the expected bundle`() {
+    fun `GIVEN a map WHEN mapToBundleForTracking THEN get the expected bundle`() {
         val key1 = "key1"
         val key2 = "key2"
         val key3 = "key3"
@@ -31,14 +31,14 @@ class MapToBundleKtTest {
             key5 to value5
         )
 
-        val result = map.mapToBundle()
+        val result = map.mapToBundleForTracking()
 
         val bundle = Bundle().apply {
-            putInt(key1, value1)
+            putString(key1, value1.toString())
             putString(key2, value2)
-            putDouble(key3, value3)
-            putFloat(key4, value4)
-            putBoolean(key5, value5)
+            putString(key3, value3.toString())
+            putString(key4, value4.toString())
+            putString(key5, value5.toString())
         }
 
         result[key1] shouldBeEqualTo bundle[key1]

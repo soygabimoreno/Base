@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.EPISODE_PLAYBACK_POSITION
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
@@ -127,22 +128,33 @@ class PlayerViewModel @Inject constructor(
         mediaPlayerServiceConnection.transportControls.stop()
     }
 
-    fun fastForward() {
+    fun clickFastForward() {
+        tracker.trackEvent(PlayerTrackerEvent.ClickFastForward(getParameters()))
         mediaPlayerServiceConnection.fastForward()
     }
 
-    fun rewind() {
+    fun clickRewind() {
+        tracker.trackEvent(PlayerTrackerEvent.ClickRewind(getParameters()))
         mediaPlayerServiceConnection.rewind()
     }
 
     /**
-     * @param value 0.0 to 1.0
+     * @param value from 0.0 to 1.0
      */
-    fun seekToFraction(value: Float) {
-        mediaPlayerServiceConnection.transportControls.seekTo(
-            (currentEpisodeDuration * value).toLong()
+    fun onSliderChangeFinished(value: Float) {
+        val playbackPosition = getPlaybackPosition(value)
+        val parameters = getParameters() + mapOf(
+            EPISODE_PLAYBACK_POSITION to formatLong(playbackPosition)
         )
+        tracker.trackEvent(PlayerTrackerEvent.SeekTo(parameters))
     }
+
+    fun seekToFraction(value: Float) {
+        val playbackPosition = getPlaybackPosition(value)
+        mediaPlayerServiceConnection.transportControls.seekTo(playbackPosition)
+    }
+
+    private fun getPlaybackPosition(value: Float) = (currentEpisodeDuration * value).toLong()
 
     suspend fun updateCurrentPlaybackPosition() {
         val currentPosition = playbackState.value?.currentPosition
