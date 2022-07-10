@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -34,6 +33,7 @@ import soy.gabimoreno.R
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
+import soy.gabimoreno.presentation.theme.PurpleLight
 import kotlin.math.roundToInt
 
 @Composable
@@ -107,7 +107,7 @@ fun AudioBottomBarStatelessContent(
     Box(
         modifier = Modifier
             .offset { IntOffset(xOffset, 0) }
-            .background(Color(0xFF343434))
+            .background(PurpleLight)
             .navigationBarsPadding()
             .height(64.dp)
             .fillMaxWidth()
