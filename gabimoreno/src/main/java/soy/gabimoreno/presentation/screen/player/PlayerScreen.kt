@@ -251,7 +251,8 @@ fun PodcastPlayerStatelessContent(
                                 painter = imagePainter,
                                 contentDescription = stringResource(R.string.podcast_thumbnail),
                                 contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier
+                                    .fillMaxSize()
                             )
                         }
 
@@ -303,7 +304,7 @@ fun PodcastPlayerStatelessContent(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp),
+                                .padding(top = 8.dp, bottom = 32.dp),
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_baseline_replay_10_24),

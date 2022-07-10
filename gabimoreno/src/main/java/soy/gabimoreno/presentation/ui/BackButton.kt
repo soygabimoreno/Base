@@ -21,11 +21,11 @@ fun BackButton() {
         Icons.Default.ArrowBack,
         contentDescription = stringResource(R.string.back),
         modifier = Modifier
-            .padding(top = 8.dp)
+            .padding(top = 8.dp, start = 8.dp)
             .clip(CircleShape)
             .clickable {
                 navController.navigateUp()
             }
-            .padding(16.dp)
+            .padding(8.dp)
     )
 }
