@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.domain.PLAY_PAUSE
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
@@ -29,14 +28,11 @@ class DetailViewModel @Inject constructor(
         episode: Episode,
         playPause: PlayPause
     ) {
-        tracker.trackEvent(
-            DetailTrackerEvent.ClickPlayPause(
-                episode.toMap() +
-                    mapOf(
-                        PLAY_PAUSE to playPause.toString()
-                    )
-            )
-        )
+        val parameters = episode.toMap()
+        when (playPause) {
+            PlayPause.PLAY -> tracker.trackEvent(DetailTrackerEvent.ClickPlay(parameters))
+            PlayPause.PAUSE -> tracker.trackEvent(DetailTrackerEvent.ClickPause(parameters))
+        }
     }
 
     fun onShareClicked(

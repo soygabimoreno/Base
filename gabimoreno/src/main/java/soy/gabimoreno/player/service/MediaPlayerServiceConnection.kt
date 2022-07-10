@@ -10,8 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.player.exoplayer.PodcastMediaSource
 import soy.gabimoreno.player.extension.currentPosition
+import javax.inject.Inject
 
-class MediaPlayerServiceConnection(
+class MediaPlayerServiceConnection @Inject constructor(
     context: Context,
     private val mediaSource: PodcastMediaSource,
 ) {
