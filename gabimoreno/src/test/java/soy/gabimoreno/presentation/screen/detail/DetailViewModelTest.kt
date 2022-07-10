@@ -1,12 +1,16 @@
 package soy.gabimoreno.presentation.screen.detail
 
 import android.content.Context
+import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.R
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.EPISODE_ID
+import soy.gabimoreno.data.tracker.domain.EPISODE_TITLE
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
@@ -36,14 +40,15 @@ class DetailViewModelTest {
 
         viewModel.onViewScreen(episode)
 
-        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ViewScreen(episode.toMap())) }
-
-        // TODO: Do this with slots
-//        val slot = slot<Map<String, String>>()
-//        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ViewScreen(capture(slot))) }
-//        val captured = slot.captured
-//        captured[EPISODE_ID] shouldBe episode.id
-//        captured[EPISODE_TITLE] shouldBe episode.title
+        verifyOnce {
+            tracker.trackEvent(
+                withArg { event ->
+                    event shouldBeInstanceOf DetailTrackerEvent.ViewScreen::class.java
+                    event.parameters[EPISODE_ID] shouldBe episode.id
+                    event.parameters[EPISODE_TITLE] shouldBe episode.title
+                }
+            )
+        }
     }
 
     @Test
