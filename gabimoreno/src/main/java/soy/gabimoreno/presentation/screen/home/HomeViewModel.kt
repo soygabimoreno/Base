@@ -11,8 +11,7 @@ import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.EPISODE_ID
 import soy.gabimoreno.data.tracker.domain.EPISODE_TITLE
-import soy.gabimoreno.data.tracker.main.HomeTrackerEvent.ClickEpisode
-import soy.gabimoreno.data.tracker.main.HomeTrackerEvent.ViewScreen
+import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.PodcastSearch
@@ -55,7 +54,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onViewScreen() {
-        tracker.trackEvent(ViewScreen)
+        tracker.trackEvent(HomeTrackerEvent.ViewScreen)
     }
 
     fun onEpisodeClicked(
@@ -63,7 +62,7 @@ class HomeViewModel @Inject constructor(
         episodeTitle: String
     ) {
         tracker.trackEvent(
-            ClickEpisode(
+            HomeTrackerEvent.ClickEpisode(
                 mapOf(
                     EPISODE_ID to episodeId,
                     EPISODE_TITLE to episodeTitle,

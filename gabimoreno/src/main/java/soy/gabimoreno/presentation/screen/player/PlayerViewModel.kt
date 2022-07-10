@@ -15,7 +15,7 @@ import kotlinx.coroutines.delay
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PLAY_PAUSE
 import soy.gabimoreno.data.tracker.domain.PlayPause
-import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent.*
+import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.framework.KLog
@@ -36,21 +36,21 @@ class PlayerViewModel @Inject constructor(
 ) : ViewModel() {
 
     fun onViewScreen(episode: Episode) {
-        tracker.trackEvent(ViewScreen(episode.toMap()))
+        tracker.trackEvent(PlayerTrackerEvent.ViewScreen(episode.toMap()))
     }
 
     private fun onPlay(episode: Episode) {
         tracker.trackEvent(
-            Play(episode.toMap())
+            PlayerTrackerEvent.Play(episode.toMap())
         )
     }
 
     private fun onPause(episode: Episode) {
-        tracker.trackEvent(Pause(episode.toMap()))
+        tracker.trackEvent(PlayerTrackerEvent.Pause(episode.toMap()))
     }
 
     private fun onPlayFromMediaId(episode: Episode) {
-        tracker.trackEvent(PlayFromMediaId(episode.toMap()))
+        tracker.trackEvent(PlayerTrackerEvent.PlayFromMediaId(episode.toMap()))
     }
 
     val currentPlayingEpisode = serviceConnection.currentPlayingEpisode
@@ -122,7 +122,7 @@ class PlayerViewModel @Inject constructor(
         playPause: PlayPause
     ) {
         tracker.trackEvent(
-            ClickPlayPause(
+            PlayerTrackerEvent.ClickPlayPause(
                 episode.toMap() +
                     mapOf(
                         PLAY_PAUSE to playPause.toString()

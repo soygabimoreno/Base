@@ -1,6 +1,5 @@
 package soy.gabimoreno.presentation.screen.home
 
-import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -12,6 +11,9 @@ import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.EPISODE_ID
+import soy.gabimoreno.data.tracker.domain.EPISODE_TITLE
+import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.domain.repository.PodcastRepository
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 
@@ -19,7 +21,7 @@ import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 class HomeViewModelTest {
 
     private val podcastRepository: PodcastRepository = relaxedMockk()
-    private val tracker: Tracker = mockk()
+    private val tracker: Tracker = relaxedMockk()
     private val getAppVersionNameUseCase: GetAppVersionNameUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: HomeViewModel
@@ -50,5 +52,30 @@ class HomeViewModelTest {
     fun `WHEN init THEN getEpisodes`() = runTest(testDispatcher) {
         viewModel.podcastSearch shouldBe soy.gabimoreno.util.Resource.Loading
         coVerifyOnce { podcastRepository.getEpisodes() }
+    }
+
+    @Test
+    fun `WHEN onViewScreen THEN track event`() {
+        viewModel.onViewScreen()
+
+        verifyOnce { tracker.trackEvent(HomeTrackerEvent.ViewScreen) }
+    }
+
+    @Test
+    fun `WHEN onEpisodeClicked THEN track event`() {
+        val episodeId = "episodeId"
+        val episodeTitle = "episodeTitle"
+        viewModel.onEpisodeClicked(episodeId, episodeTitle)
+
+        verifyOnce {
+            tracker.trackEvent(
+                HomeTrackerEvent.ClickEpisode(
+                    mapOf(
+                        EPISODE_ID to episodeId,
+                        EPISODE_TITLE to episodeTitle
+                    )
+                )
+            )
+        }
     }
 }

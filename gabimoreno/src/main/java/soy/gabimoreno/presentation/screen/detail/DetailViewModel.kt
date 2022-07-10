@@ -1,26 +1,28 @@
 package soy.gabimoreno.presentation.screen.detail
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PLAY_PAUSE
 import soy.gabimoreno.data.tracker.domain.PlayPause
-import soy.gabimoreno.data.tracker.main.DetailTrackerEvent.*
+import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.Episode
+import soy.gabimoreno.framework.intent.StartActionView
+import soy.gabimoreno.framework.intent.StartChooser
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val tracker: Tracker
+    private val tracker: Tracker,
+    private val startChooser: StartChooser,
+    private val startActionView: StartActionView
 ) : ViewModel() {
 
     fun onViewScreen(episode: Episode) {
-        tracker.trackEvent(ViewScreen(episode.toMap()))
+        tracker.trackEvent(DetailTrackerEvent.ViewScreen(episode.toMap()))
     }
 
     fun onPlayPauseClicked(
@@ -28,7 +30,7 @@ class DetailViewModel @Inject constructor(
         playPause: PlayPause
     ) {
         tracker.trackEvent(
-            ClickPlayPause(
+            DetailTrackerEvent.ClickPlayPause(
                 episode.toMap() +
                     mapOf(
                         PLAY_PAUSE to playPause.toString()
@@ -41,29 +43,20 @@ class DetailViewModel @Inject constructor(
         context: Context,
         episode: Episode
     ) {
-        tracker.trackEvent(ClickShare(episode.toMap()))
-        val text = context.getString(
-            R.string.share_podcast_content,
-            episode.title,
-            episode.url
+        tracker.trackEvent(DetailTrackerEvent.ClickShare(episode.toMap()))
+        startChooser(
+            context,
+            chooserTitleResId = R.string.share_podcast_content,
+            title = episode.title,
+            url = episode.url
         )
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TITLE, episode.title)
-            putExtra(Intent.EXTRA_TEXT, text)
-            type = "text/plain"
-        }
-
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        context.startActivity(shareIntent)
     }
 
     fun onInfoClicked(
         context: Context,
         episode: Episode
     ) {
-        tracker.trackEvent(ClickInfo(episode.toMap()))
-        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(episode.url))
-        context.startActivity(webIntent)
+        tracker.trackEvent(DetailTrackerEvent.ClickInfo(episode.toMap()))
+        startActionView(context, episode.url)
     }
 }
