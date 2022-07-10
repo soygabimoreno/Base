@@ -48,4 +48,5 @@ dependencies {
 
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("io.mockk:mockk-android:1.12.4")
 }

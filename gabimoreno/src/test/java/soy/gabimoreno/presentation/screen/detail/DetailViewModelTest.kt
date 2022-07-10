@@ -7,7 +7,6 @@ import soy.gabimoreno.R
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.domain.PLAY_PAUSE
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
@@ -54,8 +53,8 @@ class DetailViewModelTest {
 
         viewModel.onPlayPauseClicked(episode, playPause)
 
-        val map = episode.toMap() + mapOf(PLAY_PAUSE to playPause.toString())
-        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPlayPause(map)) }
+        val map = episode.toMap()
+        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPlay(map)) }
     }
 
     @Test
@@ -65,8 +64,8 @@ class DetailViewModelTest {
 
         viewModel.onPlayPauseClicked(episode, playPause)
 
-        val map = episode.toMap() + mapOf(PLAY_PAUSE to playPause.toString())
-        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPlayPause(map)) }
+        val map = episode.toMap()
+        verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPause(map)) }
     }
 
     @Test

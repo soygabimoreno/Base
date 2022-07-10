@@ -13,7 +13,6 @@ import androidx.palette.graphics.Palette
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.domain.PLAY_PAUSE
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
@@ -31,29 +30,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    private val serviceConnection: MediaPlayerServiceConnection,
+    private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
     private val tracker: Tracker
 ) : ViewModel() {
 
-    fun onViewScreen(episode: Episode) {
-        tracker.trackEvent(PlayerTrackerEvent.ViewScreen(episode.toMap()))
-    }
-
-    private fun onPlay(episode: Episode) {
-        tracker.trackEvent(
-            PlayerTrackerEvent.Play(episode.toMap())
-        )
-    }
-
-    private fun onPause(episode: Episode) {
-        tracker.trackEvent(PlayerTrackerEvent.Pause(episode.toMap()))
-    }
-
-    private fun onPlayFromMediaId(episode: Episode) {
-        tracker.trackEvent(PlayerTrackerEvent.PlayFromMediaId(episode.toMap()))
-    }
-
-    val currentPlayingEpisode = serviceConnection.currentPlayingEpisode
+    val currentPlayingEpisode = mediaPlayerServiceConnection.currentPlayingEpisode
 
     var showPlayerFullScreen by mutableStateOf(false)
 
@@ -82,37 +63,45 @@ class PlayerViewModel @Inject constructor(
             formatLong(currentEpisodeDuration)
         }
 
-    private val playbackState = serviceConnection.playbackState
+    private val playbackState = mediaPlayerServiceConnection.playbackState
 
     private val currentEpisodeDuration: Long
         get() = MediaPlayerService.currentDuration
+
+    override fun onCleared() {
+        super.onCleared()
+        mediaPlayerServiceConnection.unsubscribe(
+            MEDIA_ROOT_ID,
+            object : MediaBrowserCompat.SubscriptionCallback() {})
+    }
+
+    fun onViewScreen(episode: Episode) {
+        tracker.trackEvent(PlayerTrackerEvent.ViewScreen(episode.toMap()))
+    }
 
     fun playPauseEpisode(
         episodes: List<Episode>,
         currentEpisode: Episode
     ) {
-        serviceConnection.playPodcast(episodes)
+        mediaPlayerServiceConnection.playPodcast(episodes)
         if (currentEpisode.id == currentPlayingEpisode.value?.id) {
             if (podcastIsPlaying) {
-                onPause(currentEpisode)
-                serviceConnection.transportControls.pause()
+                onPause()
             } else {
-                onPlay(currentEpisode)
-                serviceConnection.transportControls.play()
+                onPlay()
             }
         } else {
             onPlayFromMediaId(currentEpisode)
-            serviceConnection.transportControls.playFromMediaId(currentEpisode.id, null)
         }
     }
 
     fun togglePlaybackState() {
         when {
             playbackState.value?.isPlaying == true -> {
-                serviceConnection.transportControls.pause()
+                mediaPlayerServiceConnection.transportControls.pause()
             }
             playbackState.value?.isPlayEnabled == true -> {
-                serviceConnection.transportControls.play()
+                mediaPlayerServiceConnection.transportControls.play()
             }
         }
     }
@@ -121,18 +110,15 @@ class PlayerViewModel @Inject constructor(
         episode: Episode,
         playPause: PlayPause
     ) {
-        tracker.trackEvent(
-            PlayerTrackerEvent.ClickPlayPause(
-                episode.toMap() +
-                    mapOf(
-                        PLAY_PAUSE to playPause.toString()
-                    )
-            )
-        )
+        val parameters = episode.toMap()
+        when (playPause) {
+            PlayPause.PLAY -> tracker.trackEvent(PlayerTrackerEvent.ClickPlay(parameters))
+            PlayPause.PAUSE -> tracker.trackEvent(PlayerTrackerEvent.ClickPause(parameters))
+        }
     }
 
     fun stopPlayback() {
-        serviceConnection.transportControls.stop()
+        mediaPlayerServiceConnection.transportControls.stop()
     }
 
     fun calculateColorPalette(
@@ -148,18 +134,18 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun fastForward() {
-        serviceConnection.fastForward()
+        mediaPlayerServiceConnection.fastForward()
     }
 
     fun rewind() {
-        serviceConnection.rewind()
+        mediaPlayerServiceConnection.rewind()
     }
 
     /**
      * @param value 0.0 to 1.0
      */
     fun seekToFraction(value: Float) {
-        serviceConnection.transportControls.seekTo(
+        mediaPlayerServiceConnection.transportControls.seekTo(
             (currentEpisodeDuration * value).toLong()
         )
     }
@@ -179,11 +165,24 @@ class PlayerViewModel @Inject constructor(
         return dateFormat.format(value)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        serviceConnection.unsubscribe(
-            MEDIA_ROOT_ID,
-            object : MediaBrowserCompat.SubscriptionCallback() {})
+    private fun onPlay() {
+        tracker.trackEvent(PlayerTrackerEvent.Play(getParameters()))
+        mediaPlayerServiceConnection.transportControls.play()
+    }
+
+    private fun onPause() {
+        tracker.trackEvent(PlayerTrackerEvent.Pause(getParameters()))
+        mediaPlayerServiceConnection.transportControls.pause()
+    }
+
+    private fun onPlayFromMediaId(currentEpisode: Episode) {
+        val parameters = currentEpisode.toMap()
+        tracker.trackEvent(PlayerTrackerEvent.PlayFromMediaId(parameters))
+        mediaPlayerServiceConnection.transportControls.playFromMediaId(currentEpisode.id, null)
+    }
+
+    private fun getParameters(): Map<String, String> {
+        return currentPlayingEpisode.value?.toMap() ?: mapOf()
     }
 }
 
