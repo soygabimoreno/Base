@@ -44,8 +44,9 @@ class DetailViewModelTest {
             tracker.trackEvent(
                 withArg { event ->
                     event shouldBeInstanceOf DetailTrackerEvent.ViewScreen::class.java
-                    event.parameters[EPISODE_ID] shouldBe episode.id
-                    event.parameters[EPISODE_TITLE] shouldBe episode.title
+                    val parameters = event.parameters
+                    parameters[EPISODE_ID] shouldBe episode.id
+                    parameters[EPISODE_TITLE] shouldBe episode.title
                 }
             )
         }
