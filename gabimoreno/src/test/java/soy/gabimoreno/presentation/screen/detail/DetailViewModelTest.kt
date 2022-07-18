@@ -15,22 +15,19 @@ import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.fake.buildEpisode
-import soy.gabimoreno.framework.intent.StartActionView
 import soy.gabimoreno.framework.intent.StartChooser
 
 class DetailViewModelTest {
 
     private val tracker: Tracker = relaxedMockk()
     private val startChooser: StartChooser = relaxedMockk()
-    private val startActionView: StartActionView = relaxedMockk()
     private lateinit var viewModel: DetailViewModel
 
     @Before
     fun setUp() {
         viewModel = DetailViewModel(
             tracker,
-            startChooser,
-            startActionView
+            startChooser
         )
     }
 
@@ -84,19 +81,6 @@ class DetailViewModelTest {
         verifyOnce {
             tracker.trackEvent(DetailTrackerEvent.ClickShare(episode.toMap()))
             startChooser(context, R.string.share_podcast_content, episode.title, episode.url)
-        }
-    }
-
-    @Test
-    fun `WHEN onInfoClicked THEN track the corresponding event`() {
-        val context: Context = relaxedMockk()
-        val episode = buildEpisode()
-
-        viewModel.onInfoClicked(context, episode)
-
-        verifyOnce {
-            tracker.trackEvent(DetailTrackerEvent.ClickInfo(episode.toMap()))
-            startActionView(context, episode.url)
         }
     }
 }

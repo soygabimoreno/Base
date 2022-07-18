@@ -7,7 +7,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -113,13 +112,6 @@ fun DetailScreen(
                             contentDescription = stringResource(R.string.share)
                         ) {
                             detailViewModel.onShareClicked(currentContext, episode)
-                        }
-
-                        soy.gabimoreno.presentation.ui.IconButton(
-                            imageVector = Icons.Rounded.Info,
-                            contentDescription = stringResource(R.string.source_web)
-                        ) {
-                            detailViewModel.onInfoClicked(currentContext, episode)
                         }
                     }
 
