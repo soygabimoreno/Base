@@ -9,15 +9,13 @@ import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.Episode
-import soy.gabimoreno.framework.intent.StartActionView
 import soy.gabimoreno.framework.intent.StartChooser
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val tracker: Tracker,
-    private val startChooser: StartChooser,
-    private val startActionView: StartActionView
+    private val startChooser: StartChooser
 ) : ViewModel() {
 
     fun onViewScreen(episode: Episode) {
@@ -46,13 +44,5 @@ class DetailViewModel @Inject constructor(
             title = episode.title,
             url = episode.url
         )
-    }
-
-    fun onInfoClicked(
-        context: Context,
-        episode: Episode
-    ) {
-        tracker.trackEvent(DetailTrackerEvent.ClickInfo(episode.toMap()))
-        startActionView(context, episode.url)
     }
 }

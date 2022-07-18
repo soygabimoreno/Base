@@ -11,7 +11,6 @@
     <string name="play">Play</string>
     <string name="close">Cerrar</string>
     <string name="share">Compartir</string>
-    <string name="source_web">Fuente web</string>
     <string name="replay_10_seconds">Retroceder 10 segundos</string>
     <string name="forward_10_seconds">Avanzar 10 segundos</string>
 </resources>
