@@ -24,3 +24,7 @@ fun ProvideNavHostController(content: @Composable () -> Unit) {
 private val LocalNavHostController = staticCompositionLocalOf<NavHostController> {
     error("No NavHostController provided")
 }
+
+object EpisodeNumber {
+    var value: Int? = null
+}

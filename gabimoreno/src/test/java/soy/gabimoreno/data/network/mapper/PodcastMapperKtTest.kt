@@ -20,7 +20,7 @@ class PodcastMapperKtTest {
 
         val episode = result.results[0]
         episode.id shouldBeEqualTo EPISODE_ID
-        episode.url shouldBe EPISODE_URL
+        episode.url shouldBeEqualTo EPISODE_URL
         episode.audioUrl shouldBe EPISODE_AUDIO_URL
         episode.imageUrl shouldBe EPISODE_IMAGE_URL
         episode.thumbnailUrl shouldBe EPISODE_IMAGE_URL
@@ -65,7 +65,7 @@ class PodcastMapperKtTest {
                     ItunesArticleData(
                         "author",
                         EPISODE_AUDIO_LENGTH_IN_SECONDS.toString(),
-                        "episode",
+                        EPISODE_NUMBER,
                         "episodeType",
                         "explicit",
                         EPISODE_IMAGE_URL,
@@ -96,7 +96,8 @@ class PodcastMapperKtTest {
 }
 
 private const val EPISODE_ID = "guid"
-private const val EPISODE_URL = "https://gabimoreno.soy"
+private const val EPISODE_NUMBER = "1"
+private const val EPISODE_URL = "$GABI_MORENO_WEB_BASE_URL/$EPISODE_NUMBER"
 private const val EPISODE_AUDIO_URL = "audio"
 private const val EPISODE_IMAGE_URL = "image"
 private const val EPISODE_TITLE = "title"

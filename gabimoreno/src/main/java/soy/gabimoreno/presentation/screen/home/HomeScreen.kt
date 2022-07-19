@@ -18,20 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
-import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.presentation.navigation.Destination
+import soy.gabimoreno.presentation.navigation.EpisodeNumber
 import soy.gabimoreno.presentation.navigation.Navigator
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.view.EpisodeView
 import soy.gabimoreno.presentation.screen.home.view.ErrorView
 import soy.gabimoreno.presentation.screen.home.view.LoadingPlaceholder
-import soy.gabimoreno.presentation.ui.PreviewContent
 import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 import soy.gabimoreno.util.Resource
 import java.util.*
@@ -111,8 +109,17 @@ fun HomeScreen() {
                                         modifier = Modifier.padding(bottom = 16.dp)
                                     ) {
                                         homeViewModel.onEpisodeClicked(episode.id, episode.title)
-                                        openDetail(navController, episode)
+                                        openDetail(navController, episode.id)
                                     }
+                                }
+                                // TODO: Check how to manage deep links
+                                val episodeNumber = EpisodeNumber.value
+                                if (episodeNumber != null) {
+                                    EpisodeNumber.value = null
+                                    val index = filteredEpisodes.size - episodeNumber
+                                    val episode = filteredEpisodes[index]
+                                    val episodeId = episode.id
+                                    openDetail(navController, episodeId)
                                 }
                             }
                         }
@@ -134,23 +141,8 @@ fun HomeScreen() {
 
 private fun openDetail(
     navController: NavHostController,
-    episode: Episode
+    episodeId: String
 ) {
-    navController.navigate(Destination.detail(episode.id)) { }
+    navController.navigate(Destination.detail(episodeId)) { }
 }
 
-@Composable
-@Preview(name = "Home")
-fun HomeScreenPreview() {
-    PreviewContent {
-        HomeScreen()
-    }
-}
-
-@Composable
-@Preview(name = "Home (Dark)")
-fun HomeScreenDarkPreview() {
-    PreviewContent {
-        HomeScreen()
-    }
-}
