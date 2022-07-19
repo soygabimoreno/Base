@@ -3,7 +3,7 @@
     <string name="playback_notification_channel_name">Gabi Moreno</string>
     <string name="playback_notification_channel_description">Te ayudo a CRECER en tu carrera profesional como DESARROLLADOR ANDROID. 💪🏼</string>
     <string name="unexpected_error">Ha sucedido un error. Please, inténtalo de nuevo más tarde</string>
-    <string name="share_podcast_content">Pégale una oída a esto 🎧️: %1$s %2$s</string>
+    <string name="share_podcast_content">Escucha esto️: %1$s %2$s</string>
     <string name="try_again">Prueba de nuevo</string>
     <string name="podcast_thumbnail">Carátula del episodio</string>
     <string name="back">Atrás</string>

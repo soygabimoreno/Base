@@ -35,7 +35,7 @@ fun Article.toDomain(
         val imageUrl = itunesArticleData?.image ?: ""
         Episode(
             id = guid!!.replace(IVOOX_URL, ""),
-            url = "https://gabimoreno.soy", // TODO: Get the proper Deep Link
+            url = "$GABI_MORENO_WEB_BASE_URL/${itunesArticleData?.episode ?: ""}", // TODO: When episode is null get it from title "1. REG..."
             audioUrl = audio!!,
             imageUrl = imageUrl,
             podcast = Podcast(
@@ -60,3 +60,4 @@ internal const val ANCHOR_MESSAGE =
         "\n" +
         "Send in a voice message: https://anchor.fm/losandroides/message"
 internal const val IVOOX_URL = "https://www.ivoox.com/"
+internal const val GABI_MORENO_WEB_BASE_URL = "https://gabimoreno.soy"
