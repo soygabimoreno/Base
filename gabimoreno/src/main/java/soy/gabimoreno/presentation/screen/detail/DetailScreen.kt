@@ -109,7 +109,8 @@ fun DetailScreen(
 
                         soy.gabimoreno.presentation.ui.IconButton(
                             imageVector = Icons.Rounded.Share,
-                            contentDescription = stringResource(R.string.share)
+                            contentDescription = stringResource(R.string.share),
+                            padding = 16.dp
                         ) {
                             detailViewModel.onShareClicked(currentContext, episode)
                         }
