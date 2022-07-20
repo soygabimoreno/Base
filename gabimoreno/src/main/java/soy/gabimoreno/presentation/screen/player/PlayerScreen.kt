@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.ProgressIndicatorDefaults.IndicatorBackgroundOpacity
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +41,7 @@ import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.framework.calculatePaletteColor
 import soy.gabimoreno.presentation.screen.ViewModelProvider
+import soy.gabimoreno.presentation.ui.ArrowDownButton
 import soy.gabimoreno.presentation.ui.EmphasisText
 import soy.gabimoreno.presentation.ui.PreviewContent
 import kotlin.math.roundToInt
@@ -230,21 +229,16 @@ fun PodcastPlayerStatelessContent(
                     .systemBarsPadding()
             ) {
                 Column {
-                    soy.gabimoreno.presentation.ui.IconButton(
-                        imageVector = Icons.Rounded.KeyboardArrowDown,
-                        contentDescription = stringResource(R.string.close),
-                        onClick = onClose
-                    )
-
+                    ArrowDownButton(onClick = onClose)
                     Column(
                         modifier = Modifier.padding(horizontal = 24.dp)
                     ) {
-
                         Box(
                             modifier = Modifier
                                 .padding(vertical = 32.dp)
                                 .clip(MaterialTheme.shapes.medium)
                                 .weight(1f, fill = false)
+                                .align(Alignment.CenterHorizontally)
                                 .aspectRatio(1f)
                                 .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f))
                         ) {
@@ -261,7 +255,7 @@ fun PodcastPlayerStatelessContent(
                             episode.title,
                             style = MaterialTheme.typography.h5,
                             color = MaterialTheme.colors.onBackground,
-                            maxLines = 1,
+                            maxLines = 3,
                             overflow = TextOverflow.Ellipsis,
                         )
 
