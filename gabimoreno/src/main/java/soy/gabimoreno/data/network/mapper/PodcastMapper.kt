@@ -35,7 +35,7 @@ fun Article.toDomain(
         val imageUrl = itunesArticleData?.image ?: ""
         Episode(
             id = guid!!.replace(IVOOX_URL, ""),
-            url = "$GABI_MORENO_WEB_BASE_URL/${itunesArticleData?.episode ?: ""}", // TODO: When episode is null get it from title "1. REG..."
+            url = getEpisodeUrl(),
             audioUrl = audio!!,
             imageUrl = imageUrl,
             podcast = Podcast(
@@ -52,6 +52,18 @@ fun Article.toDomain(
 }
 
 private fun String.removeAnchorMessage() = replace(ANCHOR_MESSAGE, "")
+
+private fun Article.getEpisodeUrl(): String {
+    val episodeNumber = if (itunesArticleData != null && itunesArticleData?.episode != null) {
+        itunesArticleData?.episode
+    } else {
+        title?.let { title ->
+            val index = title.indexOfFirst { it == '.' }
+            title.substring(0, index)
+        } ?: ""
+    }
+    return "$GABI_MORENO_WEB_BASE_URL/$episodeNumber"
+}
 
 internal const val LOS_ANDROIDES = "Los androides"
 internal const val ANCHOR_MESSAGE =

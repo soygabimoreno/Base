@@ -128,33 +128,27 @@ class PlayerViewModel @Inject constructor(
         mediaPlayerServiceConnection.transportControls.stop()
     }
 
-    fun clickFastForward() {
-        tracker.trackEvent(PlayerTrackerEvent.ClickFastForward(getParameters()))
-        mediaPlayerServiceConnection.fastForward()
-    }
-
-    fun clickRewind() {
+    fun onRewindClicked() {
         tracker.trackEvent(PlayerTrackerEvent.ClickRewind(getParameters()))
         mediaPlayerServiceConnection.rewind()
+    }
+
+    fun onForwardClicked() {
+        tracker.trackEvent(PlayerTrackerEvent.ClickForward(getParameters()))
+        mediaPlayerServiceConnection.fastForward()
     }
 
     /**
      * @param value from 0.0 to 1.0
      */
     fun onSliderChangeFinished(value: Float) {
-        val playbackPosition = getPlaybackPosition(value)
+        val playbackPosition = (currentEpisodeDuration * value).toLong()
         val parameters = getParameters() + mapOf(
             EPISODE_PLAYBACK_POSITION to formatLong(playbackPosition)
         )
         tracker.trackEvent(PlayerTrackerEvent.SeekTo(parameters))
-    }
-
-    fun seekToFraction(value: Float) {
-        val playbackPosition = getPlaybackPosition(value)
         mediaPlayerServiceConnection.transportControls.seekTo(playbackPosition)
     }
-
-    private fun getPlaybackPosition(value: Float) = (currentEpisodeDuration * value).toLong()
 
     suspend fun updateCurrentPlaybackPosition() {
         val currentPosition = playbackState.value?.currentPosition
