@@ -130,12 +130,12 @@ class PlayerViewModelTest {
         val currentPlayingEpisode = buildEpisode()
         every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
 
-        viewModel.clickFastForward()
+        viewModel.onForwardClicked()
 
         val parameters = currentPlayingEpisode.toMap()
         verifyOnce {
             mediaPlayerServiceConnection.fastForward()
-            tracker.trackEvent(PlayerTrackerEvent.ClickFastForward(parameters))
+            tracker.trackEvent(PlayerTrackerEvent.ClickForward(parameters))
         }
     }
 
@@ -144,7 +144,7 @@ class PlayerViewModelTest {
         val currentPlayingEpisode = buildEpisode()
         every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
 
-        viewModel.clickRewind()
+        viewModel.onRewindClicked()
 
         val parameters = currentPlayingEpisode.toMap()
         verifyOnce {
