@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,6 +10,16 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            val localProperties = gradleLocalProperties(rootDir)
+            keyAlias = localProperties.getProperty("keystore.keyAlias")
+            storeFile = file(localProperties.getProperty("keystore.storeFile"))
+            storePassword = localProperties.getProperty("keystore.storePassword")
+            keyPassword = localProperties.getProperty("keystore.keyPassword")
+        }
+    }
+
     compileSdk = 32
 
     defaultConfig {
@@ -23,15 +35,51 @@ android {
         }
     }
 
+    bundle {
+        density { enableSplit = true }
+        abi { enableSplit = true }
+        language { enableSplit = false }
+    }
+
     buildTypes {
-        release {
+        debug {
+            versionNameSuffix = "-DEBUG"
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
             isMinifyEnabled = false
+            isShrinkResources = false
+            isCrunchPngs = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
+            extra["enableCrashlytics"] = false
+            extra["alwaysUpdateBuildId"] = false
+            splits {
+                abi.isEnable = false
+                density.isEnable = false
+            }
+        }
+        release {
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName(name)
         }
     }
+
+    applicationVariants.forEach { variant ->
+        if (variant.buildType.name == "debug") {
+            variant.mergedFlavor.resourceConfigurations.clear()
+            variant.mergedFlavor.resourceConfigurations.add("es")
+            variant.mergedFlavor.resourceConfigurations.add("xhdpi")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
