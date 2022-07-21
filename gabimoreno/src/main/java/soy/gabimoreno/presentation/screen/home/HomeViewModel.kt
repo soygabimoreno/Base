@@ -17,7 +17,6 @@ import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.PodcastSearch
 import soy.gabimoreno.domain.repository.PodcastRepository
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
-import soy.gabimoreno.util.Resource
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +27,7 @@ class HomeViewModel @Inject constructor(
     @IO private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    var podcastSearch by mutableStateOf<Resource<PodcastSearch>>(Resource.Loading)
+    var podcastSearch by mutableStateOf<ViewState>(ViewState.Loading)
         private set
 
     var appVersionName by mutableStateOf("")
@@ -40,14 +39,14 @@ class HomeViewModel @Inject constructor(
 
     fun searchPodcasts() {
         viewModelScope.launch(dispatcher) {
-            podcastSearch = Resource.Loading
+            podcastSearch = ViewState.Loading
             val result = podcastRepository.getEpisodes()
             result.fold(
                 { failure ->
-                    podcastSearch = Resource.Error(failure)
+                    podcastSearch = ViewState.Error(failure)
                 },
                 { data ->
-                    podcastSearch = Resource.Success(data)
+                    podcastSearch = ViewState.Content(data)
                 }
             )
         }
@@ -73,9 +72,14 @@ class HomeViewModel @Inject constructor(
 
     fun getPodcastDetail(id: String): Episode? {
         return when (podcastSearch) {
-            is Resource.Error -> null
-            Resource.Loading -> null
-            is Resource.Success -> (podcastSearch as Resource.Success<PodcastSearch>).data.results.find { it.id == id }
+            is ViewState.Content -> (podcastSearch as ViewState.Content).data.results.find { it.id == id }
+            else -> null
         }
+    }
+
+    sealed class ViewState {
+        object Loading : ViewState()
+        data class Error(val throwable: Throwable) : ViewState()
+        data class Content(val data: PodcastSearch) : ViewState()
     }
 }

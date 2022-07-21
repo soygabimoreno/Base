@@ -21,11 +21,11 @@ import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.presentation.screen.ViewModelProvider
+import soy.gabimoreno.presentation.screen.home.HomeViewModel
 import soy.gabimoreno.presentation.ui.BackButton
 import soy.gabimoreno.presentation.ui.EmphasisText
 import soy.gabimoreno.presentation.ui.EpisodeImage
 import soy.gabimoreno.presentation.ui.PrimaryButton
-import soy.gabimoreno.util.Resource
 import soy.gabimoreno.util.formatMillisecondsAsDate
 import soy.gabimoreno.util.toDurationMinutes
 
@@ -100,7 +100,7 @@ fun DetailScreen(
                         ) {
                             detailViewModel.onPlayPauseClicked(episode, isPlaying.toPlayPause())
                             playerViewModel.playPauseEpisode(
-                                (podcastSearchViewModel.podcastSearch as Resource.Success).data.results,
+                                (podcastSearchViewModel.podcastSearch as HomeViewModel.ViewState.Content).data.results,
                                 episode
                             )
                         }
