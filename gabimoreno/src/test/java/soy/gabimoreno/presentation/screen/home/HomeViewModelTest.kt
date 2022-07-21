@@ -50,7 +50,7 @@ class HomeViewModelTest {
 
     @Test
     fun `WHEN init THEN getEpisodes`() = runTest(testDispatcher) {
-        viewModel.podcastSearch shouldBe soy.gabimoreno.util.Resource.Loading
+        viewModel.podcastSearch shouldBe HomeViewModel.ViewState.Loading
         coVerifyOnce { podcastRepository.getEpisodes() }
     }
 

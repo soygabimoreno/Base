@@ -31,7 +31,6 @@ import soy.gabimoreno.presentation.screen.home.view.EpisodeView
 import soy.gabimoreno.presentation.screen.home.view.ErrorView
 import soy.gabimoreno.presentation.screen.home.view.LoadingPlaceholder
 import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
-import soy.gabimoreno.util.Resource
 import java.util.*
 
 @Composable
@@ -73,19 +72,19 @@ fun HomeScreen() {
                 }
 
                 when (podcastSearch) {
-                    is Resource.Error -> {
+                    is HomeViewModel.ViewState.Error -> {
                         item {
                             ErrorView(text = stringResource(R.string.unexpected_error)) {
                                 homeViewModel.searchPodcasts()
                             }
                         }
                     }
-                    Resource.Loading -> {
+                    HomeViewModel.ViewState.Loading -> {
                         item {
                             LoadingPlaceholder()
                         }
                     }
-                    is Resource.Success -> {
+                    is HomeViewModel.ViewState.Content -> {
                         item {
                             StaggeredVerticalGrid(
                                 crossAxisCount = 2,
