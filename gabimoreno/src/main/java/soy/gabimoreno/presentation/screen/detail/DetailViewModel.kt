@@ -22,6 +22,10 @@ class DetailViewModel @Inject constructor(
         tracker.trackEvent(DetailTrackerEvent.ViewScreen(episode.toMap()))
     }
 
+    fun onBackClicked(episode: Episode) {
+        tracker.trackEvent(DetailTrackerEvent.ClickBack(episode.toMap()))
+    }
+
     fun onPlayPauseClicked(
         episode: Episode,
         playPause: PlayPause

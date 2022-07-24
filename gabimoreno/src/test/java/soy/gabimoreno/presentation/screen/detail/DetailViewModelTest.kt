@@ -50,6 +50,24 @@ class DetailViewModelTest {
     }
 
     @Test
+    fun `WHEN onBackClicked THEN track event`() {
+        val episode = buildEpisode()
+
+        viewModel.onBackClicked(episode)
+
+        verifyOnce {
+            tracker.trackEvent(
+                withArg { event ->
+                    event shouldBeInstanceOf DetailTrackerEvent.ClickBack::class.java
+                    val parameters = event.parameters
+                    parameters[EPISODE_ID] shouldBe episode.id
+                    parameters[EPISODE_TITLE] shouldBe episode.title
+                }
+            )
+        }
+    }
+
+    @Test
     fun `WHEN onPlayPauseClicked on play THEN track the corresponding event`() {
         val episode = buildEpisode()
         val playPause = PlayPause.PLAY

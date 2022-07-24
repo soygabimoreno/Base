@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import soy.gabimoreno.presentation.screen.detail.DetailViewModel
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
 import soy.gabimoreno.presentation.screen.player.PlayerViewModel
+import soy.gabimoreno.presentation.screen.webview.WebViewViewModel
 
 object ViewModelProvider {
     val homeViewModel: HomeViewModel
@@ -20,6 +21,10 @@ object ViewModelProvider {
     val playerViewModel: PlayerViewModel
         @Composable
         get() = LocalPlayerViewModel.current
+
+    val webViewViewModel: WebViewViewModel
+        @Composable
+        get() = LocalWebViewViewModel.current
 }
 
 @Composable
@@ -27,9 +32,11 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     val homeViewModel: HomeViewModel = viewModel()
     val detailViewModel: DetailViewModel = viewModel()
     val playerViewModel: PlayerViewModel = viewModel()
+    val webViewViewModel: WebViewViewModel = viewModel()
 
     CompositionLocalProvider(
         LocalHomeViewModel provides homeViewModel,
+        LocalWebViewViewModel provides webViewViewModel,
     ) {
         CompositionLocalProvider(
             LocalDetailViewModel provides detailViewModel,
@@ -44,13 +51,17 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
 }
 
 private val LocalHomeViewModel = staticCompositionLocalOf<HomeViewModel> {
-    error("No PodcastSearchViewModel provided")
+    error("No HomeViewModel provided")
 }
 
 private val LocalDetailViewModel = staticCompositionLocalOf<DetailViewModel> {
-    error("No PodcastDetailViewModel provided")
+    error("No DetailViewModel provided")
 }
 
 private val LocalPlayerViewModel = staticCompositionLocalOf<PlayerViewModel> {
-    error("No PodcastPlayerViewModel provided")
+    error("No PlayerViewModel provided")
+}
+
+private val LocalWebViewViewModel = staticCompositionLocalOf<WebViewViewModel> {
+    error("No WebViewViewModel provided")
 }

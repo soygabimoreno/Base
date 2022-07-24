@@ -20,6 +20,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.domain.toPlayPause
+import soy.gabimoreno.presentation.navigation.Navigator
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
 import soy.gabimoreno.presentation.ui.BackButton
@@ -39,6 +40,7 @@ fun DetailScreen(
     val playerViewModel = ViewModelProvider.playerViewModel
     val episode = podcastSearchViewModel.getPodcastDetail(podcastId)
     val currentContext = LocalContext.current
+    val navController = Navigator.current
 
     LaunchedEffect(Unit) {
         episode?.let {
@@ -52,7 +54,12 @@ fun DetailScreen(
                 .statusBarsPadding()
         ) {
             Row {
-                BackButton()
+                BackButton {
+                    episode?.let {
+                        detailViewModel.onBackClicked(episode)
+                    }
+                    navController.navigateUp()
+                }
             }
 
             if (episode != null) {

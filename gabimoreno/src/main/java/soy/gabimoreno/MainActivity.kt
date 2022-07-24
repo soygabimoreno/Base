@@ -10,19 +10,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.insets.ProvideWindowInsets
 import dagger.hilt.android.AndroidEntryPoint
-import soy.gabimoreno.presentation.navigation.Destination
-import soy.gabimoreno.presentation.navigation.EpisodeNumber
-import soy.gabimoreno.presentation.navigation.Navigator
-import soy.gabimoreno.presentation.navigation.ProvideNavHostController
+import soy.gabimoreno.presentation.navigation.*
 import soy.gabimoreno.presentation.screen.ProvideMultiViewModel
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
 import soy.gabimoreno.presentation.screen.player.PlayerScreen
+import soy.gabimoreno.presentation.screen.webview.WebViewScreen
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.ui.AudioBottomBar
 
@@ -32,7 +29,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // TODO: Check how to manage deep links
         val action: String? = intent?.action
@@ -78,7 +74,7 @@ fun GabiMorenoApp(
 //                                deepLinks = listOf(navDeepLink { uriPattern = "https://gabimoreno.soy/{id}" })
 //                            ) { backStackEntry ->
 //                                DetailScreen(
-//                                    podcastId = backStackEntry.arguments?.getString("id")!!,
+//                                    podcastId = backStackEntry.arguments?.getString("KEY_ID")!!,
 //                                )
 //                            }
 
@@ -86,7 +82,15 @@ fun GabiMorenoApp(
                                 Destination.detail
                             ) { backStackEntry ->
                                 DetailScreen(
-                                    podcastId = backStackEntry.arguments?.getString("id")!!,
+                                    podcastId = backStackEntry.arguments?.getString(KEY_ID)!!,
+                                )
+                            }
+
+                            composable(
+                                Destination.webView
+                            ) { backStackEntry ->
+                                WebViewScreen(
+                                    url = backStackEntry.arguments?.getString(KEY_URL)!!,
                                 )
                             }
                         }
