@@ -7,6 +7,7 @@ sealed class DetailTrackerEvent(
 ) : TrackerEvent {
 
     data class ViewScreen(override val parameters: Map<String, Any>) : DetailTrackerEvent()
+    data class ClickBack(override val parameters: Map<String, Any>) : DetailTrackerEvent()
     data class ClickPlay(override val parameters: Map<String, Any>) : DetailTrackerEvent()
     data class ClickPause(override val parameters: Map<String, Any>) : DetailTrackerEvent()
     data class ClickShare(override val parameters: Map<String, Any>) : DetailTrackerEvent()

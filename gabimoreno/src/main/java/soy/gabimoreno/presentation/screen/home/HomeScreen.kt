@@ -9,11 +9,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
+import kotlinx.coroutines.flow.collect
 import soy.gabimoreno.R
 import soy.gabimoreno.presentation.navigation.Destination
 import soy.gabimoreno.presentation.navigation.EpisodeNumber
@@ -39,6 +42,8 @@ fun HomeScreen() {
     val navController = Navigator.current
     val homeViewModel = ViewModelProvider.homeViewModel
     val podcastSearch = homeViewModel.podcastSearch
+
+    val webViewUrl = remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         homeViewModel.onViewScreen()
@@ -63,6 +68,12 @@ fun HomeScreen() {
                     .fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
             )
+            TextButton(
+                onClick = { homeViewModel.onShowWebViewClicked("https://gabimoreno.soy") },
+                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+            ) {
+                Text(text = stringResource(R.string.go_to_the_web))
+            }
             LazyColumn(state = scrollState) {
                 item {
                     Box(
@@ -136,6 +147,17 @@ fun HomeScreen() {
             }
         }
     }
+
+    LaunchedEffect(Unit) {
+        homeViewModel.viewEventFlow.collect { viewEvent ->
+            when (viewEvent) {
+                is HomeViewModel.ViewEvent.ShowWebView -> webViewUrl.value = viewEvent.url
+            }
+        }
+    }
+    if (webViewUrl.value.isNotBlank()) {
+        navController.navigate(Destination.webView(webViewUrl.value)) { }
+    }
 }
 
 private fun openDetail(
@@ -144,4 +166,3 @@ private fun openDetail(
 ) {
     navController.navigate(Destination.detail(episodeId)) { }
 }
-

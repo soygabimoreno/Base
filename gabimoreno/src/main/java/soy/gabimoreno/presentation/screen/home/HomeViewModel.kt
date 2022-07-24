@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.EPISODE_ID
@@ -32,6 +34,9 @@ class HomeViewModel @Inject constructor(
 
     var appVersionName by mutableStateOf("")
 
+    private val _viewEventFlow = MutableSharedFlow<ViewEvent>()
+    val viewEventFlow = _viewEventFlow.asSharedFlow()
+
     init {
         appVersionName = getAppVersionNameUseCase()
         searchPodcasts()
@@ -56,6 +61,12 @@ class HomeViewModel @Inject constructor(
         tracker.trackEvent(HomeTrackerEvent.ViewScreen)
     }
 
+    fun onShowWebViewClicked(url: String) {
+        viewModelScope.launch(dispatcher) {
+            _viewEventFlow.emit(ViewEvent.ShowWebView(url))
+        }
+    }
+
     fun onEpisodeClicked(
         episodeId: String,
         episodeTitle: String
@@ -75,6 +86,10 @@ class HomeViewModel @Inject constructor(
             is ViewState.Content -> (podcastSearch as ViewState.Content).data.results.find { it.id == id }
             else -> null
         }
+    }
+
+    sealed class ViewEvent {
+        data class ShowWebView(val url: String) : ViewEvent()
     }
 
     sealed class ViewState {
