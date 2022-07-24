@@ -78,4 +78,22 @@ class HomeViewModelTest {
             )
         }
     }
+
+    @Test
+    fun `WHEN onDeepLinkReceived THEN track event`() {
+        val episodeId = "episodeId"
+        val episodeTitle = "episodeTitle"
+        viewModel.onDeepLinkReceived(episodeId, episodeTitle)
+
+        verifyOnce {
+            tracker.trackEvent(
+                HomeTrackerEvent.ReceiveDeepLink(
+                    mapOf(
+                        EPISODE_ID to episodeId,
+                        EPISODE_TITLE to episodeTitle
+                    )
+                )
+            )
+        }
+    }
 }

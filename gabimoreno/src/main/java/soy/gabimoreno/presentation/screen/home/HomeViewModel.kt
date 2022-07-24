@@ -80,6 +80,20 @@ class HomeViewModel @Inject constructor(
         )
     }
 
+    fun onDeepLinkReceived(
+        episodeId: String,
+        episodeTitle: String
+    ) {
+        tracker.trackEvent(
+            HomeTrackerEvent.ReceiveDeepLink(
+                mapOf(
+                    EPISODE_ID to episodeId,
+                    EPISODE_TITLE to episodeTitle,
+                )
+            )
+        )
+    }
+
     fun getPodcastDetail(id: String): Episode? {
         return when (podcastSearch) {
             is ViewState.Content -> (podcastSearch as ViewState.Content).data.results.find { it.id == id }

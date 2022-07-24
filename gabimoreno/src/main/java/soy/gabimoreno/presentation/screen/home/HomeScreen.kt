@@ -18,14 +18,11 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.flow.collect
 import soy.gabimoreno.R
-import soy.gabimoreno.presentation.navigation.Destination
 import soy.gabimoreno.presentation.navigation.EpisodeNumber
-import soy.gabimoreno.presentation.navigation.Navigator
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.view.EpisodeView
 import soy.gabimoreno.presentation.screen.home.view.ErrorView
@@ -34,9 +31,12 @@ import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 import java.util.*
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onItemClicked: (episodeId: String) -> Unit,
+    onDeepLinkReceived: (episodeId: String) -> Unit,
+    onGoToWebClicked: (url: String) -> Unit
+) {
     val scrollState = rememberLazyListState()
-    val navController = Navigator.current
     val homeViewModel = ViewModelProvider.homeViewModel
     val podcastSearch = homeViewModel.podcastSearch
 
@@ -115,8 +115,9 @@ fun HomeScreen() {
                                         episode = episode,
                                         modifier = Modifier.padding(bottom = 16.dp)
                                     ) {
-                                        homeViewModel.onEpisodeClicked(episode.id, episode.title)
-                                        openDetail(navController, episode.id)
+                                        val episodeId = episode.id
+                                        homeViewModel.onEpisodeClicked(episodeId, episode.title)
+                                        onItemClicked(episodeId)
                                     }
                                 }
                                 // TODO: Check how to manage deep links
@@ -126,7 +127,8 @@ fun HomeScreen() {
                                     val index = filteredEpisodes.size - episodeNumber
                                     val episode = filteredEpisodes[index]
                                     val episodeId = episode.id
-                                    openDetail(navController, episodeId)
+                                    homeViewModel.onDeepLinkReceived(episodeId, episode.title)
+                                    onDeepLinkReceived(episodeId)
                                 }
                             }
                         }
@@ -138,7 +140,10 @@ fun HomeScreen() {
                         modifier = Modifier
                             .navigationBarsPadding()
                             .padding(bottom = 32.dp)
-                            .padding(bottom = if (ViewModelProvider.playerViewModel.currentPlayingEpisode.value != null) 64.dp else 0.dp)
+                            .padding(
+                                bottom = if (ViewModelProvider.playerViewModel.currentPlayingEpisode.value != null) 64.dp
+                                else 0.dp
+                            )
                     )
                 }
             }
@@ -153,13 +158,6 @@ fun HomeScreen() {
         }
     }
     if (webViewUrl.value.isNotBlank()) {
-        navController.navigate(Destination.webView(webViewUrl.value)) { }
+        onGoToWebClicked(webViewUrl.value)
     }
-}
-
-private fun openDetail(
-    navController: NavHostController,
-    episodeId: String
-) {
-    navController.navigate(Destination.detail(episodeId)) { }
 }

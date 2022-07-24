@@ -9,19 +9,19 @@ import androidx.navigation.compose.rememberNavController
 object Navigator {
     val current: NavHostController
         @Composable
-        get() = LocalNavHostController.current
+        get() = localNavHostController.current
 }
 
 @Composable
 fun ProvideNavHostController(content: @Composable () -> Unit) {
     val navController = rememberNavController()
     CompositionLocalProvider(
-        LocalNavHostController provides navController,
+        localNavHostController provides navController,
         content = content
     )
 }
 
-private val LocalNavHostController = staticCompositionLocalOf<NavHostController> {
+private val localNavHostController = staticCompositionLocalOf<NavHostController> {
     error("No NavHostController provided")
 }
 
