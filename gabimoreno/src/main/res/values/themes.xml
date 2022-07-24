@@ -2,10 +2,10 @@
 <resources>
 
     <style name="Theme.GabiMoreno" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/orange_700</item>
+        <item name="colorPrimary">@color/orange</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <item name="backgroundColor">@color/white</item>
+        <item name="colorSecondary">@color/green</item>
+        <item name="backgroundColor">@color/purpleDark</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 </resources>
