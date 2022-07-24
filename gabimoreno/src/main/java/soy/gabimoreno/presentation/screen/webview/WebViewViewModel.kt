@@ -19,6 +19,10 @@ class WebViewViewModel @Inject constructor(
     fun onBackClicked(url: String) {
         tracker.trackEvent(WebViewTrackerEvent.ClickBack(url.toMap()))
     }
+
+    fun onPageStarted(url: String) {
+        tracker.trackEvent(WebViewTrackerEvent.ViewPage(url.toMap()))
+    }
 }
 
 private fun String.toMap() = mapOf(

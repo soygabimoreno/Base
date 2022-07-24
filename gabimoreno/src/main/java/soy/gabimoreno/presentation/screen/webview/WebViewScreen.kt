@@ -1,13 +1,15 @@
 package soy.gabimoreno.presentation.screen.webview
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.view.ViewGroup
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -16,6 +18,7 @@ import soy.gabimoreno.presentation.navigation.Navigator
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.ui.BackButton
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewScreen(url: String) {
     val webViewViewModel = ViewModelProvider.webViewViewModel
@@ -25,6 +28,9 @@ fun WebViewScreen(url: String) {
         webViewViewModel.onViewScreen(url)
     }
 
+    var webView: WebView? = null
+    var webViewBackEnabled by remember { mutableStateOf(false) }
+
     Surface {
         Column(
             modifier = Modifier
@@ -32,8 +38,12 @@ fun WebViewScreen(url: String) {
         ) {
             Row {
                 BackButton {
-                    webViewViewModel.onBackClicked(url)
-                    navController.navigateUp()
+                    if (webViewBackEnabled) {
+                        webView?.goBack()
+                    } else {
+                        webViewViewModel.onBackClicked(url)
+                        navController.navigateUp()
+                    }
                 }
             }
             Row(
@@ -41,16 +51,30 @@ fun WebViewScreen(url: String) {
             ) {
                 AndroidView(
                     factory = {
-                        android.webkit.WebView(it).apply {
+                        WebView(it).apply {
                             layoutParams = ViewGroup.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.MATCH_PARENT
                             )
-                            webViewClient = WebViewClient()
+                            webViewClient = object : WebViewClient() {
+                                override fun onPageStarted(
+                                    webView: WebView,
+                                    url: String?,
+                                    favicon: Bitmap?
+                                ) {
+                                    url?.let {
+                                        webViewViewModel.onPageStarted(url)
+                                    }
+                                    webViewBackEnabled = webView.canGoBack()
+                                }
+                            }
+
+                            settings.javaScriptEnabled = true
                             loadUrl(url)
+                            webView = this
                         }
                     }, update = {
-                        it.loadUrl(url)
+                        webView = it
                     }
                 )
             }
