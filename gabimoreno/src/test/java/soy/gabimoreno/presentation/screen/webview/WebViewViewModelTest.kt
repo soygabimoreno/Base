@@ -53,6 +53,22 @@ class WebViewViewModelTest {
             )
         }
     }
+
+    @Test
+    fun `WHEN onPageStarted THEN track event`() {
+        val url = URL
+        viewModel.onPageStarted(url)
+
+        verifyOnce {
+            tracker.trackEvent(
+                withArg { event ->
+                    event shouldBeInstanceOf WebViewTrackerEvent.ViewPage::class.java
+                    val parameters = event.parameters
+                    parameters[WEB_VIEW_URL] shouldBe url
+                }
+            )
+        }
+    }
 }
 
 private const val URL = "https://foo.com"
