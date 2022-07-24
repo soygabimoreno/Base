@@ -1,9 +1,6 @@
 package soy.gabimoreno.presentation.screen.home
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,11 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.insets.navigationBarsPadding
@@ -58,21 +55,28 @@ fun HomeScreen() {
                     .statusBarsPadding()
                     .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
             )
-            TextField(
-                value = searchTextState.value,
-                onValueChange = { value ->
-                    searchTextState.value = value
-                },
+            Row(
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp)
-                    .fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
-            )
-            TextButton(
-                onClick = { homeViewModel.onShowWebViewClicked("https://gabimoreno.soy") },
-                modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+                    .fillMaxWidth()
             ) {
-                Text(text = stringResource(R.string.go_to_the_web))
+                TextField(
+                    value = searchTextState.value,
+                    onValueChange = { value ->
+                        searchTextState.value = value
+                    },
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+                )
+                TextButton(
+                    onClick = { homeViewModel.onShowWebViewClicked("https://gabimoreno.soy") },
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.go_to_the_web),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
             LazyColumn(state = scrollState) {
                 item {
