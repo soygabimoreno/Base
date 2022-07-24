@@ -57,7 +57,7 @@ fun HomeScreen() {
             )
             Row(
                 modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp)
+                    .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
                     .fillMaxWidth()
             ) {
                 TextField(
@@ -79,13 +79,6 @@ fun HomeScreen() {
                 }
             }
             LazyColumn(state = scrollState) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .padding(8.dp)
-                    )
-                }
-
                 when (podcastSearch) {
                     is HomeViewModel.ViewState.Error -> {
                         item {

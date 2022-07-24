@@ -3,6 +3,7 @@ package soy.gabimoreno.presentation.navigation
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+
 object Destination {
     const val home = HOME
     const val detail = "$DETAIL/{$KEY_ID}"

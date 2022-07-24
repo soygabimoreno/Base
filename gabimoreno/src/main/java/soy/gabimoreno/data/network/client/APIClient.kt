@@ -28,7 +28,7 @@ object APIClient {
         return Retrofit.Builder()
             .client(client)
             .baseUrl(BASE_URL)
-//            .addConverterFactory(ParseRSSConverterFactory.create<RSSFeedObject>())
+            // TODO: addJsonConverter
             .build()
             .create(PodcastService::class.java)
     }
