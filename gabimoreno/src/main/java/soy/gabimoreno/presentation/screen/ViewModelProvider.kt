@@ -12,19 +12,19 @@ import soy.gabimoreno.presentation.screen.webview.WebViewViewModel
 object ViewModelProvider {
     val homeViewModel: HomeViewModel
         @Composable
-        get() = LocalHomeViewModel.current
+        get() = localHomeViewModel.current
 
     val detailViewModel: DetailViewModel
         @Composable
-        get() = LocalDetailViewModel.current
+        get() = localDetailViewModel.current
 
     val playerViewModel: PlayerViewModel
         @Composable
-        get() = LocalPlayerViewModel.current
+        get() = localPlayerViewModel.current
 
     val webViewViewModel: WebViewViewModel
         @Composable
-        get() = LocalWebViewViewModel.current
+        get() = localWebViewViewModel.current
 }
 
 @Composable
@@ -35,14 +35,14 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     val webViewViewModel: WebViewViewModel = viewModel()
 
     CompositionLocalProvider(
-        LocalHomeViewModel provides homeViewModel,
-        LocalWebViewViewModel provides webViewViewModel,
+        localHomeViewModel provides homeViewModel,
+        localWebViewViewModel provides webViewViewModel,
     ) {
         CompositionLocalProvider(
-            LocalDetailViewModel provides detailViewModel,
+            localDetailViewModel provides detailViewModel,
         ) {
             CompositionLocalProvider(
-                LocalPlayerViewModel provides playerViewModel,
+                localPlayerViewModel provides playerViewModel,
             ) {
                 content()
             }
@@ -50,18 +50,18 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     }
 }
 
-private val LocalHomeViewModel = staticCompositionLocalOf<HomeViewModel> {
+private val localHomeViewModel = staticCompositionLocalOf<HomeViewModel> {
     error("No HomeViewModel provided")
 }
 
-private val LocalDetailViewModel = staticCompositionLocalOf<DetailViewModel> {
+private val localDetailViewModel = staticCompositionLocalOf<DetailViewModel> {
     error("No DetailViewModel provided")
 }
 
-private val LocalPlayerViewModel = staticCompositionLocalOf<PlayerViewModel> {
+private val localPlayerViewModel = staticCompositionLocalOf<PlayerViewModel> {
     error("No PlayerViewModel provided")
 }
 
-private val LocalWebViewViewModel = staticCompositionLocalOf<WebViewViewModel> {
+private val localWebViewViewModel = staticCompositionLocalOf<WebViewViewModel> {
     error("No WebViewViewModel provided")
 }

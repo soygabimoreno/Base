@@ -26,8 +26,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = 23
         targetSdk = 32
-        versionCode = 15
-        versionName = "0.15.0"
+        versionCode = 16
+        versionName = "0.16.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
