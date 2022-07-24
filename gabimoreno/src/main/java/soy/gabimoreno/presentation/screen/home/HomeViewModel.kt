@@ -45,8 +45,7 @@ class HomeViewModel @Inject constructor(
     fun searchPodcasts() {
         viewModelScope.launch(dispatcher) {
             podcastSearch = ViewState.Loading
-            val result = podcastRepository.getEpisodes()
-            result.fold(
+            podcastRepository.getEpisodes().fold(
                 { failure ->
                     podcastSearch = ViewState.Error(failure)
                 },

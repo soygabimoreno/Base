@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -33,7 +34,7 @@ fun PrimaryButton(
         Text(
             text = text,
             color = MaterialTheme.colors.onPrimary,
-            style = MaterialTheme.typography.button,
+            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .align(Alignment.Center)
