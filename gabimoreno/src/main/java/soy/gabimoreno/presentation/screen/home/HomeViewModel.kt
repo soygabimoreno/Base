@@ -11,13 +11,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.domain.EPISODE_ID
-import soy.gabimoreno.data.tracker.domain.EPISODE_TITLE
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.PodcastSearch
 import soy.gabimoreno.domain.repository.PodcastRepository
+import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 import javax.inject.Inject
 
@@ -26,6 +27,7 @@ class HomeViewModel @Inject constructor(
     private val podcastRepository: PodcastRepository,
     private val tracker: Tracker,
     getAppVersionNameUseCase: GetAppVersionNameUseCase,
+    private val encodeUrlUseCase: EncodeUrlUseCase,
     @IO private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -62,7 +64,7 @@ class HomeViewModel @Inject constructor(
 
     fun onShowWebViewClicked(url: String) {
         viewModelScope.launch(dispatcher) {
-            _viewEventFlow.emit(ViewEvent.ShowWebView(url))
+            _viewEventFlow.emit(ViewEvent.ShowWebView(encodeUrlUseCase(url)))
         }
     }
 
@@ -73,8 +75,8 @@ class HomeViewModel @Inject constructor(
         tracker.trackEvent(
             HomeTrackerEvent.ClickEpisode(
                 mapOf(
-                    EPISODE_ID to episodeId,
-                    EPISODE_TITLE to episodeTitle,
+                    TRACKER_KEY_EPISODE_ID to episodeId,
+                    TRACKER_KEY_EPISODE_TITLE to episodeTitle,
                 )
             )
         )
@@ -87,8 +89,8 @@ class HomeViewModel @Inject constructor(
         tracker.trackEvent(
             HomeTrackerEvent.ReceiveDeepLink(
                 mapOf(
-                    EPISODE_ID to episodeId,
-                    EPISODE_TITLE to episodeTitle,
+                    TRACKER_KEY_EPISODE_ID to episodeId,
+                    TRACKER_KEY_EPISODE_TITLE to episodeTitle,
                 )
             )
         )

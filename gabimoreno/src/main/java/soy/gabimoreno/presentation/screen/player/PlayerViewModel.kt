@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.domain.EPISODE_PLAYBACK_POSITION
 import soy.gabimoreno.data.tracker.domain.PlayPause
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_PLAYBACK_POSITION
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.Episode
@@ -144,7 +144,7 @@ class PlayerViewModel @Inject constructor(
     fun onSliderChangeFinished(value: Float) {
         val playbackPosition = (currentEpisodeDuration * value).toLong()
         val parameters = getParameters() + mapOf(
-            EPISODE_PLAYBACK_POSITION to formatLong(playbackPosition)
+            TRACKER_KEY_EPISODE_PLAYBACK_POSITION to formatLong(playbackPosition)
         )
         tracker.trackEvent(PlayerTrackerEvent.SeekTo(parameters))
         mediaPlayerServiceConnection.transportControls.seekTo(playbackPosition)

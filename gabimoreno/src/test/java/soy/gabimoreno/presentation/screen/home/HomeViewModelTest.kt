@@ -11,10 +11,11 @@ import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.domain.EPISODE_ID
-import soy.gabimoreno.data.tracker.domain.EPISODE_TITLE
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.domain.repository.PodcastRepository
+import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 
 @ExperimentalCoroutinesApi
@@ -23,6 +24,7 @@ class HomeViewModelTest {
     private val podcastRepository: PodcastRepository = relaxedMockk()
     private val tracker: Tracker = relaxedMockk()
     private val getAppVersionNameUseCase: GetAppVersionNameUseCase = relaxedMockk()
+    private val encodeUrlUseCase: EncodeUrlUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: HomeViewModel
 
@@ -33,6 +35,7 @@ class HomeViewModelTest {
             podcastRepository,
             tracker,
             getAppVersionNameUseCase,
+            encodeUrlUseCase,
             testDispatcher
         )
     }
@@ -71,8 +74,8 @@ class HomeViewModelTest {
             tracker.trackEvent(
                 HomeTrackerEvent.ClickEpisode(
                     mapOf(
-                        EPISODE_ID to episodeId,
-                        EPISODE_TITLE to episodeTitle
+                        TRACKER_KEY_EPISODE_ID to episodeId,
+                        TRACKER_KEY_EPISODE_TITLE to episodeTitle
                     )
                 )
             )
@@ -89,8 +92,8 @@ class HomeViewModelTest {
             tracker.trackEvent(
                 HomeTrackerEvent.ReceiveDeepLink(
                     mapOf(
-                        EPISODE_ID to episodeId,
-                        EPISODE_TITLE to episodeTitle
+                        TRACKER_KEY_EPISODE_ID to episodeId,
+                        TRACKER_KEY_EPISODE_TITLE to episodeTitle
                     )
                 )
             )

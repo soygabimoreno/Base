@@ -7,7 +7,7 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.domain.WEB_VIEW_URL
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_WEB_VIEW_URL
 import soy.gabimoreno.data.tracker.main.WebViewTrackerEvent
 
 class WebViewViewModelTest {
@@ -32,7 +32,7 @@ class WebViewViewModelTest {
                 withArg { event ->
                     event shouldBeInstanceOf WebViewTrackerEvent.ViewScreen::class.java
                     val parameters = event.parameters
-                    parameters[WEB_VIEW_URL] shouldBe url
+                    parameters[TRACKER_KEY_WEB_VIEW_URL] shouldBe url
                 }
             )
         }
@@ -48,7 +48,7 @@ class WebViewViewModelTest {
                 withArg { event ->
                     event shouldBeInstanceOf WebViewTrackerEvent.ClickBack::class.java
                     val parameters = event.parameters
-                    parameters[WEB_VIEW_URL] shouldBe url
+                    parameters[TRACKER_KEY_WEB_VIEW_URL] shouldBe url
                 }
             )
         }
@@ -64,7 +64,7 @@ class WebViewViewModelTest {
                 withArg { event ->
                     event shouldBeInstanceOf WebViewTrackerEvent.ViewPage::class.java
                     val parameters = event.parameters
-                    parameters[WEB_VIEW_URL] shouldBe url
+                    parameters[TRACKER_KEY_WEB_VIEW_URL] shouldBe url
                 }
             )
         }

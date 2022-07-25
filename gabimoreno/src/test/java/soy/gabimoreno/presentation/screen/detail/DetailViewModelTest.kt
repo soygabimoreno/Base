@@ -9,9 +9,9 @@ import soy.gabimoreno.R
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.domain.EPISODE_ID
-import soy.gabimoreno.data.tracker.domain.EPISODE_TITLE
 import soy.gabimoreno.data.tracker.domain.PlayPause
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.fake.buildEpisode
@@ -42,8 +42,8 @@ class DetailViewModelTest {
                 withArg { event ->
                     event shouldBeInstanceOf DetailTrackerEvent.ViewScreen::class.java
                     val parameters = event.parameters
-                    parameters[EPISODE_ID] shouldBe episode.id
-                    parameters[EPISODE_TITLE] shouldBe episode.title
+                    parameters[TRACKER_KEY_EPISODE_ID] shouldBe episode.id
+                    parameters[TRACKER_KEY_EPISODE_TITLE] shouldBe episode.title
                 }
             )
         }
@@ -60,8 +60,8 @@ class DetailViewModelTest {
                 withArg { event ->
                     event shouldBeInstanceOf DetailTrackerEvent.ClickBack::class.java
                     val parameters = event.parameters
-                    parameters[EPISODE_ID] shouldBe episode.id
-                    parameters[EPISODE_TITLE] shouldBe episode.title
+                    parameters[TRACKER_KEY_EPISODE_ID] shouldBe episode.id
+                    parameters[TRACKER_KEY_EPISODE_TITLE] shouldBe episode.title
                 }
             )
         }
