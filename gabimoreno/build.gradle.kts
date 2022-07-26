@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 
 plugins {
     id("com.android.application")
@@ -26,8 +27,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = 23
         targetSdk = 32
-        versionCode = 17
-        versionName = "0.17.0"
+        versionCode = 18
+        versionName = "0.18.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -59,6 +60,9 @@ android {
                 abi.isEnable = false
                 density.isEnable = false
             }
+            configure<CrashlyticsExtension> {
+                mappingFileUploadEnabled = false
+            }
         }
         release {
             isDebuggable = false
@@ -69,6 +73,9 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName(name)
+            configure<CrashlyticsExtension> {
+                mappingFileUploadEnabled = true
+            }
         }
     }
 

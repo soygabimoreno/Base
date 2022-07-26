@@ -2,7 +2,6 @@ package soy.gabimoreno.presentation.ui
 
 import androidx.compose.runtime.Composable
 import com.google.accompanist.insets.ProvideWindowInsets
-import soy.gabimoreno.presentation.navigation.ProvideNavHostController
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 
 @Composable
@@ -11,9 +10,7 @@ fun PreviewContent(
 ) {
     GabiMorenoTheme {
         ProvideWindowInsets {
-            ProvideNavHostController {
-                content()
-            }
+            content()
         }
     }
 }

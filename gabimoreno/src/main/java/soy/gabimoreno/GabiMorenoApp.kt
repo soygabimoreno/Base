@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.google.accompanist.insets.ProvideWindowInsets
-import soy.gabimoreno.presentation.navigation.ProvideNavHostController
 import soy.gabimoreno.presentation.screen.ProvideMultiViewModel
 import soy.gabimoreno.presentation.screen.player.PlayerScreen
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
@@ -20,18 +19,16 @@ fun GabiMorenoApp(
     GabiMorenoTheme {
         ProvideWindowInsets {
             ProvideMultiViewModel {
-                ProvideNavHostController {
                     Box(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        AppNavHost()
+                        AppNavigation()
                         AudioBottomBar(
                             modifier = Modifier.align(Alignment.BottomCenter)
                         )
                         PlayerScreen(backDispatcher)
                     }
                 }
-            }
         }
     }
 }

@@ -4,8 +4,8 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
-import soy.gabimoreno.data.network.mapper.GABI_MORENO_WEB_BASE_URL
 import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 
 class EncodeUrlUseCaseKtTest {
 

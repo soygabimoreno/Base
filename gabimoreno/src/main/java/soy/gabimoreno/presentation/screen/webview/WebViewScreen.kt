@@ -14,15 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.insets.statusBarsPadding
-import soy.gabimoreno.presentation.navigation.Navigator
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.ui.BackButton
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebViewScreen(url: String) {
+fun WebViewScreen(
+    url: String,
+    onBackClicked: () -> Unit
+) {
     val webViewViewModel = ViewModelProvider.webViewViewModel
-    val navController = Navigator.current
 
     LaunchedEffect(Unit) {
         webViewViewModel.onViewScreen(url)
@@ -42,7 +43,7 @@ fun WebViewScreen(url: String) {
                         webView?.goBack()
                     } else {
                         webViewViewModel.onBackClicked(url)
-                        navController.navigateUp()
+                        onBackClicked()
                     }
                 }
             }
