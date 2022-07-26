@@ -8,8 +8,8 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import soy.gabimoreno.R
+import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
 fun ErrorView(
@@ -17,13 +17,13 @@ fun ErrorView(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = 24.dp)
+        modifier = Modifier.padding(horizontal = Spacing.s24)
     ) {
         Text(
             text,
             modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .padding(bottom = 8.dp)
+                .padding(horizontal = Spacing.s8)
+                .padding(bottom = Spacing.s8)
         )
         TextButton(onClick = onClick) {
             Text(

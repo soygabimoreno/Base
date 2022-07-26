@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.navigationBarsPadding
 import soy.gabimoreno.R
@@ -35,6 +34,7 @@ import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.PurpleLight
+import soy.gabimoreno.presentation.theme.Spacing
 import kotlin.math.roundToInt
 
 @Composable
@@ -113,7 +113,7 @@ fun AudioBottomBarStatelessContent(
             .offset { IntOffset(xOffset, 0) }
             .background(PurpleLight)
             .navigationBarsPadding()
-            .height(64.dp)
+            .height(Spacing.s64)
             .fillMaxWidth()
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -128,7 +128,7 @@ fun AudioBottomBarStatelessContent(
                 painter = rememberCoilPainter(episode.thumbnailUrl),
                 contentDescription = stringResource(R.string.podcast_thumbnail),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(64.dp),
+                modifier = Modifier.size(Spacing.s64),
             )
 
             Column(
@@ -136,7 +136,7 @@ fun AudioBottomBarStatelessContent(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .padding(8.dp),
+                    .padding(Spacing.s8),
             ) {
                 Text(
                     episode.title,
@@ -163,11 +163,11 @@ fun AudioBottomBarStatelessContent(
                 contentDescription = stringResource(R.string.play),
                 tint = MaterialTheme.colors.onBackground,
                 modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(40.dp)
+                    .padding(end = Spacing.s8)
+                    .size(Spacing.s40)
                     .clip(CircleShape)
                     .clickable(onClick = onTooglePlaybackState)
-                    .padding(6.dp)
+                    .padding(Spacing.oddSpacing6)
             )
         }
     }

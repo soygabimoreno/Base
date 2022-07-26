@@ -15,17 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
 fun PrimaryButton(
     text: String,
-    height: Dp = 58.dp,
+    height: Dp = Spacing.oddSpacing58,
     onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
-            .defaultMinSize(200.dp)
+            .defaultMinSize(Spacing.oddSpacing200)
             .height(height)
             .clip(CircleShape)
             .background(MaterialTheme.colors.primary)
@@ -36,7 +36,7 @@ fun PrimaryButton(
             color = MaterialTheme.colors.onPrimary,
             style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = Spacing.s16)
                 .align(Alignment.Center)
         )
     }

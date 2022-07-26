@@ -15,10 +15,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 import soy.gabimoreno.R
+import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
 fun EpisodeImage(
@@ -50,7 +50,7 @@ fun EpisodeImage(
                     contentDescription = stringResource(R.string.podcast_thumbnail),
                     tint = MaterialTheme.colors.onBackground.copy(alpha = 0.14f),
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(Spacing.s48)
                         .align(Alignment.Center),
                 )
             }

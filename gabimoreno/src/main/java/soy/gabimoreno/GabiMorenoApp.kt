@@ -19,16 +19,16 @@ fun GabiMorenoApp(
     GabiMorenoTheme {
         ProvideWindowInsets {
             ProvideMultiViewModel {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        AppNavigation()
-                        AudioBottomBar(
-                            modifier = Modifier.align(Alignment.BottomCenter)
-                        )
-                        PlayerScreen(backDispatcher)
-                    }
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    AppNavigation()
+                    AudioBottomBar(
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    )
+                    PlayerScreen(backDispatcher)
                 }
+            }
         }
     }
 }

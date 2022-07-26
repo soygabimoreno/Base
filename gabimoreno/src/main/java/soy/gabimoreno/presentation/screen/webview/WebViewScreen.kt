@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.presentation.screen.ViewModelProvider
+import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.BackButton
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -48,7 +48,7 @@ fun WebViewScreen(
                 }
             }
             Row(
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = Spacing.s8)
             ) {
                 AndroidView(
                     factory = {

@@ -13,7 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import com.google.accompanist.insets.navigationBarsPadding
@@ -22,6 +21,7 @@ import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
+import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.BackButton
 import soy.gabimoreno.presentation.ui.EmphasisText
 import soy.gabimoreno.presentation.ui.EpisodeImage
@@ -71,22 +71,22 @@ fun DetailScreen(
                     modifier = Modifier
                         .verticalScroll(scrollState)
                         .navigationBarsPadding()
-                        .padding(vertical = 24.dp, horizontal = 16.dp)
-                        .padding(bottom = if (playerViewModel.currentPlayingEpisode.value != null) 64.dp else 0.dp)
+                        .padding(vertical = Spacing.s24, horizontal = Spacing.s16)
+                        .padding(bottom = if (playerViewModel.currentPlayingEpisode.value != null) Spacing.s64 else Spacing.s0)
 
                 ) {
                     EpisodeImage(
                         url = episode.imageUrl,
-                        modifier = Modifier.height(120.dp)
+                        modifier = Modifier.height(Spacing.oddSpacing120)
                     )
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(Spacing.s32))
 
                     Text(
                         episode.title,
                         style = MaterialTheme.typography.h4
                     )
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(Spacing.s24))
 
                     Text(
                         episode.podcast.author,
@@ -97,12 +97,12 @@ fun DetailScreen(
                         text = "${episode.pubDateMillis.formatMillisecondsAsDate("MMM dd")} • ${episode.audioLengthSeconds.toDurationMinutes()}"
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(Spacing.s16))
 
                     Row {
                         PrimaryButton(
                             text = playButtonText,
-                            height = 48.dp
+                            height = Spacing.s48
                         ) {
                             detailViewModel.onPlayPauseClicked(episode, isPlaying.toPlayPause())
                             playerViewModel.playPauseEpisode(
@@ -116,13 +116,13 @@ fun DetailScreen(
                         soy.gabimoreno.presentation.ui.IconButton(
                             imageVector = Icons.Rounded.Share,
                             contentDescription = stringResource(R.string.share),
-                            padding = 16.dp
+                            padding = Spacing.s16
                         ) {
                             detailViewModel.onShareClicked(currentContext, episode)
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(Spacing.s16))
 
                     EmphasisText(
                         text = HtmlCompat.fromHtml(
