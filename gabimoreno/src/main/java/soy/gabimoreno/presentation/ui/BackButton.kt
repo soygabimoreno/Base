@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import soy.gabimoreno.R
+import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
 fun BackButton(onClick: () -> Unit) {
@@ -19,9 +19,9 @@ fun BackButton(onClick: () -> Unit) {
         Icons.Default.ArrowBack,
         contentDescription = stringResource(R.string.back),
         modifier = Modifier
-            .padding(top = 8.dp, start = 8.dp)
+            .padding(top = Spacing.s8, start = Spacing.s8)
             .clip(CircleShape)
             .clickable(onClick = onClick)
-            .padding(8.dp)
+            .padding(Spacing.s8)
     )
 }

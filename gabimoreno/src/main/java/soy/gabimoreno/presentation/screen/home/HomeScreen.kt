@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.flow.collect
@@ -28,6 +27,7 @@ import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.view.EpisodeView
 import soy.gabimoreno.presentation.screen.home.view.ErrorView
 import soy.gabimoreno.presentation.screen.home.view.LoadingPlaceholder
+import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 import java.util.*
 
@@ -54,11 +54,11 @@ fun HomeScreen(
             Text(
                 homeViewModel.appVersionName, modifier = Modifier
                     .statusBarsPadding()
-                    .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
+                    .padding(start = Spacing.s16, top = Spacing.s4, bottom = Spacing.s4)
             )
             Row(
                 modifier = Modifier
-                    .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
+                    .padding(start = Spacing.s16, bottom = Spacing.s16, end = Spacing.s16)
                     .fillMaxWidth()
             ) {
                 TextField(
@@ -71,7 +71,7 @@ fun HomeScreen(
                 TextButton(
                     onClick = { homeViewModel.onShowWebViewClicked(GABI_MORENO_WEB_BASE_URL) },
                     modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp)
+                        .padding(start = Spacing.s8, end = Spacing.s8)
                 ) {
                     Text(
                         text = stringResource(R.string.go_to_the_web),
@@ -97,8 +97,8 @@ fun HomeScreen(
                         item {
                             StaggeredVerticalGrid(
                                 crossAxisCount = 2,
-                                spacing = 16.dp,
-                                modifier = Modifier.padding(horizontal = 16.dp)
+                                spacing = Spacing.s16,
+                                modifier = Modifier.padding(horizontal = Spacing.s16)
                             ) {
                                 val searchText = searchTextState.value.text
                                 val episodes = podcastSearch.data.results
@@ -114,7 +114,7 @@ fun HomeScreen(
                                 filteredEpisodes.forEach { episode ->
                                     EpisodeView(
                                         episode = episode,
-                                        modifier = Modifier.padding(bottom = 16.dp)
+                                        modifier = Modifier.padding(bottom = Spacing.s16)
                                     ) {
                                         val episodeId = episode.id
                                         homeViewModel.onEpisodeClicked(episodeId, episode.title)
@@ -140,10 +140,10 @@ fun HomeScreen(
                     Box(
                         modifier = Modifier
                             .navigationBarsPadding()
-                            .padding(bottom = 32.dp)
+                            .padding(bottom = Spacing.s32)
                             .padding(
-                                bottom = if (ViewModelProvider.playerViewModel.currentPlayingEpisode.value != null) 64.dp
-                                else 0.dp
+                                bottom = if (ViewModelProvider.playerViewModel.currentPlayingEpisode.value != null) Spacing.s64
+                                else Spacing.s0
                             )
                     )
                 }

@@ -9,15 +9,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
+import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 
 @Composable
 fun LoadingPlaceholder() {
     StaggeredVerticalGrid(
         crossAxisCount = 2,
-        spacing = 16.dp,
-        modifier = Modifier.padding(horizontal = 16.dp)
+        spacing = Spacing.s16,
+        modifier = Modifier.padding(horizontal = Spacing.s16)
     ) {
         (1..10).map {
             Column(
@@ -33,7 +33,7 @@ fun LoadingPlaceholder() {
                 )
                 Box(
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(Spacing.s8)
                         .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f))
                 )
             }

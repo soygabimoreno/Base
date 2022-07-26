@@ -31,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import coil.request.ImageRequest
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.systemBarsPadding
@@ -41,6 +40,7 @@ import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.framework.calculatePaletteColor
 import soy.gabimoreno.presentation.screen.ViewModelProvider
+import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.ArrowDownButton
 import soy.gabimoreno.presentation.ui.EmphasisText
 import soy.gabimoreno.presentation.ui.PreviewContent
@@ -231,11 +231,11 @@ fun PodcastPlayerStatelessContent(
                 Column {
                     ArrowDownButton(onClick = onClose)
                     Column(
-                        modifier = Modifier.padding(horizontal = 24.dp)
+                        modifier = Modifier.padding(horizontal = Spacing.s24)
                     ) {
                         Box(
                             modifier = Modifier
-                                .padding(vertical = 32.dp)
+                                .padding(vertical = Spacing.s32)
                                 .clip(MaterialTheme.shapes.medium)
                                 .weight(1f, fill = false)
                                 .align(Alignment.CenterHorizontally)
@@ -273,7 +273,7 @@ fun PodcastPlayerStatelessContent(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 24.dp)
+                                .padding(vertical = Spacing.s24)
                         ) {
                             Slider(
                                 value = playbackProgress,
@@ -299,7 +299,7 @@ fun PodcastPlayerStatelessContent(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 8.dp, bottom = 32.dp),
+                                .padding(top = Spacing.s8, bottom = Spacing.s32),
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_baseline_replay_10_24),
@@ -307,8 +307,8 @@ fun PodcastPlayerStatelessContent(
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .clickable(onClick = onRewind)
-                                    .padding(12.dp)
-                                    .size(32.dp)
+                                    .padding(Spacing.oddSpacing12)
+                                    .size(Spacing.s32)
                             )
                             Icon(
                                 painter = painterResource(playPauseIcon),
@@ -318,8 +318,8 @@ fun PodcastPlayerStatelessContent(
                                     .clip(CircleShape)
                                     .background(MaterialTheme.colors.onBackground)
                                     .clickable(onClick = onTooglePlayback)
-                                    .size(64.dp)
-                                    .padding(8.dp)
+                                    .size(Spacing.s64)
+                                    .padding(Spacing.s8)
                             )
                             Icon(
                                 painter = painterResource(R.drawable.ic_baseline_forward_10_24),
@@ -327,8 +327,8 @@ fun PodcastPlayerStatelessContent(
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .clickable(onClick = onForward)
-                                    .padding(12.dp)
-                                    .size(32.dp)
+                                    .padding(Spacing.oddSpacing12)
+                                    .size(Spacing.s32)
                             )
                         }
                     }

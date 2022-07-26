@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
 fun StaggeredVerticalGrid(
     modifier: Modifier = Modifier,
     crossAxisCount: Int,
-    spacing: Dp = 0.dp,
+    spacing: Dp = Spacing.s0,
     content: @Composable () -> Unit
 ) {
     Layout(

@@ -9,8 +9,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import soy.gabimoreno.domain.model.Episode
+import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.EpisodeImage
 
 @Composable
@@ -32,7 +32,7 @@ fun EpisodeView(
         Text(
             episode.title,
             style = MaterialTheme.typography.body1,
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(Spacing.s8)
         )
     }
 }
