@@ -3,6 +3,7 @@ package soy.gabimoreno.data.network.mapper
 import com.prof.rssparser.Article
 import com.prof.rssparser.Channel
 import soy.gabimoreno.domain.model.Episode
+import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.domain.model.PodcastSearch
 import java.util.*
@@ -72,4 +73,3 @@ internal const val ANCHOR_MESSAGE =
         "\n" +
         "Send in a voice message: https://anchor.fm/losandroides/message"
 internal const val IVOOX_URL = "https://www.ivoox.com/"
-internal const val GABI_MORENO_WEB_BASE_URL = "https://gabimoreno.soy"

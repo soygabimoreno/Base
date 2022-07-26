@@ -22,6 +22,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.flow.collect
 import soy.gabimoreno.R
+import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 import soy.gabimoreno.presentation.navigation.EpisodeNumber
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.view.EpisodeView
@@ -34,13 +35,13 @@ import java.util.*
 fun HomeScreen(
     onItemClicked: (episodeId: String) -> Unit,
     onDeepLinkReceived: (episodeId: String) -> Unit,
-    onGoToWebClicked: (url: String) -> Unit
+    onGoToWebClicked: (encodedUrl: String) -> Unit
 ) {
     val scrollState = rememberLazyListState()
     val homeViewModel = ViewModelProvider.homeViewModel
     val podcastSearch = homeViewModel.podcastSearch
 
-    val webViewUrl = remember { mutableStateOf("") }
+    val encodedUrl = remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         homeViewModel.onViewScreen()
@@ -68,7 +69,7 @@ fun HomeScreen(
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
                 )
                 TextButton(
-                    onClick = { homeViewModel.onShowWebViewClicked("https://gabimoreno.soy") },
+                    onClick = { homeViewModel.onShowWebViewClicked(GABI_MORENO_WEB_BASE_URL) },
                     modifier = Modifier
                         .padding(start = 8.dp, end = 8.dp)
                 ) {
@@ -153,11 +154,11 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         homeViewModel.viewEventFlow.collect { viewEvent ->
             when (viewEvent) {
-                is HomeViewModel.ViewEvent.ShowWebView -> webViewUrl.value = viewEvent.url
+                is HomeViewModel.ViewEvent.ShowWebView -> encodedUrl.value = viewEvent.encodedUrl
             }
         }
     }
-    if (webViewUrl.value.isNotBlank()) {
-        onGoToWebClicked(webViewUrl.value)
+    if (encodedUrl.value.isNotBlank()) {
+        onGoToWebClicked(encodedUrl.value)
     }
 }

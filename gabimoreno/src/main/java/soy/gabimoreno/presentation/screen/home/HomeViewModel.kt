@@ -104,7 +104,7 @@ class HomeViewModel @Inject constructor(
     }
 
     sealed class ViewEvent {
-        data class ShowWebView(val url: String) : ViewEvent()
+        data class ShowWebView(val encodedUrl: String) : ViewEvent()
     }
 
     sealed class ViewState {
