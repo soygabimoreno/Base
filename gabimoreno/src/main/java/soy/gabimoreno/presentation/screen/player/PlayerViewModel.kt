@@ -51,13 +51,25 @@ class PlayerViewModel @Inject constructor(
 
     val currentPlaybackFormattedPosition: String
         get() = run {
-            KLog.d("currentPlaybackPosition: $currentPlaybackPosition, ${formatLong(currentPlaybackPosition)}")
+            KLog.d(
+                "currentPlaybackPosition: $currentPlaybackPosition, ${
+                    formatLong(
+                        currentPlaybackPosition
+                    )
+                }"
+            )
             formatLong(currentPlaybackPosition)
         }
 
     val currentEpisodeFormattedDuration: String
         get() = run {
-            KLog.d("currentEpisodeDuration: $currentEpisodeDuration, ${formatLong(currentEpisodeDuration)}")
+            KLog.d(
+                "currentEpisodeDuration: $currentEpisodeDuration, ${
+                    formatLong(
+                        currentEpisodeDuration
+                    )
+                }"
+            )
             formatLong(currentEpisodeDuration)
         }
 
@@ -115,8 +127,16 @@ class PlayerViewModel @Inject constructor(
     ) {
         val parameters = episode.toMap()
         when (playPause) {
-            PlayPause.PLAY -> tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromAudioBottomBar(parameters))
-            PlayPause.PAUSE -> tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromAudioBottomBar(parameters))
+            PlayPause.PLAY -> tracker.trackEvent(
+                PlayerTrackerEvent.ClickPlayFromAudioBottomBar(
+                    parameters
+                )
+            )
+            PlayPause.PAUSE -> tracker.trackEvent(
+                PlayerTrackerEvent.ClickPauseFromAudioBottomBar(
+                    parameters
+                )
+            )
         }
     }
 

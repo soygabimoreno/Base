@@ -6,5 +6,6 @@ sealed class ErrorTrackerEvent(
     override val parameters: Map<String, Any> = mapOf()
 ) : TrackerEvent {
 
-    data class EncodeUrlException(override val parameters: Map<String, Any>) : ErrorTrackerEvent(parameters)
+    data class EncodeUrlException(override val parameters: Map<String, Any>) :
+        ErrorTrackerEvent(parameters)
 }

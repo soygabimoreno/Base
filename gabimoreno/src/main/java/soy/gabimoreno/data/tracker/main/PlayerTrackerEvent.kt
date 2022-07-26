@@ -15,7 +15,12 @@ sealed class PlayerTrackerEvent(
     data class ClickForward(override val parameters: Map<String, Any>) : PlayerTrackerEvent()
     data class SeekTo(override val parameters: Map<String, Any>) : PlayerTrackerEvent()
     data class ClickPlayFromPlayer(override val parameters: Map<String, Any>) : PlayerTrackerEvent()
-    data class ClickPlayFromAudioBottomBar(override val parameters: Map<String, Any>) : PlayerTrackerEvent()
-    data class ClickPauseFromPlayer(override val parameters: Map<String, Any>) : PlayerTrackerEvent()
-    data class ClickPauseFromAudioBottomBar(override val parameters: Map<String, Any>) : PlayerTrackerEvent()
+    data class ClickPlayFromAudioBottomBar(override val parameters: Map<String, Any>) :
+        PlayerTrackerEvent()
+
+    data class ClickPauseFromPlayer(override val parameters: Map<String, Any>) :
+        PlayerTrackerEvent()
+
+    data class ClickPauseFromAudioBottomBar(override val parameters: Map<String, Any>) :
+        PlayerTrackerEvent()
 }

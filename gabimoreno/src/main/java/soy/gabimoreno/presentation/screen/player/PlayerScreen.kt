@@ -119,7 +119,8 @@ fun PodcastPlayerBody(
 
     var localSliderValue by remember { mutableStateOf(0f) }
 
-    val sliderProgress = if (sliderIsChanging) localSliderValue else playerViewModel.currentEpisodeProgress
+    val sliderProgress =
+        if (sliderIsChanging) localSliderValue else playerViewModel.currentEpisodeProgress
 
     Box(
         modifier = Modifier
