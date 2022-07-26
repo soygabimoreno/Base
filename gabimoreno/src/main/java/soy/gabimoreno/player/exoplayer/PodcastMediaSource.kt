@@ -78,7 +78,8 @@ class PodcastMediaSource @Inject constructor() {
             val mediaItem = MediaItem.fromUri(
                 metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).toUri()
             )
-            val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
+            val mediaSource =
+                ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
             concatenatingMediaSource.addMediaSource(mediaSource)
         }
         return concatenatingMediaSource

@@ -7,6 +7,9 @@ sealed class HomeTrackerEvent(
 ) : TrackerEvent {
 
     object ViewScreen : HomeTrackerEvent()
-    data class ClickEpisode(override val parameters: Map<String, Any>) : HomeTrackerEvent(parameters)
-    data class ReceiveDeepLink(override val parameters: Map<String, Any>) : HomeTrackerEvent(parameters)
+    data class ClickEpisode(override val parameters: Map<String, Any>) :
+        HomeTrackerEvent(parameters)
+
+    data class ReceiveDeepLink(override val parameters: Map<String, Any>) :
+        HomeTrackerEvent(parameters)
 }
