@@ -1,4 +1,4 @@
-package soy.gabimoreno
+package soy.gabimoreno.presentation
 
 import android.net.Uri
 import android.os.Bundle

@@ -16,8 +16,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
-import soy.gabimoreno.MainActivity
 import soy.gabimoreno.player.exoplayer.*
+import soy.gabimoreno.presentation.MainActivity
 import javax.inject.Inject
 
 @AndroidEntryPoint
