@@ -2,8 +2,8 @@ package soy.gabimoreno.presentation.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Podcasts
+import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.compose.navArgument
@@ -15,11 +15,15 @@ enum class NavItem(
     @StringRes val titleResId: Int
 ) {
     PODCAST(
-        NavCommand.ContentType(Feature.PODCAST),
-        Icons.Default.PlayArrow,
-        R.string.nav_item_podcast
+        navCommand = NavCommand.ContentType(Feature.PODCAST),
+        icon = Icons.Default.Podcasts,
+        titleResId = R.string.nav_item_podcast
     ),
-    PREMIUM(NavCommand.ContentType(Feature.PREMIUM), Icons.Default.Star, R.string.nav_item_premium)
+    PREMIUM(
+        navCommand = NavCommand.ContentType(Feature.PREMIUM),
+        icon = Icons.Default.WorkspacePremium,
+        titleResId = R.string.nav_item_premium
+    )
 }
 
 sealed class NavCommand(
