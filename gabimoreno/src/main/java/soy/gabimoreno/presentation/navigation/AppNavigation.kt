@@ -1,28 +1,22 @@
-package soy.gabimoreno.presentation
+package soy.gabimoreno.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
-import soy.gabimoreno.presentation.navigation.Feature
-import soy.gabimoreno.presentation.navigation.NavArg
-import soy.gabimoreno.presentation.navigation.NavCommand
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
+import soy.gabimoreno.presentation.screen.premium.PremiumScreen
 import soy.gabimoreno.presentation.screen.webview.WebViewScreen
 
 @Composable
-fun AppNavigation() {
-    val navController = rememberNavController()
+fun AppNavigation(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = Feature.PODCAST.route
     ) {
         podcastNav(navController)
+        premiumNav(navController)
     }
 }
 
@@ -65,6 +59,19 @@ private fun NavGraphBuilder.podcastNav(
                     navController.goBack()
                 }
             )
+        }
+    }
+}
+
+private fun NavGraphBuilder.premiumNav(
+    navController: NavController
+) {
+    navigation(
+        startDestination = NavCommand.ContentType(Feature.PREMIUM).route,
+        route = Feature.PREMIUM.route
+    ) {
+        composable(navCommand = NavCommand.ContentType(Feature.PREMIUM)) {
+            PremiumScreen()
         }
     }
 }

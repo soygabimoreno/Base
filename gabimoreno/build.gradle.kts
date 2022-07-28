@@ -27,8 +27,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = 23
         targetSdk = 32
-        versionCode = 18
-        versionName = "0.18.0"
+        versionCode = 19
+        versionName = "0.19.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -118,6 +118,7 @@ dependencies {
 
     implementation("androidx.compose.ui:ui:${rootProject.extra["version_compose"]}")
     implementation("androidx.compose.material:material:${rootProject.extra["version_compose"]}")
+    implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["version_compose"]}")
     implementation("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["version_compose"]}")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha03")
 
