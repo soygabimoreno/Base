@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.GabiMoreno" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.GabiMoreno" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/orange</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/green</item>
