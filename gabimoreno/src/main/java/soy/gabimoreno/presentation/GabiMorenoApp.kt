@@ -2,6 +2,7 @@ package soy.gabimoreno.presentation
 
 import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -39,14 +40,18 @@ fun GabiMorenoApp(
                         }
                     }
                 ) { padding ->
-                    Box(modifier = Modifier.padding(padding)) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(padding)
+                    ) {
                         AppNavigation(navController)
                         AudioBottomBar(
                             modifier = Modifier.align(Alignment.BottomCenter)
                         )
-                        PlayerScreen(backDispatcher)
                     }
                 }
+                PlayerScreen(backDispatcher)
             }
         }
     }

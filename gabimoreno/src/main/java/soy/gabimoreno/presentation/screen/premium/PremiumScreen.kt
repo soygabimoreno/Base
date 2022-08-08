@@ -13,7 +13,6 @@ import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
 fun PremiumScreen() {
-
     val premiumViewModel = ViewModelProvider.premiumViewModel
 
     LaunchedEffect(Unit) {
