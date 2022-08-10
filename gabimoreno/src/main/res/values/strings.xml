@@ -18,6 +18,6 @@
     <string name="share">Compartir</string>
     <string name="replay_10_seconds">Retroceder 10 segundos</string>
     <string name="forward_10_seconds">Avanzar 10 segundos</string>
-    <string name="go_to_the_web">Ir a la Web</string>
-    <string name="premium_description">Desde aquí podrás acceder al contenido premium.\n\nDisponible a partir del lunes 12 de septiembre.\n\n\nMás info en la web:\n\ngabimoreno.soy</string>
+    <string name="premium_description">Desde aquí podrás acceder al contenido premium.\n\nDisponible a partir del lunes 12 de septiembre.</string>
+    <string name="search">Búsqueda</string>
 </resources>

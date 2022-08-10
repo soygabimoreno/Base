@@ -7,7 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -114,7 +114,7 @@ fun DetailScreen(
                         Spacer(modifier = Modifier.weight(1f))
 
                         soy.gabimoreno.presentation.ui.IconButton(
-                            imageVector = Icons.Rounded.Share,
+                            imageVector = Icons.Default.Share,
                             contentDescription = stringResource(R.string.share),
                             padding = Spacing.s16
                         ) {
