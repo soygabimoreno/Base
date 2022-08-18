@@ -109,9 +109,10 @@ android {
 
 dependencies {
 //    implementation(project(":modules:player")) // TODO: Add when moved all player files to this module
-    implementation(project(":modules:framework"))
     implementation(project(":modules:core"))
     implementation(project(":modules:core-testing"))
+    implementation(project(":modules:framework"))
+    implementation(project(":modules:remote-config"))
 
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("com.google.android.material:material:1.3.0")
