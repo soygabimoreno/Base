@@ -17,7 +17,8 @@ rootProject.name = "Base"
 include(":gabimoreno")
 include(":bike")
 
-include(":modules:framework")
-include(":modules:player")
 include(":modules:core")
 include(":modules:core-testing")
+include(":modules:framework")
+include(":modules:player")
+include(":modules:remote-config")
