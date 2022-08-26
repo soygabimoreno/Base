@@ -77,7 +77,7 @@ private fun ItunesArticleData?.getAudioLengthInSeconds(): Int {
         if (duration == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
         val dateFormat = SimpleDateFormat("HH:mm:ss")
         val date = dateFormat.parse(duration)
-        return date.minutes * 60 + date.seconds
+        return date.hours * 60 * 60 + date.minutes * 60 + date.seconds // TODO: Put this cleaner
     }
 }
 
