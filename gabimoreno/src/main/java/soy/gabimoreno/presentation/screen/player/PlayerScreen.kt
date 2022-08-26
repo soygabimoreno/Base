@@ -353,7 +353,7 @@ fun PodcastPlayerPreview() {
                 thumbnailUrl = "",
                 pubDateMillis = 0,
                 title = "This is a title",
-                audioLengthSeconds = 2700,
+                audioLengthInSeconds = 2700,
                 description = "This is a description"
             ),
             imagePainter = painterResource(id = R.drawable.ic_baseline_mic_24),
