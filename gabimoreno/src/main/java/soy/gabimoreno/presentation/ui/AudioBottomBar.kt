@@ -190,7 +190,7 @@ fun AudioBottomBarPreview() {
                 thumbnailUrl = "https://picsum.photos/200",
                 pubDateMillis = 0,
                 title = "This is a title",
-                audioLengthSeconds = 2700,
+                audioLengthInSeconds = 2700,
                 description = "This is a description"
             ),
             xOffset = 0,

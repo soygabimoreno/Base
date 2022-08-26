@@ -9,6 +9,6 @@ data class Episode(
     val thumbnailUrl: String,
     val pubDateMillis: Long,
     val title: String,
-    val audioLengthSeconds: Int,
+    val audioLengthInSeconds: Int,
     val description: String
 )

@@ -2,10 +2,12 @@ package soy.gabimoreno.data.network.mapper
 
 import com.prof.rssparser.Article
 import com.prof.rssparser.Channel
+import com.prof.rssparser.ItunesArticleData
 import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 import soy.gabimoreno.domain.model.Podcast
 import soy.gabimoreno.domain.model.PodcastSearch
+import java.text.SimpleDateFormat
 import java.util.*
 
 fun Channel.toDomain(): PodcastSearch {
@@ -33,7 +35,7 @@ fun Article.toDomain(
 ): Episode {
     return run {
         val description = description?.removeAnchorMessage() ?: ""
-        val imageUrl = itunesArticleData?.image ?: ""
+        val imageUrl = itunesArticleData?.image ?: EPISODE_EMPTY_IMAGE_URL
         Episode(
             id = guid!!.replace(IVOOX_URL, ""),
             url = getEpisodeUrl(),
@@ -46,7 +48,7 @@ fun Article.toDomain(
             thumbnailUrl = imageUrl,
             pubDateMillis = Date(pubDate).time,
             title = title ?: "",
-            audioLengthSeconds = itunesArticleData?.duration?.toInt() ?: 0,
+            audioLengthInSeconds = itunesArticleData.getAudioLengthInSeconds(),
             description = description
         )
     }
@@ -66,6 +68,19 @@ private fun Article.getEpisodeUrl(): String {
     return "$GABI_MORENO_WEB_BASE_URL/$episodeNumber"
 }
 
+private fun ItunesArticleData?.getAudioLengthInSeconds(): Int {
+    if (this == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
+    val duration = this.duration
+    if (duration?.toIntOrNull() != null) {
+        return duration.toInt()
+    } else {
+        if (duration == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
+        val dateFormat = SimpleDateFormat("HH:mm:ss")
+        val date = dateFormat.parse(duration)
+        return date.minutes * 60 + date.seconds
+    }
+}
+
 internal const val LOS_ANDROIDES = "Los androides"
 internal const val ANCHOR_MESSAGE =
     "\n\n" +
@@ -73,3 +88,5 @@ internal const val ANCHOR_MESSAGE =
         "\n" +
         "Send in a voice message: https://anchor.fm/losandroides/message"
 internal const val IVOOX_URL = "https://www.ivoox.com/"
+internal const val EPISODE_AUDIO_LENGTH_DEFAULT_DURATION = 0
+internal const val EPISODE_EMPTY_IMAGE_URL = ""

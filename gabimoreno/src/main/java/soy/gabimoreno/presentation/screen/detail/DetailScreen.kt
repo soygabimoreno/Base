@@ -94,7 +94,7 @@ fun DetailScreen(
                     )
 
                     EmphasisText(
-                        text = "${episode.pubDateMillis.formatMillisecondsAsDate("MMM dd")} • ${episode.audioLengthSeconds.toDurationMinutes()}"
+                        text = "${episode.pubDateMillis.formatMillisecondsAsDate("MMM dd")} • ${episode.audioLengthInSeconds.toDurationMinutes()}"
                     )
 
                     Spacer(modifier = Modifier.height(Spacing.s16))

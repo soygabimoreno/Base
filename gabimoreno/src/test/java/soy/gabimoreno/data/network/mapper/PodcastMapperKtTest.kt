@@ -19,15 +19,36 @@ class PodcastMapperKtTest {
         result.count shouldBe numberOfEpisodes
         result.total shouldBe numberOfEpisodes
 
-        result.results.forEach { episode ->
+        result.results.forEachIndexed { index, episode ->
             episode.id shouldBeEqualTo EPISODE_ID
             episode.url shouldBeEqualTo EPISODE_URL
             episode.audioUrl shouldBe EPISODE_AUDIO_URL
-            episode.imageUrl shouldBe EPISODE_IMAGE_URL
-            episode.thumbnailUrl shouldBe EPISODE_IMAGE_URL
             episode.pubDateMillis shouldBeEqualTo Date(EPISODE_PUB_DATE).time
             episode.title shouldBe EPISODE_TITLE
-            episode.audioLengthSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_IN_SECONDS
+
+            when (index) {
+                0 -> {
+                    episode.imageUrl shouldBe EPISODE_IMAGE_URL
+                    episode.thumbnailUrl shouldBe EPISODE_IMAGE_URL
+                    episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_IN_SECONDS
+                }
+                1 -> {
+                    episode.imageUrl shouldBe EPISODE_IMAGE_URL
+                    episode.thumbnailUrl shouldBe EPISODE_IMAGE_URL
+                    episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED_IN_SECONDS
+                }
+                2 -> {
+                    episode.imageUrl shouldBe EPISODE_EMPTY_IMAGE_URL
+                    episode.thumbnailUrl shouldBe EPISODE_EMPTY_IMAGE_URL
+                    episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
+                }
+                3 -> {
+                    episode.imageUrl shouldBe EPISODE_IMAGE_URL
+                    episode.thumbnailUrl shouldBe EPISODE_IMAGE_URL
+                    episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
+                }
+            }
+
             episode.description shouldBeEqualTo EPISODE_DESCRIPTION
 
             val podcast = episode.podcast
@@ -38,71 +59,78 @@ class PodcastMapperKtTest {
 
     private fun buildChannel(): Channel {
         return Channel(
-            PODCAST_TITLE,
-            "link",
-            "description",
-            Image(
+            title = PODCAST_TITLE,
+            link = "link",
+            description = "description",
+            image = Image(
                 "title",
                 "url",
                 "link",
                 "description"
             ),
-            "lastBuildDate",
-            "updatePeriod",
-            listOf(
-                buildArticle(),
-                buildArticle().copy(
-                    itunesArticleData = buildItunesArticleData().copy(
-                        episode = null
+            lastBuildDate = "lastBuildDate",
+            updatePeriod = "updatePeriod",
+            articles = listOf(
+                buildArticle(EPISODE_AUDIO_LENGTH_IN_SECONDS.toString()),
+                run {
+                    val duration = EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED
+                    buildArticle(duration).copy(
+                        itunesArticleData = buildItunesArticleData(duration).copy(
+                            episode = null
+                        )
                     )
-                )
+                },
+                buildArticle(EPISODE_AUDIO_LENGTH_IN_SECONDS.toString()).copy(
+                    itunesArticleData = null
+                ),
+                buildArticle(EPISODE_AUDIO_LENGTH_NULL)
             ),
-            ItunesChannelData(
-                "author",
-                listOf("categories"),
-                "2000",
-                "explicit",
-                "channelImage",
-                listOf("keywords"),
-                "newsFeedUrl",
-                ItunesOwner(
+            itunesChannelData = ItunesChannelData(
+                author = "author",
+                categories = listOf("categories"),
+                duration = "2000",
+                explicit = "explicit",
+                image = "channelImage",
+                keywords = listOf("keywords"),
+                newsFeedUrl = "newsFeedUrl",
+                owner = ItunesOwner(
                     "name",
                     "email"
                 ),
-                "subtitle",
-                "summary",
-                "type"
+                subtitle = "subtitle",
+                summary = "summary",
+                type = "type"
             )
         )
     }
 
-    private fun buildArticle() = Article(
-        "$EPISODE_ID$IVOOX_URL",
-        EPISODE_TITLE,
-        "author",
-        "link",
-        EPISODE_PUB_DATE,
-        "$EPISODE_DESCRIPTION$ANCHOR_MESSAGE",
-        "content",
-        null,
-        EPISODE_AUDIO_URL,
-        "video",
-        "sourceName",
-        "sourceUrl",
-        listOf("categories"),
-        buildItunesArticleData()
+    private fun buildArticle(duration: String?) = Article(
+        guid = "$EPISODE_ID$IVOOX_URL",
+        title = EPISODE_TITLE,
+        author = "author",
+        link = "link",
+        pubDate = EPISODE_PUB_DATE,
+        description = "$EPISODE_DESCRIPTION$ANCHOR_MESSAGE",
+        content = "content",
+        image = null,
+        audio = EPISODE_AUDIO_URL,
+        video = "video",
+        sourceName = "sourceName",
+        sourceUrl = "sourceUrl",
+        categories = listOf("categories"),
+        itunesArticleData = buildItunesArticleData(duration)
     )
 
-    private fun buildItunesArticleData() = ItunesArticleData(
-        "author",
-        EPISODE_AUDIO_LENGTH_IN_SECONDS.toString(),
-        EPISODE_NUMBER,
-        "episodeType",
-        "explicit",
-        EPISODE_IMAGE_URL,
-        listOf("keywords"),
-        "subtitle",
-        "summary"
+    private fun buildItunesArticleData(duration: String?) = ItunesArticleData(
+        author = "author",
+        duration = duration,
+        episode = EPISODE_NUMBER,
+        episodeType = "episodeType",
+        explicit = "explicit",
+        image = EPISODE_IMAGE_URL,
+        keywords = listOf("keywords"),
+        subtitle = "subtitle",
+        summary = "summary"
     )
 }
 
@@ -113,6 +141,9 @@ private const val EPISODE_AUDIO_URL = "audio"
 private const val EPISODE_IMAGE_URL = "image"
 private const val EPISODE_TITLE = "$EPISODE_NUMBER. Title"
 private const val EPISODE_AUDIO_LENGTH_IN_SECONDS = 896
+private const val EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED = "00:51:15"
+private const val EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED_IN_SECONDS = 51 * 60 + 15
+private val EPISODE_AUDIO_LENGTH_NULL = null
 private const val EPISODE_PUB_DATE = "Mon, 27 Jun 2022 04:00:33 GMT"
 private const val EPISODE_DESCRIPTION = "description"
 
