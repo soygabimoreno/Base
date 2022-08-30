@@ -75,9 +75,15 @@ private fun ItunesArticleData?.getAudioLengthInSeconds(): Int {
         return duration.toInt()
     } else {
         if (duration == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
-        val dateFormat = SimpleDateFormat("HH:mm:ss")
+        val dateFormat = SimpleDateFormat(HOURS_MINUTES_SECONDS_PATTERN, Locale.ROOT)
         val date = dateFormat.parse(duration)
-        return date.hours * 60 * 60 + date.minutes * 60 + date.seconds // TODO: Put this cleaner
+        val calendar = Calendar.getInstance()
+        if (date == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
+        calendar.time = date
+        val hours = calendar.get(Calendar.HOUR_OF_DAY)
+        val minutes = calendar.get(Calendar.MINUTE)
+        val seconds = calendar.get(Calendar.SECOND)
+        return hours * ONE_HOUR_IN_SECONDS + minutes * ONE_MINUTE_IN_SECONDS + seconds
     }
 }
 
@@ -90,3 +96,7 @@ internal const val ANCHOR_MESSAGE =
 internal const val IVOOX_URL = "https://www.ivoox.com/"
 internal const val EPISODE_AUDIO_LENGTH_DEFAULT_DURATION = 0
 internal const val EPISODE_EMPTY_IMAGE_URL = ""
+
+private const val HOURS_MINUTES_SECONDS_PATTERN = "HH:mm:ss"
+private const val ONE_MINUTE_IN_SECONDS = 60
+private const val ONE_HOUR_IN_SECONDS = 60 * ONE_MINUTE_IN_SECONDS
