@@ -4,17 +4,21 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import soy.gabimoreno.domain.usecase.GetDeepLinkContentUseCase
+import soy.gabimoreno.framework.dataStore
 import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkEpisodeNumber
 import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkUrl
-
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        preloadDataFromDataStore()
 
         // TODO: Check how to manage deep links
         val action: String? = intent?.action
@@ -27,19 +31,16 @@ class MainActivity : ComponentActivity() {
             DeepLinkUrl.value = deepLinkContent.url
         }
 
-//        val episodeNumber = if (action != null && data != null) {
-//            val parameters: List<String> = data.pathSegments
-//            if (parameters.isNotEmpty()) {
-//                parameters[0].toIntOrNull()
-//            } else null
-//        } else null
-//        DeepLinkEpisodeNumber.value = episodeNumber
-
-
         setContent {
-            GabiMorenoApp(
+            App(
                 backDispatcher = onBackPressedDispatcher
             )
+        }
+    }
+
+    private fun preloadDataFromDataStore() {
+        lifecycleScope.launch {
+            dataStore.data.first()
         }
     }
 }
