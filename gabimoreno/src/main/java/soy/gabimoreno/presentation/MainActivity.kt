@@ -5,7 +5,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
-import soy.gabimoreno.presentation.navigation.EpisodeNumber
+import soy.gabimoreno.domain.usecase.GetDeepLinkContentUseCase
+import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkEpisodeNumber
+import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkUrl
 
 
 @AndroidEntryPoint
@@ -17,13 +19,21 @@ class MainActivity : ComponentActivity() {
         // TODO: Check how to manage deep links
         val action: String? = intent?.action
         val data: Uri? = intent?.data
-        val episodeNumber = if (action != null && data != null) {
+        if (action != null && data != null) {
             val parameters: List<String> = data.pathSegments
-            if (parameters.isNotEmpty()) {
-                parameters[0].toIntOrNull()
-            } else null
-        } else null
-        EpisodeNumber.value = episodeNumber
+            val getDeepLinkContentUseCase = GetDeepLinkContentUseCase()
+            val deepLinkContent = getDeepLinkContentUseCase(parameters)
+            DeepLinkEpisodeNumber.value = deepLinkContent.episodeNumber
+            DeepLinkUrl.value = deepLinkContent.url
+        }
+
+//        val episodeNumber = if (action != null && data != null) {
+//            val parameters: List<String> = data.pathSegments
+//            if (parameters.isNotEmpty()) {
+//                parameters[0].toIntOrNull()
+//            } else null
+//        } else null
+//        DeepLinkEpisodeNumber.value = episodeNumber
 
 
         setContent {
