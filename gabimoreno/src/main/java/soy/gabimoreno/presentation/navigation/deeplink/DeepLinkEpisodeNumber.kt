@@ -1,6 +1,6 @@
-package soy.gabimoreno.presentation.navigation
+package soy.gabimoreno.presentation.navigation.deeplink
 
 @Deprecated("This is a patch for managing the deep links")
-object EpisodeNumber {
+object DeepLinkEpisodeNumber {
     var value: Int? = null
 }

@@ -26,7 +26,8 @@ import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.flow.collect
 import soy.gabimoreno.R
 import soy.gabimoreno.core.normalizeText
-import soy.gabimoreno.presentation.navigation.EpisodeNumber
+import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkEpisodeNumber
+import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkUrl
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.view.EpisodeView
 import soy.gabimoreno.presentation.screen.home.view.ErrorView
@@ -118,14 +119,20 @@ fun HomeScreen(
                                     }
                                 }
                                 // TODO: Check how to manage deep links
-                                val episodeNumber = EpisodeNumber.value
+                                val episodeNumber = DeepLinkEpisodeNumber.value
                                 if (episodeNumber != null) {
-                                    EpisodeNumber.value = null
+                                    DeepLinkEpisodeNumber.value = null
                                     val index = filteredEpisodes.size - episodeNumber
                                     val episode = filteredEpisodes[index]
                                     val episodeId = episode.id
                                     homeViewModel.onDeepLinkReceived(episodeId, episode.title)
                                     onDeepLinkReceived(episodeId)
+                                } else {
+                                    val url = DeepLinkUrl.value
+                                    url?.let {
+                                        DeepLinkUrl.value = null
+                                        homeViewModel.onShowWebViewClicked(url)
+                                    }
                                 }
                             }
                         }
