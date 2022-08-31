@@ -24,8 +24,9 @@ import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.ui.AudioBottomBar
 
 @Composable
-fun GabiMorenoApp(
-    backDispatcher: OnBackPressedDispatcher
+fun App(
+    backDispatcher: OnBackPressedDispatcher,
+    appState: AppState = rememberAppState()
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -45,7 +46,7 @@ fun GabiMorenoApp(
                             .fillMaxHeight()
                             .padding(padding)
                     ) {
-                        AppNavigation(navController)
+                        AppNavigation(navController, appState)
                         AudioBottomBar(
                             modifier = Modifier.align(Alignment.BottomCenter)
                         )

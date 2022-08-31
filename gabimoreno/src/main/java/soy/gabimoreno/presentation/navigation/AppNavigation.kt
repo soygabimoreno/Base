@@ -4,30 +4,36 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import soy.gabimoreno.presentation.AppState
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
 import soy.gabimoreno.presentation.screen.premium.PremiumScreen
 import soy.gabimoreno.presentation.screen.webview.WebViewScreen
 
 @Composable
-fun AppNavigation(navController: NavHostController) {
+fun AppNavigation(
+    navController: NavHostController,
+    appState: AppState
+) {
     NavHost(
         navController = navController,
-        startDestination = Feature.PODCAST.route
+        startDestination = appState.startDestination
     ) {
-        podcastNav(navController)
-        premiumNav(navController)
+        podcastNav(navController, appState)
+        premiumNav(navController, appState)
     }
 }
 
 private fun NavGraphBuilder.podcastNav(
-    navController: NavController
+    navController: NavController,
+    appState: AppState
 ) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.PODCAST).route,
         route = Feature.PODCAST.route
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.PODCAST)) {
+            appState.setStartDestination(Feature.PODCAST)
             HomeScreen(
                 onItemClicked = { episodeId ->
                     navController.navigateToDetail(episodeId)
@@ -64,13 +70,15 @@ private fun NavGraphBuilder.podcastNav(
 }
 
 private fun NavGraphBuilder.premiumNav(
-    navController: NavController
+    navController: NavController,
+    appState: AppState
 ) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.PREMIUM).route,
         route = Feature.PREMIUM.route
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.PREMIUM)) {
+            appState.setStartDestination(Feature.PREMIUM)
             PremiumScreen()
         }
     }

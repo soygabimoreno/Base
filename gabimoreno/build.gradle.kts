@@ -149,6 +149,8 @@ dependencies {
 
     implementation("io.arrow-kt:arrow-core:1.0.1")
 
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.amshove.kluent:kluent-android:1.68")
     testImplementation("io.mockk:mockk:1.12.4")
