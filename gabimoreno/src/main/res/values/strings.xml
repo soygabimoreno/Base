@@ -19,6 +19,10 @@
     <string name="replay_10_seconds">Retroceder 10 segundos</string>
     <string name="forward_10_seconds">Avanzar 10 segundos</string>
     <string name="premium_description">Desde aquí podrás acceder al contenido premium.\n\nDisponible a partir del lunes 12 de septiembre.</string>
-    <string name="premium_login">LOGIN</string>
+    <string name="premium_login">Acceder</string>
+    <string name="premium_email">Email</string>
+    <string name="premium_password">Password</string>
+    <string name="premium_email_error_invalid_format">El email no tiene el formato adecuado</string>
+    <string name="premium_password_error_invalid">El password tiene menos de 4 caracteres</string>
     <string name="search">Búsqueda</string>
 </resources>
