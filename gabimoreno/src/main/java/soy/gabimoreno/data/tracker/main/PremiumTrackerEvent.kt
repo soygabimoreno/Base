@@ -7,4 +7,5 @@ sealed class PremiumTrackerEvent(
 ) : TrackerEvent {
 
     object ViewScreen : PremiumTrackerEvent()
+    data class ClickLogin(override val parameters: Map<String, Any>) : PremiumTrackerEvent()
 }

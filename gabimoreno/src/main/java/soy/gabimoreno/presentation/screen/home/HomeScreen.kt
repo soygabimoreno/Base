@@ -8,15 +8,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -45,13 +42,13 @@ fun HomeScreen(
     val homeViewModel = ViewModelProvider.homeViewModel
     val podcastSearch = homeViewModel.podcastSearch
 
-    val encodedUrl = remember { mutableStateOf("") }
+    var encodedUrl by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         homeViewModel.onViewScreen()
     }
 
-    val searchTextState = remember { mutableStateOf(TextFieldValue("")) }
+    var searchTextState by remember { mutableStateOf(TextFieldValue("")) }
 
     Surface {
         Column {
@@ -60,10 +57,10 @@ fun HomeScreen(
                     .statusBarsPadding()
                     .padding(start = Spacing.s16, top = Spacing.s4, bottom = Spacing.s4)
             )
-            TextField(
-                value = searchTextState.value,
+            OutlinedTextField(
+                value = searchTextState,
                 onValueChange = { value ->
-                    searchTextState.value = value
+                    searchTextState = value
                 },
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                 leadingIcon = {
@@ -97,7 +94,7 @@ fun HomeScreen(
                                 spacing = Spacing.s16,
                                 modifier = Modifier.padding(horizontal = Spacing.s16)
                             ) {
-                                val searchText = searchTextState.value.text
+                                val searchText = searchTextState.text
                                 val episodes = podcastSearch.data.results
                                 val filteredEpisodes = if (searchText.isBlank()) {
                                     episodes
@@ -157,11 +154,11 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         homeViewModel.viewEventFlow.collect { viewEvent ->
             when (viewEvent) {
-                is HomeViewModel.ViewEvent.ShowWebView -> encodedUrl.value = viewEvent.encodedUrl
+                is HomeViewModel.ViewEvent.ShowWebView -> encodedUrl = viewEvent.encodedUrl
             }
         }
     }
-    if (encodedUrl.value.isNotBlank()) {
-        onGoToWebClicked(encodedUrl.value)
+    if (encodedUrl.isNotBlank()) {
+        onGoToWebClicked(encodedUrl)
     }
 }
