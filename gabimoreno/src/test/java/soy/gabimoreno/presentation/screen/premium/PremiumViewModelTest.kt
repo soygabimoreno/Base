@@ -44,7 +44,7 @@ class PremiumViewModelTest {
     fun `GIVEN PREMIUM_SUBSCRIPTION_LAUNCH enabled WHEN onViewScreen THEN track event and show login`() {
         every { remoteConfigProvider.isFeatureEnabled(RemoteConfigName.PREMIUM_SUBSCRIPTION_LAUNCH) } returns true
 
-        viewModel.onViewScreen()
+        viewModel.onViewScreen(email, password)
 
         verifyOnce {
             tracker.trackEvent(PremiumTrackerEvent.ViewScreen)
@@ -60,7 +60,7 @@ class PremiumViewModelTest {
     fun `GIVEN PREMIUM_SUBSCRIPTION_LAUNCH disabled WHEN onViewScreen THEN track event and do not show login`() {
         every { remoteConfigProvider.isFeatureEnabled(RemoteConfigName.PREMIUM_SUBSCRIPTION_LAUNCH) } returns true
 
-        viewModel.onViewScreen()
+        viewModel.onViewScreen(email, password)
 
         verifyOnce {
             tracker.trackEvent(PremiumTrackerEvent.ViewScreen)

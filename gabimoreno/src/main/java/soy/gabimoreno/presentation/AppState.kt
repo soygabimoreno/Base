@@ -6,8 +6,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import soy.gabimoreno.framework.getStartDestination
-import soy.gabimoreno.framework.setStartDestination
+import soy.gabimoreno.framework.datastore.getStartDestination
+import soy.gabimoreno.framework.datastore.setStartDestination
 import soy.gabimoreno.presentation.navigation.Feature
 
 @Composable
@@ -19,12 +19,12 @@ fun rememberAppState(): AppState {
 }
 
 class AppState(private val context: Context) {
-    val startDestination: String = runBlocking {
+    val startDestination: String = runBlocking { // TODO: This is blocking the UI. Do it better
         context.getStartDestination().first()
     }
 
     fun setStartDestination(feature: Feature) {
-        runBlocking {
+        runBlocking { // TODO: This is blocking the UI. Do it better
             context.setStartDestination(feature)
         }
     }

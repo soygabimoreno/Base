@@ -24,9 +24,6 @@ object Spacing {
     val oddSpacing12 = 12.dp
 
     @Deprecated("This is an odd spacing and probably should be replaced by a proper one")
-    val oddSpacing58 = 58.dp
-
-    @Deprecated("This is an odd spacing and probably should be replaced by a proper one")
     val oddSpacing120 = 120.dp
 
     @Deprecated("This is an odd spacing and probably should be replaced by a proper one")

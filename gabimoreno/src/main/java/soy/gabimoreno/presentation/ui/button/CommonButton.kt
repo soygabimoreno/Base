@@ -1,4 +1,4 @@
-package soy.gabimoreno.presentation.ui
+package soy.gabimoreno.presentation.ui.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,14 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
-fun PrimaryButton(
+fun CommonButton(
     text: String,
-    height: Dp = Spacing.oddSpacing58,
+    height: Dp,
+    background: Color,
     onClick: () -> Unit
 ) {
     Box(
@@ -28,7 +30,7 @@ fun PrimaryButton(
             .defaultMinSize(Spacing.oddSpacing200)
             .height(height)
             .clip(CircleShape)
-            .background(MaterialTheme.colors.primary)
+            .background(background)
             .clickable(onClick = onClick)
     ) {
         Text(
