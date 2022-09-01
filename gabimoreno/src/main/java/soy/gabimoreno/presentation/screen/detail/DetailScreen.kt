@@ -25,7 +25,7 @@ import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.BackButton
 import soy.gabimoreno.presentation.ui.EmphasisText
 import soy.gabimoreno.presentation.ui.EpisodeImage
-import soy.gabimoreno.presentation.ui.PrimaryButton
+import soy.gabimoreno.presentation.ui.button.PrimaryButton
 import soy.gabimoreno.util.formatMillisecondsAsDate
 import soy.gabimoreno.util.toDurationMinutes
 

@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import soy.gabimoreno.domain.usecase.GetDeepLinkContentUseCase
-import soy.gabimoreno.framework.dataStore
+import soy.gabimoreno.framework.datastore.dataStore
 import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkEpisodeNumber
 import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkUrl
 

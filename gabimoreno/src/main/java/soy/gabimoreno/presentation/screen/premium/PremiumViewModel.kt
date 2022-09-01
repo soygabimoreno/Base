@@ -12,6 +12,7 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
+import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.remoteconfig.RemoteConfigName
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import javax.inject.Inject
@@ -21,17 +22,25 @@ class PremiumViewModel @Inject constructor(
     private val tracker: Tracker,
     private val remoteConfigProvider: RemoteConfigProvider,
     private val loginValidationUseCase: LoginValidationUseCase,
+    private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase,
     @IO private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _viewEventFlow = MutableSharedFlow<ViewEvent>()
     val viewEventFlow = _viewEventFlow.asSharedFlow()
 
-    fun onViewScreen() {
+    fun onViewScreen(
+        email: String,
+        password: String
+    ) {
         tracker.trackEvent(PremiumTrackerEvent.ViewScreen)
         if (remoteConfigProvider.isFeatureEnabled(RemoteConfigName.PREMIUM_SUBSCRIPTION_LAUNCH)) {
             viewModelScope.launch(dispatcher) {
-                _viewEventFlow.emit(ViewEvent.ShowLogin)
+                _viewEventFlow.emit(ViewEvent.ShowAccess(email, password))
+            }
+        } else {
+            viewModelScope.launch(dispatcher) {
+                _viewEventFlow.emit(ViewEvent.HideLoading)
             }
         }
     }
@@ -55,7 +64,7 @@ class PremiumViewModel @Inject constructor(
                     }
                 }, {
                     viewModelScope.launch(dispatcher) {
-                        _viewEventFlow.emit(ViewEvent.ShowPremium)
+                        _viewEventFlow.emit(ViewEvent.ShowPremium(email, password))
                     }
                 }
             )
@@ -67,10 +76,35 @@ class PremiumViewModel @Inject constructor(
         tracker.trackEvent(PremiumTrackerEvent.ClickLogin(parameters))
     }
 
+    fun saveCredentialsInDataStore(
+        email: String,
+        password: String
+    ) {
+        viewModelScope.launch(dispatcher) {
+            saveCredentialsInDataStoreUseCase(email, password)
+        }
+    }
+
+    fun onLogoutClicked() {
+        viewModelScope.launch(dispatcher) {
+            _viewEventFlow.emit(ViewEvent.ShowAccessAgain)
+        }
+    }
+
     sealed class ViewEvent {
-        object ShowLogin : ViewEvent()
+        data class ShowAccess(
+            val email: String,
+            val password: String
+        ) : ViewEvent()
+
+        object ShowAccessAgain : ViewEvent()
+        object HideLoading : ViewEvent()
+
         object ShowInvalidEmailFormatError : ViewEvent()
         object ShowInvalidPasswordError : ViewEvent()
-        object ShowPremium : ViewEvent()
+        data class ShowPremium(
+            val email: String,
+            val password: String
+        ) : ViewEvent()
     }
 }

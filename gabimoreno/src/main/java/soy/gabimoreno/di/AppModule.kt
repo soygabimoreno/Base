@@ -16,6 +16,7 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.domain.repository.PodcastRepository
 import soy.gabimoreno.domain.repository.PodcastRepositoryImpl
 import soy.gabimoreno.domain.usecase.GetTrackingEventNameUseCase
+import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.player.exoplayer.PodcastMediaSource
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
 import javax.inject.Singleton
@@ -66,6 +67,13 @@ object AppModule {
     @Singleton
     fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics =
         FirebaseAnalytics.getInstance(context)
+
+    @Provides
+    @Singleton
+    fun provideSaveCredentialsInDataStoreUseCase(
+        @ApplicationContext context: Context
+    ): SaveCredentialsInDataStoreUseCase =
+        SaveCredentialsInDataStoreUseCase(context)
 }
 
 private const val ONE_DAY_IN_MILLIS = 24L * 60L * 60L * 1000L

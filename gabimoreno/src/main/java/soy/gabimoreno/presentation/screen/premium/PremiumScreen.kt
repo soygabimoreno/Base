@@ -7,28 +7,54 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import soy.gabimoreno.R
+import soy.gabimoreno.framework.datastore.getEmail
+import soy.gabimoreno.framework.datastore.getPassword
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Spacing
-import soy.gabimoreno.presentation.ui.PrimaryButton
+import soy.gabimoreno.presentation.ui.button.PrimaryButton
+import soy.gabimoreno.presentation.ui.button.SecondaryButton
 
 @Composable
 fun PremiumScreen() {
+    val context = LocalContext.current
+
     val premiumViewModel = ViewModelProvider.premiumViewModel
-    var showLogin by remember { mutableStateOf(false) }
+
+    var email by remember { mutableStateOf(EMPTY_EMAIL) }
+    var password by remember { mutableStateOf(EMPTY_PASSWORD) }
+
+    var showLoading by remember { mutableStateOf(true) }
+    var showAccess by remember { mutableStateOf(false) }
     var showInvalidEmailFormatError by remember { mutableStateOf(false) }
     var showInvalidPasswordError by remember { mutableStateOf(false) }
     var showPremium by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        premiumViewModel.onViewScreen()
+        premiumViewModel.onViewScreen(
+            email = context.getEmail().first(),
+            password = context.getPassword().first()
+        )
         premiumViewModel.viewEventFlow.collect { viewEvent ->
             when (viewEvent) {
-                is PremiumViewModel.ViewEvent.ShowLogin -> {
-                    showLogin = true
+                is PremiumViewModel.ViewEvent.ShowAccess -> {
+                    showLoading = false
+                    showAccess = true
+
+                    email = viewEvent.email
+                    password = viewEvent.password
+                }
+                is PremiumViewModel.ViewEvent.ShowAccessAgain -> {
+                    showAccess = true
+                    showPremium = false
+                }
+                PremiumViewModel.ViewEvent.HideLoading -> {
+                    showLoading = false
                 }
                 PremiumViewModel.ViewEvent.ShowInvalidEmailFormatError -> {
                     showInvalidPasswordError = false
@@ -38,16 +64,16 @@ fun PremiumScreen() {
                     showInvalidEmailFormatError = false
                     showInvalidPasswordError = true
                 }
-                PremiumViewModel.ViewEvent.ShowPremium -> {
+                is PremiumViewModel.ViewEvent.ShowPremium -> {
                     showInvalidEmailFormatError = false
                     showInvalidPasswordError = false
                     showPremium = true
+                    premiumViewModel.saveCredentialsInDataStore(viewEvent.email, viewEvent.password)
                 }
             }
         }
     }
 
-    val showLoading = !showLogin
     ShowLoading(showLoading)
 
     Column(
@@ -59,35 +85,35 @@ fun PremiumScreen() {
             text = stringResource(id = R.string.nav_item_premium).uppercase(),
             style = MaterialTheme.typography.h5
         )
-        Spacer(modifier = Modifier.height(Spacing.s16))
+        Spacer()
         Text(text = stringResource(id = R.string.premium_description))
         Spacer(modifier = Modifier.height(Spacing.s40))
-        Text(
-            text = stringResource(id = R.string.premium_login).uppercase(),
-            style = MaterialTheme.typography.h6
-        )
-        if (showLogin && !showPremium) {
-            Spacer(modifier = Modifier.height(Spacing.s16))
-            var email by remember { mutableStateOf(TextFieldValue("")) }
+        if (showAccess && !showPremium) {
+            Text(
+                text = stringResource(id = R.string.premium_login).uppercase(),
+                style = MaterialTheme.typography.h6
+            )
+            Spacer()
+            var emailTextFieldValue by remember { mutableStateOf(TextFieldValue(email)) }
             LoginOutlinedTextField(
-                email,
+                emailTextFieldValue,
                 stringResource(id = R.string.premium_email),
                 showInvalidEmailFormatError,
                 stringResource(id = R.string.premium_email_error_invalid_format)
             ) {
-                email = it
+                emailTextFieldValue = it
             }
-            Spacer(modifier = Modifier.height(Spacing.s16))
-            var password by remember { mutableStateOf(TextFieldValue("")) }
+            Spacer()
+            var passwordTextFieldValue by remember { mutableStateOf(TextFieldValue(password)) }
             LoginOutlinedTextField(
-                password,
+                passwordTextFieldValue,
                 stringResource(id = R.string.premium_password),
                 showInvalidPasswordError,
                 stringResource(id = R.string.premium_password_error_invalid)
             ) {
-                password = it
+                passwordTextFieldValue = it
             }
-            Spacer(modifier = Modifier.height(Spacing.s16))
+            Spacer()
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth()
@@ -96,13 +122,28 @@ fun PremiumScreen() {
                     text = stringResource(id = R.string.premium_login),
                     height = Spacing.s48
                 ) {
-                    premiumViewModel.onLoginClicked(email.text, password.text)
+                    premiumViewModel.onLoginClicked(
+                        emailTextFieldValue.text,
+                        passwordTextFieldValue.text
+                    )
                 }
             }
         }
 
         if (showPremium) {
-            Text(text = "PREMIUM")
+            Spacer()
+            Text(text = stringResource(id = R.string.premium_premium).uppercase()) // TODO: This is provisional
+            Spacer()
+            SecondaryButton(
+                text = stringResource(id = R.string.premium_logout),
+                height = Spacing.s48
+            ) {
+                premiumViewModel.onLogoutClicked()
+            }
+
+            // TODO 2: Do the Auth Cookie request
+
+
         }
     }
 }
@@ -118,3 +159,11 @@ private fun ShowLoading(showLoading: Boolean) {
         }
     }
 }
+
+@Composable
+private fun Spacer() {
+    Spacer(modifier = Modifier.height(Spacing.s16))
+}
+
+private const val EMPTY_EMAIL = ""
+private const val EMPTY_PASSWORD = ""
