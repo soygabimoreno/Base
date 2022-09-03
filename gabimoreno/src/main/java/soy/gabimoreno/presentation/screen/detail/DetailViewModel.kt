@@ -8,7 +8,7 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
-import soy.gabimoreno.domain.model.Episode
+import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.framework.intent.StartChooser
 import javax.inject.Inject
 

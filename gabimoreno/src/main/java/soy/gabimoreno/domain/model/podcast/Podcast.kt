@@ -1,4 +1,4 @@
-package soy.gabimoreno.domain.model
+package soy.gabimoreno.domain.model.podcast
 
 data class Podcast(
     val author: String,

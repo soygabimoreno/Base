@@ -1,5 +1,8 @@
 package soy.gabimoreno.presentation.screen.premium
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -7,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -15,7 +19,10 @@ import kotlinx.coroutines.flow.first
 import soy.gabimoreno.R
 import soy.gabimoreno.framework.datastore.getEmail
 import soy.gabimoreno.framework.datastore.getPassword
+import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
+import soy.gabimoreno.presentation.screen.premium.view.LoginOutlinedTextField
+import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
 import soy.gabimoreno.presentation.ui.button.SecondaryButton
@@ -34,6 +41,7 @@ fun PremiumScreen() {
     var showInvalidEmailFormatError by remember { mutableStateOf(false) }
     var showInvalidPasswordError by remember { mutableStateOf(false) }
     var showPremium by remember { mutableStateOf(false) }
+    var showGenerateAuthCookieError by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         premiumViewModel.onViewScreen(
@@ -53,6 +61,9 @@ fun PremiumScreen() {
                     showAccess = true
                     showPremium = false
                 }
+                PremiumViewModel.ViewEvent.ShowLoading -> {
+                    showLoading = true
+                }
                 PremiumViewModel.ViewEvent.HideLoading -> {
                     showLoading = false
                 }
@@ -70,11 +81,12 @@ fun PremiumScreen() {
                     showPremium = true
                     premiumViewModel.saveCredentialsInDataStore(viewEvent.email, viewEvent.password)
                 }
+                PremiumViewModel.ViewEvent.ShowGenerateAuthCookieError -> {
+                    showGenerateAuthCookieError = true
+                }
             }
         }
     }
-
-    ShowLoading(showLoading)
 
     Column(
         modifier = Modifier
@@ -140,12 +152,15 @@ fun PremiumScreen() {
             ) {
                 premiumViewModel.onLogoutClicked()
             }
+        }
 
-            // TODO 2: Do the Auth Cookie request
-
-
+        if (showGenerateAuthCookieError) {
+            showGenerateAuthCookieError = false
+            context.toast(stringResource(id = R.string.premium_error_generate_auth_cookie))
         }
     }
+
+    ShowLoading(showLoading)
 }
 
 @Composable
@@ -153,7 +168,11 @@ private fun ShowLoading(showLoading: Boolean) {
     if (showLoading) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .background(brush = SolidColor(Black), alpha = 0.2f)
+                .fillMaxSize()
+                .focusable()
+                .clickable {}
         ) {
             CircularProgressIndicator()
         }

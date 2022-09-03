@@ -1,7 +1,7 @@
 package soy.gabimoreno.fake
 
-import soy.gabimoreno.domain.model.Episode
-import soy.gabimoreno.domain.model.Podcast
+import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.podcast.Podcast
 
 fun buildEpisodes() = listOf(
     buildEpisode().copy(id = "1"),

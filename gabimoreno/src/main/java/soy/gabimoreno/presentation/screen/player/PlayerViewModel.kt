@@ -12,7 +12,7 @@ import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_PLAYBACK_POSITION
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
-import soy.gabimoreno.domain.model.Episode
+import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.framework.KLog
 import soy.gabimoreno.player.extension.currentPosition
 import soy.gabimoreno.player.extension.isPlayEnabled

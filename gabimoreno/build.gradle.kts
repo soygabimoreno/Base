@@ -135,7 +135,10 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")
 
     implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["version_retrofit"]}")
-    implementation("com.squareup.retrofit2:converter-gson:${rootProject.extra["version_retrofit"]}")
+    implementation("com.squareup.retrofit2:converter-moshi:${rootProject.extra["version_retrofit"]}")
+
+    implementation("com.squareup.moshi:moshi:1.13.0")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
 
     implementation("com.prof18.rssparser:rssparser:4.0.2")
 
