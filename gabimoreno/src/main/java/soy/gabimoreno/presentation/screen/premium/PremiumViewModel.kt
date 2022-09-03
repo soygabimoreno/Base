@@ -11,6 +11,7 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
+import soy.gabimoreno.domain.usecase.GenerateAuthCookieUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.remoteconfig.RemoteConfigName
@@ -23,6 +24,7 @@ class PremiumViewModel @Inject constructor(
     private val remoteConfigProvider: RemoteConfigProvider,
     private val loginValidationUseCase: LoginValidationUseCase,
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase,
+    private val generateAuthCookieUseCase: GenerateAuthCookieUseCase,
     @IO private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -35,13 +37,9 @@ class PremiumViewModel @Inject constructor(
     ) {
         tracker.trackEvent(PremiumTrackerEvent.ViewScreen)
         if (remoteConfigProvider.isFeatureEnabled(RemoteConfigName.PREMIUM_SUBSCRIPTION_LAUNCH)) {
-            viewModelScope.launch(dispatcher) {
-                _viewEventFlow.emit(ViewEvent.ShowAccess(email, password))
-            }
+            ViewEvent.ShowAccess(email, password).emit()
         } else {
-            viewModelScope.launch(dispatcher) {
-                _viewEventFlow.emit(ViewEvent.HideLoading)
-            }
+            ViewEvent.HideLoading.emit()
         }
     }
 
@@ -52,23 +50,31 @@ class PremiumViewModel @Inject constructor(
         loginValidationUseCase(email, password)
             .fold(
                 {
-                    viewModelScope.launch(dispatcher) {
-                        when (it) {
-                            LoginValidationUseCase.Error.InvalidEmailFormat -> _viewEventFlow.emit(
-                                ViewEvent.ShowInvalidEmailFormatError
-                            )
-                            LoginValidationUseCase.Error.InvalidPassword -> _viewEventFlow.emit(
-                                ViewEvent.ShowInvalidPasswordError
-                            )
+                    when (it) {
+                        LoginValidationUseCase.Error.InvalidEmailFormat -> {
+                            ViewEvent.ShowInvalidEmailFormatError.emit()
+                        }
+
+                        LoginValidationUseCase.Error.InvalidPassword -> {
+                            ViewEvent.ShowInvalidPasswordError.emit()
                         }
                     }
                 }, {
+                    ViewEvent.ShowLoading.emit()
                     viewModelScope.launch(dispatcher) {
-                        _viewEventFlow.emit(ViewEvent.ShowPremium(email, password))
+                        generateAuthCookieUseCase(email, password)
+                            .fold(
+                                {
+                                    ViewEvent.HideLoading.emit()
+                                    ViewEvent.ShowGenerateAuthCookieError.emit()
+                                }, {
+                                    ViewEvent.HideLoading.emit()
+                                    ViewEvent.ShowPremium(email, password).emit()
+                                }
+                            )
                     }
                 }
             )
-
 
         val parameters = mapOf(
             TRACKER_KEY_EMAIL to email
@@ -86,8 +92,12 @@ class PremiumViewModel @Inject constructor(
     }
 
     fun onLogoutClicked() {
+        ViewEvent.ShowAccessAgain.emit()
+    }
+
+    private fun ViewEvent.emit() {
         viewModelScope.launch(dispatcher) {
-            _viewEventFlow.emit(ViewEvent.ShowAccessAgain)
+            _viewEventFlow.emit(this@emit)
         }
     }
 
@@ -98,6 +108,7 @@ class PremiumViewModel @Inject constructor(
         ) : ViewEvent()
 
         object ShowAccessAgain : ViewEvent()
+        object ShowLoading : ViewEvent()
         object HideLoading : ViewEvent()
 
         object ShowInvalidEmailFormatError : ViewEvent()
@@ -106,5 +117,7 @@ class PremiumViewModel @Inject constructor(
             val email: String,
             val password: String
         ) : ViewEvent()
+
+        object ShowGenerateAuthCookieError : ViewEvent()
     }
 }

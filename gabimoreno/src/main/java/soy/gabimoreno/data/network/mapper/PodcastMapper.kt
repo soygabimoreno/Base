@@ -3,10 +3,10 @@ package soy.gabimoreno.data.network.mapper
 import com.prof.rssparser.Article
 import com.prof.rssparser.Channel
 import com.prof.rssparser.ItunesArticleData
-import soy.gabimoreno.domain.model.Episode
 import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
-import soy.gabimoreno.domain.model.Podcast
-import soy.gabimoreno.domain.model.PodcastSearch
+import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.podcast.Podcast
+import soy.gabimoreno.domain.model.podcast.PodcastSearch
 import java.text.SimpleDateFormat
 import java.util.*
 

@@ -7,7 +7,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.runtime.mutableStateOf
-import soy.gabimoreno.domain.model.Episode
+import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.player.exoplayer.PodcastMediaSource
 import soy.gabimoreno.player.extension.currentPosition
 import javax.inject.Inject

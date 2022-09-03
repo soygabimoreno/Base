@@ -1,7 +1,7 @@
 package soy.gabimoreno.domain.repository
 
 import arrow.core.Either
-import soy.gabimoreno.domain.model.PodcastSearch
+import soy.gabimoreno.domain.model.podcast.PodcastSearch
 
 interface PodcastRepository {
 

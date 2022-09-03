@@ -30,8 +30,8 @@ import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.navigationBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.domain.toPlayPause
-import soy.gabimoreno.domain.model.Episode
-import soy.gabimoreno.domain.model.Podcast
+import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.podcast.Podcast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing

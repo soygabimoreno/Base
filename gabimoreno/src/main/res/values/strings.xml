@@ -26,5 +26,6 @@
     <string name="premium_password">Password</string>
     <string name="premium_email_error_invalid_format">El email no tiene el formato adecuado</string>
     <string name="premium_password_error_invalid">El password tiene menos de 4 caracteres</string>
+    <string name="premium_error_generate_auth_cookie">Ha habido un error de autenticación.\nAsegúrate de que los credenciales son correctos.</string>
     <string name="search">Búsqueda</string>
 </resources>

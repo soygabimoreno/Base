@@ -15,8 +15,8 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.di.IO
-import soy.gabimoreno.domain.model.Episode
-import soy.gabimoreno.domain.model.PodcastSearch
+import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.podcast.PodcastSearch
 import soy.gabimoreno.domain.repository.PodcastRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase

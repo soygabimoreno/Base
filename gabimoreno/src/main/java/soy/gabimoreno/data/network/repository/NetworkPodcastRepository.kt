@@ -1,17 +1,14 @@
-package soy.gabimoreno.domain.repository
+package soy.gabimoreno.data.network.repository
 
 import arrow.core.Either
 import com.prof.rssparser.Parser
 import soy.gabimoreno.data.network.mapper.toDomain
-import soy.gabimoreno.domain.model.PodcastSearch
+import soy.gabimoreno.domain.model.podcast.PodcastSearch
+import soy.gabimoreno.domain.repository.PodcastRepository
 
-class PodcastRepositoryImpl(
+class NetworkPodcastRepository(
     private val rssParser: Parser
 ) : PodcastRepository {
-
-    companion object {
-        private const val TAG = "PodcastRepository"
-    }
 
     override suspend fun getEpisodes(): Either<Throwable, PodcastSearch> {
         return Either.catch {
