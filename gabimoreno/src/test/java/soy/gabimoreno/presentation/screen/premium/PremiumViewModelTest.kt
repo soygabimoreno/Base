@@ -14,7 +14,7 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
-import soy.gabimoreno.domain.usecase.GenerateAuthCookieUseCase
+import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.remoteconfig.RemoteConfigName
@@ -28,7 +28,7 @@ class PremiumViewModelTest {
     private val loginValidationUseCase: LoginValidationUseCase = relaxedMockk()
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase =
         relaxedMockk()
-    private val generateAuthCookieUseCase: GenerateAuthCookieUseCase = relaxedMockk()
+    private val loginUseCase: LoginUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: PremiumViewModel
 
@@ -40,7 +40,7 @@ class PremiumViewModelTest {
             remoteConfigProvider = remoteConfigProvider,
             loginValidationUseCase = loginValidationUseCase,
             saveCredentialsInDataStoreUseCase = saveCredentialsInDataStoreUseCase,
-            generateAuthCookieUseCase = generateAuthCookieUseCase,
+            loginUseCase = loginUseCase,
             dispatcher = testDispatcher
         )
     }

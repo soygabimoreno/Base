@@ -11,7 +11,7 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
-import soy.gabimoreno.domain.usecase.GenerateAuthCookieUseCase
+import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.remoteconfig.RemoteConfigName
@@ -24,7 +24,7 @@ class PremiumViewModel @Inject constructor(
     private val remoteConfigProvider: RemoteConfigProvider,
     private val loginValidationUseCase: LoginValidationUseCase,
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase,
-    private val generateAuthCookieUseCase: GenerateAuthCookieUseCase,
+    private val loginUseCase: LoginUseCase,
     @IO private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -62,11 +62,12 @@ class PremiumViewModel @Inject constructor(
                 }, {
                     ViewEvent.ShowLoading.emit()
                     viewModelScope.launch(dispatcher) {
-                        generateAuthCookieUseCase(email, password)
+                        loginUseCase(email, password)
                             .fold(
                                 {
+                                    it.message
                                     ViewEvent.HideLoading.emit()
-                                    ViewEvent.ShowGenerateAuthCookieError.emit()
+                                    ViewEvent.ShowLoginError.emit()
                                 }, {
                                     ViewEvent.HideLoading.emit()
                                     ViewEvent.ShowPremium(email, password).emit()
@@ -118,6 +119,6 @@ class PremiumViewModel @Inject constructor(
             val password: String
         ) : ViewEvent()
 
-        object ShowGenerateAuthCookieError : ViewEvent()
+        object ShowLoginError : ViewEvent()
     }
 }

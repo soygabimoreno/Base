@@ -42,4 +42,13 @@ class FirebaseRemoteConfigProvider @Inject constructor(
     override fun isFeatureEnabled(remoteConfigName: RemoteConfigName): Boolean {
         return firebaseRemoteConfig.getBoolean(remoteConfigName.name.lowercase())
     }
+
+    override fun getTokenCredentials(): TokenCredentials {
+        val username = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_USERNAME)
+        val password = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_PASSWORD)
+        return TokenCredentials(username, password)
+    }
 }
+
+private const val TOKEN_CREDENTIAL_USERNAME = "TOKEN_CREDENTIAL_USERNAME"
+private const val TOKEN_CREDENTIAL_PASSWORD = "TOKEN_CREDENTIAL_PASSWORD"
