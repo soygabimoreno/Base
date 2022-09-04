@@ -17,25 +17,19 @@ class LoginUseCase @Inject constructor(
         password: String
     ): Either<Throwable, Member> {
         return repository.generateAuthCookie(email, password)
-            .fold(
-                {
-                    it.left()
-                }, {
-                    // TODO: Check if it is possible to get a success without a `"status": "ok"`
-                    val tokenCredentials = remoteConfigProvider.getTokenCredentials()
-                    val tokenCredentialUsername = tokenCredentials.username
-                    val tokenCredentialPassword = tokenCredentials.password
-                    repository.obtainToken(tokenCredentialUsername, tokenCredentialPassword)
-                        .fold(
-                            {
-                                it.left()
-                            },
-                            { jwtAuth ->
-                                val token = jwtAuth.token
-                                repository.getMember(email, token)
-                            }
-                        )
-                }
-            )
+            .map { authCookie ->
+                if (!authCookie.isStatusOK()) return Throwable().left()
+                val tokenCredentials = remoteConfigProvider.getTokenCredentials()
+                val tokenCredentialUsername = tokenCredentials.username
+                val tokenCredentialPassword = tokenCredentials.password
+                if (tokenCredentialUsername.isBlank()) return Throwable().left()
+                if (tokenCredentialPassword.isBlank()) return Throwable().left()
+                return repository.obtainToken(tokenCredentialUsername, tokenCredentialPassword)
+                    .map { jwtAuth ->
+                        val token = jwtAuth.token
+                        return repository.getMember(email, token)
+                    }
+
+            }
     }
 }

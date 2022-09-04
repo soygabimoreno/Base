@@ -11,6 +11,7 @@ import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.network.model.AuthCookieApiModel
 import soy.gabimoreno.data.network.model.JwtAuthApiModel
+import soy.gabimoreno.data.network.model.MemberApiModel
 import soy.gabimoreno.data.network.service.GabiMorenoService
 
 @ExperimentalCoroutinesApi
@@ -81,4 +82,36 @@ class NetworkGabiMorenoRepositoryTest {
             result.isLeft().shouldBeTrue()
             coVerifyOnce { service.obtainToken(username, password) }
         }
+
+    @Test
+    fun `GIVEN a success member WHEN getMember THEN get the expected result`() =
+        runTest {
+            val email = "email@example.com"
+            val token = "1234"
+            val bearerToken = "$BEARER_PREFIX$token"
+            val members = buildMembers()
+            coEvery { service.getMembers(email, bearerToken) } returns members
+
+            val result = repository.getMember(email, token)
+
+            result.isRight().shouldBeTrue()
+            coVerifyOnce { service.getMembers(email, bearerToken) }
+        }
+
+    @Test
+    fun `GIVEN a failure member WHEN getMember THEN get the expected error`() =
+        runTest {
+            val email = "email@example.com"
+            val token = "1234"
+            val bearerToken = "$BEARER_PREFIX$token"
+            val throwable = Throwable()
+            coEvery { service.getMembers(email, bearerToken) } throws throwable
+
+            val result = repository.getMember(email, token)
+
+            result.isLeft().shouldBeTrue()
+            coVerifyOnce { service.getMembers(email, bearerToken) }
+        }
 }
+
+private fun buildMembers() = listOf(MemberApiModel(isActive = true))

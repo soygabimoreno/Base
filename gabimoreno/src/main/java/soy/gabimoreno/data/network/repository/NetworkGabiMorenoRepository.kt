@@ -1,5 +1,6 @@
 package soy.gabimoreno.data.network.repository
 
+import androidx.annotation.VisibleForTesting
 import arrow.core.Either
 import soy.gabimoreno.data.network.mapper.toDomain
 import soy.gabimoreno.data.network.service.GabiMorenoService
@@ -40,8 +41,11 @@ class NetworkGabiMorenoRepository @Inject constructor(
         return Either.catch {
             service.getMembers(
                 email = email,
-                bearerToken = "Bearer $token"
+                bearerToken = "$BEARER_PREFIX$token"
             ).toDomain()
         }
     }
 }
+
+@VisibleForTesting
+internal const val BEARER_PREFIX = "Bearer "
