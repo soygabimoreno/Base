@@ -140,6 +140,8 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.13.0")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
 
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
+
     implementation("com.prof18.rssparser:rssparser:4.0.2")
 
     implementation("com.google.android.exoplayer:exoplayer:${rootProject.extra["version_exo_player"]}")

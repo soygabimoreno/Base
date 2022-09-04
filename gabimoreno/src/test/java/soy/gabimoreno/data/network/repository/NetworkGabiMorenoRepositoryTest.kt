@@ -10,6 +10,7 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.network.model.AuthCookieApiModel
+import soy.gabimoreno.data.network.model.JwtAuthApiModel
 import soy.gabimoreno.data.network.service.GabiMorenoService
 
 @ExperimentalCoroutinesApi
@@ -51,5 +52,33 @@ class NetworkGabiMorenoRepositoryTest {
 
             result.isLeft().shouldBeTrue()
             coVerifyOnce { service.generateAuthCookie(email, password) }
+        }
+
+    @Test
+    fun `GIVEN a success jwtAuth WHEN obtainToken THEN get the expected result`() =
+        runTest {
+            val username = "username"
+            val password = "1234"
+            val jwtAuthApiModel: JwtAuthApiModel = relaxedMockk()
+            coEvery { service.obtainToken(username, password) } returns jwtAuthApiModel
+
+            val result = repository.obtainToken(username, password)
+
+            result.isRight().shouldBeTrue()
+            coVerifyOnce { service.obtainToken(username, password) }
+        }
+
+    @Test
+    fun `GIVEN a failure jwtAuth WHEN obtainToken THEN get the expected error`() =
+        runTest {
+            val username = "username"
+            val password = "1234"
+            val throwable = Throwable()
+            coEvery { service.obtainToken(username, password) } throws throwable
+
+            val result = repository.obtainToken(username, password)
+
+            result.isLeft().shouldBeTrue()
+            coVerifyOnce { service.obtainToken(username, password) }
         }
 }

@@ -15,14 +15,14 @@ import soy.gabimoreno.data.network.repository.NetworkGabiMorenoRepository
 import soy.gabimoreno.domain.model.login.AuthCookie
 
 @ExperimentalCoroutinesApi
-class GenerateAuthCookieUseCaseTest {
+class LoginUseCaseTest {
 
     private val repository: NetworkGabiMorenoRepository = mockk()
-    private lateinit var useCase: GenerateAuthCookieUseCase
+    private lateinit var useCase: LoginUseCase
 
     @Before
     fun setUp() {
-        useCase = GenerateAuthCookieUseCase(
+        useCase = LoginUseCase(
             repository
         )
     }

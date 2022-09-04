@@ -2,7 +2,6 @@ package soy.gabimoreno.presentation.screen.premium
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -81,7 +80,7 @@ fun PremiumScreen() {
                     showPremium = true
                     premiumViewModel.saveCredentialsInDataStore(viewEvent.email, viewEvent.password)
                 }
-                PremiumViewModel.ViewEvent.ShowGenerateAuthCookieError -> {
+                PremiumViewModel.ViewEvent.ShowLoginError -> {
                     showGenerateAuthCookieError = true
                 }
             }
@@ -171,8 +170,7 @@ private fun ShowLoading(showLoading: Boolean) {
             modifier = Modifier
                 .background(brush = SolidColor(Black), alpha = 0.2f)
                 .fillMaxSize()
-                .focusable()
-                .clickable {}
+                .clickable(false) {}
         ) {
             CircularProgressIndicator()
         }
