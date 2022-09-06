@@ -95,7 +95,7 @@ class PremiumViewModel @Inject constructor(
                                 {
                                     it.message
                                     ViewEvent.HideLoading.emit()
-                                    ViewEvent.ShowLoginError.emit()
+                                    ViewEvent.ShowLoginError(email, password).emit()
                                 }, { member ->
                                     val isUserActive = member.isActive
                                     dataStoreMemberSession.setActive(isUserActive)
@@ -118,7 +118,7 @@ class PremiumViewModel @Inject constructor(
                     {
                         it.message
                         ViewEvent.HideLoading.emit()
-                        ViewEvent.ShowLoginError.emit()
+                        ViewEvent.ShowLoginError(email, password).emit()
                     },
                     { posts ->
                         ViewEvent.HideLoading.emit()
@@ -168,6 +168,9 @@ class PremiumViewModel @Inject constructor(
             val posts: List<Post>
         ) : ViewEvent()
 
-        object ShowLoginError : ViewEvent()
+        data class ShowLoginError(
+            val email: String,
+            val password: String
+        ) : ViewEvent()
     }
 }

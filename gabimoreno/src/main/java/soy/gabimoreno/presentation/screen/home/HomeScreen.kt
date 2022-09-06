@@ -96,6 +96,10 @@ fun HomeScreen(
                             ) {
                                 val searchText = searchTextState.text
                                 val episodes = podcastSearch.data.results
+                                    .subList(
+                                        0,
+                                        30
+                                    ) // TODO: Paginate this and remove filtering the last 30 episodes
                                 val filteredEpisodes = if (searchText.isBlank()) {
                                     episodes
                                 } else {

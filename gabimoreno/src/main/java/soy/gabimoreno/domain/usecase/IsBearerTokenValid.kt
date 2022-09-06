@@ -13,6 +13,8 @@ class IsBearerTokenValid @Inject constructor(
 
     suspend operator fun invoke(): Boolean {
         if (APIClient.bearerToken != null) return true
-        return context.getBearerToken().first() != EMPTY_BEARER_TOKEN
+        val bearerToken = context.getBearerToken().first()
+        APIClient.bearerToken = bearerToken
+        return bearerToken != EMPTY_BEARER_TOKEN
     }
 }
