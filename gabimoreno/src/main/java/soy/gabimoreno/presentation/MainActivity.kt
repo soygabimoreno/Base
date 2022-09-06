@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import soy.gabimoreno.domain.usecase.GetDeepLinkContentUseCase
 import soy.gabimoreno.framework.datastore.dataStore
+import soy.gabimoreno.presentation.navigation.Feature
 import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkEpisodeNumber
 import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkUrl
 
@@ -20,19 +21,22 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         preloadDataFromDataStore()
 
-        // TODO: Check how to manage deep links
-        val action: String? = intent?.action
-        val data: Uri? = intent?.data
-        if (action != null && data != null) {
-            val parameters: List<String> = data.pathSegments
-            val getDeepLinkContentUseCase = GetDeepLinkContentUseCase()
-            val deepLinkContent = getDeepLinkContentUseCase(parameters)
-            DeepLinkEpisodeNumber.value = deepLinkContent.episodeNumber
-            DeepLinkUrl.value = deepLinkContent.url
-        }
-
         setContent {
-            App(
+            // TODO: Check how to manage deep links
+            val action: String? = intent?.action
+            val data: Uri? = intent?.data
+            if (action != null && data != null) {
+                val parameters: List<String> = data.pathSegments
+                val getDeepLinkContentUseCase = GetDeepLinkContentUseCase()
+                val deepLinkContent = getDeepLinkContentUseCase(parameters)
+                DeepLinkEpisodeNumber.value = deepLinkContent.episodeNumber
+                DeepLinkUrl.value = deepLinkContent.url
+
+                val appState = rememberAppState()
+                appState.setStartDestination(Feature.PODCAST)
+            }
+
+            AppUi(
                 backDispatcher = onBackPressedDispatcher
             )
         }
