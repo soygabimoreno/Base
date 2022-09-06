@@ -20,7 +20,7 @@ import java.io.File
 
 @Module
 @InstallIn(ServiceComponent::class)
-object ServiceModule {
+object AudioModule {
 
     @Provides
     @ServiceScoped

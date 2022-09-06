@@ -3,10 +3,7 @@ package soy.gabimoreno.data.network.client
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import soy.gabimoreno.BuildConfig
-import soy.gabimoreno.data.network.service.GabiMorenoService
 
 object APIClient {
 
@@ -29,17 +26,4 @@ object APIClient {
             .addInterceptor(httpLoggingInterceptor)
         return httpClient.build()
     }
-
-    fun createGabiMorenoService(
-        client: OkHttpClient
-    ): GabiMorenoService {
-        return Retrofit.Builder()
-            .client(client)
-            .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(GabiMorenoService::class.java)
-    }
 }
-
-private const val BASE_URL = "https://gabimoreno.soy/"

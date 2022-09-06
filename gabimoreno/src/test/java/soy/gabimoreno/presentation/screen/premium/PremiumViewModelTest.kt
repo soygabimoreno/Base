@@ -17,6 +17,7 @@ import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
+import soy.gabimoreno.framework.datastore.DataStoreMemberSession
 import soy.gabimoreno.remoteconfig.RemoteConfigName
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 
@@ -28,6 +29,7 @@ class PremiumViewModelTest {
     private val loginValidationUseCase: LoginValidationUseCase = relaxedMockk()
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase =
         relaxedMockk()
+    private val dataStoreMemberSession: DataStoreMemberSession = relaxedMockk()
     private val loginUseCase: LoginUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: PremiumViewModel
@@ -40,6 +42,7 @@ class PremiumViewModelTest {
             remoteConfigProvider = remoteConfigProvider,
             loginValidationUseCase = loginValidationUseCase,
             saveCredentialsInDataStoreUseCase = saveCredentialsInDataStoreUseCase,
+            dataStoreMemberSession = dataStoreMemberSession,
             loginUseCase = loginUseCase,
             dispatcher = testDispatcher
         )

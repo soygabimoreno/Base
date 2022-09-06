@@ -11,7 +11,7 @@ import org.amshove.kluent.shouldBeTrue
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
-import soy.gabimoreno.data.network.repository.NetworkGabiMorenoRepository
+import soy.gabimoreno.data.network.repository.NetworkLoginRepository
 import soy.gabimoreno.domain.model.login.JwtAuth
 import soy.gabimoreno.domain.model.login.Member
 import soy.gabimoreno.fake.buildAuthCookie
@@ -21,7 +21,7 @@ import soy.gabimoreno.remoteconfig.TokenCredentials
 @ExperimentalCoroutinesApi
 class LoginUseCaseTest {
 
-    private val repository: NetworkGabiMorenoRepository = mockk()
+    private val repository: NetworkLoginRepository = mockk()
     private val remoteConfigProvider: RemoteConfigProvider = mockk()
     private lateinit var useCase: LoginUseCase
 
