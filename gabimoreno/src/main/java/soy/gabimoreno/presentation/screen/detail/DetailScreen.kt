@@ -13,12 +13,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.text.HtmlCompat
-import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.domain.toPlayPause
+import soy.gabimoreno.framework.parseFromHtmlFormat
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
 import soy.gabimoreno.presentation.theme.Spacing
@@ -125,10 +124,7 @@ fun DetailScreen(
                     Spacer(modifier = Modifier.height(Spacing.s16))
 
                     EmphasisText(
-                        text = HtmlCompat.fromHtml(
-                            episode.description,
-                            FROM_HTML_MODE_COMPACT
-                        ).toString()
+                        text = episode.description.parseFromHtmlFormat()
                     )
                 }
             }

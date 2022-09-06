@@ -10,7 +10,7 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.network.model.Category
-import soy.gabimoreno.data.network.model.PostApiModel
+import soy.gabimoreno.data.network.model.post.PostApiModel
 import soy.gabimoreno.data.network.model.toQueryValue
 import soy.gabimoreno.data.network.service.ContentService
 

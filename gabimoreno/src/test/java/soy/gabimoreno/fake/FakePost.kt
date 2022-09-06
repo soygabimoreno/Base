@@ -9,5 +9,7 @@ fun buildPosts() = listOf(
 )
 
 fun buildPost() = Post(
-    id = 1234L
+    id = 1234L,
+    title = "title",
+    content = "content"
 )

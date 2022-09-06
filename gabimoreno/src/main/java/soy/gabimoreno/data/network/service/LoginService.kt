@@ -1,7 +1,6 @@
 package soy.gabimoreno.data.network.service
 
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 import soy.gabimoreno.data.network.model.AuthCookieApiModel
@@ -24,7 +23,6 @@ interface LoginService {
 
     @GET("wp-json/rcp/v1/members/")
     suspend fun getMembers(
-        @Query("s") email: String,
-        @Header("Authorization") bearerToken: String
+        @Query("s") email: String
     ): List<MemberApiModel>
 }

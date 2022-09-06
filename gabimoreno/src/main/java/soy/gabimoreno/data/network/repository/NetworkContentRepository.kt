@@ -15,7 +15,9 @@ class NetworkContentRepository @Inject constructor(
     private val service: ContentService
 ) : ContentRepository {
 
-    override suspend fun getPosts(categories: List<Category>): Either<Throwable, List<Post>> {
+    override suspend fun getPosts(
+        categories: List<Category>
+    ): Either<Throwable, List<Post>> {
         return Either.catch {
             service.getPosts(
                 categories.toQueryValue()

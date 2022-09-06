@@ -16,8 +16,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import soy.gabimoreno.R
+import soy.gabimoreno.domain.model.content.Post
 import soy.gabimoreno.framework.datastore.getEmail
 import soy.gabimoreno.framework.datastore.getPassword
+import soy.gabimoreno.framework.parseFromHtmlFormat
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.premium.view.LoginOutlinedTextField
@@ -34,6 +36,7 @@ fun PremiumScreen() {
 
     var email by remember { mutableStateOf(EMPTY_EMAIL) }
     var password by remember { mutableStateOf(EMPTY_PASSWORD) }
+    var posts by remember { mutableStateOf(EMPTY_POSTS) }
 
     var showLoading by remember { mutableStateOf(true) }
     var showAccess by remember { mutableStateOf(false) }
@@ -79,7 +82,7 @@ fun PremiumScreen() {
                     showInvalidPasswordError = false
                     showPremium = true
                     premiumViewModel.saveCredentialsInDataStore(viewEvent.email, viewEvent.password)
-                    context.toast("Post IDS: ${viewEvent.posts.get(0).id}")
+                    posts = viewEvent.posts
                 }
                 PremiumViewModel.ViewEvent.ShowLoginError -> {
                     showGenerateAuthCookieError = true
@@ -144,7 +147,15 @@ fun PremiumScreen() {
 
         if (showPremium) {
             Spacer()
-            Text(text = stringResource(id = R.string.premium_premium).uppercase()) // TODO: This is provisional
+            Text(text = stringResource(id = R.string.premium_premium).uppercase()) // TODO: This is provisional. Remove asap
+            Spacer()
+            posts.forEach { post ->
+                PremiumContent(
+                    title = post.title,
+                    content = post.content.parseFromHtmlFormat()
+                )
+            }
+            Spacer()
             Spacer()
             SecondaryButton(
                 text = stringResource(id = R.string.premium_logout),
@@ -161,6 +172,20 @@ fun PremiumScreen() {
     }
 
     ShowLoading(showLoading)
+}
+
+@Composable
+fun PremiumContent(
+    title: String,
+    content: String
+) {
+    // TODO: Provisional for visualizing
+    Spacer()
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(text = "Título: $title")
+        Spacer()
+        Text(text = "Contenido: $content")
+    }
 }
 
 @Composable
@@ -185,3 +210,4 @@ private fun Spacer() {
 
 private const val EMPTY_EMAIL = ""
 private const val EMPTY_PASSWORD = ""
+private val EMPTY_POSTS = emptyList<Post>()

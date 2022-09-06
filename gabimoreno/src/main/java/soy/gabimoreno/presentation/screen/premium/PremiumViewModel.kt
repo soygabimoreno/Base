@@ -13,10 +13,7 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.content.Post
-import soy.gabimoreno.domain.usecase.GetPremiumPostsUseCase
-import soy.gabimoreno.domain.usecase.LoginUseCase
-import soy.gabimoreno.domain.usecase.LoginValidationUseCase
-import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
+import soy.gabimoreno.domain.usecase.*
 import soy.gabimoreno.framework.datastore.DataStoreMemberSession
 import soy.gabimoreno.remoteconfig.RemoteConfigName
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
@@ -31,6 +28,7 @@ class PremiumViewModel @Inject constructor(
     private val dataStoreMemberSession: DataStoreMemberSession,
     private val loginUseCase: LoginUseCase,
     private val getPremiumPostsUseCase: GetPremiumPostsUseCase,
+    private val isBearerTokenValid: IsBearerTokenValid,
     @IO private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -51,7 +49,11 @@ class PremiumViewModel @Inject constructor(
                     ViewEvent.ShowAccess(email, password).emit()
                 }
                 isActive -> {
-                    successPerform(email, password)
+                    if (isBearerTokenValid()) {
+                        loginSuccessPerform(email, password)
+                    } else {
+                        login(email, password)
+                    }
                 }
                 else -> {
                     ViewEvent.HideLoading.emit()
@@ -61,6 +63,15 @@ class PremiumViewModel @Inject constructor(
     }
 
     fun onLoginClicked(
+        email: String,
+        password: String
+    ) {
+        val parameters = mapOf(TRACKER_KEY_EMAIL to email)
+        tracker.trackEvent(PremiumTrackerEvent.ClickLogin(parameters))
+        login(email, password)
+    }
+
+    private fun login(
         email: String,
         password: String
     ) {
@@ -88,24 +99,18 @@ class PremiumViewModel @Inject constructor(
                                 }, { member ->
                                     val isUserActive = member.isActive
                                     dataStoreMemberSession.setActive(isUserActive)
-                                    successPerform(email, password)
+                                    loginSuccessPerform(email, password)
                                 }
                             )
                     }
                 }
             )
-
-        val parameters = mapOf(
-            TRACKER_KEY_EMAIL to email
-        )
-        tracker.trackEvent(PremiumTrackerEvent.ClickLogin(parameters))
     }
 
-    private fun successPerform(
+    private fun loginSuccessPerform(
         email: String,
         password: String
     ) {
-
         viewModelScope.launch(dispatcher) {
             val categories = listOf(Category.PREMIUM_ALGORITHMS, Category.PREMIUM_AUDIO_COURSES)
             getPremiumPostsUseCase(categories)
