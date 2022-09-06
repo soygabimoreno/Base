@@ -3,18 +3,18 @@ package soy.gabimoreno.data.network.repository
 import androidx.annotation.VisibleForTesting
 import arrow.core.Either
 import soy.gabimoreno.data.network.mapper.toDomain
-import soy.gabimoreno.data.network.service.GabiMorenoService
+import soy.gabimoreno.data.network.service.LoginService
 import soy.gabimoreno.domain.model.login.AuthCookie
 import soy.gabimoreno.domain.model.login.JwtAuth
 import soy.gabimoreno.domain.model.login.Member
-import soy.gabimoreno.domain.repository.GabiMorenoRepository
+import soy.gabimoreno.domain.repository.LoginRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NetworkGabiMorenoRepository @Inject constructor(
-    private val service: GabiMorenoService
-) : GabiMorenoRepository {
+class NetworkLoginRepository @Inject constructor(
+    private val service: LoginService
+) : LoginRepository {
 
     override suspend fun generateAuthCookie(
         email: String,

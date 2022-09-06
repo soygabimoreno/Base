@@ -79,6 +79,7 @@ fun PremiumScreen() {
                     showInvalidPasswordError = false
                     showPremium = true
                     premiumViewModel.saveCredentialsInDataStore(viewEvent.email, viewEvent.password)
+                    context.toast("Post IDS: ${viewEvent.posts.get(0).id}")
                 }
                 PremiumViewModel.ViewEvent.ShowLoginError -> {
                     showGenerateAuthCookieError = true

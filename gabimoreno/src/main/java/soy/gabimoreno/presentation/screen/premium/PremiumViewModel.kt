@@ -7,13 +7,17 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import soy.gabimoreno.data.network.model.Category
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
+import soy.gabimoreno.domain.model.content.Post
+import soy.gabimoreno.domain.usecase.GetPremiumPostsUseCase
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
+import soy.gabimoreno.framework.datastore.DataStoreMemberSession
 import soy.gabimoreno.remoteconfig.RemoteConfigName
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import javax.inject.Inject
@@ -24,11 +28,13 @@ class PremiumViewModel @Inject constructor(
     private val remoteConfigProvider: RemoteConfigProvider,
     private val loginValidationUseCase: LoginValidationUseCase,
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase,
+    private val dataStoreMemberSession: DataStoreMemberSession,
     private val loginUseCase: LoginUseCase,
+    private val getPremiumPostsUseCase: GetPremiumPostsUseCase,
     @IO private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    private val _viewEventFlow = MutableSharedFlow<ViewEvent>()
+    private val _viewEventFlow = MutableSharedFlow<PremiumViewModel.ViewEvent>()
     val viewEventFlow = _viewEventFlow.asSharedFlow()
 
     fun onViewScreen(
@@ -36,10 +42,21 @@ class PremiumViewModel @Inject constructor(
         password: String
     ) {
         tracker.trackEvent(PremiumTrackerEvent.ViewScreen)
-        if (remoteConfigProvider.isFeatureEnabled(RemoteConfigName.PREMIUM_SUBSCRIPTION_LAUNCH)) {
-            ViewEvent.ShowAccess(email, password).emit()
-        } else {
-            ViewEvent.HideLoading.emit()
+        viewModelScope.launch(dispatcher) {
+            val isActive = dataStoreMemberSession.isActive()
+            val isPremiumSubscriptionLaunch =
+                remoteConfigProvider.isFeatureEnabled(RemoteConfigName.PREMIUM_SUBSCRIPTION_LAUNCH)
+            when {
+                isPremiumSubscriptionLaunch && !isActive -> {
+                    ViewEvent.ShowAccess(email, password).emit()
+                }
+                isActive -> {
+                    successPerform(email, password)
+                }
+                else -> {
+                    ViewEvent.HideLoading.emit()
+                }
+            }
         }
     }
 
@@ -68,9 +85,10 @@ class PremiumViewModel @Inject constructor(
                                     it.message
                                     ViewEvent.HideLoading.emit()
                                     ViewEvent.ShowLoginError.emit()
-                                }, {
-                                    ViewEvent.HideLoading.emit()
-                                    ViewEvent.ShowPremium(email, password).emit()
+                                }, { member ->
+                                    val isUserActive = member.isActive
+                                    dataStoreMemberSession.setActive(isUserActive)
+                                    successPerform(email, password)
                                 }
                             )
                     }
@@ -83,6 +101,28 @@ class PremiumViewModel @Inject constructor(
         tracker.trackEvent(PremiumTrackerEvent.ClickLogin(parameters))
     }
 
+    private fun successPerform(
+        email: String,
+        password: String
+    ) {
+
+        viewModelScope.launch(dispatcher) {
+            val categories = listOf(Category.PREMIUM_ALGORITHMS, Category.PREMIUM_AUDIO_COURSES)
+            getPremiumPostsUseCase(categories)
+                .fold(
+                    {
+                        it.message
+                        ViewEvent.HideLoading.emit()
+                        ViewEvent.ShowLoginError.emit()
+                    },
+                    { posts ->
+                        ViewEvent.HideLoading.emit()
+                        ViewEvent.ShowPremium(email, password, posts).emit()
+                    }
+                )
+        }
+    }
+
     fun saveCredentialsInDataStore(
         email: String,
         password: String
@@ -93,6 +133,9 @@ class PremiumViewModel @Inject constructor(
     }
 
     fun onLogoutClicked() {
+        viewModelScope.launch(dispatcher) {
+            dataStoreMemberSession.setActive(false)
+        }
         ViewEvent.ShowAccessAgain.emit()
     }
 
@@ -116,7 +159,8 @@ class PremiumViewModel @Inject constructor(
         object ShowInvalidPasswordError : ViewEvent()
         data class ShowPremium(
             val email: String,
-            val password: String
+            val password: String,
+            val posts: List<Post>
         ) : ViewEvent()
 
         object ShowLoginError : ViewEvent()

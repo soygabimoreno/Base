@@ -3,12 +3,12 @@ package soy.gabimoreno.domain.usecase
 import arrow.core.Either
 import arrow.core.left
 import soy.gabimoreno.domain.model.login.Member
-import soy.gabimoreno.domain.repository.GabiMorenoRepository
+import soy.gabimoreno.domain.repository.LoginRepository
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
-    private val repository: GabiMorenoRepository,
+    private val repository: LoginRepository,
     private val remoteConfigProvider: RemoteConfigProvider
 ) {
 

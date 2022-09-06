@@ -8,7 +8,7 @@ import soy.gabimoreno.data.network.model.AuthCookieApiModel
 import soy.gabimoreno.data.network.model.JwtAuthApiModel
 import soy.gabimoreno.data.network.model.MemberApiModel
 
-interface GabiMorenoService {
+interface LoginService {
 
     @GET("api/user/generate_auth_cookie/")
     suspend fun generateAuthCookie(

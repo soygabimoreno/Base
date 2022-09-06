@@ -12,17 +12,17 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.network.model.AuthCookieApiModel
 import soy.gabimoreno.data.network.model.JwtAuthApiModel
 import soy.gabimoreno.data.network.model.MemberApiModel
-import soy.gabimoreno.data.network.service.GabiMorenoService
+import soy.gabimoreno.data.network.service.LoginService
 
 @ExperimentalCoroutinesApi
-class NetworkGabiMorenoRepositoryTest {
+class NetworkLoginRepositoryTest {
 
-    private val service: GabiMorenoService = mockk()
-    private lateinit var repository: NetworkGabiMorenoRepository
+    private val service: LoginService = mockk()
+    private lateinit var repository: NetworkLoginRepository
 
     @Before
     fun setUp() {
-        repository = NetworkGabiMorenoRepository(
+        repository = NetworkLoginRepository(
             service
         )
     }
