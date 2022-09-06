@@ -11,6 +11,7 @@ import org.amshove.kluent.shouldBeTrue
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
+import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.network.repository.NetworkLoginRepository
 import soy.gabimoreno.domain.model.login.JwtAuth
 import soy.gabimoreno.domain.model.login.Member
@@ -23,13 +24,15 @@ class LoginUseCaseTest {
 
     private val repository: NetworkLoginRepository = mockk()
     private val remoteConfigProvider: RemoteConfigProvider = mockk()
+    private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase = relaxedMockk()
     private lateinit var useCase: LoginUseCase
 
     @Before
     fun setUp() {
         useCase = LoginUseCase(
             repository,
-            remoteConfigProvider
+            remoteConfigProvider,
+            setJwtAuthTokenUseCase
         )
     }
 
@@ -60,7 +63,7 @@ class LoginUseCaseTest {
             } returns jwtAuth.right()
 
             val member = Member(isActive = true)
-            coEvery { repository.getMember(email, token) } returns member.right()
+            coEvery { repository.getMember(email) } returns member.right()
 
             val result = useCase(email, password)
 
@@ -189,7 +192,7 @@ class LoginUseCaseTest {
             } returns jwtAuth.right()
 
             val throwable = Throwable()
-            coEvery { repository.getMember(email, token) } returns throwable.left()
+            coEvery { repository.getMember(email) } returns throwable.left()
 
             val result = useCase(email, password)
 

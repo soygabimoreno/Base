@@ -88,14 +88,13 @@ class NetworkLoginRepositoryTest {
         runTest {
             val email = "email@example.com"
             val token = "1234"
-            val bearerToken = "$BEARER_PREFIX$token"
             val members = buildMembers()
-            coEvery { service.getMembers(email, bearerToken) } returns members
+            coEvery { service.getMembers(email) } returns members
 
-            val result = repository.getMember(email, token)
+            val result = repository.getMember(email)
 
             result.isRight().shouldBeTrue()
-            coVerifyOnce { service.getMembers(email, bearerToken) }
+            coVerifyOnce { service.getMembers(email) }
         }
 
     @Test
@@ -103,14 +102,13 @@ class NetworkLoginRepositoryTest {
         runTest {
             val email = "email@example.com"
             val token = "1234"
-            val bearerToken = "$BEARER_PREFIX$token"
             val throwable = Throwable()
-            coEvery { service.getMembers(email, bearerToken) } throws throwable
+            coEvery { service.getMembers(email) } throws throwable
 
-            val result = repository.getMember(email, token)
+            val result = repository.getMember(email)
 
             result.isLeft().shouldBeTrue()
-            coVerifyOnce { service.getMembers(email, bearerToken) }
+            coVerifyOnce { service.getMembers(email) }
         }
 }
 

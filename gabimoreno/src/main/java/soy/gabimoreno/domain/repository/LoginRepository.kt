@@ -17,8 +17,5 @@ interface LoginRepository {
         password: String
     ): Either<Throwable, JwtAuth>
 
-    suspend fun getMember(
-        email: String,
-        token: String
-    ): Either<Throwable, Member>
+    suspend fun getMember(email: String): Either<Throwable, Member>
 }

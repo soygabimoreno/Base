@@ -10,9 +10,7 @@ class GetPremiumPostsUseCase @Inject constructor(
     private val repository: ContentRepository
 ) {
 
-    suspend operator fun invoke(
-        categories: List<Category>
-    ): Either<Throwable, List<Post>> {
+    suspend operator fun invoke(categories: List<Category>): Either<Throwable, List<Post>> {
         return repository.getPosts(categories)
     }
 }

@@ -1,6 +1,5 @@
 package soy.gabimoreno.data.network.repository
 
-import androidx.annotation.VisibleForTesting
 import arrow.core.Either
 import soy.gabimoreno.data.network.mapper.toDomain
 import soy.gabimoreno.data.network.service.LoginService
@@ -35,17 +34,10 @@ class NetworkLoginRepository @Inject constructor(
     }
 
     override suspend fun getMember(
-        email: String,
-        token: String
+        email: String
     ): Either<Throwable, Member> {
         return Either.catch {
-            service.getMembers(
-                email = email,
-                bearerToken = "$BEARER_PREFIX$token"
-            ).toDomain()
+            service.getMembers(email = email).toDomain()
         }
     }
 }
-
-@VisibleForTesting
-internal const val BEARER_PREFIX = "Bearer "

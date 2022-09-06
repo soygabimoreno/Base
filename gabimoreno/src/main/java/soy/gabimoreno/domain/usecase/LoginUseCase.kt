@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
     private val repository: LoginRepository,
-    private val remoteConfigProvider: RemoteConfigProvider
+    private val remoteConfigProvider: RemoteConfigProvider,
+    private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase
 ) {
 
     suspend operator fun invoke(
@@ -27,9 +28,9 @@ class LoginUseCase @Inject constructor(
                 return repository.obtainToken(tokenCredentialUsername, tokenCredentialPassword)
                     .map { jwtAuth ->
                         val token = jwtAuth.token
-                        return repository.getMember(email, token)
+                        setJwtAuthTokenUseCase(token)
+                        return repository.getMember(email)
                     }
-
             }
     }
 }

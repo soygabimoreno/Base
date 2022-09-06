@@ -10,8 +10,6 @@ import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.data.tracker.DefaultTracker
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.domain.usecase.GetTrackingEventNameUseCase
-import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
-import soy.gabimoreno.framework.datastore.DataStoreMemberSession
 import soy.gabimoreno.player.exoplayer.PodcastMediaSource
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
 import javax.inject.Singleton
@@ -41,18 +39,4 @@ object AppModule {
     @Singleton
     fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics =
         FirebaseAnalytics.getInstance(context)
-
-    @Provides
-    @Singleton
-    fun provideSaveCredentialsInDataStoreUseCase(
-        @ApplicationContext context: Context
-    ): SaveCredentialsInDataStoreUseCase =
-        SaveCredentialsInDataStoreUseCase(context)
-
-    @Provides
-    @Singleton
-    fun provideDataStoreUserSession(
-        @ApplicationContext context: Context
-    ): DataStoreMemberSession =
-        DataStoreMemberSession(context)
 }
