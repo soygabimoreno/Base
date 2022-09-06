@@ -8,6 +8,6 @@ interface ContentService {
 
     @GET("wp-json/wp/v2/posts/")
     suspend fun getPosts(
-        @Query("categories") categories: String
+        @Query("categories") categoriesQuery: String
     ): List<PostApiModel>
 }
