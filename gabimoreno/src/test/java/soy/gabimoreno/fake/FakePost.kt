@@ -11,5 +11,6 @@ fun buildPosts() = listOf(
 fun buildPost() = Post(
     id = 1234L,
     title = "title",
-    content = "content"
+    content = "content",
+    audioUrl = "audioUrl"
 )

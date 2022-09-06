@@ -43,7 +43,7 @@ fun PremiumScreen() {
     var showInvalidEmailFormatError by remember { mutableStateOf(false) }
     var showInvalidPasswordError by remember { mutableStateOf(false) }
     var showPremium by remember { mutableStateOf(false) }
-    var showGenerateAuthCookieError by remember { mutableStateOf(false) }
+    var showLoginError by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         premiumViewModel.onViewScreen(
@@ -84,8 +84,12 @@ fun PremiumScreen() {
                     premiumViewModel.saveCredentialsInDataStore(viewEvent.email, viewEvent.password)
                     posts = viewEvent.posts
                 }
-                PremiumViewModel.ViewEvent.ShowLoginError -> {
-                    showGenerateAuthCookieError = true
+                is PremiumViewModel.ViewEvent.ShowLoginError -> {
+                    showLoginError = true
+                    showAccess = true
+
+                    email = viewEvent.email
+                    password = viewEvent.password
                 }
             }
         }
@@ -150,12 +154,8 @@ fun PremiumScreen() {
             Text(text = stringResource(id = R.string.premium_premium).uppercase()) // TODO: This is provisional. Remove asap
             Spacer()
             posts.forEach { post ->
-                PremiumContent(
-                    title = post.title,
-                    content = post.content.parseFromHtmlFormat()
-                )
+                PremiumContent(post)
             }
-            Spacer()
             Spacer()
             SecondaryButton(
                 text = stringResource(id = R.string.premium_logout),
@@ -165,8 +165,8 @@ fun PremiumScreen() {
             }
         }
 
-        if (showGenerateAuthCookieError) {
-            showGenerateAuthCookieError = false
+        if (showLoginError) {
+            showLoginError = false
             context.toast(stringResource(id = R.string.premium_error_generate_auth_cookie))
         }
     }
@@ -175,16 +175,22 @@ fun PremiumScreen() {
 }
 
 @Composable
-fun PremiumContent(
-    title: String,
-    content: String
-) {
+fun PremiumContent(post: Post) {
     // TODO: Provisional for visualizing
     Spacer()
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "Título: $title")
+        Text(text = "Título: ${post.title}")
         Spacer()
-        Text(text = "Contenido: $content")
+        PrimaryButton(
+            text = "PLAY", // TODO: Temporary
+            height = Spacing.s48
+        ) {
+            // TODO: Play Episode
+        }
+        Spacer()
+        Text(text = "Contenido: ${post.content.parseFromHtmlFormat()}")
+        Spacer()
+        Text(text = "Audio URL: ${post.audioUrl}")
     }
 }
 
