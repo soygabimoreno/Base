@@ -14,6 +14,7 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
+import soy.gabimoreno.domain.usecase.GetPremiumPostsUseCase
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
@@ -31,6 +32,7 @@ class PremiumViewModelTest {
         relaxedMockk()
     private val dataStoreMemberSession: DataStoreMemberSession = relaxedMockk()
     private val loginUseCase: LoginUseCase = relaxedMockk()
+    private val getPremiumPostsUseCase: GetPremiumPostsUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: PremiumViewModel
 
@@ -44,6 +46,7 @@ class PremiumViewModelTest {
             saveCredentialsInDataStoreUseCase = saveCredentialsInDataStoreUseCase,
             dataStoreMemberSession = dataStoreMemberSession,
             loginUseCase = loginUseCase,
+            getPremiumPostsUseCase = getPremiumPostsUseCase,
             dispatcher = testDispatcher
         )
     }
