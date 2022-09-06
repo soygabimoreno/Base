@@ -24,7 +24,7 @@ import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.ui.AudioBottomBar
 
 @Composable
-fun App(
+fun AppUi(
     backDispatcher: OnBackPressedDispatcher,
     appState: AppState = rememberAppState()
 ) {
