@@ -90,7 +90,8 @@ class MainActivity : ComponentActivity() {
                 MainViewModel.ViewEvent.Error.ShowReadFailure -> showReadFailure()
                 MainViewModel.ViewEvent.Error.ShowNotLoadedDevice -> showNotLoadedDevice()
                 MainViewModel.ViewEvent.Foo -> foo()
-                is MainViewModel.ViewEvent.CheckPermissionsAndInitBle -> checkPermissionsAndInitBle(viewEvent.bleManager)
+                is MainViewModel.ViewEvent.CheckPermissionsAndInitBle -> checkPermissionsAndInitBle(
+                    viewEvent.bleManager)
                 is MainViewModel.ViewEvent.ShowDeviceName -> showDeviceName(viewEvent.deviceName)
             }
         }

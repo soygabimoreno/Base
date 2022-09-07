@@ -14,7 +14,7 @@ import soy.gabimoreno.presentation.theme.Spacing
 @Composable
 fun ErrorView(
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(horizontal = Spacing.s24)

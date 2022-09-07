@@ -8,7 +8,7 @@ import soy.gabimoreno.framework.datastore.getBearerToken
 import javax.inject.Inject
 
 class IsBearerTokenValid @Inject constructor(
-    private val context: Context
+    private val context: Context,
 ) {
 
     suspend operator fun invoke(): Boolean {

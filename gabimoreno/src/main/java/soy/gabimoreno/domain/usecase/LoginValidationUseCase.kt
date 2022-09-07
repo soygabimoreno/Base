@@ -10,7 +10,7 @@ class LoginValidationUseCase @Inject constructor() {
 
     operator fun invoke(
         email: String,
-        password: String
+        password: String,
     ): Either<Error, Unit> {
         val isAValidEmail = email.isAValidEmail()
         val isAValidPassword = password.isAValidPassword()

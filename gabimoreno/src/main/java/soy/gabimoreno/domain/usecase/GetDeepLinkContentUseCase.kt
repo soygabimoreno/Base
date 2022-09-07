@@ -33,5 +33,5 @@ class GetDeepLinkContentUseCase @Inject constructor() {
 
 data class DeepLinkContent(
     val episodeNumber: Int?,
-    val url: String?
+    val url: String?,
 )

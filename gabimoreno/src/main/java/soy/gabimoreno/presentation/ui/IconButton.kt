@@ -20,7 +20,7 @@ fun IconButton(
     padding: Dp,
     modifier: Modifier = Modifier,
     tint: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Icon(
         imageVector = imageVector,

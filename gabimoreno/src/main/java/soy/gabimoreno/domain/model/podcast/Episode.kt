@@ -10,5 +10,5 @@ data class Episode(
     val pubDateMillis: Long,
     val title: String,
     val audioLengthInSeconds: Int,
-    val description: String
+    val description: String,
 )

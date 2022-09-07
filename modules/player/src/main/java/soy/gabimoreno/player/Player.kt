@@ -21,7 +21,7 @@ class Player(private val context: Context) {
     fun init(
         exoplayerView: StyledPlayerView,
         uriStrings: List<String>,
-        onStop: () -> Unit
+        onStop: () -> Unit,
     ) {
         this.onStop = onStop
         val trackSelector = DefaultTrackSelector(context)

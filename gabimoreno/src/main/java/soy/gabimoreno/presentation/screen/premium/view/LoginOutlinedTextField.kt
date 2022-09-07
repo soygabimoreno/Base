@@ -20,7 +20,7 @@ fun LoginOutlinedTextField(
     placeholderText: String,
     showError: Boolean,
     errorText: String,
-    onValueChange: (TextFieldValue) -> Unit
+    onValueChange: (TextFieldValue) -> Unit,
 ) {
     OutlinedTextField(
         value = value,

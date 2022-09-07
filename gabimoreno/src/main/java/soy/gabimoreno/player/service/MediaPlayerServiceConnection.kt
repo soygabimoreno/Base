@@ -57,14 +57,14 @@ class MediaPlayerServiceConnection @Inject constructor(
 
     fun subscribe(
         parentId: String,
-        callback: MediaBrowserCompat.SubscriptionCallback
+        callback: MediaBrowserCompat.SubscriptionCallback,
     ) {
         mediaBrowser.subscribe(parentId, callback)
     }
 
     fun unsubscribe(
         parentId: String,
-        callback: MediaBrowserCompat.SubscriptionCallback
+        callback: MediaBrowserCompat.SubscriptionCallback,
     ) {
         mediaBrowser.unsubscribe(parentId, callback)
     }
@@ -74,7 +74,7 @@ class MediaPlayerServiceConnection @Inject constructor(
     }
 
     private inner class MediaBrowserConnectionCallback(
-        private val context: Context
+        private val context: Context,
     ) : MediaBrowserCompat.ConnectionCallback() {
         override fun onConnected() {
             super.onConnected()

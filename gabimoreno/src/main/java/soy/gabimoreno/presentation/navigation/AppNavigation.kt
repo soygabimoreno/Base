@@ -13,7 +13,7 @@ import soy.gabimoreno.presentation.screen.webview.WebViewScreen
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    appState: AppState
+    appState: AppState,
 ) {
     NavHost(
         navController = navController,
@@ -26,7 +26,7 @@ fun AppNavigation(
 
 private fun NavGraphBuilder.podcastNav(
     navController: NavController,
-    appState: AppState
+    appState: AppState,
 ) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.PODCAST).route,
@@ -71,7 +71,7 @@ private fun NavGraphBuilder.podcastNav(
 
 private fun NavGraphBuilder.premiumNav(
     navController: NavController,
-    appState: AppState
+    appState: AppState,
 ) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.PREMIUM).route,
@@ -98,7 +98,7 @@ private fun NavController.goBack() {
 
 private fun NavGraphBuilder.composable(
     navCommand: NavCommand,
-    content: @Composable (NavBackStackEntry) -> Unit
+    content: @Composable (NavBackStackEntry) -> Unit,
 ) {
     composable(
         route = navCommand.route,

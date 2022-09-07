@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
     private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
-    private val tracker: Tracker
+    private val tracker: Tracker,
 ) : ViewModel() {
 
     private val playbackState = mediaPlayerServiceConnection.playbackState
@@ -89,7 +89,7 @@ class PlayerViewModel @Inject constructor(
 
     fun playPauseEpisode(
         episodes: List<Episode>,
-        currentEpisode: Episode
+        currentEpisode: Episode,
     ) {
         mediaPlayerServiceConnection.playPodcast(episodes)
         if (currentEpisode.id == currentPlayingEpisode.value?.id) {
@@ -112,7 +112,7 @@ class PlayerViewModel @Inject constructor(
 
     fun onPlayPauseClickedFromPlayer(
         episode: Episode,
-        playPause: PlayPause
+        playPause: PlayPause,
     ) {
         val parameters = episode.toMap()
         when (playPause) {
@@ -123,7 +123,7 @@ class PlayerViewModel @Inject constructor(
 
     fun onPlayPauseClickedFromAudioBottomBar(
         episode: Episode,
-        playPause: PlayPause
+        playPause: PlayPause,
     ) {
         val parameters = episode.toMap()
         when (playPause) {

@@ -4,5 +4,5 @@ data class JwtAuth(
     val token: String,
     val userEmail: String,
     val userNiceName: String,
-    val userDisplayName: String
+    val userDisplayName: String,
 )

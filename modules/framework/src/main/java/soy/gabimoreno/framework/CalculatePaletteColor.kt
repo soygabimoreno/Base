@@ -8,7 +8,7 @@ import androidx.palette.graphics.Palette
 
 fun calculatePaletteColor(
     drawable: Drawable,
-    onFinished: (Color) -> Unit
+    onFinished: (Color) -> Unit,
 ) {
     val bitmap = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
     Palette.from(bitmap).generate { palette ->

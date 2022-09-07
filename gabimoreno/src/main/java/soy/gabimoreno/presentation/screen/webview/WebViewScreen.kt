@@ -21,7 +21,7 @@ import soy.gabimoreno.presentation.ui.BackButton
 @Composable
 fun WebViewScreen(
     url: String,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
 ) {
     val webViewViewModel = ViewModelProvider.webViewViewModel
 
@@ -61,7 +61,7 @@ fun WebViewScreen(
                                 override fun onPageStarted(
                                     webView: WebView,
                                     url: String?,
-                                    favicon: Bitmap?
+                                    favicon: Bitmap?,
                                 ) {
                                     url?.let {
                                         webViewViewModel.onPageStarted(url)

@@ -10,12 +10,12 @@ import javax.inject.Inject
 class LoginUseCase @Inject constructor(
     private val repository: LoginRepository,
     private val remoteConfigProvider: RemoteConfigProvider,
-    private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase
+    private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase,
 ) {
 
     suspend operator fun invoke(
         email: String,
-        password: String
+        password: String,
     ): Either<Throwable, Member> {
         return repository.generateAuthCookie(email, password)
             .map { authCookie ->

@@ -36,7 +36,7 @@ import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 fun HomeScreen(
     onItemClicked: (episodeId: String) -> Unit,
     onDeepLinkReceived: (episodeId: String) -> Unit,
-    onGoToWebClicked: (encodedUrl: String) -> Unit
+    onGoToWebClicked: (encodedUrl: String) -> Unit,
 ) {
     val scrollState = rememberLazyListState()
     val homeViewModel = ViewModelProvider.homeViewModel

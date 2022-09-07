@@ -94,7 +94,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     override fun onStartCommand(
         intent: Intent?,
         flags: Int,
-        startId: Int
+        startId: Int,
     ): Int {
         return Service.START_STICKY
     }
@@ -102,7 +102,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     override fun onCustomAction(
         action: String,
         extras: Bundle?,
-        result: Result<Bundle>
+        result: Result<Bundle>,
     ) {
         super.onCustomAction(action, extras, result)
         when (action) {
@@ -120,14 +120,14 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     override fun onGetRoot(
         clientPackageName: String,
         clientUid: Int,
-        rootHints: Bundle?
+        rootHints: Bundle?,
     ): BrowserRoot {
         return BrowserRoot(MEDIA_ROOT_ID, null)
     }
 
     override fun onLoadChildren(
         parentId: String,
-        result: Result<MutableList<MediaBrowserCompat.MediaItem>>
+        result: Result<MutableList<MediaBrowserCompat.MediaItem>>,
     ) {
         when (parentId) {
             MEDIA_ROOT_ID -> {
@@ -159,7 +159,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     private fun preparePlayer(
         mediaMetaData: List<MediaMetadataCompat>,
         itemToPlay: MediaMetadataCompat?,
-        playWhenReady: Boolean
+        playWhenReady: Boolean,
     ) {
         val indexToPlay = if (currentPlayingMedia == null) 0 else mediaMetaData.indexOf(itemToPlay)
         exoPlayer.setMediaSource(mediaSource.asMediaSource(dataSourceFactory))

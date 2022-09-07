@@ -24,7 +24,8 @@ class MainViewModel @Inject constructor(
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    private val _viewEvents = MutableStateFlow<ViewEvent>(ViewEvent.CheckPermissionsAndInitBle(bleManager))
+    private val _viewEvents =
+        MutableStateFlow<ViewEvent>(ViewEvent.CheckPermissionsAndInitBle(bleManager))
     val viewEvents: StateFlow<ViewEvent> = _viewEvents.asStateFlow()
 
     private val _viewState = MutableStateFlow<ViewState>(ViewState.Idle)
@@ -59,7 +60,7 @@ class MainViewModel @Inject constructor(
 
                     override fun onConnectFail(
                         bleDevice: BleDevice?,
-                        exception: BleException?
+                        exception: BleException?,
                     ) {
                         _viewEvents.value = ViewEvent.Error.ShowConnectionFailed
                     }
@@ -67,7 +68,7 @@ class MainViewModel @Inject constructor(
                     override fun onConnectSuccess(
                         bleDevice: BleDevice?,
                         gatt: BluetoothGatt?,
-                        status: Int
+                        status: Int,
                     ) {
                         bleDevice?.let {
                             _viewEvents.value = ViewEvent.ShowDeviceName(bleDevice.name)
@@ -84,7 +85,7 @@ class MainViewModel @Inject constructor(
                         isActiveDisConnected: Boolean,
                         device: BleDevice?,
                         gatt: BluetoothGatt?,
-                        status: Int
+                        status: Int,
                     ) {
                         _viewEvents.value = ViewEvent.Error.ShowDisconnected
                     }
@@ -154,7 +155,7 @@ class MainViewModel @Inject constructor(
         object Idle : ViewState()
         data class Content(
             val dataString: String = "",
-            val bleDevice: BleDevice? = null
+            val bleDevice: BleDevice? = null,
         ) : ViewState()
     }
 }

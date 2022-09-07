@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.Dp
 fun PrimaryButton(
     text: String,
     height: Dp,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     CommonButton(
         text = text,

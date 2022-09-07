@@ -15,7 +15,7 @@ import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
 fun ArrowDownButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Icon(
         imageVector = Icons.Default.KeyboardArrowDown,

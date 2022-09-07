@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(
     private val tracker: Tracker,
     getAppVersionNameUseCase: GetAppVersionNameUseCase,
     private val encodeUrlUseCase: EncodeUrlUseCase,
-    @IO private val dispatcher: CoroutineDispatcher
+    @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     var podcastSearch by mutableStateOf<ViewState>(ViewState.Loading)
@@ -70,7 +70,7 @@ class HomeViewModel @Inject constructor(
 
     fun onEpisodeClicked(
         episodeId: String,
-        episodeTitle: String
+        episodeTitle: String,
     ) {
         tracker.trackEvent(
             HomeTrackerEvent.ClickEpisode(
@@ -84,7 +84,7 @@ class HomeViewModel @Inject constructor(
 
     fun onDeepLinkReceived(
         episodeId: String,
-        episodeTitle: String
+        episodeTitle: String,
     ) {
         tracker.trackEvent(
             HomeTrackerEvent.ReceiveDeepLink(

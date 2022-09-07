@@ -7,7 +7,7 @@ data class AuthCookie(
     val cookie: String,
     val cookieAdmin: String,
     val cookieName: String,
-    val user: User
+    val user: User,
 ) {
     fun isStatusOK() = status == STATUS_OK
 }

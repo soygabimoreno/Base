@@ -9,12 +9,12 @@ interface LoginRepository {
 
     suspend fun generateAuthCookie(
         email: String,
-        password: String
+        password: String,
     ): Either<Throwable, AuthCookie>
 
     suspend fun obtainToken(
         username: String,
-        password: String
+        password: String,
     ): Either<Throwable, JwtAuth>
 
     suspend fun getMember(email: String): Either<Throwable, Member>

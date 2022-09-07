@@ -26,7 +26,7 @@ import soy.gabimoreno.presentation.ui.AudioBottomBar
 @Composable
 fun AppUi(
     backDispatcher: OnBackPressedDispatcher,
-    appState: AppState = rememberAppState()
+    appState: AppState = rememberAppState(),
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()

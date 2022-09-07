@@ -19,24 +19,24 @@ object DataStoreModule {
     @Provides
     @Singleton
     fun provideSaveCredentialsInDataStoreUseCase(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ) = SaveCredentialsInDataStoreUseCase(context)
 
     @Provides
     @Singleton
     fun provideDataStoreMemberSession(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ) = DataStoreMemberSession(context)
 
     @Provides
     @Singleton
     fun provideIsBearerTokenValid(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ) = IsBearerTokenValid(context)
 
     @Provides
     @Singleton
     fun provideSetJwtAuthTokenUseCase(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ) = SetJwtAuthTokenUseCase(context)
 }

@@ -7,7 +7,7 @@ class PermissionRequester(
     activity: ComponentActivity,
     private val permission: String,
     private val onShowRationale: () -> Unit,
-    private val onDenied: () -> Unit
+    private val onDenied: () -> Unit,
 ) {
     private var onGranted: () -> Unit = {}
     private val permissionLauncher =

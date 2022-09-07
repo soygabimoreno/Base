@@ -23,7 +23,7 @@ fun CommonButton(
     text: String,
     height: Dp,
     background: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier

@@ -7,12 +7,12 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import soy.gabimoreno.player.service.MediaPlayerService
 
 class MediaPlayerNotificationListener(
-    private val mediaService: MediaPlayerService
+    private val mediaService: MediaPlayerService,
 ) : PlayerNotificationManager.NotificationListener {
 
     override fun onNotificationCancelled(
         notificationId: Int,
-        dismissedByUser: Boolean
+        dismissedByUser: Boolean,
     ) {
         super.onNotificationCancelled(notificationId, dismissedByUser)
         mediaService.apply {
@@ -25,7 +25,7 @@ class MediaPlayerNotificationListener(
     override fun onNotificationPosted(
         notificationId: Int,
         notification: Notification,
-        ongoing: Boolean
+        ongoing: Boolean,
     ) {
         super.onNotificationPosted(notificationId, notification, ongoing)
         mediaService.apply {

@@ -11,13 +11,13 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 
 class MediaPlaybackPreparer(
     private val mediaSource: PodcastMediaSource,
-    private val playerPrepared: (MediaMetadataCompat?) -> Unit
+    private val playerPrepared: (MediaMetadataCompat?) -> Unit,
 ) : MediaSessionConnector.PlaybackPreparer {
 
     override fun onPrepareFromSearch(
         query: String,
         playWhenReady: Boolean,
-        extras: Bundle?
+        extras: Bundle?,
     ) = Unit
 
     override fun onCommand(
@@ -25,7 +25,7 @@ class MediaPlaybackPreparer(
         controlDispatcher: ControlDispatcher,
         command: String,
         extras: Bundle?,
-        cb: ResultReceiver?
+        cb: ResultReceiver?,
     ): Boolean = false
 
     override fun getSupportedPrepareActions(): Long {
@@ -35,7 +35,7 @@ class MediaPlaybackPreparer(
     override fun onPrepareFromMediaId(
         mediaId: String,
         playWhenReady: Boolean,
-        extras: Bundle?
+        extras: Bundle?,
     ) {
         mediaSource.whenReady {
             val itemToPlay = mediaSource.mediaMetadataEpisodes.find {
@@ -48,7 +48,7 @@ class MediaPlaybackPreparer(
     override fun onPrepareFromUri(
         uri: Uri,
         playWhenReady: Boolean,
-        extras: Bundle?
+        extras: Bundle?,
     ) = Unit
 
     override fun onPrepare(playWhenReady: Boolean) = Unit

@@ -6,7 +6,7 @@ import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 
 @Composable
 fun PreviewContent(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     GabiMorenoTheme {
         ProvideWindowInsets {

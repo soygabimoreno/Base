@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class MemberApiModel(
     @Json(name = "is_active")
-    val isActive: Boolean
+    val isActive: Boolean,
 )

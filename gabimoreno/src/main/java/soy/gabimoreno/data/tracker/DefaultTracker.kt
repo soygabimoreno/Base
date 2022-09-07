@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class DefaultTracker @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics,
-    private val getTrackingEventNameUseCase: GetTrackingEventNameUseCase
+    private val getTrackingEventNameUseCase: GetTrackingEventNameUseCase,
 ) : Tracker {
 
     override fun trackEvent(trackerEvent: TrackerEvent) {
