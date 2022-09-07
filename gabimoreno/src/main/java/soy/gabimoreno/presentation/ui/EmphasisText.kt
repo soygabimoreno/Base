@@ -12,7 +12,7 @@ import androidx.compose.ui.text.TextStyle
 fun EmphasisText(
     text: String,
     contentAlpha: Float = ContentAlpha.medium,
-    style: TextStyle = MaterialTheme.typography.body1
+    style: TextStyle = MaterialTheme.typography.body1,
 ) {
     CompositionLocalProvider(LocalContentAlpha provides contentAlpha) {
         Text(

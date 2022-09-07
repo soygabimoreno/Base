@@ -30,5 +30,5 @@ data class UserApiModel(
     @Json(name = "capabilities")
     val capabilities: String,
     @Json(name = "avatar")
-    val avatar: String?
+    val avatar: String?,
 )

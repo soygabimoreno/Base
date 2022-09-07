@@ -34,7 +34,7 @@ object AudioModule {
     @ServiceScoped
     fun provideExoPlayer(
         @ApplicationContext context: Context,
-        audioAttributes: AudioAttributes
+        audioAttributes: AudioAttributes,
     ): SimpleExoPlayer = SimpleExoPlayer.Builder(context)
         .build()
         .apply {
@@ -46,14 +46,14 @@ object AudioModule {
     @Provides
     @ServiceScoped
     fun provideDataSourceFactory(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ) = DefaultDataSourceFactory(context, Util.getUserAgent(context, context.packageName))
 
     @Provides
     @ServiceScoped
     fun provideCacheDataSourceFactory(
         @ApplicationContext context: Context,
-        datasourceFactory: DefaultDataSourceFactory
+        datasourceFactory: DefaultDataSourceFactory,
     ): CacheDataSource.Factory {
         val cacheDir = File(context.cacheDir, "media")
         val databaseProvider = ExoDatabaseProvider(context)

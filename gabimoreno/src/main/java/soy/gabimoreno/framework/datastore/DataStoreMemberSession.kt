@@ -6,7 +6,7 @@ import soy.gabimoreno.domain.session.MemberSession
 import javax.inject.Inject
 
 class DataStoreMemberSession @Inject constructor(
-    private val context: Context
+    private val context: Context,
 ) : MemberSession {
 
     override suspend fun isActive(): Boolean {

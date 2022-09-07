@@ -10,7 +10,7 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun AppBottomNavigation(
     currentRoute: String,
-    onNavItemClick: (item: NavItem) -> Unit
+    onNavItemClick: (item: NavItem) -> Unit,
 ) {
     BottomNavigation {
         NavItem.values().forEach { item ->

@@ -77,7 +77,7 @@ fun PlayerScreen(backDispatcher: OnBackPressedDispatcher) {
 @Composable
 fun PodcastPlayerBody(
     episode: Episode,
-    backDispatcher: OnBackPressedDispatcher
+    backDispatcher: OnBackPressedDispatcher,
 ) {
     val playerViewModel = ViewModelProvider.playerViewModel
     val swipeableState = rememberSwipeableState(0)
@@ -199,7 +199,7 @@ fun PodcastPlayerStatelessContent(
     onTooglePlayback: () -> Unit,
     onSliderChange: (Float) -> Unit,
     onSliderChangeFinished: () -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
 ) {
     val gradientColors = listOf(gradientColor, MaterialTheme.colors.background)
 

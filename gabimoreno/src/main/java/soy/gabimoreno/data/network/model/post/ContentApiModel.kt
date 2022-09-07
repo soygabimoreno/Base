@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ContentApiModel(
     @Json(name = "rendered")
-    val rendered: String
+    val rendered: String,
 )

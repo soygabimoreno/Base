@@ -14,5 +14,5 @@ data class AuthCookieApiModel(
     @Json(name = "cookie_name")
     val cookieName: String,
     @Json(name = "user")
-    val userApiModel: UserApiModel
+    val userApiModel: UserApiModel,
 )

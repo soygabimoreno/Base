@@ -7,7 +7,7 @@ import soy.gabimoreno.domain.repository.ContentRepository
 import javax.inject.Inject
 
 class GetPremiumPostsUseCase @Inject constructor(
-    private val repository: ContentRepository
+    private val repository: ContentRepository,
 ) {
 
     suspend operator fun invoke(categories: List<Category>): Either<Throwable, List<Post>> {

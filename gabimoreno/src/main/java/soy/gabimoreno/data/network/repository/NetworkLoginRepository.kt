@@ -12,12 +12,12 @@ import javax.inject.Singleton
 
 @Singleton
 class NetworkLoginRepository @Inject constructor(
-    private val service: LoginService
+    private val service: LoginService,
 ) : LoginRepository {
 
     override suspend fun generateAuthCookie(
         email: String,
-        password: String
+        password: String,
     ): Either<Throwable, AuthCookie> {
         return Either.catch {
             service.generateAuthCookie(email, password).toDomain()
@@ -26,7 +26,7 @@ class NetworkLoginRepository @Inject constructor(
 
     override suspend fun obtainToken(
         username: String,
-        password: String
+        password: String,
     ): Either<Throwable, JwtAuth> {
         return Either.catch {
             service.obtainToken(username, password).toDomain()
@@ -34,7 +34,7 @@ class NetworkLoginRepository @Inject constructor(
     }
 
     override suspend fun getMember(
-        email: String
+        email: String,
     ): Either<Throwable, Member> {
         return Either.catch {
             service.getMembers(email = email).toDomain()

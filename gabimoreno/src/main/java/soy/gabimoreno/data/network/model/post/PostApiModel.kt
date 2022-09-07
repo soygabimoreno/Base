@@ -10,5 +10,5 @@ data class PostApiModel(
     @Json(name = "title")
     val titleApiModel: TitleApiModel,
     @Json(name = "content")
-    val contentApiModel: ContentApiModel
+    val contentApiModel: ContentApiModel,
 )

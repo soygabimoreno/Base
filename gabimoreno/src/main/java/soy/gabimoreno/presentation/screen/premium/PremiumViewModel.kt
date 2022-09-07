@@ -29,7 +29,7 @@ class PremiumViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val getPremiumPostsUseCase: GetPremiumPostsUseCase,
     private val isBearerTokenValid: IsBearerTokenValid,
-    @IO private val dispatcher: CoroutineDispatcher
+    @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     private val _viewEventFlow = MutableSharedFlow<PremiumViewModel.ViewEvent>()
@@ -37,7 +37,7 @@ class PremiumViewModel @Inject constructor(
 
     fun onViewScreen(
         email: String,
-        password: String
+        password: String,
     ) {
         tracker.trackEvent(PremiumTrackerEvent.ViewScreen)
         viewModelScope.launch(dispatcher) {
@@ -64,7 +64,7 @@ class PremiumViewModel @Inject constructor(
 
     fun onLoginClicked(
         email: String,
-        password: String
+        password: String,
     ) {
         val parameters = mapOf(TRACKER_KEY_EMAIL to email)
         tracker.trackEvent(PremiumTrackerEvent.ClickLogin(parameters))
@@ -73,7 +73,7 @@ class PremiumViewModel @Inject constructor(
 
     private fun login(
         email: String,
-        password: String
+        password: String,
     ) {
         loginValidationUseCase(email, password)
             .fold(
@@ -109,7 +109,7 @@ class PremiumViewModel @Inject constructor(
 
     private fun loginSuccessPerform(
         email: String,
-        password: String
+        password: String,
     ) {
         viewModelScope.launch(dispatcher) {
             val categories = listOf(Category.PREMIUM_ALGORITHMS, Category.PREMIUM_AUDIO_COURSES)
@@ -130,7 +130,7 @@ class PremiumViewModel @Inject constructor(
 
     fun saveCredentialsInDataStore(
         email: String,
-        password: String
+        password: String,
     ) {
         viewModelScope.launch(dispatcher) {
             saveCredentialsInDataStoreUseCase(email, password)
@@ -153,7 +153,7 @@ class PremiumViewModel @Inject constructor(
     sealed class ViewEvent {
         data class ShowAccess(
             val email: String,
-            val password: String
+            val password: String,
         ) : ViewEvent()
 
         object ShowAccessAgain : ViewEvent()
@@ -165,12 +165,12 @@ class PremiumViewModel @Inject constructor(
         data class ShowPremium(
             val email: String,
             val password: String,
-            val posts: List<Post>
+            val posts: List<Post>,
         ) : ViewEvent()
 
         data class ShowLoginError(
             val email: String,
-            val password: String
+            val password: String,
         ) : ViewEvent()
     }
 }

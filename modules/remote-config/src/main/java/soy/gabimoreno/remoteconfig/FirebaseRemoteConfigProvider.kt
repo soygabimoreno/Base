@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class FirebaseRemoteConfigProvider @Inject constructor(
-    private val firebaseRemoteConfig: FirebaseRemoteConfig
+    private val firebaseRemoteConfig: FirebaseRemoteConfig,
 ) : RemoteConfigProvider {
 
     init {

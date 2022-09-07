@@ -17,7 +17,7 @@ import soy.gabimoreno.presentation.ui.EpisodeImage
 fun EpisodeView(
     episode: Episode,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
         modifier = modifier

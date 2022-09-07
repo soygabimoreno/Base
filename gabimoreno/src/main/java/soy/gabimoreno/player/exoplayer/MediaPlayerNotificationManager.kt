@@ -19,7 +19,7 @@ class MediaPlayerNotificationManager(
     private val context: Context,
     sessionToken: MediaSessionCompat.Token,
     notificationListener: PlayerNotificationManager.NotificationListener,
-    private val newSongCallback: () -> Unit
+    private val newSongCallback: () -> Unit,
 ) {
 
     private val notificationManager: PlayerNotificationManager
@@ -37,7 +37,7 @@ class MediaPlayerNotificationManager(
     private fun createNotificationManager(
         mediaController: MediaControllerCompat,
         sessionToken: MediaSessionCompat.Token,
-        notificationListener: PlayerNotificationManager.NotificationListener
+        notificationListener: PlayerNotificationManager.NotificationListener,
     ): PlayerNotificationManager {
         return PlayerNotificationManager.Builder(
             context,
@@ -60,7 +60,7 @@ class MediaPlayerNotificationManager(
     }
 
     private inner class DescriptionAdapter(
-        private val mediaController: MediaControllerCompat
+        private val mediaController: MediaControllerCompat,
     ) : PlayerNotificationManager.MediaDescriptionAdapter {
         override fun createCurrentContentIntent(player: Player): PendingIntent? {
             return mediaController.sessionActivity
@@ -77,7 +77,7 @@ class MediaPlayerNotificationManager(
 
         override fun getCurrentLargeIcon(
             player: Player,
-            callback: PlayerNotificationManager.BitmapCallback
+            callback: PlayerNotificationManager.BitmapCallback,
         ): Bitmap? {
             Glide.with(context).asBitmap()
                 .load(mediaController.metadata.description.iconUri)
@@ -87,7 +87,7 @@ class MediaPlayerNotificationManager(
 
                     override fun onResourceReady(
                         resource: Bitmap,
-                        transition: Transition<in Bitmap>?
+                        transition: Transition<in Bitmap>?,
                     ) {
                         callback.onBitmap(resource)
                     }

@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WebViewViewModel @Inject constructor(
-    private val tracker: Tracker
+    private val tracker: Tracker,
 ) : ViewModel() {
 
     fun onViewScreen(url: String) {

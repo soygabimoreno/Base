@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val tracker: Tracker,
-    private val startChooser: StartChooser
+    private val startChooser: StartChooser,
 ) : ViewModel() {
 
     fun onViewScreen(episode: Episode) {
@@ -28,7 +28,7 @@ class DetailViewModel @Inject constructor(
 
     fun onPlayPauseClicked(
         episode: Episode,
-        playPause: PlayPause
+        playPause: PlayPause,
     ) {
         val parameters = episode.toMap()
         when (playPause) {
@@ -39,7 +39,7 @@ class DetailViewModel @Inject constructor(
 
     fun onShareClicked(
         context: Context,
-        episode: Episode
+        episode: Episode,
     ) {
         tracker.trackEvent(DetailTrackerEvent.ClickShare(episode.toMap()))
         startChooser(

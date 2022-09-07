@@ -7,7 +7,7 @@ import soy.gabimoreno.domain.model.podcast.PodcastSearch
 import soy.gabimoreno.domain.repository.PodcastRepository
 
 class NetworkPodcastRepository(
-    private val rssParser: Parser
+    private val rssParser: Parser,
 ) : PodcastRepository {
 
     override suspend fun getEpisodes(): Either<Throwable, PodcastSearch> {

@@ -24,14 +24,14 @@ fun Channel.toDomain(): PodcastSearch {
 
 fun List<Article>.toDomain(
     podcastAuthor: String,
-    podcastTitle: String
+    podcastTitle: String,
 ): List<Episode> {
     return map { it.toDomain(podcastAuthor, podcastTitle) }
 }
 
 fun Article.toDomain(
     podcastAuthor: String,
-    podcastTitle: String
+    podcastTitle: String,
 ): Episode {
     return run {
         val description = description?.removeAnchorMessage() ?: ""

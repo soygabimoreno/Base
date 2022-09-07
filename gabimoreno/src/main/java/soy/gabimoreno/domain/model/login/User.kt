@@ -13,5 +13,5 @@ data class User(
     val nickname: String,
     val description: String,
     val capabilities: String,
-    val avatar: String?
+    val avatar: String?,
 )

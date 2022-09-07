@@ -12,7 +12,7 @@ import soy.gabimoreno.R
 enum class NavItem(
     val navCommand: NavCommand,
     val icon: ImageVector,
-    @StringRes val titleResId: Int
+    @StringRes val titleResId: Int,
 ) {
     PODCAST(
         navCommand = NavCommand.ContentType(Feature.PODCAST),
@@ -29,7 +29,7 @@ enum class NavItem(
 sealed class NavCommand(
     internal val feature: Feature,
     internal val subRoute: String = "home",
-    private val navArgs: List<NavArg> = emptyList()
+    private val navArgs: List<NavArg> = emptyList(),
 ) {
     class ContentType(feature: Feature) : NavCommand(feature)
 
@@ -63,7 +63,7 @@ sealed class NavCommand(
 
 enum class NavArg(
     val key: String,
-    val navType: NavType<*>
+    val navType: NavType<*>,
 ) {
     EpisodeId("episodeId", NavType.StringType),
     EncodedUrl("encodedUrl", NavType.StringType)

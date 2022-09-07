@@ -11,7 +11,7 @@ class StartChooser @Inject constructor() {
         context: Context,
         @StringRes chooserTitleResId: Int,
         title: String,
-        url: String
+        url: String,
     ) {
         val text = context.getString(
             chooserTitleResId,

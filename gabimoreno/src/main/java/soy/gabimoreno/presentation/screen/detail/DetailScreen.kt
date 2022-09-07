@@ -31,7 +31,7 @@ import soy.gabimoreno.util.toDurationMinutes
 @Composable
 fun DetailScreen(
     podcastId: String,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val podcastSearchViewModel = ViewModelProvider.homeViewModel

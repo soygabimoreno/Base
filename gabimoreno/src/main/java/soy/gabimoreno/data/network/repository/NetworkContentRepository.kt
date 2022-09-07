@@ -12,11 +12,11 @@ import javax.inject.Singleton
 
 @Singleton
 class NetworkContentRepository @Inject constructor(
-    private val service: ContentService
+    private val service: ContentService,
 ) : ContentRepository {
 
     override suspend fun getPosts(
-        categories: List<Category>
+        categories: List<Category>,
     ): Either<Throwable, List<Post>> {
         return Either.catch {
             service.getPosts(

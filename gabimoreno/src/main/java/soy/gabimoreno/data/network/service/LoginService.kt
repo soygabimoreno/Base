@@ -12,17 +12,17 @@ interface LoginService {
     @GET("api/user/generate_auth_cookie/")
     suspend fun generateAuthCookie(
         @Query("email") email: String,
-        @Query("password") password: String
+        @Query("password") password: String,
     ): AuthCookieApiModel
 
     @POST("wp-json/jwt-auth/v1/token/")
     suspend fun obtainToken(
         @Query("username") username: String,
-        @Query("password") password: String
+        @Query("password") password: String,
     ): JwtAuthApiModel
 
     @GET("wp-json/rcp/v1/members/")
     suspend fun getMembers(
-        @Query("s") email: String
+        @Query("s") email: String,
     ): List<MemberApiModel>
 }

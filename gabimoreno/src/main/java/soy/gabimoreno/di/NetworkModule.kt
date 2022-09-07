@@ -44,31 +44,31 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideLoginService(
-        retrofit: Retrofit
+        retrofit: Retrofit,
     ): LoginService = retrofit.create(LoginService::class.java)
 
     @Provides
     @Singleton
     fun provideContentService(
-        retrofit: Retrofit
+        retrofit: Retrofit,
     ): ContentService = retrofit.create(ContentService::class.java)
 
     @Provides
     @Singleton
     fun provideLoginRepository(
-        service: LoginService
+        service: LoginService,
     ): LoginRepository = NetworkLoginRepository(service)
 
     @Provides
     @Singleton
     fun provideContentRepository(
-        service: ContentService
+        service: ContentService,
     ): ContentRepository = NetworkContentRepository(service)
 
     @Provides
     @Singleton
     fun providePodcastRepository(
-        rssParser: Parser
+        rssParser: Parser,
     ): PodcastRepository = NetworkPodcastRepository(rssParser)
 }
 

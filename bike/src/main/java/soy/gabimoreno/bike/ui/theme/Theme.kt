@@ -12,7 +12,7 @@ private val DarkColorPalette = darkColors(
 
 @Composable
 fun BaseTheme(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
 
     MaterialTheme(

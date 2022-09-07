@@ -16,7 +16,7 @@ private val ColorPalette = darkColors(
 
 @Composable
 fun GabiMorenoTheme(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     MaterialTheme(
         colors = ColorPalette,

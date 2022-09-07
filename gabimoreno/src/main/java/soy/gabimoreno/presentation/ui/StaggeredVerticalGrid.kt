@@ -11,7 +11,7 @@ fun StaggeredVerticalGrid(
     modifier: Modifier = Modifier,
     crossAxisCount: Int,
     spacing: Dp = Spacing.s0,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Layout(
         content = content,

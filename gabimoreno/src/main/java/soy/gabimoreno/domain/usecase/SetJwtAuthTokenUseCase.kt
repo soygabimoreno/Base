@@ -6,7 +6,7 @@ import soy.gabimoreno.framework.datastore.setBearerToken
 import javax.inject.Inject
 
 class SetJwtAuthTokenUseCase @Inject constructor(
-    private val context: Context
+    private val context: Context,
 ) {
 
     suspend operator fun invoke(token: String) {

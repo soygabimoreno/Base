@@ -22,14 +22,14 @@ object AppModule {
     @Singleton
     fun provideMediaPlayerServiceConnection(
         @ApplicationContext context: Context,
-        mediaSource: PodcastMediaSource
+        mediaSource: PodcastMediaSource,
     ): MediaPlayerServiceConnection = MediaPlayerServiceConnection(context, mediaSource)
 
     @Provides
     @Singleton
     fun provideTracker(
         firebaseAnalytics: FirebaseAnalytics,
-        getTrackingEventNameUseCase: GetTrackingEventNameUseCase
+        getTrackingEventNameUseCase: GetTrackingEventNameUseCase,
     ): Tracker = DefaultTracker(
         firebaseAnalytics,
         getTrackingEventNameUseCase

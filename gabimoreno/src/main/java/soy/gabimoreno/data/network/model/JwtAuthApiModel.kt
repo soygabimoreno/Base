@@ -12,5 +12,5 @@ data class JwtAuthApiModel(
     @Json(name = "user_nicename")
     val userNiceName: String,
     @Json(name = "user_display_name")
-    val userDisplayName: String
+    val userDisplayName: String,
 )

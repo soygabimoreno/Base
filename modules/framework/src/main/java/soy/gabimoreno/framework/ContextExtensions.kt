@@ -6,7 +6,7 @@ import androidx.annotation.StringRes
 
 fun Context.toast(
     @StringRes resId: Int,
-    duration: Int = Toast.LENGTH_SHORT
+    duration: Int = Toast.LENGTH_SHORT,
 ) {
     Toast.makeText(
         this,
@@ -17,7 +17,7 @@ fun Context.toast(
 
 fun Context.toast(
     message: CharSequence,
-    duration: Int = Toast.LENGTH_SHORT
+    duration: Int = Toast.LENGTH_SHORT,
 ) {
     Toast.makeText(
         this,
