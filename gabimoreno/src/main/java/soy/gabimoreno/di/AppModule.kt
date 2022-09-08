@@ -10,7 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.data.tracker.DefaultTracker
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.domain.usecase.GetTrackingEventNameUseCase
-import soy.gabimoreno.player.exoplayer.PodcastMediaSource
+import soy.gabimoreno.player.exoplayer.AudioMediaSource
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
 import javax.inject.Singleton
 
@@ -22,7 +22,7 @@ object AppModule {
     @Singleton
     fun provideMediaPlayerServiceConnection(
         @ApplicationContext context: Context,
-        mediaSource: PodcastMediaSource,
+        mediaSource: AudioMediaSource,
     ): MediaPlayerServiceConnection = MediaPlayerServiceConnection(context, mediaSource)
 
     @Provides

@@ -36,8 +36,9 @@ import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.systemBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.domain.toPlayPause
+import soy.gabimoreno.domain.model.audio.Audio
+import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
-import soy.gabimoreno.domain.model.podcast.Podcast
 import soy.gabimoreno.framework.calculatePaletteColor
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Spacing
@@ -49,17 +50,17 @@ import kotlin.math.roundToInt
 @Composable
 fun PlayerScreen(backDispatcher: OnBackPressedDispatcher) {
     val playerViewModel = ViewModelProvider.playerViewModel
-    val episode = playerViewModel.currentPlayingEpisode.value
+    val audio = playerViewModel.currentPlayingAudio.value
 
     val showPlayerFullScreen = playerViewModel.showPlayerFullScreen
     if (showPlayerFullScreen) {
-        episode?.let {
-            playerViewModel.onViewScreen(episode)
+        audio?.let {
+            playerViewModel.onViewScreen(audio)
         }
     }
 
     AnimatedVisibility(
-        visible = episode != null && showPlayerFullScreen,
+        visible = audio != null && showPlayerFullScreen,
         enter = slideInVertically(
             initialOffsetY = { it }
         ),
@@ -67,8 +68,8 @@ fun PlayerScreen(backDispatcher: OnBackPressedDispatcher) {
             targetOffsetY = { it }
         )
     ) {
-        if (episode != null) {
-            PodcastPlayerBody(episode, backDispatcher)
+        if (audio != null) {
+            PodcastPlayerBody(audio, backDispatcher)
         }
     }
 }
@@ -76,7 +77,7 @@ fun PlayerScreen(backDispatcher: OnBackPressedDispatcher) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PodcastPlayerBody(
-    episode: Episode,
+    audio: Audio,
     backDispatcher: OnBackPressedDispatcher,
 ) {
     val playerViewModel = ViewModelProvider.playerViewModel
@@ -101,7 +102,7 @@ fun PodcastPlayerBody(
     }
 
     val imageRequest = ImageRequest.Builder(LocalContext.current)
-        .data(episode.imageUrl)
+        .data(audio.imageUrl)
         .target {
             calculatePaletteColor(it) { color ->
                 gradientColor = color
@@ -120,7 +121,7 @@ fun PodcastPlayerBody(
     var localSliderValue by remember { mutableStateOf(0f) }
 
     val sliderProgress =
-        if (sliderIsChanging) localSliderValue else playerViewModel.currentEpisodeProgress
+        if (sliderIsChanging) localSliderValue else playerViewModel.currentAudioProgress
 
     Box(
         modifier = Modifier
@@ -139,14 +140,14 @@ fun PodcastPlayerBody(
         }
 
         PodcastPlayerStatelessContent(
-            episode = episode,
+            audio = audio,
             imagePainter = imagePainter,
             gradientColor = gradientColor,
             yOffset = swipeableState.offset.value.roundToInt(),
             playPauseIcon = iconResId,
             playbackProgress = sliderProgress,
             currentTime = playerViewModel.currentPlaybackFormattedPosition,
-            totalTime = playerViewModel.currentEpisodeFormattedDuration,
+            totalTime = playerViewModel.currentAudioFormattedDuration,
             onRewind = {
                 playerViewModel.onRewindClicked()
             },
@@ -154,7 +155,7 @@ fun PodcastPlayerBody(
                 playerViewModel.onForwardClicked()
             },
             onTooglePlayback = {
-                playerViewModel.onPlayPauseClickedFromPlayer(episode, isPlaying.toPlayPause())
+                playerViewModel.onPlayPauseClickedFromPlayer(audio, isPlaying.toPlayPause())
                 playerViewModel.togglePlaybackState()
             },
             onSliderChange = { newPosition ->
@@ -186,7 +187,7 @@ fun PodcastPlayerBody(
 
 @Composable
 fun PodcastPlayerStatelessContent(
-    episode: Episode,
+    audio: Audio,
     imagePainter: Painter,
     gradientColor: Color,
     yOffset: Int,
@@ -253,7 +254,7 @@ fun PodcastPlayerStatelessContent(
                         }
 
                         Text(
-                            episode.title,
+                            audio.title,
                             style = MaterialTheme.typography.h5,
                             color = MaterialTheme.colors.onBackground,
                             maxLines = 3,
@@ -261,7 +262,7 @@ fun PodcastPlayerStatelessContent(
                         )
 
                         Text(
-                            episode.podcast.title,
+                            audio.saga.title,
                             style = MaterialTheme.typography.subtitle1,
                             color = MaterialTheme.colors.onBackground,
                             maxLines = 1,
@@ -344,12 +345,12 @@ fun PodcastPlayerStatelessContent(
 fun PodcastPlayerPreview() {
     PreviewContent {
         PodcastPlayerStatelessContent(
-            episode = Episode(
+            audio = Episode(
                 id = "1",
                 url = "",
                 audioUrl = "",
                 imageUrl = "",
-                podcast = Podcast("This is publisher", "This is podcast title"),
+                saga = Saga("This is publisher", "This is podcast title"),
                 thumbnailUrl = "",
                 pubDateMillis = 0,
                 title = "This is a title",

@@ -33,12 +33,15 @@ sealed class NavCommand(
 ) {
     class ContentType(feature: Feature) : NavCommand(feature)
 
-    class ContentDetail(feature: Feature) : NavCommand(
+    class ContentDetail(
+        feature: Feature,
+        navArgs: List<NavArg>,
+    ) : NavCommand(
         feature,
         "detail",
-        listOf(NavArg.EpisodeId)
+        navArgs
     ) {
-        fun createRoute(episodeId: String) = "${feature.route}/$subRoute/$episodeId"
+        fun createRoute(audioId: String) = "${feature.route}/$subRoute/$audioId"
     }
 
     class ContentWebView(feature: Feature) : NavCommand(
@@ -66,5 +69,6 @@ enum class NavArg(
     val navType: NavType<*>,
 ) {
     EpisodeId("episodeId", NavType.StringType),
-    EncodedUrl("encodedUrl", NavType.StringType)
+    EncodedUrl("encodedUrl", NavType.StringType),
+    PremiumAudioId("premiumAudioId", NavType.StringType)
 }

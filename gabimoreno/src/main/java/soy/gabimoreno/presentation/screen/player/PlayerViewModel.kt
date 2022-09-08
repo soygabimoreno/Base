@@ -9,10 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PlayPause
-import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_PLAYBACK_POSITION
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_PLAYBACK_POSITION
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.framework.KLog
 import soy.gabimoreno.player.extension.currentPosition
 import soy.gabimoreno.player.extension.isPlayEnabled
@@ -32,7 +32,7 @@ class PlayerViewModel @Inject constructor(
 
     private val playbackState = mediaPlayerServiceConnection.playbackState
 
-    val currentPlayingEpisode = mediaPlayerServiceConnection.currentPlayingEpisode
+    val currentPlayingAudio = mediaPlayerServiceConnection.currentPlayingAudio
 
     var showPlayerFullScreen by mutableStateOf(false)
 
@@ -41,10 +41,10 @@ class PlayerViewModel @Inject constructor(
     val podcastIsPlaying: Boolean
         get() = playbackState.value?.isPlaying == true
 
-    val currentEpisodeProgress: Float
+    val currentAudioProgress: Float
         get() {
-            if (currentEpisodeDuration > 0) {
-                return currentPlaybackPosition.toFloat() / currentEpisodeDuration
+            if (currentAudioDuration > 0) {
+                return currentPlaybackPosition.toFloat() / currentAudioDuration
             }
             return 0f
         }
@@ -61,19 +61,13 @@ class PlayerViewModel @Inject constructor(
             formatLong(currentPlaybackPosition)
         }
 
-    val currentEpisodeFormattedDuration: String
+    val currentAudioFormattedDuration: String
         get() = run {
-            KLog.d(
-                "currentEpisodeDuration: $currentEpisodeDuration, ${
-                    formatLong(
-                        currentEpisodeDuration
-                    )
-                }"
-            )
-            formatLong(currentEpisodeDuration)
+            KLog.d("currentAudioDuration: $currentAudioDuration, ${formatLong(currentAudioDuration)}")
+            formatLong(currentAudioDuration)
         }
 
-    private val currentEpisodeDuration: Long
+    private val currentAudioDuration: Long
         get() = MediaPlayerService.currentDuration
 
     override fun onCleared() {
@@ -83,23 +77,23 @@ class PlayerViewModel @Inject constructor(
             object : MediaBrowserCompat.SubscriptionCallback() {})
     }
 
-    fun onViewScreen(episode: Episode) {
-        tracker.trackEvent(PlayerTrackerEvent.ViewScreen(episode.toMap()))
+    fun onViewScreen(audio: Audio) {
+        tracker.trackEvent(PlayerTrackerEvent.ViewScreen(audio.toMap()))
     }
 
-    fun playPauseEpisode(
-        episodes: List<Episode>,
-        currentEpisode: Episode,
+    fun playPauseAudio(
+        audios: List<Audio>,
+        currentAudio: Audio,
     ) {
-        mediaPlayerServiceConnection.playPodcast(episodes)
-        if (currentEpisode.id == currentPlayingEpisode.value?.id) {
+        mediaPlayerServiceConnection.playAudios(audios)
+        if (currentAudio.id == currentPlayingAudio.value?.id) {
             if (podcastIsPlaying) {
                 onPause()
             } else {
                 onPlay()
             }
         } else {
-            onPlayFromMediaId(currentEpisode)
+            onPlayFromMediaId(currentAudio)
         }
     }
 
@@ -111,10 +105,10 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun onPlayPauseClickedFromPlayer(
-        episode: Episode,
+        audio: Audio,
         playPause: PlayPause,
     ) {
-        val parameters = episode.toMap()
+        val parameters = audio.toMap()
         when (playPause) {
             PlayPause.PLAY -> tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromPlayer(parameters))
             PlayPause.PAUSE -> tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromPlayer(parameters))
@@ -122,10 +116,10 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun onPlayPauseClickedFromAudioBottomBar(
-        episode: Episode,
+        audio: Audio,
         playPause: PlayPause,
     ) {
-        val parameters = episode.toMap()
+        val parameters = audio.toMap()
         when (playPause) {
             PlayPause.PLAY -> tracker.trackEvent(
                 PlayerTrackerEvent.ClickPlayFromAudioBottomBar(
@@ -162,9 +156,9 @@ class PlayerViewModel @Inject constructor(
      * @param value from 0.0 to 1.0
      */
     fun onSliderChangeFinished(value: Float) {
-        val playbackPosition = (currentEpisodeDuration * value).toLong()
+        val playbackPosition = (currentAudioDuration * value).toLong()
         val parameters = getParameters() + mapOf(
-            TRACKER_KEY_EPISODE_PLAYBACK_POSITION to formatLong(playbackPosition)
+            TRACKER_KEY_AUDIO_PLAYBACK_POSITION to formatLong(playbackPosition)
         )
         tracker.trackEvent(PlayerTrackerEvent.SeekTo(parameters))
         mediaPlayerServiceConnection.transportControls.seekTo(playbackPosition)
@@ -195,14 +189,14 @@ class PlayerViewModel @Inject constructor(
         mediaPlayerServiceConnection.transportControls.pause()
     }
 
-    private fun onPlayFromMediaId(currentEpisode: Episode) {
-        val parameters = currentEpisode.toMap()
+    private fun onPlayFromMediaId(currentAudio: Audio) {
+        val parameters = currentAudio.toMap()
         tracker.trackEvent(PlayerTrackerEvent.PlayFromMediaId(parameters))
-        mediaPlayerServiceConnection.transportControls.playFromMediaId(currentEpisode.id, null)
+        mediaPlayerServiceConnection.transportControls.playFromMediaId(currentAudio.id, null)
     }
 
     private fun getParameters(): Map<String, String> {
-        return currentPlayingEpisode.value?.toMap() ?: mapOf()
+        return currentPlayingAudio.value?.toMap() ?: mapOf()
     }
 }
 

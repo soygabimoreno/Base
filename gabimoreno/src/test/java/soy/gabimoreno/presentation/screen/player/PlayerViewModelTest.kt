@@ -9,8 +9,9 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
-import soy.gabimoreno.fake.buildEpisode
-import soy.gabimoreno.fake.buildEpisodes
+import soy.gabimoreno.domain.model.audio.Audio
+import soy.gabimoreno.fake.buildAudio
+import soy.gabimoreno.fake.buildAudios
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
 
 class PlayerViewModelTest {
@@ -29,82 +30,82 @@ class PlayerViewModelTest {
 
     @Test
     fun `WHEN onViewScreen THEN track event`() {
-        val episode = buildEpisode()
+        val audio = buildAudio()
 
-        viewModel.onViewScreen(episode)
+        viewModel.onViewScreen(audio)
 
-        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ViewScreen(episode.toMap())) }
+        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ViewScreen(audio.toMap())) }
     }
 
     @Test
-    fun `GIVEN the same episode and podcastIsPlaying WHEN playPauseEpisode THEN play the episode and track event`() {
+    fun `GIVEN the same audio and podcastIsPlaying WHEN playPauseAudio THEN play the audio and track event`() {
         val index = 0
-        val episodes = buildEpisodes()
-        val currentEpisode = episodes[index]
-        every { viewModel.currentPlayingEpisode.value } returns currentEpisode
+        val audios = buildAudios()
+        val currentAudio = audios[index]
+        every { viewModel.currentPlayingAudio.value } returns currentAudio
 
         // TODO
-//        viewModel.playPauseEpisode(episodes, currentEpisode)
+//        viewModel.playPauseAudio(audios, currentAudio)
 
-//        verifyOnce { mediaPlayerServiceConnection.playPodcast(episodes) }
+//        verifyOnce { mediaPlayerServiceConnection.playPodcast(audios) }
     }
 
     @Test
-    fun `GIVEN a new episode WHEN playPauseEpisode THEN play the new episode and track event`() {
-        val episodes = buildEpisodes()
-        val currentPlayingEpisode = episodes[0]
-        val newEpisode = episodes[1]
-        every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
+    fun `GIVEN a new audio WHEN playPauseAudio THEN play the new audio and track event`() {
+        val audios = buildAudios()
+        val currentPlayingAudio = audios[0]
+        val newAudio: Audio = audios[1]
+        every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
 
-        viewModel.playPauseEpisode(episodes, newEpisode)
+        viewModel.playPauseAudio(audios, newAudio)
 
         verifyOnce {
-            tracker.trackEvent(PlayerTrackerEvent.PlayFromMediaId(newEpisode.toMap()))
-            mediaPlayerServiceConnection.transportControls.playFromMediaId(newEpisode.id, null)
+            tracker.trackEvent(PlayerTrackerEvent.PlayFromMediaId(newAudio.toMap()))
+            mediaPlayerServiceConnection.transportControls.playFromMediaId(newAudio.id, null)
         }
     }
 
     @Test
     fun `WHEN onPlayPauseClickedFromPlayer on play THEN track the corresponding event`() {
-        val episode = buildEpisode()
+        val audio = buildAudio()
         val playPause = PlayPause.PLAY
 
-        viewModel.onPlayPauseClickedFromPlayer(episode, playPause)
+        viewModel.onPlayPauseClickedFromPlayer(audio, playPause)
 
-        val parameters = episode.toMap()
+        val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromPlayer(parameters)) }
     }
 
     @Test
     fun `WHEN onPlayPauseClicked on pause THEN track the corresponding event`() {
-        val episode = buildEpisode()
+        val audio = buildAudio()
         val playPause = PlayPause.PAUSE
 
-        viewModel.onPlayPauseClickedFromPlayer(episode, playPause)
+        viewModel.onPlayPauseClickedFromPlayer(audio, playPause)
 
-        val parameters = episode.toMap()
+        val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromPlayer(parameters)) }
     }
 
     @Test
     fun `WHEN onPlayPauseClickedFromAudioBottomBar on play THEN track the corresponding event`() {
-        val episode = buildEpisode()
+        val audio = buildAudio()
         val playPause = PlayPause.PLAY
 
-        viewModel.onPlayPauseClickedFromAudioBottomBar(episode, playPause)
+        viewModel.onPlayPauseClickedFromAudioBottomBar(audio, playPause)
 
-        val parameters = episode.toMap()
+        val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromAudioBottomBar(parameters)) }
     }
 
     @Test
     fun `WHEN onPlayPauseClickedFromAudioBottomBar on pause THEN track the corresponding event`() {
-        val episode = buildEpisode()
+        val audio = buildAudio()
         val playPause = PlayPause.PAUSE
 
-        viewModel.onPlayPauseClickedFromAudioBottomBar(episode, playPause)
+        viewModel.onPlayPauseClickedFromAudioBottomBar(audio, playPause)
 
-        val parameters = episode.toMap()
+        val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromAudioBottomBar(parameters)) }
     }
 
@@ -116,23 +117,23 @@ class PlayerViewModelTest {
 
     @Test
     fun `WHEN onAudioBottomBarSwiped THEN track the corresponding event`() {
-        val currentPlayingEpisode = buildEpisode()
-        every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
+        val currentPlayingAudio = buildAudio()
+        every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
 
         viewModel.onAudioBottomBarSwiped()
 
-        val parameters = currentPlayingEpisode.toMap()
+        val parameters = currentPlayingAudio.toMap()
         verifyOnce { tracker.trackEvent(PlayerTrackerEvent.Stop(parameters)) }
     }
 
     @Test
     fun `WHEN clickFastForward THEN track the corresponding event`() {
-        val currentPlayingEpisode = buildEpisode()
-        every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
+        val currentPlayingAudio = buildAudio()
+        every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
 
         viewModel.onForwardClicked()
 
-        val parameters = currentPlayingEpisode.toMap()
+        val parameters = currentPlayingAudio.toMap()
         verifyOnce {
             mediaPlayerServiceConnection.fastForward()
             tracker.trackEvent(PlayerTrackerEvent.ClickForward(parameters))
@@ -141,12 +142,12 @@ class PlayerViewModelTest {
 
     @Test
     fun `WHEN clickRewind THEN track the corresponding event`() {
-        val currentPlayingEpisode = buildEpisode()
-        every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
+        val currentPlayingAudio = buildAudio()
+        every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
 
         viewModel.onRewindClicked()
 
-        val parameters = currentPlayingEpisode.toMap()
+        val parameters = currentPlayingAudio.toMap()
         verifyOnce {
             mediaPlayerServiceConnection.rewind()
             tracker.trackEvent(PlayerTrackerEvent.ClickRewind(parameters))
@@ -157,8 +158,8 @@ class PlayerViewModelTest {
     fun `WHEN onSliderChangeFinished THEN track the corresponding event`() {
 
         // TODO
-//        val currentPlayingEpisode = buildEpisode()
-//        every { viewModel.currentPlayingEpisode.value } returns currentPlayingEpisode
+//        val currentPlayingAudio = buildAudio()
+//        every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
 //
 //        mockkStatic(MediaPlayerService::class)
 //        every { MediaPlayerService.currentDuration } returns 0L
@@ -166,8 +167,8 @@ class PlayerViewModelTest {
 //
 //        viewModel.onSliderChangeFinished(localSliderValue)
 //
-//        val parameters = currentPlayingEpisode.toMap() + mapOf(
-//            EPISODE_PLAYBACK_POSITION to "0"
+//        val parameters = currentPlayingAudio.toMap() + mapOf(
+//            AUDIO_PLAYBACK_POSITION to "0"
 //        )
 //        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.SeekTo(parameters)) }
     }

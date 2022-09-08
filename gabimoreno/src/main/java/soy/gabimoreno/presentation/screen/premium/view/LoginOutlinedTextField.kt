@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import soy.gabimoreno.framework.toast
 
 @Composable
@@ -20,6 +21,7 @@ fun LoginOutlinedTextField(
     placeholderText: String,
     showError: Boolean,
     errorText: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     onValueChange: (TextFieldValue) -> Unit,
 ) {
     OutlinedTextField(
@@ -40,6 +42,7 @@ fun LoginOutlinedTextField(
             }
         },
         isError = showError,
+        visualTransformation = visualTransformation,
         modifier = Modifier
             .fillMaxWidth()
     )

@@ -10,7 +10,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 
 class MediaPlaybackPreparer(
-    private val mediaSource: PodcastMediaSource,
+    private val mediaSource: AudioMediaSource,
     private val playerPrepared: (MediaMetadataCompat?) -> Unit,
 ) : MediaSessionConnector.PlaybackPreparer {
 
@@ -38,7 +38,7 @@ class MediaPlaybackPreparer(
         extras: Bundle?,
     ) {
         mediaSource.whenReady {
-            val itemToPlay = mediaSource.mediaMetadataEpisodes.find {
+            val itemToPlay = mediaSource.audioMediaMetadataCompat.find {
                 it.description.mediaId == mediaId
             }
             playerPrepared(itemToPlay)

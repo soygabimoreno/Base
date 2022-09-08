@@ -21,7 +21,7 @@ import soy.gabimoreno.R
 import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
-fun EpisodeImage(
+fun AudioImage(
     url: String,
     modifier: Modifier = Modifier,
     aspectRatio: Float = 1f,

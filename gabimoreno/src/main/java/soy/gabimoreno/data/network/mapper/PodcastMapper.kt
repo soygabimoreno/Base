@@ -4,21 +4,21 @@ import com.prof.rssparser.Article
 import com.prof.rssparser.Channel
 import com.prof.rssparser.ItunesArticleData
 import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
+import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
-import soy.gabimoreno.domain.model.podcast.Podcast
-import soy.gabimoreno.domain.model.podcast.PodcastSearch
+import soy.gabimoreno.domain.model.podcast.EpisodesWrapper
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun Channel.toDomain(): PodcastSearch {
+fun Channel.toDomain(): EpisodesWrapper {
     val numberOfEpisodes = articles.size.toLong()
     val title = title ?: LOS_ANDROIDES
     val podcastAuthor = title.uppercase()
     val podcastTitle = title
-    return PodcastSearch(
+    return EpisodesWrapper(
         count = numberOfEpisodes,
         total = numberOfEpisodes,
-        results = articles.toDomain(podcastAuthor, podcastTitle)
+        episodes = articles.toDomain(podcastAuthor, podcastTitle)
     )
 }
 
@@ -41,7 +41,7 @@ fun Article.toDomain(
             url = getEpisodeUrl(),
             audioUrl = audio!!,
             imageUrl = imageUrl,
-            podcast = Podcast(
+            saga = Saga(
                 author = podcastAuthor,
                 title = podcastTitle
             ),

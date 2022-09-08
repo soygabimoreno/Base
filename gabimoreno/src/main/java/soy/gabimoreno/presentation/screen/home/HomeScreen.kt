@@ -40,7 +40,7 @@ fun HomeScreen(
 ) {
     val scrollState = rememberLazyListState()
     val homeViewModel = ViewModelProvider.homeViewModel
-    val podcastSearch = homeViewModel.podcastSearch
+    val viewState = homeViewModel.viewState
 
     var encodedUrl by remember { mutableStateOf("") }
 
@@ -74,7 +74,7 @@ fun HomeScreen(
                     .fillMaxWidth()
             )
             LazyColumn(state = scrollState) {
-                when (podcastSearch) {
+                when (viewState) {
                     is HomeViewModel.ViewState.Error -> {
                         item {
                             ErrorView(text = stringResource(R.string.unexpected_error)) {
@@ -95,7 +95,7 @@ fun HomeScreen(
                                 modifier = Modifier.padding(horizontal = Spacing.s16)
                             ) {
                                 val searchText = searchTextState.text
-                                val episodes = podcastSearch.data.results
+                                val episodes = viewState.episodesWrapper.episodes
                                     .subList(
                                         0,
                                         30
@@ -146,7 +146,7 @@ fun HomeScreen(
                             .navigationBarsPadding()
                             .padding(bottom = Spacing.s32)
                             .padding(
-                                bottom = if (ViewModelProvider.playerViewModel.currentPlayingEpisode.value != null) Spacing.s64
+                                bottom = if (ViewModelProvider.playerViewModel.currentPlayingAudio.value != null) Spacing.s64
                                 else Spacing.s0
                             )
                     )

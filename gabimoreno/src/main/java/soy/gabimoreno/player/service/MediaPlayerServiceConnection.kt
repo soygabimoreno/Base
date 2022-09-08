@@ -7,18 +7,18 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.runtime.mutableStateOf
-import soy.gabimoreno.domain.model.podcast.Episode
-import soy.gabimoreno.player.exoplayer.PodcastMediaSource
+import soy.gabimoreno.domain.model.audio.Audio
+import soy.gabimoreno.player.exoplayer.AudioMediaSource
 import soy.gabimoreno.player.extension.currentPosition
 import javax.inject.Inject
 
 class MediaPlayerServiceConnection @Inject constructor(
     context: Context,
-    private val mediaSource: PodcastMediaSource,
+    private val mediaSource: AudioMediaSource,
 ) {
 
     var playbackState = mutableStateOf<PlaybackStateCompat?>(null)
-    var currentPlayingEpisode = mutableStateOf<Episode?>(null)
+    var currentPlayingAudio = mutableStateOf<Audio?>(null)
 
     lateinit var mediaController: MediaControllerCompat
 
@@ -38,8 +38,8 @@ class MediaPlayerServiceConnection @Inject constructor(
         connect()
     }
 
-    fun playPodcast(episodes: List<Episode>) {
-        mediaSource.setEpisodes(episodes)
+    fun playAudios(audios: List<Audio>) {
+        mediaSource.setAudios(audios)
         mediaBrowser.sendCustomAction(START_MEDIA_PLAYBACK_ACTION, null, null)
     }
 
@@ -103,8 +103,8 @@ class MediaPlayerServiceConnection @Inject constructor(
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             super.onMetadataChanged(metadata)
-            currentPlayingEpisode.value = metadata?.let {
-                mediaSource.podcastEpisodes.find {
+            currentPlayingAudio.value = metadata?.let {
+                mediaSource.audios.find {
                     it.id == metadata.description?.mediaId
                 }
             }

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -29,7 +30,9 @@ import soy.gabimoreno.presentation.ui.button.PrimaryButton
 import soy.gabimoreno.presentation.ui.button.SecondaryButton
 
 @Composable
-fun PremiumScreen() {
+fun PremiumScreen(
+    onItemClicked: (premiumAudioId: String) -> Unit,
+) {
     val context = LocalContext.current
 
     val premiumViewModel = ViewModelProvider.premiumViewModel
@@ -115,20 +118,21 @@ fun PremiumScreen() {
             Spacer()
             var emailTextFieldValue by remember { mutableStateOf(TextFieldValue(email)) }
             LoginOutlinedTextField(
-                emailTextFieldValue,
-                stringResource(id = R.string.premium_email),
-                showInvalidEmailFormatError,
-                stringResource(id = R.string.premium_email_error_invalid_format)
+                value = emailTextFieldValue,
+                placeholderText = stringResource(id = R.string.premium_email),
+                showError = showInvalidEmailFormatError,
+                errorText = stringResource(id = R.string.premium_email_error_invalid_format)
             ) {
                 emailTextFieldValue = it
             }
             Spacer()
             var passwordTextFieldValue by remember { mutableStateOf(TextFieldValue(password)) }
             LoginOutlinedTextField(
-                passwordTextFieldValue,
-                stringResource(id = R.string.premium_password),
-                showInvalidPasswordError,
-                stringResource(id = R.string.premium_password_error_invalid)
+                value = passwordTextFieldValue,
+                placeholderText = stringResource(id = R.string.premium_password),
+                showError = showInvalidPasswordError,
+                errorText = stringResource(id = R.string.premium_password_error_invalid),
+                visualTransformation = PasswordVisualTransformation()
             ) {
                 passwordTextFieldValue = it
             }
@@ -154,7 +158,7 @@ fun PremiumScreen() {
             Text(text = stringResource(id = R.string.premium_premium).uppercase()) // TODO: This is provisional. Remove asap
             Spacer()
             posts.forEach { post ->
-                PremiumContent(post)
+                PremiumContent(post, onItemClicked)
             }
             Spacer()
             SecondaryButton(
@@ -175,7 +179,10 @@ fun PremiumScreen() {
 }
 
 @Composable
-fun PremiumContent(post: Post) {
+fun PremiumContent(
+    post: Post,
+    onItemClicked: (premiumAudioId: String) -> Unit,
+) {
     // TODO: Provisional for visualizing
     Spacer()
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -185,7 +192,7 @@ fun PremiumContent(post: Post) {
             text = "PLAY", // TODO: Temporary
             height = Spacing.s48
         ) {
-            // TODO: Play Episode
+            onItemClicked(post.getPremiumAudioId())
         }
         Spacer()
         Text(text = "Contenido: ${post.content.parseFromHtmlFormat()}")

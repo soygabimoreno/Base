@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.presentation.theme.Spacing
-import soy.gabimoreno.presentation.ui.EpisodeImage
+import soy.gabimoreno.presentation.ui.AudioImage
 
 @Composable
 fun EpisodeView(
@@ -25,7 +25,7 @@ fun EpisodeView(
             .background(MaterialTheme.colors.background)
             .clickable(onClick = onClick),
     ) {
-        EpisodeImage(
+        AudioImage(
             url = episode.thumbnailUrl,
             aspectRatio = 1f
         )

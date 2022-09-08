@@ -53,7 +53,7 @@ class HomeViewModelTest {
 
     @Test
     fun `WHEN init THEN getEpisodes`() = runTest(testDispatcher) {
-        viewModel.podcastSearch shouldBe HomeViewModel.ViewState.Loading
+        viewModel.viewState shouldBe HomeViewModel.ViewState.Loading
         coVerifyOnce { podcastRepository.getEpisodes() }
     }
 
