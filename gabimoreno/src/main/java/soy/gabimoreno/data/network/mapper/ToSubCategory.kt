@@ -2,16 +2,16 @@ package soy.gabimoreno.data.network.mapper
 
 import soy.gabimoreno.data.network.model.Category
 
-fun List<Int>.toSubcategoryTitleResId(): String? {
+fun List<Int>.toSubcategory(): Category? {
     if (size != 2) return null
     val subcategoryId = filterNot { it == Category.PREMIUM.id }[0]
-    return findCategoryTitleById(subcategoryId)
+    return findCategoryById(subcategoryId)
 }
 
-private fun findCategoryTitleById(id: Int): String? {
+private fun findCategoryById(id: Int): Category? {
     enumValues<Category>().forEach { category ->
         if (category.id == id) {
-            return category.title
+            return category
         }
     }
     return null

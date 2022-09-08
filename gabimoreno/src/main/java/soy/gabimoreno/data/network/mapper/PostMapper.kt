@@ -17,9 +17,10 @@ fun PostApiModel.toDomain(): Post {
         content = renderedContent,
         audioUrl = renderedContent.extractMp3Url(),
         author = findAuthorDisplayNameById(authorId) ?: UNKNOWN_AUTHOR_DISPLAY_NAME,
-        subcategoryTitle = categoryIds.toSubcategoryTitleResId(),
+        subcategoryTitle = categoryIds.toSubcategory()?.title,
         url = url,
-        pubDateMillis = dateString.toMillis() ?: EMPTY_PUB_DATE_MILLIS
+        pubDateMillis = dateString.toMillis() ?: EMPTY_PUB_DATE_MILLIS,
+        category = categoryIds.toSubcategory(),
     )
 }
 

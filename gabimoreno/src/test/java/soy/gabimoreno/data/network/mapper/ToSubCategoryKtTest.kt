@@ -5,22 +5,22 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
 import soy.gabimoreno.data.network.model.Category
 
-class ToSubCategoryTitleResIdKtTest {
+class ToSubCategoryKtTest {
 
     @Test
     fun `GIVEN the happy path WHEN call THEN return null`() {
         val categoryIds = listOf(Category.PREMIUM.id, Category.PREMIUM_AUDIO_COURSES.id)
 
-        val result = categoryIds.toSubcategoryTitleResId()
+        val result = categoryIds.toSubcategory()
 
-        result shouldBeEqualTo Category.PREMIUM_AUDIO_COURSES.title
+        result shouldBeEqualTo Category.PREMIUM_AUDIO_COURSES
     }
 
     @Test
     fun `GIVEN an empty categoryIds WHEN call THEN return null`() {
         val categoryIds = emptyList<Int>()
 
-        val result = categoryIds.toSubcategoryTitleResId()
+        val result = categoryIds.toSubcategory()
 
         result shouldBe null
     }
@@ -29,7 +29,7 @@ class ToSubCategoryTitleResIdKtTest {
     fun `GIVEN only 1 category WHEN call THEN return null`() {
         val categoryIds = listOf(Category.PREMIUM.id)
 
-        val result = categoryIds.toSubcategoryTitleResId()
+        val result = categoryIds.toSubcategory()
 
         result shouldBe null
     }
@@ -42,7 +42,7 @@ class ToSubCategoryTitleResIdKtTest {
             Category.PREMIUM_ALGORITHMS.id
         )
 
-        val result = categoryIds.toSubcategoryTitleResId()
+        val result = categoryIds.toSubcategory()
 
         result shouldBe null
     }
