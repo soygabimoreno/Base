@@ -3,31 +3,40 @@ package soy.gabimoreno.presentation.screen.premium
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import soy.gabimoreno.R
+import soy.gabimoreno.data.network.mapper.toPremiumAudios
 import soy.gabimoreno.domain.model.content.Post
+import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.framework.datastore.getEmail
 import soy.gabimoreno.framework.datastore.getPassword
-import soy.gabimoreno.framework.parseFromHtmlFormat
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.premium.view.LoginOutlinedTextField
 import soy.gabimoreno.presentation.theme.Black
+import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
-import soy.gabimoreno.presentation.ui.button.SecondaryButton
 
 @Composable
 fun PremiumScreen(
@@ -101,14 +110,23 @@ fun PremiumScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Spacing.s16)
     ) {
-        Text(
-            text = stringResource(id = R.string.nav_item_premium).uppercase(),
-            style = MaterialTheme.typography.h5
-        )
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Spacing.s16)
+        ) {
+            Text(
+                text = stringResource(id = R.string.nav_item_premium).uppercase(),
+                style = MaterialTheme.typography.h5
+            )
+        }
         Spacer()
-        Text(text = stringResource(id = R.string.premium_description))
+        Text(
+            text = stringResource(id = R.string.premium_description),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Spacing.s16)
+        )
         Spacer(modifier = Modifier.height(Spacing.s40))
         if (showAccess && !showPremium) {
             Text(
@@ -154,19 +172,31 @@ fun PremiumScreen(
         }
 
         if (showPremium) {
-            Spacer()
-            Text(text = stringResource(id = R.string.premium_premium).uppercase()) // TODO: This is provisional. Remove asap
-            Spacer()
-            posts.forEach { post ->
-                PremiumContent(post, onItemClicked)
-            }
-            Spacer()
-            SecondaryButton(
-                text = stringResource(id = R.string.premium_logout),
-                height = Spacing.s48
+            Box(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                premiumViewModel.onLogoutClicked()
+                Text(
+                    text = stringResource(id = R.string.nav_item_premium).uppercase(),
+                    style = MaterialTheme.typography.h5,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(top = Spacing.s16, start = Spacing.s16)
+                )
+                Icon(
+                    Icons.Default.Logout,
+                    contentDescription = stringResource(R.string.premium_logout),
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = Spacing.s8, end = Spacing.s8)
+                        .clip(CircleShape)
+                        .clickable {
+                            premiumViewModel.onLogoutClicked()
+                        }
+                        .padding(Spacing.s8)
+                )
             }
+            Spacer()
+            PremiumContent(posts, onItemClicked)
         }
 
         if (showLoginError) {
@@ -180,24 +210,41 @@ fun PremiumScreen(
 
 @Composable
 fun PremiumContent(
-    post: Post,
+    posts: List<Post>,
     onItemClicked: (premiumAudioId: String) -> Unit,
 ) {
-    // TODO: Provisional for visualizing
-    Spacer()
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "Título: ${post.title}")
-        Spacer()
-        PrimaryButton(
-            text = "PLAY", // TODO: Temporary
-            height = Spacing.s48
-        ) {
-            onItemClicked(post.getPremiumAudioId())
+    LazyColumn {
+        items(posts.toPremiumAudios()) { premiumAudio ->
+            PremiumItem(premiumAudio, onItemClicked)
         }
-        Spacer()
-        Text(text = "Contenido: ${post.content.parseFromHtmlFormat()}")
-        Spacer()
-        Text(text = "Audio URL: ${post.audioUrl}")
+    }
+}
+
+@Composable
+fun PremiumItem(
+    premiumAudio: PremiumAudio,
+    onItemClicked: (premiumAudioId: String) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onItemClicked(premiumAudio.id)
+            }
+            .background(brush = SolidColor(PurpleLight), alpha = 0.5f)
+            .padding(horizontal = Spacing.s16, vertical = Spacing.s24)
+    ) {
+        Icon(
+            imageVector = premiumAudio.category.icon,
+            contentDescription = premiumAudio.category.title
+        )
+        Spacer(modifier = Modifier.width(Spacing.s16))
+        Text(
+            text = premiumAudio.title,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(end = Spacing.s16)
+        )
     }
 }
 

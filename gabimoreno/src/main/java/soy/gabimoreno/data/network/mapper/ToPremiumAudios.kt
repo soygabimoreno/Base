@@ -9,7 +9,8 @@ fun List<Post>.toPremiumAudios(): List<PremiumAudio> {
     this.forEach { post ->
         if (
             post.audioUrl != null &&
-            post.subcategoryTitle != null
+            post.subcategoryTitle != null &&
+            post.category != null
         ) {
             premiumAudios.add(
                 PremiumAudio(
@@ -22,7 +23,8 @@ fun List<Post>.toPremiumAudios(): List<PremiumAudio> {
                     imageUrl = "https://gabimoreno.soy/wp-content/uploads/GABI-MORENO-Premium-sample-mp3-image.png", // TODO: This is fake content for now
                     thumbnailUrl = "https://gabimoreno.soy/wp-content/uploads/GABI-MORENO-Premium-sample-mp3-image.png", // TODO: This is fake content for now
                     pubDateMillis = post.pubDateMillis,
-                    audioLengthInSeconds = EMPTY_AUDIO_LENGTH_IN_SECONDS, // TODO: This is unknown for now
+                    audioLengthInSeconds = EMPTY_AUDIO_LENGTH_IN_SECONDS, // TODO: This is unknown for now,
+                    category = post.category
                 )
             )
         }

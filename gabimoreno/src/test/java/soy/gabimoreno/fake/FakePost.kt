@@ -1,5 +1,6 @@
 package soy.gabimoreno.fake
 
+import soy.gabimoreno.data.network.model.Category
 import soy.gabimoreno.domain.model.content.Post
 
 fun buildPosts() = listOf(
@@ -16,5 +17,6 @@ fun buildPost() = Post(
     author = "author",
     subcategoryTitle = "subcategoryTitle",
     url = "https://example.com",
-    pubDateMillis = 1000L
+    pubDateMillis = 1000L,
+    category = Category.PREMIUM_ALGORITHMS
 )

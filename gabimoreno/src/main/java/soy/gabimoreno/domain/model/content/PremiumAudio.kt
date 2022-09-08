@@ -1,5 +1,6 @@
 package soy.gabimoreno.domain.model.content
 
+import soy.gabimoreno.data.network.model.Category
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.audio.Saga
 
@@ -14,4 +15,5 @@ data class PremiumAudio(
     override val thumbnailUrl: String,
     override val pubDateMillis: Long,
     override val audioLengthInSeconds: Int,
+    val category: Category,
 ) : Audio

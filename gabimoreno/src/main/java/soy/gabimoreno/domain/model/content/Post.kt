@@ -1,5 +1,7 @@
 package soy.gabimoreno.domain.model.content
 
+import soy.gabimoreno.data.network.model.Category
+
 data class Post(
     val id: Long,
     val title: String,
@@ -9,6 +11,7 @@ data class Post(
     val subcategoryTitle: String?,
     val url: String,
     val pubDateMillis: Long,
+    val category: Category?,
 ) {
     fun getPremiumAudioId() = id.toString()
 }
