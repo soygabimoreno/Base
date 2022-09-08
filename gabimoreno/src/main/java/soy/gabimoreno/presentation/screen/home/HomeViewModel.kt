@@ -16,7 +16,7 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.podcast.Episode
-import soy.gabimoreno.domain.model.podcast.PodcastSearch
+import soy.gabimoreno.domain.model.podcast.EpisodesWrapper
 import soy.gabimoreno.domain.repository.PodcastRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    var podcastSearch by mutableStateOf<ViewState>(ViewState.Loading)
+    var viewState by mutableStateOf<ViewState>(ViewState.Loading)
         private set
 
     var appVersionName by mutableStateOf("")
@@ -46,13 +46,13 @@ class HomeViewModel @Inject constructor(
 
     fun searchPodcasts() {
         viewModelScope.launch(dispatcher) {
-            podcastSearch = ViewState.Loading
+            viewState = ViewState.Loading
             podcastRepository.getEpisodes().fold(
                 { failure ->
-                    podcastSearch = ViewState.Error(failure)
+                    viewState = ViewState.Error(failure)
                 },
-                { data ->
-                    podcastSearch = ViewState.Content(data)
+                { episodesWrapper ->
+                    viewState = ViewState.Content(episodesWrapper)
                 }
             )
         }
@@ -96,9 +96,9 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun getPodcastDetail(id: String): Episode? {
-        return when (podcastSearch) {
-            is ViewState.Content -> (podcastSearch as ViewState.Content).data.results.find { it.id == id }
+    fun findEpisodeFromId(id: String): Episode? {
+        return when (viewState) {
+            is ViewState.Content -> (viewState as ViewState.Content).episodesWrapper.episodes.find { it.id == id }
             else -> null
         }
     }
@@ -110,6 +110,6 @@ class HomeViewModel @Inject constructor(
     sealed class ViewState {
         object Loading : ViewState()
         data class Error(val throwable: Throwable) : ViewState()
-        data class Content(val data: PodcastSearch) : ViewState()
+        data class Content(val episodesWrapper: EpisodesWrapper) : ViewState()
     }
 }

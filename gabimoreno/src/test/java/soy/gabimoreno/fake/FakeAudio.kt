@@ -1,15 +1,16 @@
 package soy.gabimoreno.fake
 
+import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
 
-fun buildEpisodes() = listOf(
+fun buildAudios() = listOf(
     buildEpisode().copy(id = "1"),
     buildEpisode().copy(id = "2"),
     buildEpisode().copy(id = "3")
 )
 
-fun buildEpisode() = Episode(
+fun buildAudio(): Audio = Episode(
     id = "1",
     url = "",
     audioUrl = "",

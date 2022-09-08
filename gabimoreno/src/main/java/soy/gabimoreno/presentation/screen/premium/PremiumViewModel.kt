@@ -1,5 +1,8 @@
 package soy.gabimoreno.presentation.screen.premium
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,12 +10,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import soy.gabimoreno.data.network.mapper.toPremiumAudios
 import soy.gabimoreno.data.network.model.Category
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.content.Post
+import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.domain.usecase.*
 import soy.gabimoreno.framework.datastore.DataStoreMemberSession
 import soy.gabimoreno.remoteconfig.RemoteConfigName
@@ -31,6 +36,9 @@ class PremiumViewModel @Inject constructor(
     private val isBearerTokenValid: IsBearerTokenValid,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
+
+    var viewState by mutableStateOf<ViewState>(ViewState.Loading)
+        private set
 
     private val _viewEventFlow = MutableSharedFlow<PremiumViewModel.ViewEvent>()
     val viewEventFlow = _viewEventFlow.asSharedFlow()
@@ -75,6 +83,7 @@ class PremiumViewModel @Inject constructor(
         email: String,
         password: String,
     ) {
+        viewState = ViewState.Loading
         loginValidationUseCase(email, password)
             .fold(
                 {
@@ -93,7 +102,7 @@ class PremiumViewModel @Inject constructor(
                         loginUseCase(email, password)
                             .fold(
                                 {
-                                    it.message
+                                    viewState = ViewState.Error(it)
                                     ViewEvent.HideLoading.emit()
                                     ViewEvent.ShowLoginError(email, password).emit()
                                 }, { member ->
@@ -112,15 +121,17 @@ class PremiumViewModel @Inject constructor(
         password: String,
     ) {
         viewModelScope.launch(dispatcher) {
+            viewState = ViewState.Loading
             val categories = listOf(Category.PREMIUM_ALGORITHMS, Category.PREMIUM_AUDIO_COURSES)
             getPremiumPostsUseCase(categories)
                 .fold(
                     {
-                        it.message
+                        viewState = ViewState.Error(it)
                         ViewEvent.HideLoading.emit()
                         ViewEvent.ShowLoginError(email, password).emit()
                     },
                     { posts ->
+                        viewState = ViewState.Content(posts.toPremiumAudios())
                         ViewEvent.HideLoading.emit()
                         ViewEvent.ShowPremium(email, password, posts).emit()
                     }
@@ -150,6 +161,13 @@ class PremiumViewModel @Inject constructor(
         }
     }
 
+    fun findPremiumAudioFromId(id: String): PremiumAudio? {
+        return when (viewState) {
+            is ViewState.Content -> (viewState as ViewState.Content).premiumAudios.find { it.id == id }
+            else -> null
+        }
+    }
+
     sealed class ViewEvent {
         data class ShowAccess(
             val email: String,
@@ -172,5 +190,13 @@ class PremiumViewModel @Inject constructor(
             val email: String,
             val password: String,
         ) : ViewEvent()
+    }
+
+    sealed class ViewState {
+        object Loading : ViewState() // TODO: Use it instead of the view event
+        data class Error(val throwable: Throwable) :
+            ViewState() // TODO: Use it instead of the view event
+
+        data class Content(val premiumAudios: List<PremiumAudio>) : ViewState()
     }
 }

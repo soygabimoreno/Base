@@ -30,7 +30,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     lateinit var exoPlayer: SimpleExoPlayer
 
     @Inject
-    lateinit var mediaSource: PodcastMediaSource
+    lateinit var mediaSource: AudioMediaSource
 
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
@@ -72,7 +72,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
         val mediaPlaybackPreparer = MediaPlaybackPreparer(mediaSource) { mediaMetadata ->
             currentPlayingMedia = mediaMetadata
-            preparePlayer(mediaSource.mediaMetadataEpisodes, mediaMetadata, true)
+            preparePlayer(mediaSource.audioMediaMetadataCompat, mediaMetadata, true)
         }
         mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
             setPlaybackPreparer(mediaPlaybackPreparer)
@@ -135,7 +135,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     if (isInitialized) {
 
                         result.sendResult(mediaSource.asMediaItems())
-                        if (!isPlayerInitialized && mediaSource.mediaMetadataEpisodes.isNotEmpty()) {
+                        if (!isPlayerInitialized && mediaSource.audioMediaMetadataCompat.isNotEmpty()) {
                             isPlayerInitialized = true
                         }
                     } else {

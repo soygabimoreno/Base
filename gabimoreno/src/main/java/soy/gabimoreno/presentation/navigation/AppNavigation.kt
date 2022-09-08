@@ -36,10 +36,10 @@ private fun NavGraphBuilder.podcastNav(
             appState.setStartDestination(Feature.PODCAST)
             HomeScreen(
                 onItemClicked = { episodeId ->
-                    navController.navigateToDetail(episodeId)
+                    navController.navigateToDetailFromPodcast(episodeId)
                 },
                 onDeepLinkReceived = { episodeId ->
-                    navController.navigateToDetail(episodeId)
+                    navController.navigateToDetailFromPodcast(episodeId)
                 },
                 onGoToWebClicked = { encodedUrl ->
                     navController.navigateToWebView(encodedUrl)
@@ -49,9 +49,11 @@ private fun NavGraphBuilder.podcastNav(
 
         // TODO: Check how to manage deep links
         // deepLinks = listOf(navDeepLink { uriPattern = "https://gabimoreno.soy/{id}" })
-        composable(navCommand = NavCommand.ContentDetail(Feature.PODCAST)) {
+        composable(navCommand = NavCommand.ContentDetail(Feature.PODCAST,
+                                                         listOf(NavArg.EpisodeId))) {
             DetailScreen(
-                podcastId = it.findArg(NavArg.EpisodeId),
+                audioId = it.findArg(NavArg.EpisodeId),
+                Feature.PODCAST,
                 onBackClicked = {
                     navController.goBack()
                 }
@@ -79,13 +81,32 @@ private fun NavGraphBuilder.premiumNav(
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.PREMIUM)) {
             appState.setStartDestination(Feature.PREMIUM)
-            PremiumScreen()
+            PremiumScreen { premiumAudioId ->
+                navController.navigateToDetailFromPremium(premiumAudioId)
+            }
+        }
+        composable(navCommand = NavCommand.ContentDetail(
+            Feature.PREMIUM,
+            listOf(NavArg.PremiumAudioId))) {
+            DetailScreen(
+                audioId = it.findArg(NavArg.PremiumAudioId),
+                Feature.PREMIUM,
+                onBackClicked = {
+                    navController.goBack()
+                }
+            )
         }
     }
 }
 
-private fun NavController.navigateToDetail(episodeId: String) {
-    navigate(route = NavCommand.ContentDetail(Feature.PODCAST).createRoute(episodeId))
+private fun NavController.navigateToDetailFromPodcast(episodeId: String) {
+    navigate(route = NavCommand.ContentDetail(Feature.PODCAST, listOf(NavArg.EpisodeId))
+        .createRoute(episodeId))
+}
+
+private fun NavController.navigateToDetailFromPremium(premiumAudioId: String) {
+    navigate(route = NavCommand.ContentDetail(Feature.PREMIUM, listOf(NavArg.PremiumAudioId))
+        .createRoute(premiumAudioId))
 }
 
 private fun NavController.navigateToWebView(encodedUrl: String) {

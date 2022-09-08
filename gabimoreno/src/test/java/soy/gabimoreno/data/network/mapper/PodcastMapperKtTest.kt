@@ -19,7 +19,7 @@ class PodcastMapperKtTest {
         result.count shouldBe numberOfEpisodes
         result.total shouldBe numberOfEpisodes
 
-        result.results.forEachIndexed { index, episode ->
+        result.episodes.forEachIndexed { index, episode ->
             episode.id shouldBeEqualTo EPISODE_ID
             episode.url shouldBeEqualTo EPISODE_URL
             episode.audioUrl shouldBe EPISODE_AUDIO_URL
@@ -51,9 +51,9 @@ class PodcastMapperKtTest {
 
             episode.description shouldBeEqualTo EPISODE_DESCRIPTION
 
-            val podcast = episode.podcast
-            podcast.title shouldBe PODCAST_TITLE
-            podcast.author shouldBeEqualTo PODCAST_TITLE.uppercase()
+            val saga = episode.saga
+            saga.title shouldBe PODCAST_TITLE
+            saga.author shouldBeEqualTo PODCAST_TITLE.uppercase()
         }
     }
 

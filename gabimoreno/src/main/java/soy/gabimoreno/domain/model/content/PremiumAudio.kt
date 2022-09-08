@@ -1,9 +1,9 @@
-package soy.gabimoreno.domain.model.podcast
+package soy.gabimoreno.domain.model.content
 
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.audio.Saga
 
-data class Episode(
+data class PremiumAudio(
     override val id: String,
     override val title: String,
     override val description: String,

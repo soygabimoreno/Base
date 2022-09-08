@@ -2,7 +2,10 @@ package soy.gabimoreno.data.network.mapper
 
 import soy.gabimoreno.data.network.model.post.PostApiModel
 import soy.gabimoreno.domain.model.content.Post
+import soy.gabimoreno.domain.model.content.findAuthorDisplayNameById
 import soy.gabimoreno.domain.util.extractMp3Url
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun List<PostApiModel>.toDomain(): List<Post> = map { it.toDomain() }
 
@@ -12,6 +15,20 @@ fun PostApiModel.toDomain(): Post {
         id = id,
         title = titleApiModel.rendered,
         content = renderedContent,
-        audioUrl = renderedContent.extractMp3Url()
+        audioUrl = renderedContent.extractMp3Url(),
+        author = findAuthorDisplayNameById(authorId) ?: UNKNOWN_AUTHOR_DISPLAY_NAME,
+        subcategoryTitle = categoryIds.toSubcategoryTitleResId(),
+        url = url,
+        pubDateMillis = dateString.toMillis() ?: EMPTY_PUB_DATE_MILLIS
     )
 }
+
+private fun String.toMillis(): Long? {
+    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
+    val date = formatter.parse(this)
+    return date?.time
+}
+
+
+private const val EMPTY_PUB_DATE_MILLIS = 0L
+private const val UNKNOWN_AUTHOR_DISPLAY_NAME = "Unknown"

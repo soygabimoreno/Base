@@ -30,8 +30,9 @@ import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.navigationBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.domain.toPlayPause
+import soy.gabimoreno.domain.model.audio.Audio
+import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
-import soy.gabimoreno.domain.model.podcast.Podcast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
@@ -41,21 +42,21 @@ import kotlin.math.roundToInt
 fun AudioBottomBar(
     modifier: Modifier = Modifier,
 ) {
-    val episode = ViewModelProvider.playerViewModel.currentPlayingEpisode.value
+    val audio = ViewModelProvider.playerViewModel.currentPlayingAudio.value
 
     AnimatedVisibility(
-        visible = episode != null,
+        visible = audio != null,
         modifier = modifier
     ) {
-        if (episode != null) {
-            AudioBottomBarContent(episode)
+        if (audio != null) {
+            AudioBottomBarContent(audio)
         }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AudioBottomBarContent(episode: Episode) {
+fun AudioBottomBarContent(audio: Audio) {
     val swipeableState = rememberSwipeableState(0)
     val playerViewModel = ViewModelProvider.playerViewModel
 
@@ -87,12 +88,12 @@ fun AudioBottomBarContent(episode: Episode) {
         }
 
         AudioBottomBarStatelessContent(
-            episode = episode,
+            audio = audio,
             xOffset = swipeableState.offset.value.roundToInt(),
             icon = iconResId,
             onTooglePlaybackState = {
                 playerViewModel.onPlayPauseClickedFromAudioBottomBar(
-                    episode,
+                    audio,
                     isPlaying.toPlayPause()
                 )
                 playerViewModel.togglePlaybackState()
@@ -105,7 +106,7 @@ fun AudioBottomBarContent(episode: Episode) {
 
 @Composable
 fun AudioBottomBarStatelessContent(
-    episode: Episode,
+    audio: Audio,
     xOffset: Int,
     @DrawableRes icon: Int,
     onTooglePlaybackState: () -> Unit,
@@ -128,7 +129,7 @@ fun AudioBottomBarStatelessContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = rememberCoilPainter(episode.thumbnailUrl),
+                painter = rememberCoilPainter(audio.thumbnailUrl),
                 contentDescription = stringResource(R.string.podcast_thumbnail),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(Spacing.s64),
@@ -142,7 +143,7 @@ fun AudioBottomBarStatelessContent(
                     .padding(Spacing.s8),
             ) {
                 Text(
-                    episode.title,
+                    audio.title,
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.onBackground,
                     maxLines = 1,
@@ -150,7 +151,7 @@ fun AudioBottomBarStatelessContent(
                 )
 
                 Text(
-                    episode.podcast.title,
+                    audio.saga.title,
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.onBackground,
                     maxLines = 1,
@@ -181,12 +182,12 @@ fun AudioBottomBarStatelessContent(
 fun AudioBottomBarPreview() {
     PreviewContent {
         AudioBottomBarStatelessContent(
-            episode = Episode(
+            audio = Episode(
                 id = "1",
                 url = "",
                 audioUrl = "",
                 imageUrl = "https://picsum.photos/200",
-                podcast = Podcast("This is publisher", "This is podcast title"),
+                saga = Saga("This is publisher", "This is podcast title"),
                 thumbnailUrl = "https://picsum.photos/200",
                 pubDateMillis = 0,
                 title = "This is a title",

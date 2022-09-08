@@ -8,7 +8,7 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.framework.intent.StartChooser
 import javax.inject.Inject
 
@@ -18,19 +18,19 @@ class DetailViewModel @Inject constructor(
     private val startChooser: StartChooser,
 ) : ViewModel() {
 
-    fun onViewScreen(episode: Episode) {
-        tracker.trackEvent(DetailTrackerEvent.ViewScreen(episode.toMap()))
+    fun onViewScreen(audio: Audio) {
+        tracker.trackEvent(DetailTrackerEvent.ViewScreen(audio.toMap()))
     }
 
-    fun onBackClicked(episode: Episode) {
-        tracker.trackEvent(DetailTrackerEvent.ClickBack(episode.toMap()))
+    fun onBackClicked(audio: Audio) {
+        tracker.trackEvent(DetailTrackerEvent.ClickBack(audio.toMap()))
     }
 
     fun onPlayPauseClicked(
-        episode: Episode,
+        audio: Audio,
         playPause: PlayPause,
     ) {
-        val parameters = episode.toMap()
+        val parameters = audio.toMap()
         when (playPause) {
             PlayPause.PLAY -> tracker.trackEvent(DetailTrackerEvent.ClickPlay(parameters))
             PlayPause.PAUSE -> tracker.trackEvent(DetailTrackerEvent.ClickPause(parameters))
@@ -39,14 +39,14 @@ class DetailViewModel @Inject constructor(
 
     fun onShareClicked(
         context: Context,
-        episode: Episode,
+        audio: Audio,
     ) {
-        tracker.trackEvent(DetailTrackerEvent.ClickShare(episode.toMap()))
+        tracker.trackEvent(DetailTrackerEvent.ClickShare(audio.toMap()))
         startChooser(
             context,
             chooserTitleResId = R.string.share_podcast_content,
-            title = episode.title,
-            url = episode.url
+            title = audio.title,
+            url = audio.url
         )
     }
 }

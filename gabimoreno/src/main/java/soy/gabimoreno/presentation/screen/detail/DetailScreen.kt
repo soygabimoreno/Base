@@ -16,33 +16,53 @@ import androidx.compose.ui.res.stringResource
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
+import soy.gabimoreno.data.network.mapper.EMPTY_AUDIO_LENGTH_IN_SECONDS
 import soy.gabimoreno.data.tracker.domain.toPlayPause
+import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.framework.parseFromHtmlFormat
+import soy.gabimoreno.presentation.navigation.Feature
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
+import soy.gabimoreno.presentation.screen.premium.PremiumViewModel
 import soy.gabimoreno.presentation.theme.Spacing
+import soy.gabimoreno.presentation.ui.AudioImage
 import soy.gabimoreno.presentation.ui.BackButton
 import soy.gabimoreno.presentation.ui.EmphasisText
-import soy.gabimoreno.presentation.ui.EpisodeImage
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
 import soy.gabimoreno.util.formatMillisecondsAsDate
 import soy.gabimoreno.util.toDurationMinutes
 
 @Composable
 fun DetailScreen(
-    podcastId: String,
+    audioId: String,
+    feature: Feature,
     onBackClicked: () -> Unit,
 ) {
+    val currentContext = LocalContext.current
     val scrollState = rememberScrollState()
-    val podcastSearchViewModel = ViewModelProvider.homeViewModel
+    val homeViewModel = ViewModelProvider.homeViewModel
     val detailViewModel = ViewModelProvider.detailViewModel
     val playerViewModel = ViewModelProvider.playerViewModel
-    val episode = podcastSearchViewModel.getPodcastDetail(podcastId)
-    val currentContext = LocalContext.current
+    val premiumViewModel = ViewModelProvider.premiumViewModel
+
+    var audios: List<Audio>? = null
+    var audio: Audio? = null
+    when (feature) {
+        Feature.PODCAST -> {
+            audios =
+                (homeViewModel.viewState as HomeViewModel.ViewState.Content).episodesWrapper.episodes
+            audio = homeViewModel.findEpisodeFromId(audioId)
+        }
+        Feature.PREMIUM -> {
+            audios = (premiumViewModel.viewState as PremiumViewModel.ViewState.Content)
+                .premiumAudios
+            audio = premiumViewModel.findPremiumAudioFromId(audioId)
+        }
+    }
 
     LaunchedEffect(Unit) {
-        episode?.let {
-            detailViewModel.onViewScreen(episode)
+        audio?.let {
+            detailViewModel.onViewScreen(audio)
         }
     }
 
@@ -53,16 +73,16 @@ fun DetailScreen(
         ) {
             Row {
                 BackButton {
-                    episode?.let {
-                        detailViewModel.onBackClicked(episode)
+                    audio?.let {
+                        detailViewModel.onBackClicked(audio)
                     }
                     onBackClicked()
                 }
             }
 
-            if (episode != null) {
+            if (audio != null) {
                 val isPlaying = playerViewModel.podcastIsPlaying &&
-                    playerViewModel.currentPlayingEpisode.value?.id == episode.id
+                    playerViewModel.currentPlayingAudio.value?.id == audio.id
                 val playButtonText =
                     if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play)
 
@@ -71,29 +91,35 @@ fun DetailScreen(
                         .verticalScroll(scrollState)
                         .navigationBarsPadding()
                         .padding(vertical = Spacing.s24, horizontal = Spacing.s16)
-                        .padding(bottom = if (playerViewModel.currentPlayingEpisode.value != null) Spacing.s64 else Spacing.s0)
+                        .padding(bottom = if (playerViewModel.currentPlayingAudio.value != null) Spacing.s64 else Spacing.s0)
 
                 ) {
-                    EpisodeImage(
-                        url = episode.imageUrl,
+                    AudioImage(
+                        url = audio.imageUrl,
                         modifier = Modifier.height(Spacing.oddSpacing120)
                     )
 
                     Spacer(modifier = Modifier.height(Spacing.s32))
 
                     Text(
-                        episode.title,
+                        audio.title,
                         style = MaterialTheme.typography.h4
                     )
                     Spacer(modifier = Modifier.height(Spacing.s24))
 
                     Text(
-                        episode.podcast.author,
+                        audio.saga.author,
                         style = MaterialTheme.typography.body1
                     )
 
+                    val dateAndDurationText =
+                        if (audio.audioLengthInSeconds != EMPTY_AUDIO_LENGTH_IN_SECONDS) {
+                            "${audio.pubDateMillis.formatMillisecondsAsDate("MMM dd")} • ${audio.audioLengthInSeconds.toDurationMinutes()}"
+                        } else {
+                            audio.pubDateMillis.formatMillisecondsAsDate("MMM dd")
+                        }
                     EmphasisText(
-                        text = "${episode.pubDateMillis.formatMillisecondsAsDate("MMM dd")} • ${episode.audioLengthInSeconds.toDurationMinutes()}"
+                        text = dateAndDurationText
                     )
 
                     Spacer(modifier = Modifier.height(Spacing.s16))
@@ -103,11 +129,8 @@ fun DetailScreen(
                             text = playButtonText,
                             height = Spacing.s48
                         ) {
-                            detailViewModel.onPlayPauseClicked(episode, isPlaying.toPlayPause())
-                            playerViewModel.playPauseEpisode(
-                                (podcastSearchViewModel.podcastSearch as HomeViewModel.ViewState.Content).data.results,
-                                episode
-                            )
+                            detailViewModel.onPlayPauseClicked(audio, isPlaying.toPlayPause())
+                            playerViewModel.playPauseAudio(audios, audio)
                         }
 
                         Spacer(modifier = Modifier.weight(1f))
@@ -117,14 +140,14 @@ fun DetailScreen(
                             contentDescription = stringResource(R.string.share),
                             padding = Spacing.s16
                         ) {
-                            detailViewModel.onShareClicked(currentContext, episode)
+                            detailViewModel.onShareClicked(currentContext, audio)
                         }
                     }
 
                     Spacer(modifier = Modifier.height(Spacing.s16))
 
                     EmphasisText(
-                        text = episode.description.parseFromHtmlFormat()
+                        text = audio.description.parseFromHtmlFormat()
                     )
                 }
             }

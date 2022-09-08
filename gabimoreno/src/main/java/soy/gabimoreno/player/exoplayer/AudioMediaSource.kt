@@ -8,15 +8,15 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.audio.Audio
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PodcastMediaSource @Inject constructor() {
+class AudioMediaSource @Inject constructor() {
 
-    var mediaMetadataEpisodes: List<MediaMetadataCompat> = emptyList()
-    var podcastEpisodes: List<Episode> = emptyList()
+    var audioMediaMetadataCompat: List<MediaMetadataCompat> = emptyList()
+    var audios: List<Audio> = emptyList()
         private set
     private val onReadyListeners = mutableListOf<OnReadyListener>()
 
@@ -38,34 +38,34 @@ class PodcastMediaSource @Inject constructor() {
     private val isReady: Boolean
         get() = state == MusicSourceState.INITIALIZED
 
-    fun setEpisodes(data: List<Episode>) {
+    fun setAudios(audios: List<Audio>) {
         state = MusicSourceState.INITIALIZING
-        podcastEpisodes = data
-        mediaMetadataEpisodes = data.map { episode ->
+        this.audios = audios
+        audioMediaMetadataCompat = audios.map { audio ->
             MediaMetadataCompat.Builder()
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_MEDIA_ID,
-                    episode.id
+                    audio.id
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_ARTIST,
-                    episode.podcast.author
+                    audio.saga.author
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_TITLE,
-                    episode.title
+                    audio.title
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
-                    episode.podcast.title
+                    audio.saga.title
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
-                    episode.audioUrl
+                    audio.audioUrl
                 )
                 .putString(
                     MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,
-                    episode.imageUrl
+                    audio.imageUrl
                 )
                 .build()
         }
@@ -74,7 +74,7 @@ class PodcastMediaSource @Inject constructor() {
 
     fun asMediaSource(dataSourceFactory: DataSource.Factory): ConcatenatingMediaSource {
         val concatenatingMediaSource = ConcatenatingMediaSource()
-        mediaMetadataEpisodes.forEach { metadata ->
+        audioMediaMetadataCompat.forEach { metadata ->
             val mediaItem = MediaItem.fromUri(
                 metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI).toUri()
             )
@@ -85,7 +85,7 @@ class PodcastMediaSource @Inject constructor() {
         return concatenatingMediaSource
     }
 
-    fun asMediaItems() = mediaMetadataEpisodes.map { metadata ->
+    fun asMediaItems() = audioMediaMetadataCompat.map { metadata ->
         val description = MediaDescriptionCompat.Builder()
             .setMediaId(metadata.description.mediaId)
             .setTitle(metadata.description.title)

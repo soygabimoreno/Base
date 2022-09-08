@@ -10,11 +10,11 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PlayPause
-import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
-import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_ID
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_TITLE
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
-import soy.gabimoreno.fake.buildEpisode
+import soy.gabimoreno.fake.buildAudio
 import soy.gabimoreno.framework.intent.StartChooser
 
 class DetailViewModelTest {
@@ -33,17 +33,17 @@ class DetailViewModelTest {
 
     @Test
     fun `WHEN onViewScreen THEN track event`() {
-        val episode = buildEpisode()
+        val audio = buildAudio()
 
-        viewModel.onViewScreen(episode)
+        viewModel.onViewScreen(audio)
 
         verifyOnce {
             tracker.trackEvent(
                 withArg { event ->
                     event shouldBeInstanceOf DetailTrackerEvent.ViewScreen::class.java
                     val parameters = event.parameters
-                    parameters[TRACKER_KEY_EPISODE_ID] shouldBe episode.id
-                    parameters[TRACKER_KEY_EPISODE_TITLE] shouldBe episode.title
+                    parameters[TRACKER_KEY_AUDIO_ID] shouldBe audio.id
+                    parameters[TRACKER_KEY_AUDIO_TITLE] shouldBe audio.title
                 }
             )
         }
@@ -51,17 +51,17 @@ class DetailViewModelTest {
 
     @Test
     fun `WHEN onBackClicked THEN track event`() {
-        val episode = buildEpisode()
+        val audio = buildAudio()
 
-        viewModel.onBackClicked(episode)
+        viewModel.onBackClicked(audio)
 
         verifyOnce {
             tracker.trackEvent(
                 withArg { event ->
                     event shouldBeInstanceOf DetailTrackerEvent.ClickBack::class.java
                     val parameters = event.parameters
-                    parameters[TRACKER_KEY_EPISODE_ID] shouldBe episode.id
-                    parameters[TRACKER_KEY_EPISODE_TITLE] shouldBe episode.title
+                    parameters[TRACKER_KEY_AUDIO_ID] shouldBe audio.id
+                    parameters[TRACKER_KEY_AUDIO_TITLE] shouldBe audio.title
                 }
             )
         }
@@ -69,36 +69,36 @@ class DetailViewModelTest {
 
     @Test
     fun `WHEN onPlayPauseClicked on play THEN track the corresponding event`() {
-        val episode = buildEpisode()
+        val audio = buildAudio()
         val playPause = PlayPause.PLAY
 
-        viewModel.onPlayPauseClicked(episode, playPause)
+        viewModel.onPlayPauseClicked(audio, playPause)
 
-        val parameters = episode.toMap()
+        val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPlay(parameters)) }
     }
 
     @Test
     fun `WHEN onPlayPauseClicked on pause THEN track the corresponding event`() {
-        val episode = buildEpisode()
+        val audio = buildAudio()
         val playPause = PlayPause.PAUSE
 
-        viewModel.onPlayPauseClicked(episode, playPause)
+        viewModel.onPlayPauseClicked(audio, playPause)
 
-        val parameters = episode.toMap()
+        val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPause(parameters)) }
     }
 
     @Test
     fun `WHEN onShareClicked THEN track the corresponding event`() {
         val context: Context = relaxedMockk()
-        val episode = buildEpisode()
+        val audio = buildAudio()
 
-        viewModel.onShareClicked(context, episode)
+        viewModel.onShareClicked(context, audio)
 
         verifyOnce {
-            tracker.trackEvent(DetailTrackerEvent.ClickShare(episode.toMap()))
-            startChooser(context, R.string.share_podcast_content, episode.title, episode.url)
+            tracker.trackEvent(DetailTrackerEvent.ClickShare(audio.toMap()))
+            startChooser(context, R.string.share_podcast_content, audio.title, audio.url)
         }
     }
 }

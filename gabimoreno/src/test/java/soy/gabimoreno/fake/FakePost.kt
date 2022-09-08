@@ -12,5 +12,9 @@ fun buildPost() = Post(
     id = 1234L,
     title = "title",
     content = "content",
-    audioUrl = "audioUrl"
+    audioUrl = "audioUrl",
+    author = "author",
+    subcategoryTitle = "subcategoryTitle",
+    url = "https://example.com",
+    pubDateMillis = 1000L
 )
