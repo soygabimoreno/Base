@@ -95,15 +95,17 @@ fun HomeScreen(
                                 modifier = Modifier.padding(horizontal = Spacing.s16)
                             ) {
                                 val searchText = searchTextState.text
+
+                                // TODO: Paginate this and remove filtering the last 30 episodes
                                 val episodes = viewState.episodesWrapper.episodes
-                                    .subList(
-                                        0,
-                                        30
-                                    ) // TODO: Paginate this and remove filtering the last 30 episodes
+                                val fromIndex = 0
+                                val toIndex = 30.coerceAtMost(episodes.size)
+                                val episodesSubList = episodes.subList(fromIndex, toIndex)
+
                                 val filteredEpisodes = if (searchText.isBlank()) {
-                                    episodes
+                                    episodesSubList
                                 } else {
-                                    episodes.filter { episode ->
+                                    episodesSubList.filter { episode ->
                                         val lowerCaseTitle = episode.title.normalizeText()
                                         val lowerSearchText = searchText.normalizeText()
                                         lowerCaseTitle.contains(lowerSearchText)
