@@ -122,7 +122,7 @@ class PremiumViewModel @Inject constructor(
     ) {
         viewModelScope.launch(dispatcher) {
             viewState = ViewState.Loading
-            val categories = listOf(Category.PREMIUM_ALGORITHMS, Category.PREMIUM_AUDIO_COURSES)
+            val categories = Category.values().toList()
             getPremiumPostsUseCase(categories)
                 .fold(
                     {

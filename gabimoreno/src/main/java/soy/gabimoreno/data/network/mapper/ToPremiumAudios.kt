@@ -20,8 +20,8 @@ fun List<Post>.toPremiumAudios(): List<PremiumAudio> {
                     saga = Saga(author = post.author, post.subcategoryTitle),
                     url = post.url,
                     audioUrl = post.audioUrl,
-                    imageUrl = "https://gabimoreno.soy/wp-content/uploads/GABI-MORENO-Premium-sample-mp3-image.png", // TODO: This is fake content for now
-                    thumbnailUrl = "https://gabimoreno.soy/wp-content/uploads/GABI-MORENO-Premium-sample-mp3-image.png", // TODO: This is fake content for now
+                    imageUrl = post.category.coverUrl,
+                    thumbnailUrl = post.category.coverUrl,
                     pubDateMillis = post.pubDateMillis,
                     audioLengthInSeconds = EMPTY_AUDIO_LENGTH_IN_SECONDS, // TODO: This is unknown for now,
                     category = post.category
