@@ -3,6 +3,7 @@ package soy.gabimoreno.data.network.mapper
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
+import soy.gabimoreno.data.network.mapper.category.toSubcategory
 import soy.gabimoreno.data.network.model.Category
 
 class ToSubCategoryKtTest {
@@ -26,8 +27,17 @@ class ToSubCategoryKtTest {
     }
 
     @Test
-    fun `GIVEN only 1 category WHEN call THEN return null`() {
+    fun `GIVEN 1 PREMIUM category WHEN call THEN return the PREMIUM category`() {
         val categoryIds = listOf(Category.PREMIUM.id)
+
+        val result = categoryIds.toSubcategory()
+
+        result shouldBe Category.PREMIUM
+    }
+
+    @Test
+    fun `GIVEN 1 subcategory WHEN call THEN return null`() {
+        val categoryIds = listOf(Category.PREMIUM_NEWS.id)
 
         val result = categoryIds.toSubcategory()
 

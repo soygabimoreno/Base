@@ -1,5 +1,6 @@
 package soy.gabimoreno.data.network.mapper
 
+import soy.gabimoreno.data.network.mapper.category.toSubcategory
 import soy.gabimoreno.data.network.model.post.PostApiModel
 import soy.gabimoreno.domain.model.content.Post
 import soy.gabimoreno.domain.model.content.findAuthorDisplayNameById
