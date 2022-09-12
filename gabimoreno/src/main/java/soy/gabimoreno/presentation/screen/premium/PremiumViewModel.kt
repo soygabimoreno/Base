@@ -20,14 +20,11 @@ import soy.gabimoreno.domain.model.content.Post
 import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.domain.usecase.*
 import soy.gabimoreno.framework.datastore.DataStoreMemberSession
-import soy.gabimoreno.remoteconfig.RemoteConfigName
-import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import javax.inject.Inject
 
 @HiltViewModel
 class PremiumViewModel @Inject constructor(
     private val tracker: Tracker,
-    private val remoteConfigProvider: RemoteConfigProvider,
     private val loginValidationUseCase: LoginValidationUseCase,
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase,
     private val dataStoreMemberSession: DataStoreMemberSession,
@@ -50,10 +47,8 @@ class PremiumViewModel @Inject constructor(
         tracker.trackEvent(PremiumTrackerEvent.ViewScreen)
         viewModelScope.launch(dispatcher) {
             val isActive = dataStoreMemberSession.isActive()
-            val isPremiumSubscriptionLaunch =
-                remoteConfigProvider.isFeatureEnabled(RemoteConfigName.PREMIUM_SUBSCRIPTION_LAUNCH)
             when {
-                isPremiumSubscriptionLaunch && !isActive -> {
+                !isActive -> {
                     ViewEvent.ShowAccess(email, password).emit()
                 }
                 isActive -> {
