@@ -1,6 +1,5 @@
 package soy.gabimoreno.presentation.screen.premium
 
-import io.mockk.every
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
@@ -16,14 +15,11 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.domain.usecase.*
 import soy.gabimoreno.framework.datastore.DataStoreMemberSession
-import soy.gabimoreno.remoteconfig.RemoteConfigName
-import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 
 @ExperimentalCoroutinesApi
 class PremiumViewModelTest {
 
     private val tracker: Tracker = relaxedMockk()
-    private val remoteConfigProvider: RemoteConfigProvider = relaxedMockk()
     private val loginValidationUseCase: LoginValidationUseCase = relaxedMockk()
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase =
         relaxedMockk()
@@ -39,7 +35,6 @@ class PremiumViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel = PremiumViewModel(
             tracker = tracker,
-            remoteConfigProvider = remoteConfigProvider,
             loginValidationUseCase = loginValidationUseCase,
             saveCredentialsInDataStoreUseCase = saveCredentialsInDataStoreUseCase,
             dataStoreMemberSession = dataStoreMemberSession,
@@ -56,8 +51,7 @@ class PremiumViewModelTest {
     }
 
     @Test
-    fun `GIVEN PREMIUM_SUBSCRIPTION_LAUNCH enabled WHEN onViewScreen THEN track event and show login`() {
-        every { remoteConfigProvider.isFeatureEnabled(RemoteConfigName.PREMIUM_SUBSCRIPTION_LAUNCH) } returns true
+    fun `GIVEN  WHEN onViewScreen THEN track event and show login`() {
         val email = "email@example.com"
         val password = "1234"
 
@@ -69,24 +63,6 @@ class PremiumViewModelTest {
 //            runTest(testDispatcher) {
 //                val viewEvent = viewModel.viewEventFlow.first()
 //                viewEvent shouldBe PremiumViewModel.ViewEvent.ShowLogin
-//            }
-        }
-    }
-
-    @Test
-    fun `GIVEN PREMIUM_SUBSCRIPTION_LAUNCH disabled WHEN onViewScreen THEN track event and do not show login`() {
-        every { remoteConfigProvider.isFeatureEnabled(RemoteConfigName.PREMIUM_SUBSCRIPTION_LAUNCH) } returns false
-        val email = "email@example.com"
-        val password = "1234"
-
-        viewModel.onViewScreen(email, password)
-
-        verifyOnce {
-            tracker.trackEvent(PremiumTrackerEvent.ViewScreen)
-            // TODO: Test this navigation
-//            runTest(testDispatcher) {
-//                val viewEvent = viewModel.viewEventFlow.first()
-//                viewEvent shouldNotBe PremiumViewModel.ViewEvent.ShowLogin
 //            }
         }
     }
