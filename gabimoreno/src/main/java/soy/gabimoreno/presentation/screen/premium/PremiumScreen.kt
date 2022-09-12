@@ -112,44 +112,46 @@ fun PremiumScreen(
             .fillMaxWidth()
     ) {
         if (showAccess && !showPremium) {
-            Text(
-                text = stringResource(id = R.string.premium_login).uppercase(),
-                style = MaterialTheme.typography.h6
-            )
-            Spacer()
-            var emailTextFieldValue by remember { mutableStateOf(TextFieldValue(email)) }
-            LoginOutlinedTextField(
-                value = emailTextFieldValue,
-                placeholderText = stringResource(id = R.string.premium_email),
-                showError = showInvalidEmailFormatError,
-                errorText = stringResource(id = R.string.premium_email_error_invalid_format)
-            ) {
-                emailTextFieldValue = it
-            }
-            Spacer()
-            var passwordTextFieldValue by remember { mutableStateOf(TextFieldValue(password)) }
-            LoginOutlinedTextField(
-                value = passwordTextFieldValue,
-                placeholderText = stringResource(id = R.string.premium_password),
-                showError = showInvalidPasswordError,
-                errorText = stringResource(id = R.string.premium_password_error_invalid),
-                visualTransformation = PasswordVisualTransformation()
-            ) {
-                passwordTextFieldValue = it
-            }
-            Spacer()
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                PrimaryButton(
-                    text = stringResource(id = R.string.premium_login),
-                    height = Spacing.s48
+            Column(modifier = Modifier.padding(Spacing.s16)) {
+                Text(
+                    text = stringResource(id = R.string.premium_login).uppercase(),
+                    style = MaterialTheme.typography.h6
+                )
+                Spacer()
+                var emailTextFieldValue by remember { mutableStateOf(TextFieldValue(email)) }
+                LoginOutlinedTextField(
+                    value = emailTextFieldValue,
+                    placeholderText = stringResource(id = R.string.premium_email),
+                    showError = showInvalidEmailFormatError,
+                    errorText = stringResource(id = R.string.premium_email_error_invalid_format)
                 ) {
-                    premiumViewModel.onLoginClicked(
-                        emailTextFieldValue.text,
-                        passwordTextFieldValue.text
-                    )
+                    emailTextFieldValue = it
+                }
+                Spacer()
+                var passwordTextFieldValue by remember { mutableStateOf(TextFieldValue(password)) }
+                LoginOutlinedTextField(
+                    value = passwordTextFieldValue,
+                    placeholderText = stringResource(id = R.string.premium_password),
+                    showError = showInvalidPasswordError,
+                    errorText = stringResource(id = R.string.premium_password_error_invalid),
+                    visualTransformation = PasswordVisualTransformation()
+                ) {
+                    passwordTextFieldValue = it
+                }
+                Spacer()
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    PrimaryButton(
+                        text = stringResource(id = R.string.premium_login),
+                        height = Spacing.s48
+                    ) {
+                        premiumViewModel.onLoginClicked(
+                            emailTextFieldValue.text,
+                            passwordTextFieldValue.text
+                        )
+                    }
                 }
             }
         }
