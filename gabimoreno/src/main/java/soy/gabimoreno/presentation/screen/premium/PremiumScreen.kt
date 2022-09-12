@@ -111,23 +111,6 @@ fun PremiumScreen(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Spacing.s16)
-        ) {
-            Text(
-                text = stringResource(id = R.string.nav_item_premium).uppercase(),
-                style = MaterialTheme.typography.h5
-            )
-        }
-        Spacer()
-        Text(
-            text = stringResource(id = R.string.premium_description),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Spacing.s16)
-        )
-        Spacer(modifier = Modifier.height(Spacing.s40))
         if (showAccess && !showPremium) {
             Text(
                 text = stringResource(id = R.string.premium_login).uppercase(),
