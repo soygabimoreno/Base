@@ -34,6 +34,7 @@ import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.premium.view.LoginOutlinedTextField
 import soy.gabimoreno.presentation.theme.Black
+import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
@@ -216,8 +217,16 @@ fun PremiumItem(
             .clickable {
                 onItemClicked(premiumAudio.id)
             }
-            .background(brush = SolidColor(PurpleLight), alpha = 0.5f)
-            .padding(horizontal = Spacing.s16, vertical = Spacing.s24)
+            .background(brush = run {
+                val backgroundColor =
+                    if (premiumAudio.id == "5453") { // TODO: This is a provisional patch for visualization
+                        Orange
+                    } else {
+                        PurpleLight
+                    }
+                SolidColor(backgroundColor)
+            }, alpha = 0.5f)
+            .padding(horizontal = Spacing.s16, vertical = Spacing.s32)
     ) {
         Icon(
             imageVector = premiumAudio.category.icon,
