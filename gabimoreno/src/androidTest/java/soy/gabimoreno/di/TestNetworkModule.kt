@@ -4,9 +4,9 @@ import android.content.Context
 import com.prof.rssparser.Parser
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -22,8 +22,11 @@ import soy.gabimoreno.domain.repository.PodcastRepository
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
-object NetworkModule {
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [NetworkModule::class]
+)
+object TestNetworkModule {
 
     @Provides
     fun provideRSSParser(@ApplicationContext context: Context): Parser = Parser.Builder()
@@ -37,7 +40,7 @@ object NetworkModule {
     @Provides
     @Singleton
     @BaseUrl
-    fun provideUrl(): String = BASE_URL
+    fun provideUrl(): String = TEST_BASE_URL
 
     @Provides
     fun provideRetrofit(
@@ -80,5 +83,4 @@ object NetworkModule {
     ): PodcastRepository = NetworkPodcastRepository(rssParser)
 }
 
-internal const val ONE_DAY_IN_MILLIS = 24L * 60L * 60L * 1000L
-private const val BASE_URL = "https://gabimoreno.soy/"
+private const val TEST_BASE_URL = "http://localhost:8080/"
