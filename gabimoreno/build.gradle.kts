@@ -30,7 +30,7 @@ android {
         versionCode = 32
         versionName = "1.0.3"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "soy.gabimoreno.di.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -157,7 +157,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.amshove.kluent:kluent-android:1.68")
+    testImplementation("org.amshove.kluent:kluent:1.68")
     testImplementation("io.mockk:mockk:1.12.4")
     testImplementation("org.robolectric:robolectric:4.8.1")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3")
@@ -165,6 +165,13 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${rootProject.extra["version_compose"]}")
+    androidTestImplementation("org.amshove.kluent:kluent-android:1.68")
+
+    androidTestImplementation("com.google.dagger:hilt-android-testing:${rootProject.extra["version_hilt"]}")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
+    androidTestImplementation("com.jakewharton.espresso:okhttp3-idling-resource:1.0.0")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3")
 
     debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["version_compose"]}")
 }
