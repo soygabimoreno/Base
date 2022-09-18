@@ -45,15 +45,16 @@ class ToSubCategoryKtTest {
     }
 
     @Test
-    fun `GIVEN more than 2 categories WHEN call THEN return null`() {
+    fun `GIVEN 2 premium categories and another additional WHEN call THEN return the right one`() {
         val categoryIds = listOf(
             Category.PREMIUM.id,
             Category.PREMIUM_AUDIO_COURSES.id,
-            Category.PREMIUM_ALGORITHMS.id
+            151,
+            12
         )
 
         val result = categoryIds.toSubcategory()
 
-        result shouldBe null
+        result shouldBe Category.PREMIUM_AUDIO_COURSES
     }
 }
