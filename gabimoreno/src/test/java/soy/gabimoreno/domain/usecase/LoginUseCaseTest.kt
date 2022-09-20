@@ -10,6 +10,7 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeTrue
 import org.junit.Before
 import org.junit.Test
+import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.network.repository.NetworkLoginRepository
@@ -25,6 +26,7 @@ class LoginUseCaseTest {
     private val repository: NetworkLoginRepository = mockk()
     private val remoteConfigProvider: RemoteConfigProvider = mockk()
     private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase = relaxedMockk()
+    private val resetJwtAuthTokenUseCase: ResetJwtAuthTokenUseCase = relaxedMockk()
     private lateinit var useCase: LoginUseCase
 
     @Before
@@ -32,7 +34,8 @@ class LoginUseCaseTest {
         useCase = LoginUseCase(
             repository,
             remoteConfigProvider,
-            setJwtAuthTokenUseCase
+            setJwtAuthTokenUseCase,
+            resetJwtAuthTokenUseCase,
         )
     }
 
@@ -69,6 +72,13 @@ class LoginUseCaseTest {
 
             result.isRight().shouldBeTrue()
             coVerifyOnce { repository.generateAuthCookie(email, password) }
+            coVerifyOnce {
+                repository.obtainToken(tokenCredentialUsername,
+                                       tokenCredentialPassword)
+            }
+            coVerifyOnce { setJwtAuthTokenUseCase(jwtAuth.token) }
+            coVerifyOnce { repository.getMember(email) }
+            coVerifyNever { resetJwtAuthTokenUseCase() }
         }
 
     @Test
@@ -198,6 +208,41 @@ class LoginUseCaseTest {
 
             result.isLeft().shouldBeTrue()
             coVerifyOnce { repository.generateAuthCookie(email, password) }
+        }
+
+
+    @Test
+    fun `GIVEN expired token WHEN invoke THEN get the expected result`() =
+        runTest {
+            val email = "email@example.com"
+            val password = "1234"
+            val authCookie = buildAuthCookie()
+            coEvery { repository.generateAuthCookie(email, password) } returns authCookie.right()
+
+            val tokenCredentialUsername = "tokenCredentialUsername"
+            val tokenCredentialPassword = "tokenCredentialPassword"
+            val tokenCredentials =
+                TokenCredentials(tokenCredentialUsername, tokenCredentialPassword)
+            every { remoteConfigProvider.getTokenCredentials() } returns tokenCredentials
+
+            val throwable = Throwable()
+            coEvery {
+                repository.obtainToken(
+                    tokenCredentialUsername,
+                    tokenCredentialPassword
+                )
+            } returns throwable.left()
+
+            val result = useCase(email, password)
+
+            result.isLeft().shouldBeTrue()
+            coVerifyOnce { repository.generateAuthCookie(email, password) }
+            coVerifyOnce {
+                repository.obtainToken(tokenCredentialUsername,
+                                       tokenCredentialPassword)
+            }
+            coVerifyOnce { resetJwtAuthTokenUseCase() }
+            coVerifyNever { repository.getMember(email) }
         }
 }
 

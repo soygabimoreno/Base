@@ -16,6 +16,7 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
+import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.model.content.Post
 import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.domain.usecase.*
@@ -99,7 +100,14 @@ class PremiumViewModel @Inject constructor(
                                 {
                                     viewState = ViewState.Error(it)
                                     ViewEvent.HideLoading.emit()
-                                    ViewEvent.ShowLoginError(email, password).emit()
+                                    when (it) {
+                                        is TokenExpiredException -> {
+                                            ViewEvent.ShowTokenExpiredError(email, password).emit()
+                                        }
+                                        else -> {
+                                            ViewEvent.ShowLoginError(email, password).emit()
+                                        }
+                                    }
                                 }, { member ->
                                     val isUserActive = member.isActive
                                     dataStoreMemberSession.setActive(isUserActive)
@@ -182,6 +190,11 @@ class PremiumViewModel @Inject constructor(
         ) : ViewEvent()
 
         data class ShowLoginError(
+            val email: String,
+            val password: String,
+        ) : ViewEvent()
+
+        data class ShowTokenExpiredError(
             val email: String,
             val password: String,
         ) : ViewEvent()

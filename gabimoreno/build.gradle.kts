@@ -27,8 +27,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = 23
         targetSdk = 32
-        versionCode = 33
-        versionName = "1.0.4"
+        versionCode = 34
+        versionName = "1.0.5"
 
         testInstrumentationRunner = "soy.gabimoreno.di.HiltTestRunner"
         vectorDrawables {
