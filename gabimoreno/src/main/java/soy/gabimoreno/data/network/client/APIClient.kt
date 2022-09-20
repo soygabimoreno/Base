@@ -5,10 +5,11 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import soy.gabimoreno.BuildConfig
+import soy.gabimoreno.framework.datastore.EMPTY_BEARER_TOKEN
 
 object APIClient {
 
-    var bearerToken: String? = null
+    var bearerToken = EMPTY_BEARER_TOKEN
 
     fun createHttpClient(): OkHttpClient {
         val requestInterceptor = Interceptor { chain ->
@@ -16,8 +17,8 @@ object APIClient {
                 .request()
                 .newBuilder()
 
-            bearerToken?.let {
-                request.addHeader(AUTHORIZATION, it)
+            if (bearerToken != EMPTY_BEARER_TOKEN) {
+                request.addHeader(AUTHORIZATION, bearerToken)
             }
 
             return@Interceptor chain.proceed(request.build())

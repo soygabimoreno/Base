@@ -57,6 +57,7 @@ fun PremiumScreen(
     var showInvalidPasswordError by remember { mutableStateOf(false) }
     var showPremium by remember { mutableStateOf(false) }
     var showLoginError by remember { mutableStateOf(false) }
+    var showTokenExpiredError by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         premiumViewModel.onViewScreen(
@@ -99,6 +100,13 @@ fun PremiumScreen(
                 }
                 is PremiumViewModel.ViewEvent.ShowLoginError -> {
                     showLoginError = true
+                    showAccess = true
+
+                    email = viewEvent.email
+                    password = viewEvent.password
+                }
+                is PremiumViewModel.ViewEvent.ShowTokenExpiredError -> {
+                    showTokenExpiredError = true
                     showAccess = true
 
                     email = viewEvent.email
@@ -188,6 +196,11 @@ fun PremiumScreen(
         if (showLoginError) {
             showLoginError = false
             context.toast(stringResource(id = R.string.premium_error_generate_auth_cookie))
+        }
+
+        if (showTokenExpiredError) {
+            showTokenExpiredError = false
+            context.toast(stringResource(id = R.string.premium_error_token_expired))
         }
     }
 
