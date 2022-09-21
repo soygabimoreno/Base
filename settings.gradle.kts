@@ -19,6 +19,8 @@ include(":bike")
 
 include(":modules:core")
 include(":modules:core-testing")
+include(":modules:core-view")
 include(":modules:framework")
+include(":modules:paparazzi")
 include(":modules:player")
 include(":modules:remote-config")

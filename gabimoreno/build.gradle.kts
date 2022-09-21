@@ -111,6 +111,7 @@ dependencies {
 //    implementation(project(":modules:player")) // TODO: Add when moved all player files to this module
     implementation(project(":modules:core"))
     implementation(project(":modules:core-testing"))
+    implementation(project(":modules:core-view"))
     implementation(project(":modules:framework"))
     implementation(project(":modules:remote-config"))
 

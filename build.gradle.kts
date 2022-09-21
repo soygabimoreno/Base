@@ -13,12 +13,14 @@ buildscript {
         set("version_glide", "4.12.0")
         set("version_retrofit", "2.9.0")
         set("version_accompanist", "0.12.0")
+        set("version_paparazzi", "1.0.0")
     }
 
     dependencies {
         classpath("com.google.gms:google-services:${rootProject.extra["version_google_services"]}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${rootProject.extra["version_hilt"]}")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
+        classpath("app.cash.paparazzi:paparazzi-gradle-plugin:${rootProject.extra["version_paparazzi"]}")
     }
 }
 
@@ -28,6 +30,7 @@ plugins {
     id("org.jetbrains.kotlin.android") version "${extra["version_kotlin"]}" apply false
     id("org.jetbrains.kotlin.jvm") version "${extra["version_kotlin"]}" apply false
     id("io.gitlab.arturbosch.detekt") version "${extra["version_detekt"]}"
+//    id("app.cash.paparazzi") version "${extra["version_paparazzi"]}"
 }
 
 tasks.register("clean", Delete::class) {
