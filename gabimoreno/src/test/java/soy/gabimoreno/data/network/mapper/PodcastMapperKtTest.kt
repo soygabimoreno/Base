@@ -28,23 +28,18 @@ class PodcastMapperKtTest {
 
             when (index) {
                 0 -> {
-                    episode.imageUrl shouldBe EPISODE_IMAGE_URL
-                    episode.thumbnailUrl shouldBe EPISODE_IMAGE_URL
+                    episode.imageUrl shouldBeEqualTo EPISODE_IMAGE_URL
+                    episode.thumbnailUrl shouldBeEqualTo EPISODE_IMAGE_URL
                     episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_IN_SECONDS
                 }
                 1 -> {
-                    episode.imageUrl shouldBe EPISODE_IMAGE_URL
-                    episode.thumbnailUrl shouldBe EPISODE_IMAGE_URL
+                    episode.imageUrl shouldBeEqualTo EPISODE_IMAGE_URL
+                    episode.thumbnailUrl shouldBeEqualTo EPISODE_IMAGE_URL
                     episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED_IN_SECONDS
                 }
                 2 -> {
-                    episode.imageUrl shouldBe EPISODE_EMPTY_IMAGE_URL
-                    episode.thumbnailUrl shouldBe EPISODE_EMPTY_IMAGE_URL
-                    episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
-                }
-                3 -> {
-                    episode.imageUrl shouldBe EPISODE_IMAGE_URL
-                    episode.thumbnailUrl shouldBe EPISODE_IMAGE_URL
+                    episode.imageUrl shouldBeEqualTo EPISODE_IMAGE_URL
+                    episode.thumbnailUrl shouldBeEqualTo EPISODE_IMAGE_URL
                     episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
                 }
             }
@@ -80,9 +75,6 @@ class PodcastMapperKtTest {
                         )
                     )
                 },
-                buildArticle(EPISODE_AUDIO_LENGTH_IN_SECONDS.toString()).copy(
-                    itunesArticleData = null
-                ),
                 buildArticle(EPISODE_AUDIO_LENGTH_NULL)
             ),
             itunesChannelData = ItunesChannelData(
@@ -138,7 +130,8 @@ private const val EPISODE_ID = "guid"
 private const val EPISODE_NUMBER = "1234"
 private const val EPISODE_URL = "$GABI_MORENO_WEB_BASE_URL/$EPISODE_NUMBER"
 private const val EPISODE_AUDIO_URL = "audio"
-private const val EPISODE_IMAGE_URL = "image"
+private const val EPISODE_IMAGE_URL =
+    "$GABI_MORENO_WEB_BASE_URL/$PODCAST_COVER_PREFIX$EPISODE_NUMBER$PODCAST_COVER_SUFFIX"
 private const val EPISODE_TITLE = "$EPISODE_NUMBER. Title"
 private const val EPISODE_AUDIO_LENGTH_IN_SECONDS = 896
 private const val EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED = "01:51:15"
