@@ -1,5 +1,6 @@
 package soy.gabimoreno.data.network.mapper
 
+import androidx.annotation.VisibleForTesting
 import com.prof.rssparser.Article
 import com.prof.rssparser.Channel
 import com.prof.rssparser.ItunesArticleData
@@ -35,7 +36,7 @@ fun Article.toDomain(
 ): Episode {
     return run {
         val description = description?.removeAnchorMessage() ?: ""
-        val imageUrl = itunesArticleData?.image ?: EPISODE_EMPTY_IMAGE_URL
+        val imageUrl = getEpisodeCoverUrl()
         Episode(
             id = guid!!.replace(IVOOX_URL, ""),
             url = getEpisodeUrl(),
@@ -57,6 +58,14 @@ fun Article.toDomain(
 private fun String.removeAnchorMessage() = replace(ANCHOR_MESSAGE, "")
 
 private fun Article.getEpisodeUrl(): String {
+    return "$GABI_MORENO_WEB_BASE_URL/${getEpisodeNumber()}"
+}
+
+private fun Article.getEpisodeCoverUrl(): String {
+    return "$GABI_MORENO_WEB_BASE_URL/$PODCAST_COVER_PREFIX${getEpisodeNumber()}$PODCAST_COVER_SUFFIX"
+}
+
+private fun Article.getEpisodeNumber(): String {
     val episodeNumber = if (itunesArticleData != null && itunesArticleData?.episode != null) {
         itunesArticleData?.episode
     } else {
@@ -65,7 +74,7 @@ private fun Article.getEpisodeUrl(): String {
             title.substring(0, index)
         } ?: ""
     }
-    return "$GABI_MORENO_WEB_BASE_URL/$episodeNumber"
+    return episodeNumber.toString()
 }
 
 private fun ItunesArticleData?.getAudioLengthInSeconds(): Int {
@@ -95,8 +104,14 @@ internal const val ANCHOR_MESSAGE =
         "Send in a voice message: https://anchor.fm/losandroides/message"
 internal const val IVOOX_URL = "https://www.ivoox.com/"
 internal const val EPISODE_AUDIO_LENGTH_DEFAULT_DURATION = 0
-internal const val EPISODE_EMPTY_IMAGE_URL = ""
 
 private const val HOURS_MINUTES_SECONDS_PATTERN = "HH:mm:ss"
 private const val ONE_MINUTE_IN_SECONDS = 60
 private const val ONE_HOUR_IN_SECONDS = 60 * ONE_MINUTE_IN_SECONDS
+
+@VisibleForTesting
+internal const val PODCAST_COVER_PREFIX =
+    "images/podcast-los-androides/cover-podcast-los-androides-"
+
+@VisibleForTesting
+internal const val PODCAST_COVER_SUFFIX = ".png"
