@@ -47,7 +47,7 @@ private fun NavGraphBuilder.podcastNav(
             )
         }
 
-        // TODO: Check how to manage deep links
+        // TODO: Manage deep links in a proper way
         // deepLinks = listOf(navDeepLink { uriPattern = "https://gabimoreno.soy/{id}" })
         composable(navCommand = NavCommand.ContentDetail(Feature.PODCAST,
                                                          listOf(NavArg.EpisodeId))) {

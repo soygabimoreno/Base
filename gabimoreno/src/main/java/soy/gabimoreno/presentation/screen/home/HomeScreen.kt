@@ -116,7 +116,7 @@ fun HomeScreen(
                                         onItemClicked(episodeId)
                                     }
                                 }
-                                // TODO: Check how to manage deep links
+                                // TODO: Manage deep links in a proper way
                                 val episodeNumber = DeepLinkEpisodeNumber.value
                                 if (episodeNumber != null) {
                                     DeepLinkEpisodeNumber.value = null

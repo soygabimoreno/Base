@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         preloadDataFromDataStore()
 
         setContent {
-            // TODO: Check how to manage deep links
+            // TODO: Manage deep links in a proper way
             val action: String? = intent?.action
             val data: Uri? = intent?.data
             if (action != null && data != null) {

@@ -97,7 +97,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             val bleDevice = (_viewState.value as? ViewState.Content)?.bleDevice
             bleDevice?.let {
-                // TODO: This is just for retrieve data. Only should be done once:
+                // TODO: This is just for retrieving data. Only should be done once:
 //                val services = bleManager.getBluetoothGattServices(bleDevice)
 //                val characteristics = bleManager.getBluetoothGattCharacteristics(services[2])
 //                val characteristic = characteristics[1]
