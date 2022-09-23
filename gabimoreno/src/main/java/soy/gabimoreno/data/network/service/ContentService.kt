@@ -9,5 +9,8 @@ interface ContentService {
     @GET("wp-json/wp/v2/posts/")
     suspend fun getPosts(
         @Query("categories") categoriesQuery: String,
+        @Query("per_page") postsPerPage: Int = POSTS_PER_PAGE,
     ): List<PostApiModel>
 }
+
+private const val POSTS_PER_PAGE = 100
