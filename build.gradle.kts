@@ -36,6 +36,8 @@ plugins {
 //    id("app.cash.paparazzi") version "${extra["version_paparazzi"]}"
 }
 
+apply(from = "gradle-scripts/detekt.gradle")
+
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
 }
