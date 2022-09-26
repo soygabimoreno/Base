@@ -15,6 +15,8 @@ buildscript {
         set("version_accompanist", "0.12.0")
         set("version_paparazzi", "1.0.0")
         set("detekt_version", "1.19.0")
+
+        // This is just a comment to check the CI
     }
 
     dependencies {
