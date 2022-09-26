@@ -14,6 +14,7 @@ buildscript {
         set("version_retrofit", "2.9.0")
         set("version_accompanist", "0.12.0")
         set("version_paparazzi", "1.0.0")
+        set("detekt_version", "1.19.0")
     }
 
     dependencies {
