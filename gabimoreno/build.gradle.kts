@@ -11,13 +11,15 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        create("release") {
-            val localProperties = gradleLocalProperties(rootDir)
-            keyAlias = localProperties.getProperty("keystore.keyAlias")
-            storeFile = file(localProperties.getProperty("keystore.storeFile"))
-            storePassword = localProperties.getProperty("keystore.storePassword")
-            keyPassword = localProperties.getProperty("keystore.keyPassword")
+    if (isLocalBuild()) {
+        signingConfigs {
+            create("release") {
+                val localProperties = gradleLocalProperties(rootDir)
+                keyAlias = localProperties.getProperty("keystore.keyAlias")
+                storeFile = file(localProperties.getProperty("keystore.storeFile") ?: "fakePath")
+                storePassword = localProperties.getProperty("keystore.storePassword")
+                keyPassword = localProperties.getProperty("keystore.keyPassword")
+            }
         }
     }
 
@@ -72,7 +74,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName(name)
+            if (isLocalBuild()) {
+                signingConfig = signingConfigs.getByName(name)
+            }
             configure<CrashlyticsExtension> {
                 mappingFileUploadEnabled = true
             }
@@ -175,4 +179,8 @@ dependencies {
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3")
 
     debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["version_compose"]}")
+}
+
+fun isLocalBuild(): Boolean {
+    return System.getenv("CI") == null
 }

@@ -17,9 +17,13 @@ subprojects {
     }
 
     afterEvaluate {
-        // we don't want to run the detekt task in every build task to don't impact in the building time. (check dependsOn build)
-        tasks.named("check").configure {
-            dependsOn = dependsOn.findAll { it.name != 'detekt' }
+        // This is to avoid running the detekt task in every build task.
+        // This way, we save on building times (check dependsOn build)
+        def check = "check"
+        if (tasks.getNames().contains(check)) {
+            tasks.named(check).configure {
+                dependsOn = dependsOn.findAll { it.name != 'detekt' }
+            }
         }
     }
 }
