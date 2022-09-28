@@ -15,6 +15,8 @@ buildscript {
         set("version_accompanist", "0.12.0")
         set("version_paparazzi", "1.0.0")
         set("detekt_version", "1.19.0")
+
+        // This is just a comment to check the CI
     }
 
     dependencies {
@@ -33,6 +35,8 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "${extra["version_detekt"]}"
 //    id("app.cash.paparazzi") version "${extra["version_paparazzi"]}"
 }
+
+apply(from = "gradle-scripts/detekt.gradle")
 
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
