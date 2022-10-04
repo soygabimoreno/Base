@@ -152,6 +152,16 @@ class PlayerViewModel @Inject constructor(
         mediaPlayerServiceConnection.fastForward()
     }
 
+    fun onSkipToPrevious() {
+        tracker.trackEvent(PlayerTrackerEvent.ClickSkipToPrevious(getParameters()))
+        mediaPlayerServiceConnection.skipToPrevious()
+    }
+
+    fun onSkipToNext() {
+        tracker.trackEvent(PlayerTrackerEvent.ClickSkipToNext(getParameters()))
+        mediaPlayerServiceConnection.skipToNext()
+    }
+
     /**
      * @param value from 0.0 to 1.0
      */

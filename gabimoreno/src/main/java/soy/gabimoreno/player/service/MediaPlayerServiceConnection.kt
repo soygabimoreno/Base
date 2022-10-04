@@ -43,16 +43,24 @@ class MediaPlayerServiceConnection @Inject constructor(
         mediaBrowser.sendCustomAction(START_MEDIA_PLAYBACK_ACTION, null, null)
     }
 
+    fun rewind(seconds: Int = 10) {
+        playbackState.value?.currentPosition?.let { currentPosition ->
+            transportControls.seekTo(currentPosition - seconds * 1000)
+        }
+    }
+
     fun fastForward(seconds: Int = 10) {
         playbackState.value?.currentPosition?.let { currentPosition ->
             transportControls.seekTo(currentPosition + seconds * 1000)
         }
     }
 
-    fun rewind(seconds: Int = 10) {
-        playbackState.value?.currentPosition?.let { currentPosition ->
-            transportControls.seekTo(currentPosition - seconds * 1000)
-        }
+    fun skipToPrevious() {
+        transportControls.skipToPrevious()
+    }
+
+    fun skipToNext() {
+        transportControls.skipToNext()
     }
 
     fun subscribe(

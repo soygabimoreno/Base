@@ -127,6 +127,20 @@ class PlayerViewModelTest {
     }
 
     @Test
+    fun `WHEN clickRewind THEN track the corresponding event`() {
+        val currentPlayingAudio = buildAudio()
+        every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
+
+        viewModel.onRewindClicked()
+
+        val parameters = currentPlayingAudio.toMap()
+        verifyOnce {
+            mediaPlayerServiceConnection.rewind()
+            tracker.trackEvent(PlayerTrackerEvent.ClickRewind(parameters))
+        }
+    }
+
+    @Test
     fun `WHEN clickFastForward THEN track the corresponding event`() {
         val currentPlayingAudio = buildAudio()
         every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
@@ -141,16 +155,30 @@ class PlayerViewModelTest {
     }
 
     @Test
-    fun `WHEN clickRewind THEN track the corresponding event`() {
+    fun `WHEN onSkipToPrevious THEN track the corresponding event`() {
         val currentPlayingAudio = buildAudio()
         every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
 
-        viewModel.onRewindClicked()
+        viewModel.onSkipToPrevious()
 
         val parameters = currentPlayingAudio.toMap()
         verifyOnce {
-            mediaPlayerServiceConnection.rewind()
-            tracker.trackEvent(PlayerTrackerEvent.ClickRewind(parameters))
+            mediaPlayerServiceConnection.skipToPrevious()
+            tracker.trackEvent(PlayerTrackerEvent.ClickSkipToPrevious(parameters))
+        }
+    }
+
+    @Test
+    fun `WHEN onSkipToNext THEN track the corresponding event`() {
+        val currentPlayingAudio = buildAudio()
+        every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
+
+        viewModel.onSkipToNext()
+
+        val parameters = currentPlayingAudio.toMap()
+        verifyOnce {
+            mediaPlayerServiceConnection.skipToNext()
+            tracker.trackEvent(PlayerTrackerEvent.ClickSkipToNext(parameters))
         }
     }
 

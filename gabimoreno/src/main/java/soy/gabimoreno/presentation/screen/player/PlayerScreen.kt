@@ -154,6 +154,12 @@ fun PodcastPlayerBody(
             onForward = {
                 playerViewModel.onForwardClicked()
             },
+            onSkipToPrevious = {
+                playerViewModel.onSkipToPrevious()
+            },
+            onSkipToNext = {
+                playerViewModel.onSkipToNext()
+            },
             onTooglePlayback = {
                 playerViewModel.onPlayPauseClickedFromPlayer(audio, isPlaying.toPlayPause())
                 playerViewModel.togglePlaybackState()
@@ -197,6 +203,8 @@ fun PodcastPlayerStatelessContent(
     totalTime: String,
     onRewind: () -> Unit,
     onForward: () -> Unit,
+    onSkipToPrevious: () -> Unit,
+    onSkipToNext: () -> Unit,
     onTooglePlayback: () -> Unit,
     onSliderChange: (Float) -> Unit,
     onSliderChangeFinished: () -> Unit,
@@ -304,6 +312,15 @@ fun PodcastPlayerStatelessContent(
                                 .padding(top = Spacing.s8, bottom = Spacing.s32),
                         ) {
                             Icon(
+                                painter = painterResource(R.drawable.ic_baseline_skip_previous_24),
+                                contentDescription = stringResource(R.string.skip_to_previous),
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable(onClick = onSkipToPrevious)
+                                    .padding(Spacing.oddSpacing12)
+                                    .size(Spacing.s32)
+                            )
+                            Icon(
                                 painter = painterResource(R.drawable.ic_baseline_replay_10_24),
                                 contentDescription = stringResource(R.string.replay_10_seconds),
                                 modifier = Modifier
@@ -329,6 +346,15 @@ fun PodcastPlayerStatelessContent(
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .clickable(onClick = onForward)
+                                    .padding(Spacing.oddSpacing12)
+                                    .size(Spacing.s32)
+                            )
+                            Icon(
+                                painter = painterResource(R.drawable.ic_baseline_skip_next_24),
+                                contentDescription = stringResource(R.string.skip_to_next),
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable(onClick = onSkipToNext)
                                     .padding(Spacing.oddSpacing12)
                                     .size(Spacing.s32)
                             )
@@ -366,6 +392,8 @@ fun PodcastPlayerPreview() {
             totalTime = "10:00",
             onClose = { },
             onForward = { },
+            onSkipToPrevious = {},
+            onSkipToNext = {},
             onRewind = { },
             onTooglePlayback = { },
             onSliderChange = { },
