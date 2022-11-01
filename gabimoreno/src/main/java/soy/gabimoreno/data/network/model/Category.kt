@@ -54,5 +54,5 @@ fun List<Category>.toQueryValue(): String {
     return ids.joinToString(",")
 }
 
-private const val COVER_URL_PREFIX = "https://gabimoreno.soy/premium/images/cover-"
+private const val COVER_URL_PREFIX = "https://gabimoreno.soy/images/premium/cover-"
 private const val COVER_URL_SUFFIX = ".png"

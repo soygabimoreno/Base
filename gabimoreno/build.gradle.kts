@@ -23,14 +23,14 @@ android {
         }
     }
 
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "soy.gabimoreno"
         minSdk = 23
-        targetSdk = 32
-        versionCode = 37
-        versionName = "1.0.8"
+        targetSdk = 33
+        versionCode = 38
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "soy.gabimoreno.di.HiltTestRunner"
         vectorDrawables {
@@ -119,22 +119,23 @@ dependencies {
     implementation(project(":modules:framework"))
     implementation(project(":modules:remote-config"))
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("com.google.android.material:material:1.3.0")
+    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("com.google.android.material:material:1.7.0")
 
     implementation("androidx.compose.ui:ui:${rootProject.extra["version_compose"]}")
     implementation("androidx.compose.material:material:${rootProject.extra["version_compose"]}")
     implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["version_compose"]}")
     implementation("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["version_compose"]}")
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha03")
+    implementation("androidx.navigation:navigation-compose:2.6.0-alpha02")
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation("androidx.activity:activity-compose:1.3.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
+    implementation("androidx.activity:activity-compose:1.6.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha02")
 
     implementation(platform("com.google.firebase:firebase-bom:29.2.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-messaging-ktx")
 
     implementation("com.google.dagger:hilt-android:${rootProject.extra["version_hilt"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")

@@ -2,6 +2,7 @@ package soy.gabimoreno.di
 
 import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +28,16 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseMessaging(): FirebaseMessaging =
+        FirebaseMessaging.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics =
+        FirebaseAnalytics.getInstance(context)
+
+    @Provides
+    @Singleton
     fun provideTracker(
         firebaseAnalytics: FirebaseAnalytics,
         getTrackingEventNameUseCase: GetTrackingEventNameUseCase,
@@ -34,9 +45,4 @@ object AppModule {
         firebaseAnalytics,
         getTrackingEventNameUseCase
     )
-
-    @Provides
-    @Singleton
-    fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics =
-        FirebaseAnalytics.getInstance(context)
 }
