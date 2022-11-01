@@ -31,4 +31,9 @@
     <string name="premium_error_generate_auth_cookie">Error de autenticación.\nAsegúrate de que los credenciales sean los correctos.</string>
     <string name="premium_error_token_expired">Accede de nuevo, por favor.\nEl token había expirado.</string>
     <string name="search">Búsqueda</string>
+    <string name="new_premium_audio_channel_name">Nuevo Audio Premium</string>
+    <string name="new_premium_audio_channel_description">Nuevo audio premium disponible para escuchar</string>
+    <string name="new_premium_audio_channel_id">new_premium_audio_channel_id</string>
+    <string name="app_will_show_notifications">La app te avisará cuando aparezca un nuevo audio</string>
+    <string name="notifications_rationale">La app requiere notificaciones para avisarte cuando aparezca un nuevo audio</string>
 </resources>
