@@ -9,4 +9,5 @@ interface MemberSession {
 //    fun setPremium(isPremium: Boolean)
     suspend fun isActive(): Boolean
     suspend fun setActive(isActive: Boolean)
+    suspend fun getEmail(): String
 }

@@ -48,7 +48,12 @@ class FirebaseRemoteConfigProvider @Inject constructor(
         val password = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_PASSWORD)
         return TokenCredentials(username, password)
     }
+
+    override fun getTrialEmail(): String = firebaseRemoteConfig.getString(TRIAL_EMAIL)
+    override fun getTrialPassword(): String = firebaseRemoteConfig.getString(TRIAL_PASSWORD)
 }
 
 private const val TOKEN_CREDENTIAL_USERNAME = "TOKEN_CREDENTIAL_USERNAME"
 private const val TOKEN_CREDENTIAL_PASSWORD = "TOKEN_CREDENTIAL_PASSWORD"
+private const val TRIAL_EMAIL = "TRIAL_EMAIL"
+private const val TRIAL_PASSWORD = "TRIAL_PASSWORD"

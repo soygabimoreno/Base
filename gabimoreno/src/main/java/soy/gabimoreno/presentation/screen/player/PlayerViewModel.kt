@@ -5,14 +5,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_PLAYBACK_POSITION
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
+import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.audio.Audio
+import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.framework.KLog
 import soy.gabimoreno.player.extension.currentPosition
 import soy.gabimoreno.player.extension.isPlayEnabled
@@ -20,6 +25,7 @@ import soy.gabimoreno.player.extension.isPlaying
 import soy.gabimoreno.player.service.MEDIA_ROOT_ID
 import soy.gabimoreno.player.service.MediaPlayerService
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
+import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -28,6 +34,9 @@ import javax.inject.Inject
 class PlayerViewModel @Inject constructor(
     private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
     private val tracker: Tracker,
+    private val memberSession: MemberSession,
+    private val remoteConfigProvider: RemoteConfigProvider,
+    @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     private val playbackState = mediaPlayerServiceConnection.playbackState
@@ -51,6 +60,7 @@ class PlayerViewModel @Inject constructor(
 
     val currentPlaybackFormattedPosition: String
         get() = run {
+            stopAfter1Minute()
             KLog.d(
                 "currentPlaybackPosition: $currentPlaybackPosition, ${
                     formatLong(
@@ -208,6 +218,18 @@ class PlayerViewModel @Inject constructor(
     private fun getParameters(): Map<String, String> {
         return currentPlayingAudio.value?.toMap() ?: mapOf()
     }
+
+    private fun stopAfter1Minute() {
+        if (currentPlaybackPosition > ONE_MINUTE_IN_MILLIS) {
+            viewModelScope.launch(dispatcher) {
+                if (memberSession.getEmail() == remoteConfigProvider.getTrialEmail()) {
+                    tracker.trackEvent(PlayerTrackerEvent.StopAfter1Minute)
+                    stopPlayback()
+                }
+            }
+        }
+    }
 }
 
-private const val PLAYBACK_POSITION_UPDATE_INTERVAL = 1000L
+private const val PLAYBACK_POSITION_UPDATE_INTERVAL = 1_000L
+private const val ONE_MINUTE_IN_MILLIS = 60_000L

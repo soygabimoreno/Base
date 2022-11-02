@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import soy.gabimoreno.R
 import soy.gabimoreno.data.network.mapper.toPremiumAudios
@@ -60,9 +59,16 @@ fun PremiumScreen(
     var showTokenExpiredError by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
+        val previousEmail = context.getEmail().first().ifBlank {
+            premiumViewModel.getTrialEmail()
+        }
+        val previousPassword = context.getPassword().first().ifBlank {
+            premiumViewModel.getTrialPassword()
+        }
+
         premiumViewModel.onViewScreen(
-            email = context.getEmail().first(),
-            password = context.getPassword().first()
+            email = previousEmail,
+            password = previousPassword
         )
         premiumViewModel.viewEventFlow.collect { viewEvent ->
             when (viewEvent) {
@@ -162,6 +168,8 @@ fun PremiumScreen(
                         )
                     }
                 }
+                Spacer()
+                Text(text = stringResource(id = R.string.premium_check_the_app))
             }
         }
 

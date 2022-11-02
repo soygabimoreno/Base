@@ -220,7 +220,6 @@ fun PodcastPlayerStatelessContent(
         ),
     )
 
-
     Box(
         modifier = Modifier
             .offset { IntOffset(0, yOffset) }

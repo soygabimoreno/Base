@@ -16,4 +16,8 @@ class DataStoreMemberSession @Inject constructor(
     override suspend fun setActive(isActive: Boolean) {
         context.setMemberActive(isActive)
     }
+
+    override suspend fun getEmail(): String {
+        return context.getEmail().first()
+    }
 }
