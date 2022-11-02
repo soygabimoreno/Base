@@ -1,6 +1,9 @@
 package soy.gabimoreno.presentation.screen.player
 
 import io.mockk.every
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
@@ -10,21 +13,30 @@ import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.audio.Audio
+import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.fake.buildAudio
 import soy.gabimoreno.fake.buildAudios
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
+import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 
+@ExperimentalCoroutinesApi
 class PlayerViewModelTest {
 
     private val tracker: Tracker = relaxedMockk()
     private val mediaPlayerServiceConnection: MediaPlayerServiceConnection = relaxedMockk()
+    private val memberSession: MemberSession = relaxedMockk()
+    private val remoteConfigProvider: RemoteConfigProvider = relaxedMockk()
+    private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: PlayerViewModel
 
     @Before
     fun setUp() {
         viewModel = PlayerViewModel(
             mediaPlayerServiceConnection,
-            tracker
+            tracker,
+            memberSession,
+            remoteConfigProvider,
+            testDispatcher
         )
     }
 

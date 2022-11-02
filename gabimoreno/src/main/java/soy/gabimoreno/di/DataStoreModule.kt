@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
@@ -27,7 +28,7 @@ object DataStoreModule {
     @Singleton
     fun provideDataStoreMemberSession(
         @ApplicationContext context: Context,
-    ) = DataStoreMemberSession(context)
+    ): MemberSession = DataStoreMemberSession(context)
 
     @Provides
     @Singleton

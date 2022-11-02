@@ -19,8 +19,9 @@ import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.model.content.Post
 import soy.gabimoreno.domain.model.content.PremiumAudio
+import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.*
-import soy.gabimoreno.framework.datastore.DataStoreMemberSession
+import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,10 +29,11 @@ class PremiumViewModel @Inject constructor(
     private val tracker: Tracker,
     private val loginValidationUseCase: LoginValidationUseCase,
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase,
-    private val dataStoreMemberSession: DataStoreMemberSession,
+    private val memberSession: MemberSession,
     private val loginUseCase: LoginUseCase,
     private val getPremiumPostsUseCase: GetPremiumPostsUseCase,
     private val isBearerTokenValid: IsBearerTokenValid,
+    private val remoteConfigProvider: RemoteConfigProvider,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -47,7 +49,7 @@ class PremiumViewModel @Inject constructor(
     ) {
         tracker.trackEvent(PremiumTrackerEvent.ViewScreen)
         viewModelScope.launch(dispatcher) {
-            val isActive = dataStoreMemberSession.isActive()
+            val isActive = memberSession.isActive()
             when {
                 !isActive -> {
                     ViewEvent.ShowAccess(email, password).emit()
@@ -110,7 +112,7 @@ class PremiumViewModel @Inject constructor(
                                     }
                                 }, { member ->
                                     val isUserActive = member.isActive
-                                    dataStoreMemberSession.setActive(isUserActive)
+                                    memberSession.setActive(isUserActive)
                                     loginSuccessPerform(email, password)
                                 }
                             )
@@ -153,7 +155,7 @@ class PremiumViewModel @Inject constructor(
 
     fun onLogoutClicked() {
         viewModelScope.launch(dispatcher) {
-            dataStoreMemberSession.setActive(false)
+            memberSession.setActive(false)
         }
         ViewEvent.ShowAccessAgain.emit()
     }
@@ -170,6 +172,9 @@ class PremiumViewModel @Inject constructor(
             else -> null
         }
     }
+
+    fun getTrialEmail(): String = remoteConfigProvider.getTrialEmail()
+    fun getTrialPassword(): String = remoteConfigProvider.getTrialPassword()
 
     sealed class ViewEvent {
         data class ShowAccess(
