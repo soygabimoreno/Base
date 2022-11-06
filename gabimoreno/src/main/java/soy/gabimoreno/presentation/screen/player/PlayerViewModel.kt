@@ -58,18 +58,17 @@ class PlayerViewModel @Inject constructor(
             return 0f
         }
 
-    val currentPlaybackFormattedPosition: String
-        get() = run {
-            stopAfter1Minute()
-            KLog.d(
-                "currentPlaybackPosition: $currentPlaybackPosition, ${
-                    formatLong(
-                        currentPlaybackPosition
-                    )
-                }"
-            )
-            formatLong(currentPlaybackPosition)
-        }
+    fun getCurrentPlaybackFormattedPosition(callback: () -> Unit): String {
+        stopAfter1Minute(callback)
+        KLog.d(
+            "currentPlaybackPosition: $currentPlaybackPosition, ${
+                formatLong(
+                    currentPlaybackPosition
+                )
+            }"
+        )
+        return formatLong(currentPlaybackPosition)
+    }
 
     val currentAudioFormattedDuration: String
         get() = run {
@@ -219,12 +218,13 @@ class PlayerViewModel @Inject constructor(
         return currentPlayingAudio.value?.toMap() ?: mapOf()
     }
 
-    private fun stopAfter1Minute() {
+    private fun stopAfter1Minute(callback: () -> Unit) {
         if (currentPlaybackPosition > ONE_MINUTE_IN_MILLIS) {
             viewModelScope.launch(dispatcher) {
                 if (memberSession.getEmail() == remoteConfigProvider.getTrialEmail()) {
                     tracker.trackEvent(PlayerTrackerEvent.StopAfter1Minute)
                     stopPlayback()
+                    callback()
                 }
             }
         }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.ProgressIndicatorDefaults.IndicatorBackgroundOpacity
@@ -40,6 +41,7 @@ import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.framework.calculatePaletteColor
+import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.ArrowDownButton
@@ -139,6 +141,8 @@ fun PodcastPlayerBody(
             }
         }
 
+        val context = LocalContext.current
+        LazyRow(content =)
         PodcastPlayerStatelessContent(
             audio = audio,
             imagePainter = imagePainter,
@@ -146,7 +150,9 @@ fun PodcastPlayerBody(
             yOffset = swipeableState.offset.value.roundToInt(),
             playPauseIcon = iconResId,
             playbackProgress = sliderProgress,
-            currentTime = playerViewModel.currentPlaybackFormattedPosition,
+            currentTime = playerViewModel.getCurrentPlaybackFormattedPosition {
+                context.toast(R.string.premium_end_preview_message)
+            },
             totalTime = playerViewModel.currentAudioFormattedDuration,
             onRewind = {
                 playerViewModel.onRewindClicked()
