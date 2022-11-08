@@ -54,9 +54,11 @@ fun DetailScreen(
             audio = homeViewModel.findEpisodeFromId(audioId)
         }
         Feature.PREMIUM -> {
-            audios = (premiumViewModel.viewState as PremiumViewModel.ViewState.Content)
-                .premiumAudios
-            audio = premiumViewModel.findPremiumAudioFromId(audioId)
+            val viewState = premiumViewModel.viewState
+            if (viewState is PremiumViewModel.ViewState.Content) {
+                audios = viewState.premiumAudios
+                audio = premiumViewModel.findPremiumAudioFromId(audioId)
+            }
         }
     }
 
@@ -130,7 +132,9 @@ fun DetailScreen(
                             height = Spacing.s48
                         ) {
                             detailViewModel.onPlayPauseClicked(audio, isPlaying.toPlayPause())
-                            playerViewModel.playPauseAudio(audios, audio)
+                            audios?.let {
+                                playerViewModel.playPauseAudio(audios, audio)
+                            }
                         }
 
                         Spacer(modifier = Modifier.weight(1f))
