@@ -13,14 +13,18 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
-import kotlinx.coroutines.flow.collect
 import soy.gabimoreno.R
 import soy.gabimoreno.core.normalizeText
 import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkEpisodeNumber
@@ -41,8 +45,6 @@ fun HomeScreen(
     val scrollState = rememberLazyListState()
     val homeViewModel = ViewModelProvider.homeViewModel
     val viewState = homeViewModel.viewState
-
-    var encodedUrl by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         homeViewModel.onViewScreen()
@@ -126,8 +128,7 @@ fun HomeScreen(
                                     homeViewModel.onDeepLinkReceived(episodeId, episode.title)
                                     onDeepLinkReceived(episodeId)
                                 } else {
-                                    val url = DeepLinkUrl.value
-                                    url?.let {
+                                    DeepLinkUrl.value?.let { url ->
                                         DeepLinkUrl.value = null
                                         homeViewModel.onShowWebViewClicked(url)
                                     }
@@ -155,11 +156,14 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         homeViewModel.viewEventFlow.collect { viewEvent ->
             when (viewEvent) {
-                is HomeViewModel.ViewEvent.ShowWebView -> encodedUrl = viewEvent.encodedUrl
+                is HomeViewModel.ViewEvent.ShowWebView -> {
+                    val encodedUrl = viewEvent.encodedUrl
+                    if (encodedUrl.isNotBlank()) {
+                        onGoToWebClicked(encodedUrl)
+                    }
+                }
             }
         }
     }
-    if (encodedUrl.isNotBlank()) {
-        onGoToWebClicked(encodedUrl)
-    }
+
 }
