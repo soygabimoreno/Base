@@ -12,10 +12,18 @@ import javax.inject.Qualifier
 @Module
 object CoroutinesDispatchersModule {
 
-    @IO
+    @Main
     @Provides
     fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+
+    @IO
+    @Provides
+    fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 }
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class Main
 
 @Retention(AnnotationRetention.RUNTIME)
 @Qualifier

@@ -29,8 +29,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = 23
         targetSdk = 33
-        versionCode = 42
-        versionName = "1.1.2"
+        versionCode = 43
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "soy.gabimoreno.di.HiltTestRunner"
         vectorDrawables {
@@ -161,6 +161,11 @@ dependencies {
     implementation("io.arrow-kt:arrow-core:1.0.1")
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    implementation("androidx.room:room-runtime:${rootProject.extra["version_room"]}")
+    kapt("androidx.room:room-compiler:${rootProject.extra["version_room"]}")
+
+    implementation("com.google.code.gson:gson:${rootProject.extra["version_gson"]}")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.amshove.kluent:kluent:1.68")

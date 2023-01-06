@@ -2,7 +2,7 @@ package soy.gabimoreno.domain.usecase
 
 import android.content.Context
 import kotlinx.coroutines.flow.first
-import soy.gabimoreno.data.network.client.APIClient
+import soy.gabimoreno.data.remote.client.APIClient
 import soy.gabimoreno.framework.datastore.EMPTY_BEARER_TOKEN
 import soy.gabimoreno.framework.datastore.getBearerToken
 import javax.inject.Inject

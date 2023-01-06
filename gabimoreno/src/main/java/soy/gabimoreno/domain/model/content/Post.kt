@@ -1,6 +1,6 @@
 package soy.gabimoreno.domain.model.content
 
-import soy.gabimoreno.data.network.model.Category
+import soy.gabimoreno.data.remote.model.Category
 
 data class Post(
     val id: Long,

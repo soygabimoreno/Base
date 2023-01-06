@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package soy.gabimoreno.presentation.screen.premium
 
 import androidx.compose.foundation.background
@@ -6,12 +8,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,10 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import soy.gabimoreno.R
-import soy.gabimoreno.data.network.mapper.toPremiumAudios
-import soy.gabimoreno.domain.model.content.Post
 import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.framework.datastore.getEmail
 import soy.gabimoreno.framework.datastore.getPassword
@@ -48,7 +50,7 @@ fun PremiumScreen(
 
     var email by remember { mutableStateOf(EMPTY_EMAIL) }
     var password by remember { mutableStateOf(EMPTY_PASSWORD) }
-    var posts by remember { mutableStateOf(EMPTY_POSTS) }
+    var premiumAudios by remember { mutableStateOf(EMPTY_PREMIUM_AUDIOS) }
 
     var showLoading by remember { mutableStateOf(true) }
     var showAccess by remember { mutableStateOf(false) }
@@ -102,7 +104,7 @@ fun PremiumScreen(
                     showInvalidPasswordError = false
                     showPremium = true
                     premiumViewModel.saveCredentialsInDataStore(viewEvent.email, viewEvent.password)
-                    posts = viewEvent.posts
+                    premiumAudios = viewEvent.premiumAudios
                 }
                 is PremiumViewModel.ViewEvent.ShowLoginError -> {
                     showLoginError = true
@@ -198,7 +200,9 @@ fun PremiumScreen(
                 )
             }
             Spacer()
-            PremiumContent(posts, onItemClicked)
+            PremiumContent(premiumAudios, onItemClicked) {
+                premiumViewModel.refreshContent(email, password)
+            }
         }
 
         if (showLoginError) {
@@ -217,13 +221,33 @@ fun PremiumScreen(
 
 @Composable
 fun PremiumContent(
-    posts: List<Post>,
+    premiumAudios: List<PremiumAudio>,
     onItemClicked: (premiumAudioId: String) -> Unit,
+    onPullRefreshTriggered: () -> Unit,
 ) {
-    LazyColumn {
-        items(posts.toPremiumAudios()) { premiumAudio ->
-            PremiumItem(premiumAudio, onItemClicked)
+    val refreshScope = rememberCoroutineScope()
+    var refreshing by remember { mutableStateOf(false) }
+
+    fun refresh() = refreshScope.launch {
+        refreshing = true
+        delay(1500)
+        onPullRefreshTriggered()
+        refreshing = false
+    }
+
+    val pullRefreshState = rememberPullRefreshState(refreshing, ::refresh)
+
+    Box(Modifier.pullRefresh(pullRefreshState)) {
+        LazyColumn {
+            items(premiumAudios) { premiumAudio ->
+                PremiumItem(premiumAudio, onItemClicked)
+            }
         }
+        PullRefreshIndicator(
+            refreshing = refreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -285,4 +309,4 @@ private fun Spacer() {
 
 private const val EMPTY_EMAIL = ""
 private const val EMPTY_PASSWORD = ""
-private val EMPTY_POSTS = emptyList<Post>()
+private val EMPTY_PREMIUM_AUDIOS = emptyList<PremiumAudio>()

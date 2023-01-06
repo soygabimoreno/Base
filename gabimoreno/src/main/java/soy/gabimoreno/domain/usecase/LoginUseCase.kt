@@ -2,14 +2,14 @@ package soy.gabimoreno.domain.usecase
 
 import arrow.core.Either
 import arrow.core.left
+import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.model.login.Member
-import soy.gabimoreno.domain.repository.LoginRepository
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
-    private val repository: LoginRepository,
+    private val repository: LoginDatasource,
     private val remoteConfigProvider: RemoteConfigProvider,
     private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase,
     private val resetJwtAuthTokenUseCase: ResetJwtAuthTokenUseCase,

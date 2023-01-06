@@ -14,7 +14,9 @@ buildscript {
         set("version_retrofit", "2.9.0")
         set("version_accompanist", "0.12.0")
         set("version_paparazzi", "1.0.0")
-        set("detekt_version", "1.19.0")
+        set("version_detekt", "1.19.0")
+        set("version_room", "2.4.3")
+        set("version_gson", "2.9.0")
 
         // This is just a comment to check the CI
     }

@@ -26,9 +26,10 @@ class PremiumViewModelTest {
         relaxedMockk()
     private val memberSession: MemberSession = relaxedMockk()
     private val loginUseCase: LoginUseCase = relaxedMockk()
-    private val getPremiumPostsUseCase: GetPremiumPostsUseCase = relaxedMockk()
+    private val getPremiumAudiosUseCase: GetPremiumAudiosUseCase = relaxedMockk()
     private val isBearerTokenValid: IsBearerTokenValid = relaxedMockk()
     private val remoteConfigProvider: RemoteConfigProvider = relaxedMockk()
+    private val refreshPremiumAudiosUseCase: RefreshPremiumAudiosUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: PremiumViewModel
 
@@ -41,9 +42,10 @@ class PremiumViewModelTest {
             saveCredentialsInDataStoreUseCase = saveCredentialsInDataStoreUseCase,
             memberSession = memberSession,
             loginUseCase = loginUseCase,
-            getPremiumPostsUseCase = getPremiumPostsUseCase,
+            getPremiumAudiosUseCase = getPremiumAudiosUseCase,
             isBearerTokenValid = isBearerTokenValid,
             remoteConfigProvider = remoteConfigProvider,
+            refreshPremiumAudiosUseCase = refreshPremiumAudiosUseCase,
             dispatcher = testDispatcher
         )
     }

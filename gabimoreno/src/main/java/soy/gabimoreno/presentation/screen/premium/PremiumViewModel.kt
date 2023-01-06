@@ -10,14 +10,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import soy.gabimoreno.data.network.mapper.toPremiumAudios
-import soy.gabimoreno.data.network.model.Category
+import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.exception.TokenExpiredException
-import soy.gabimoreno.domain.model.content.Post
 import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.*
@@ -31,9 +29,10 @@ class PremiumViewModel @Inject constructor(
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase,
     private val memberSession: MemberSession,
     private val loginUseCase: LoginUseCase,
-    private val getPremiumPostsUseCase: GetPremiumPostsUseCase,
+    private val getPremiumAudiosUseCase: GetPremiumAudiosUseCase,
     private val isBearerTokenValid: IsBearerTokenValid,
     private val remoteConfigProvider: RemoteConfigProvider,
+    private val refreshPremiumAudiosUseCase: RefreshPremiumAudiosUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -128,17 +127,17 @@ class PremiumViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             viewState = ViewState.Loading
             val categories = Category.values().toList()
-            getPremiumPostsUseCase(categories)
+            getPremiumAudiosUseCase(categories)
                 .fold(
                     {
                         viewState = ViewState.Error(it)
                         ViewEvent.HideLoading.emit()
                         ViewEvent.ShowLoginError(email, password).emit()
                     },
-                    { posts ->
-                        viewState = ViewState.Content(posts.toPremiumAudios())
+                    { premiumAudios ->
+                        viewState = ViewState.Content(premiumAudios)
                         ViewEvent.HideLoading.emit()
-                        ViewEvent.ShowPremium(email, password, posts).emit()
+                        ViewEvent.ShowPremium(email, password, premiumAudios).emit()
                     }
                 )
         }
@@ -176,6 +175,16 @@ class PremiumViewModel @Inject constructor(
     fun getTrialEmail(): String = remoteConfigProvider.getTrialEmail()
     fun getTrialPassword(): String = remoteConfigProvider.getTrialPassword()
 
+    fun refreshContent(
+        email: String,
+        password: String,
+    ) {
+        viewModelScope.launch(dispatcher) {
+            refreshPremiumAudiosUseCase()
+            loginSuccessPerform(email, password)
+        }
+    }
+
     sealed class ViewEvent {
         data class ShowAccess(
             val email: String,
@@ -191,7 +200,7 @@ class PremiumViewModel @Inject constructor(
         data class ShowPremium(
             val email: String,
             val password: String,
-            val posts: List<Post>,
+            val premiumAudios: List<PremiumAudio>,
         ) : ViewEvent()
 
         data class ShowLoginError(

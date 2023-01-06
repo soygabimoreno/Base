@@ -1,6 +1,6 @@
 package soy.gabimoreno.fake
 
-import soy.gabimoreno.data.network.model.Category
+import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.Post
 
 fun buildPosts() = listOf(

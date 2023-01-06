@@ -13,7 +13,7 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
-import soy.gabimoreno.data.network.repository.NetworkLoginRepository
+import soy.gabimoreno.data.remote.datasource.login.RemoteLoginDatasource
 import soy.gabimoreno.domain.model.login.JwtAuth
 import soy.gabimoreno.domain.model.login.Member
 import soy.gabimoreno.fake.buildAuthCookie
@@ -23,7 +23,7 @@ import soy.gabimoreno.remoteconfig.TokenCredentials
 @ExperimentalCoroutinesApi
 class LoginUseCaseTest {
 
-    private val repository: NetworkLoginRepository = mockk()
+    private val repository: RemoteLoginDatasource = mockk()
     private val remoteConfigProvider: RemoteConfigProvider = mockk()
     private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase = relaxedMockk()
     private val resetJwtAuthTokenUseCase: ResetJwtAuthTokenUseCase = relaxedMockk()
@@ -86,8 +86,7 @@ class LoginUseCaseTest {
         runTest {
             val email = "email@example.com"
             val password = "1234"
-            val throwable = Throwable()
-            coEvery { repository.generateAuthCookie(email, password) } returns throwable.left()
+            coEvery { repository.generateAuthCookie(email, password) } returns Throwable().left()
 
             val result = useCase(email, password)
 
@@ -161,13 +160,12 @@ class LoginUseCaseTest {
                 TokenCredentials(tokenCredentialUsername, tokenCredentialPassword)
             every { remoteConfigProvider.getTokenCredentials() } returns tokenCredentials
 
-            val throwable = Throwable()
             coEvery {
                 repository.obtainToken(
                     tokenCredentialUsername,
                     tokenCredentialPassword
                 )
-            } returns throwable.left()
+            } returns Throwable().left()
 
             val result = useCase(email, password)
 
@@ -201,8 +199,7 @@ class LoginUseCaseTest {
                 )
             } returns jwtAuth.right()
 
-            val throwable = Throwable()
-            coEvery { repository.getMember(email) } returns throwable.left()
+            coEvery { repository.getMember(email) } returns Throwable().left()
 
             val result = useCase(email, password)
 
@@ -225,13 +222,12 @@ class LoginUseCaseTest {
                 TokenCredentials(tokenCredentialUsername, tokenCredentialPassword)
             every { remoteConfigProvider.getTokenCredentials() } returns tokenCredentials
 
-            val throwable = Throwable()
             coEvery {
                 repository.obtainToken(
                     tokenCredentialUsername,
                     tokenCredentialPassword
                 )
-            } returns throwable.left()
+            } returns Throwable().left()
 
             val result = useCase(email, password)
 
