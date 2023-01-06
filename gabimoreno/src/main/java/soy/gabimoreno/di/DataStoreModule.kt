@@ -7,10 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.domain.session.MemberSession
-import soy.gabimoreno.domain.usecase.IsBearerTokenValid
-import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
-import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
-import soy.gabimoreno.domain.usecase.SetJwtAuthTokenUseCase
+import soy.gabimoreno.domain.usecase.*
 import soy.gabimoreno.framework.datastore.DataStoreMemberSession
 import javax.inject.Singleton
 
@@ -47,4 +44,16 @@ object DataStoreModule {
     fun provideResetJwtAuthTokenUseCase(
         @ApplicationContext context: Context,
     ) = ResetJwtAuthTokenUseCase(context)
+
+    @Provides
+    @Singleton
+    fun provideSaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
+        @ApplicationContext context: Context,
+    ) = SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(context)
+
+    @Provides
+    @Singleton
+    fun provideGetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
+        @ApplicationContext context: Context,
+    ) = GetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(context)
 }

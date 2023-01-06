@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
-import soy.gabimoreno.data.network.mapper.EMPTY_AUDIO_LENGTH_IN_SECONDS
+import soy.gabimoreno.data.remote.mapper.EMPTY_AUDIO_LENGTH_IN_SECONDS
 import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.framework.parseFromHtmlFormat

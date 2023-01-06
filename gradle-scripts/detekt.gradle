@@ -2,7 +2,7 @@ subprojects {
     apply plugin: "io.gitlab.arturbosch.detekt"
 
     detekt {
-        toolVersion = detekt_version
+        toolVersion = version_detekt
         buildUponDefaultConfig = true
         config = files("$rootDir/config/detekt/detekt.yml")
     }

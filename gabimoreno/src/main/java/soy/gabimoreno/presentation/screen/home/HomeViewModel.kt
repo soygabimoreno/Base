@@ -14,21 +14,21 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
-import soy.gabimoreno.di.IO
+import soy.gabimoreno.di.Main
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.domain.model.podcast.EpisodesWrapper
-import soy.gabimoreno.domain.repository.PodcastRepository
+import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val podcastRepository: PodcastRepository,
+    private val podcastDatasource: PodcastRepository,
     private val tracker: Tracker,
     getAppVersionNameUseCase: GetAppVersionNameUseCase,
     private val encodeUrlUseCase: EncodeUrlUseCase,
-    @IO private val dispatcher: CoroutineDispatcher,
+    @Main private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     var viewState by mutableStateOf<ViewState>(ViewState.Loading)
@@ -47,7 +47,7 @@ class HomeViewModel @Inject constructor(
     fun searchPodcasts() {
         viewModelScope.launch(dispatcher) {
             viewState = ViewState.Loading
-            podcastRepository.getEpisodes().fold(
+            podcastDatasource.getEpisodes().fold(
                 { failure ->
                     viewState = ViewState.Error(failure)
                 },

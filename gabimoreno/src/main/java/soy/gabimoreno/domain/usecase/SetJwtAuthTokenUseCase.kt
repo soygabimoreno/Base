@@ -1,7 +1,7 @@
 package soy.gabimoreno.domain.usecase
 
 import android.content.Context
-import soy.gabimoreno.data.network.client.APIClient
+import soy.gabimoreno.data.remote.client.APIClient
 import soy.gabimoreno.framework.datastore.setBearerToken
 import javax.inject.Inject
 

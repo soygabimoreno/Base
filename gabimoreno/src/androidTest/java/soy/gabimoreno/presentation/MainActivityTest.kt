@@ -16,8 +16,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import soy.gabimoreno.data.MockWebServerRule
 import soy.gabimoreno.data.fromJson
-import soy.gabimoreno.data.network.model.Category
-import soy.gabimoreno.domain.repository.ContentRepository
+import soy.gabimoreno.data.remote.model.Category
+import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -38,7 +38,7 @@ class MainActivityTest {
     lateinit var okHttpClient: OkHttpClient
 
     @Inject
-    lateinit var contentRepository: ContentRepository
+    lateinit var premiumAudiosRepository: PremiumAudiosRepository
 
     @Before
     fun setUp() {
@@ -53,7 +53,7 @@ class MainActivityTest {
     @Test
     fun check_mock_web_server_is_working() = runTest {
         val categories = Category.values().toList()
-        contentRepository.getPosts(categories)
+        premiumAudiosRepository.getPremiumAudios(categories)
             .fold({
                       throw Exception(it.toString())
                   }, { posts ->
