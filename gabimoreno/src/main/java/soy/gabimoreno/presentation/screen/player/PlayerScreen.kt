@@ -40,7 +40,6 @@ import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.framework.calculatePaletteColor
-import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.ArrowDownButton
@@ -140,7 +139,8 @@ fun PodcastPlayerBody(
             }
         }
 
-        val context = LocalContext.current
+        // TODO: This triggers a crash: NullPointerException: Can't toast on a thread that has not called Looper.prepare()
+//        val context = LocalContext.current
         PodcastPlayerStatelessContent(
             audio = audio,
             imagePainter = imagePainter,
@@ -149,7 +149,8 @@ fun PodcastPlayerBody(
             playPauseIcon = iconResId,
             playbackProgress = sliderProgress,
             currentTime = playerViewModel.getCurrentPlaybackFormattedPosition {
-                context.toast(R.string.premium_end_preview_message)
+                // TODO: This triggers a crash: NullPointerException: Can't toast on a thread that has not called Looper.prepare()
+//                context.toast(R.string.premium_end_preview_message)
             },
             totalTime = playerViewModel.currentAudioFormattedDuration,
             onRewind = {
