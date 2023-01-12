@@ -2,7 +2,7 @@
 
 This is the module corresponding to the app Gabi Moreno.
 
-Download it from [Google Play](https://play.google.com/store/apps/details?id=soy.gabimoreno).
+Download it from [Google Play](https://gabimoreno.soy/app).
 
 ## Stack
 
@@ -31,7 +31,9 @@ This module was initially based on the [Podcast App](https://github.com/fabirt/p
 
 ## Collaborate
 
-It's an open source project. **Feel free to request issues**.
+I am [Gabi Moreno](https://gabimoreno.soy).
+
+This is an open source project. **Feel free to request issues**.
 
 And for sure, **Pull Requests are opened** and super-well received.
 
