@@ -1,7 +1,7 @@
 buildscript {
     extra.apply {
         set("version_kotlin", "1.7.10")
-        set("version_android_gradle_plugin", "7.3.0")
+        set("version_android_gradle_plugin", "7.4.0")
         set("version_google_services", "4.3.14")
         set("version_compose", "1.3.1")
         set("version_compose_nav", "2.4.2")
@@ -17,8 +17,6 @@ buildscript {
         set("version_detekt", "1.19.0")
         set("version_room", "2.4.3")
         set("version_gson", "2.9.0")
-
-        // This is just a comment to check the CI
     }
 
     dependencies {
