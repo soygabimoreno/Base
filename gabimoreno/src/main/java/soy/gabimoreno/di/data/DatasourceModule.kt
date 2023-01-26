@@ -21,6 +21,10 @@ object DatasourceModule {
 
     @Provides
     @Singleton
+    fun providePodcastUrl(): PodcastUrl = PODCAST_URL
+
+    @Provides
+    @Singleton
     fun provideLoginDatasource(
         loginService: LoginService,
     ): LoginDatasource = RemoteLoginDatasource(loginService)
@@ -37,3 +41,7 @@ object DatasourceModule {
         rssParser: Parser,
     ): PodcastDatasource = RemotePodcastDatasource(rssParser)
 }
+
+typealias PodcastUrl = String
+
+private const val PODCAST_URL = "https://anchor.fm/s/74bc02a4/podcast/rss"
