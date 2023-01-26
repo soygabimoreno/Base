@@ -43,5 +43,9 @@ object RepositoryModule {
     @Singleton
     fun providePodcastRepository(
         podcastDatasource: PodcastDatasource,
-    ): PodcastRepository = RemotePodcastRepository(podcastDatasource)
+        podcastUrl: PodcastUrl,
+    ): PodcastRepository = RemotePodcastRepository(
+        podcastDatasource,
+        podcastUrl
+    )
 }
