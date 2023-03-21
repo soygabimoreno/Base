@@ -139,6 +139,7 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:${rootProject.extra["version_hilt"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")
+    implementation("androidx.hilt:hilt-navigation-compose:${rootProject.extra["version_hilt_navigation_compose"]}")
 
     implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["version_retrofit"]}")
     implementation("com.squareup.retrofit2:converter-moshi:${rootProject.extra["version_retrofit"]}")
@@ -185,6 +186,7 @@ dependencies {
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3")
 
     debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["version_compose"]}")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:${rootProject.extra["version_compose"]}")
 }
 
 fun isLocalBuild(): Boolean {

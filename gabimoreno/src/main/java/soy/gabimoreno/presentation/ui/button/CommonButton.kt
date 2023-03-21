@@ -1,5 +1,6 @@
 package soy.gabimoreno.presentation.ui.button
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,9 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import soy.gabimoreno.presentation.theme.Spacing
+import soy.gabimoreno.presentation.ui.PreviewContent
 
 @Composable
 fun CommonButton(
@@ -32,6 +36,7 @@ fun CommonButton(
             .clip(CircleShape)
             .background(background)
             .clickable(onClick = onClick)
+            .testTag(COMMON_BUTTON_BOX_ID)
     ) {
         Text(
             text = text,
@@ -43,3 +48,18 @@ fun CommonButton(
         )
     }
 }
+
+@Preview(name = "CommonButton")
+@Composable
+fun CommonButtonPreview() {
+    PreviewContent {
+        CommonButton(
+            "Play",
+            height = Spacing.s48,
+            MaterialTheme.colors.primary
+        ) {}
+    }
+}
+
+@VisibleForTesting
+internal const val COMMON_BUTTON_BOX_ID = "COMMON_BUTTON_BOX_ID"
