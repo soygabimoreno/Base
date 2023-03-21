@@ -5,7 +5,7 @@ buildscript {
         set("version_google_services", "4.3.14")
         set("version_compose", "1.3.1")
         set("version_compose_nav", "2.4.2")
-        set("version_hilt", "2.44.2")
+        set("version_hilt", "2.45")
         set("version_hilt_navigation_compose", "1.0.0")
         set("version_detekt", "1.19.0")
         set("version_coroutines", "1.6.1")
