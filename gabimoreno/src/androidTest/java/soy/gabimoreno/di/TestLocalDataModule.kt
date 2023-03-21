@@ -20,7 +20,7 @@ import javax.inject.Named
 object TestLocalDataModule {
 
     @Provides
-    @Named("gabimoreno-db-test")
+    @Named(DB_TEST_NAME)
     fun gabiMorenoDatabaseProvider(application: Application): GabiMorenoDatabase =
         Room.inMemoryDatabaseBuilder(
             application, GabiMorenoDatabase::class.java
@@ -29,6 +29,7 @@ object TestLocalDataModule {
 
     @Provides
     fun provideLocalPremiumAudioDataSource(
+        @Named(DB_TEST_NAME)
         gabiMorenoDatabase: GabiMorenoDatabase,
         @IO dispatcher: CoroutineDispatcher,
     ): LocalPremiumAudiosDataSource =
@@ -37,3 +38,5 @@ object TestLocalDataModule {
             dispatcher
         )
 }
+
+private const val DB_TEST_NAME = "gabimoreno-db-test"
