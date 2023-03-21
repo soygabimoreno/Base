@@ -65,4 +65,4 @@ class MainActivityTest {
     }
 }
 
-private const val FIRST_POST_ID = 5436L
+private const val FIRST_POST_ID = "5436"
