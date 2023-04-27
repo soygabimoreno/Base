@@ -1,9 +1,16 @@
 package soy.gabimoreno.presentation.screen.home
 
+import app.cash.turbine.test
+import io.mockk.every
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -99,4 +106,17 @@ class HomeViewModelTest {
             )
         }
     }
+
+    @Test
+    fun `GIVEN encodeUrlUseCase returns a url WHEN onShowWebViewClicked THEN ShowWebView`() =
+        runTest(testDispatcher) {
+            val url = "url"
+            every { encodeUrlUseCase(url) } returns url
+
+            viewModel.viewEventFlow.test {
+                viewModel.onShowWebViewClicked(url)
+
+                awaitItem() shouldBeEqualTo HomeViewModel.ViewEvent.ShowWebView(url)
+            }
+        }
 }
