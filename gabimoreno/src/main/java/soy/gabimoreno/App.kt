@@ -2,6 +2,8 @@ package soy.gabimoreno
 
 import android.app.Application
 import com.google.firebase.FirebaseApp
+import com.microsoft.clarity.Clarity
+import com.microsoft.clarity.ClarityConfig
 import dagger.hilt.android.HiltAndroidApp
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.domain.usecase.SubscribeToTopicUseCase
@@ -25,6 +27,7 @@ class App : Application() {
         initDebugLogs()
         initFirebase()
         initNotifications()
+        initClarity()
     }
 
     private fun initDebugLogs() {
@@ -38,5 +41,10 @@ class App : Application() {
 
     private fun initNotifications() {
         createNotificationChannel(this)
+    }
+
+    private fun initClarity() {
+        val config = ClarityConfig(BuildConfig.CLARITY_PROJECT_ID)
+        Clarity.initialize(applicationContext, config)
     }
 }

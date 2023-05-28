@@ -8,6 +8,7 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.firebase.crashlytics")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -29,8 +30,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = 23
         targetSdk = 33
-        versionCode = 44
-        versionName = "1.2.1"
+        versionCode = 45
+        versionName = "1.2.2"
 
         testInstrumentationRunner = "soy.gabimoreno.di.HiltTestRunner"
         vectorDrawables {
@@ -167,6 +168,8 @@ dependencies {
     kapt("androidx.room:room-compiler:${rootProject.extra["version_room"]}")
 
     implementation("com.google.code.gson:gson:${rootProject.extra["version_gson"]}")
+
+    implementation("com.microsoft.clarity:clarity:1.3.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.amshove.kluent:kluent:1.68")
