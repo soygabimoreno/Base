@@ -1,9 +1,13 @@
 package soy.gabimoreno.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.*
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import soy.gabimoreno.presentation.AppState
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
@@ -49,8 +53,12 @@ private fun NavGraphBuilder.podcastNav(
 
         // TODO: Manage deep links in a proper way
         // deepLinks = listOf(navDeepLink { uriPattern = "https://gabimoreno.soy/{id}" })
-        composable(navCommand = NavCommand.ContentDetail(Feature.PODCAST,
-                                                         listOf(NavArg.EpisodeId))) {
+        composable(
+            navCommand = NavCommand.ContentDetail(
+                Feature.PODCAST,
+                listOf(NavArg.EpisodeId)
+            )
+        ) {
             DetailScreen(
                 audioId = it.findArg(NavArg.EpisodeId),
                 Feature.PODCAST,
@@ -85,9 +93,12 @@ private fun NavGraphBuilder.premiumNav(
                 navController.navigateToDetailFromPremium(premiumAudioId)
             }
         }
-        composable(navCommand = NavCommand.ContentDetail(
-            Feature.PREMIUM,
-            listOf(NavArg.PremiumAudioId))) {
+        composable(
+            navCommand = NavCommand.ContentDetail(
+                Feature.PREMIUM,
+                listOf(NavArg.PremiumAudioId)
+            )
+        ) {
             DetailScreen(
                 audioId = it.findArg(NavArg.PremiumAudioId),
                 Feature.PREMIUM,
@@ -100,13 +111,17 @@ private fun NavGraphBuilder.premiumNav(
 }
 
 private fun NavController.navigateToDetailFromPodcast(episodeId: String) {
-    navigate(route = NavCommand.ContentDetail(Feature.PODCAST, listOf(NavArg.EpisodeId))
-        .createRoute(episodeId))
+    navigate(
+        route = NavCommand.ContentDetail(Feature.PODCAST, listOf(NavArg.EpisodeId))
+            .createRoute(episodeId)
+    )
 }
 
 private fun NavController.navigateToDetailFromPremium(premiumAudioId: String) {
-    navigate(route = NavCommand.ContentDetail(Feature.PREMIUM, listOf(NavArg.PremiumAudioId))
-        .createRoute(premiumAudioId))
+    navigate(
+        route = NavCommand.ContentDetail(Feature.PREMIUM, listOf(NavArg.PremiumAudioId))
+            .createRoute(premiumAudioId)
+    )
 }
 
 private fun NavController.navigateToWebView(encodedUrl: String) {

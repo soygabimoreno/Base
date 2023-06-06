@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+@Suppress("UnstableApiUsage")
 android {
     compileSdk = 32
 

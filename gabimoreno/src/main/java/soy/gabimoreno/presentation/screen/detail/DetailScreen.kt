@@ -1,6 +1,10 @@
 package soy.gabimoreno.presentation.screen.detail
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -53,6 +57,7 @@ fun DetailScreen(
                 (homeViewModel.viewState as HomeViewModel.ViewState.Content).episodesWrapper.episodes
             audio = homeViewModel.findEpisodeFromId(audioId)
         }
+
         Feature.PREMIUM -> {
             val viewState = premiumViewModel.viewState
             if (viewState is PremiumViewModel.ViewState.Content) {

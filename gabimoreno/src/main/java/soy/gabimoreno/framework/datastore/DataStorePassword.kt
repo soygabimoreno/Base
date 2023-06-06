@@ -6,9 +6,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-private const val PASSWORD = "PASSWORD"
-private val key = stringPreferencesKey(PASSWORD)
-
 fun Context.getPassword(): Flow<String> {
     return dataStore.data
         .map { preferences ->
@@ -23,3 +20,5 @@ suspend fun Context.setPassword(password: String) {
 }
 
 private const val EMPTY_PASSWORD = ""
+private const val PASSWORD = "PASSWORD"
+private val key = stringPreferencesKey(PASSWORD)
