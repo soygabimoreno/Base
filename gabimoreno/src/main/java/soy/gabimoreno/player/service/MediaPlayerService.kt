@@ -16,7 +16,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
-import soy.gabimoreno.player.exoplayer.*
+import soy.gabimoreno.player.exoplayer.AudioMediaSource
+import soy.gabimoreno.player.exoplayer.MediaPlaybackPreparer
+import soy.gabimoreno.player.exoplayer.MediaPlayerNotificationListener
+import soy.gabimoreno.player.exoplayer.MediaPlayerNotificationManager
+import soy.gabimoreno.player.exoplayer.MediaPlayerQueueNavigator
 import soy.gabimoreno.presentation.MainActivity
 import javax.inject.Inject
 
@@ -109,10 +113,12 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
             START_MEDIA_PLAYBACK_ACTION -> {
                 mediaPlayerNotificationManager.showNotification(exoPlayer)
             }
+
             REFRESH_MEDIA_BROWSER_CHILDREN -> {
                 mediaSource.refresh()
                 notifyChildrenChanged(MEDIA_ROOT_ID)
             }
+
             else -> Unit
         }
     }
@@ -146,6 +152,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                     result.detach()
                 }
             }
+
             else -> Unit
         }
     }

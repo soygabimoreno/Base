@@ -6,9 +6,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-private const val EMAIL = "EMAIL"
-private val key = stringPreferencesKey(EMAIL)
-
 fun Context.getEmail(): Flow<String> {
     return dataStore.data
         .map { preferences ->
@@ -23,3 +20,5 @@ suspend fun Context.setEmail(email: String) {
 }
 
 private const val EMPTY_EMAIL = ""
+private const val EMAIL = "EMAIL"
+private val key = stringPreferencesKey(EMAIL)

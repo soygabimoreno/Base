@@ -11,6 +11,7 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
+@Suppress("UnstableApiUsage")
 android {
     if (isLocalBuild()) {
         signingConfigs {

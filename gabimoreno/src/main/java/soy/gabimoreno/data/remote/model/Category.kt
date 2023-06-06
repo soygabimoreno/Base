@@ -1,7 +1,15 @@
 package soy.gabimoreno.data.remote.model
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AutoStories
+import androidx.compose.material.icons.filled.Calculate
+import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.Feed
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.HistoryEdu
+import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.TipsAndUpdates
+import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class Category(
@@ -10,42 +18,60 @@ enum class Category(
     val icon: ImageVector,
     val coverUrl: String,
 ) {
-    PREMIUM(262,
-            "Premium",
-            Icons.Default.WorkspacePremium,
-            "${COVER_URL_PREFIX}premium$COVER_URL_SUFFIX"),
-    PREMIUM_ALGORITHMS(267,
-                       "Algoritmos",
-                       Icons.Default.Calculate,
-                       "${COVER_URL_PREFIX}algoritmos$COVER_URL_SUFFIX"),
-    PREMIUM_ANDROID_STORIES(270,
-                            "Historias androides",
-                            Icons.Default.AutoStories,
-                            "${COVER_URL_PREFIX}historias-androides$COVER_URL_SUFFIX"),
-    PREMIUM_AUDIO_COURSES(263,
-                          "AudioCursos",
-                          Icons.Default.MenuBook,
-                          "${COVER_URL_PREFIX}audiocursos$COVER_URL_SUFFIX"),
-    PREMIUM_AUDIO_TIPS(264,
-                       "AudioTips",
-                       Icons.Default.TipsAndUpdates,
-                       "${COVER_URL_PREFIX}audiotips$COVER_URL_SUFFIX"),
-    PREMIUM_BIOGRAPHIES(265,
-                        "Biografías",
-                        Icons.Default.HistoryEdu,
-                        "${COVER_URL_PREFIX}biografias$COVER_URL_SUFFIX"),
-    PREMIUM_INTERVIEWS(269,
-                       "Entrevistas",
-                       Icons.Default.Group,
-                       "${COVER_URL_PREFIX}entrevistas$COVER_URL_SUFFIX"),
-    PREMIUM_NEWS(266,
-                 "Noticias",
-                 Icons.Default.Feed,
-                 "${COVER_URL_PREFIX}noticias$COVER_URL_SUFFIX"),
-    PREMIUM_TECH_TALKS(268,
-                       "Charlas Técnicas",
-                       Icons.Default.Code,
-                       "${COVER_URL_PREFIX}charlas-tecnicas$COVER_URL_SUFFIX")
+    PREMIUM(
+        262,
+        "Premium",
+        Icons.Default.WorkspacePremium,
+        "${COVER_URL_PREFIX}premium$COVER_URL_SUFFIX"
+    ),
+    PREMIUM_ALGORITHMS(
+        267,
+        "Algoritmos",
+        Icons.Default.Calculate,
+        "${COVER_URL_PREFIX}algoritmos$COVER_URL_SUFFIX"
+    ),
+    PREMIUM_ANDROID_STORIES(
+        270,
+        "Historias androides",
+        Icons.Default.AutoStories,
+        "${COVER_URL_PREFIX}historias-androides$COVER_URL_SUFFIX"
+    ),
+    PREMIUM_AUDIO_COURSES(
+        263,
+        "AudioCursos",
+        Icons.Default.MenuBook,
+        "${COVER_URL_PREFIX}audiocursos$COVER_URL_SUFFIX"
+    ),
+    PREMIUM_AUDIO_TIPS(
+        264,
+        "AudioTips",
+        Icons.Default.TipsAndUpdates,
+        "${COVER_URL_PREFIX}audiotips$COVER_URL_SUFFIX"
+    ),
+    PREMIUM_BIOGRAPHIES(
+        265,
+        "Biografías",
+        Icons.Default.HistoryEdu,
+        "${COVER_URL_PREFIX}biografias$COVER_URL_SUFFIX"
+    ),
+    PREMIUM_INTERVIEWS(
+        269,
+        "Entrevistas",
+        Icons.Default.Group,
+        "${COVER_URL_PREFIX}entrevistas$COVER_URL_SUFFIX"
+    ),
+    PREMIUM_NEWS(
+        266,
+        "Noticias",
+        Icons.Default.Feed,
+        "${COVER_URL_PREFIX}noticias$COVER_URL_SUFFIX"
+    ),
+    PREMIUM_TECH_TALKS(
+        268,
+        "Charlas Técnicas",
+        Icons.Default.Code,
+        "${COVER_URL_PREFIX}charlas-tecnicas$COVER_URL_SUFFIX"
+    )
 }
 
 @Throws

@@ -7,9 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import soy.gabimoreno.presentation.navigation.Feature
 
-private const val START_DESTINATION = "START_DESTINATION"
-private val key = stringPreferencesKey(START_DESTINATION)
-
 fun Context.getStartDestination(): Flow<String> {
     return dataStore.data
         .map { preferences ->
@@ -22,3 +19,6 @@ suspend fun Context.setStartDestination(feature: Feature) {
         settings[key] = feature.route
     }
 }
+
+private const val START_DESTINATION = "START_DESTINATION"
+private val key = stringPreferencesKey(START_DESTINATION)

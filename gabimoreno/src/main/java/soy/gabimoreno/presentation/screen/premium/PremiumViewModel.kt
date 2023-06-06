@@ -18,7 +18,12 @@ import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.domain.session.MemberSession
-import soy.gabimoreno.domain.usecase.*
+import soy.gabimoreno.domain.usecase.GetPremiumAudiosUseCase
+import soy.gabimoreno.domain.usecase.IsBearerTokenValid
+import soy.gabimoreno.domain.usecase.LoginUseCase
+import soy.gabimoreno.domain.usecase.LoginValidationUseCase
+import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosUseCase
+import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import javax.inject.Inject
 
@@ -53,6 +58,7 @@ class PremiumViewModel @Inject constructor(
                 !isActive -> {
                     ViewEvent.ShowAccess(email, password).emit()
                 }
+
                 isActive -> {
                     if (isBearerTokenValid()) {
                         loginSuccessPerform(email, password)
@@ -60,6 +66,7 @@ class PremiumViewModel @Inject constructor(
                         login(email, password)
                     }
                 }
+
                 else -> {
                     ViewEvent.HideLoading.emit()
                 }
@@ -105,6 +112,7 @@ class PremiumViewModel @Inject constructor(
                                         is TokenExpiredException -> {
                                             ViewEvent.ShowTokenExpiredError(email, password).emit()
                                         }
+
                                         else -> {
                                             ViewEvent.ShowLoginError(email, password).emit()
                                         }

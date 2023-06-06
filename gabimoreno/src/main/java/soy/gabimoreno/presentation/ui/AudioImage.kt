@@ -44,6 +44,7 @@ fun AudioImage(
             is ImageLoadState.Success -> {
                 // Remove placeholder
             }
+
             else -> {
                 Icon(
                     painter = painterResource(R.drawable.ic_baseline_mic_24),

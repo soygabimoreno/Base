@@ -12,7 +12,6 @@ import soy.gabimoreno.framework.notification.TOPIC_NEW_AUDIO
 import soy.gabimoreno.framework.notification.createNotificationChannel
 import javax.inject.Inject
 
-
 @HiltAndroidApp
 class App : Application() {
 
