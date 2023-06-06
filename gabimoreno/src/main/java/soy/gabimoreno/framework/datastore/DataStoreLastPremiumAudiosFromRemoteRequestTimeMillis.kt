@@ -6,10 +6,6 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-private const val LAST_PREMIUM_AUDIOS_FROM_REMOTE_REQUEST_TIME_MILLIS =
-    "LAST_PREMIUM_AUDIOS_FROM_REMOTE_REQUEST_TIME_MILLIS"
-private val key = longPreferencesKey(LAST_PREMIUM_AUDIOS_FROM_REMOTE_REQUEST_TIME_MILLIS)
-
 fun Context.getLastPremiumAudiosFromRemoteRequestTimeMillis(): Flow<Long> {
     return dataStore.data
         .map { preferences ->
@@ -24,3 +20,6 @@ suspend fun Context.setLastPremiumAudiosFromRemoteRequestTimeMillis(timeMillis: 
 }
 
 private const val EMPTY_LAST_PREMIUM_AUDIOS_FROM_REMOTE_REQUEST_TIME_MILLIS = -1L
+private const val LAST_PREMIUM_AUDIOS_FROM_REMOTE_REQUEST_TIME_MILLIS =
+    "LAST_PREMIUM_AUDIOS_FROM_REMOTE_REQUEST_TIME_MILLIS"
+private val key = longPreferencesKey(LAST_PREMIUM_AUDIOS_FROM_REMOTE_REQUEST_TIME_MILLIS)

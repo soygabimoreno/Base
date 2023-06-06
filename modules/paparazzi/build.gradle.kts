@@ -5,6 +5,7 @@ plugins {
     id("app.cash.paparazzi")
 }
 
+@Suppress("UnstableApiUsage")
 android {
     compileSdk = 32
 

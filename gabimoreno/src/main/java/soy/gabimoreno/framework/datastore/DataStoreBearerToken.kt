@@ -6,9 +6,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-private const val BEARER_TOKEN = "BEARER_TOKEN"
-private val key = stringPreferencesKey(BEARER_TOKEN)
-
 fun Context.getBearerToken(): Flow<String> {
     return dataStore.data
         .map { preferences ->
@@ -23,3 +20,5 @@ suspend fun Context.setBearerToken(bearerToken: String) {
 }
 
 internal const val EMPTY_BEARER_TOKEN = ""
+private const val BEARER_TOKEN = "BEARER_TOKEN"
+private val key = stringPreferencesKey(BEARER_TOKEN)

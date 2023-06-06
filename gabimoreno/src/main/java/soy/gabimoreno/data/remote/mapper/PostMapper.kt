@@ -6,7 +6,7 @@ import soy.gabimoreno.domain.model.content.Post
 import soy.gabimoreno.domain.model.content.findAuthorDisplayNameById
 import soy.gabimoreno.domain.util.extractMp3Url
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 fun List<PostApiModel>.toDomain(): List<Post> = map { it.toDomain() }
 

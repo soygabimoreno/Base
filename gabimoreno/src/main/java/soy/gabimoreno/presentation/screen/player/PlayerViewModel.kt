@@ -28,7 +28,8 @@ import soy.gabimoreno.player.service.MediaPlayerService
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -136,6 +137,7 @@ class PlayerViewModel @Inject constructor(
                     parameters
                 )
             )
+
             PlayPause.PAUSE -> tracker.trackEvent(
                 PlayerTrackerEvent.ClickPauseFromAudioBottomBar(
                     parameters

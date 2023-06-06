@@ -25,5 +25,6 @@ sealed class PlayerTrackerEvent(
 
     data class ClickPauseFromAudioBottomBar(override val parameters: Map<String, Any>) :
         PlayerTrackerEvent()
+
     object StopAfter1Minute : PlayerTrackerEvent()
 }

@@ -9,7 +9,9 @@ import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.domain.model.podcast.EpisodesWrapper
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 fun Channel.toDomain(): EpisodesWrapper {
     val numberOfEpisodes = articles.size.toLong()
