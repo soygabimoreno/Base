@@ -15,6 +15,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Base"
 include(":gabimoreno")
+include(":shared")
 include(":bike")
 
 include(":modules:core")
