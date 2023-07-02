@@ -4,7 +4,6 @@ import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.internal.ConfigFetchHandler
-import soy.gabimoreno.raffle.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
