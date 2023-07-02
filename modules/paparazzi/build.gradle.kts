@@ -38,7 +38,7 @@ android {
 dependencies {
     implementation(project(":gabimoreno")) // TODO: This is just for checking Paparazzi
 
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("com.google.android.material:material:1.5.0")
 

@@ -6,7 +6,7 @@ plugins {
 
 @Suppress("UnstableApiUsage")
 android {
-    namespace = "soy.gabimoreno.raffle"
+    namespace = "soy.gabimoreno.remoteconfig"
     compileSdk = 33
 
     defaultConfig {
@@ -35,7 +35,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("com.google.android.material:material:1.5.0")
 
