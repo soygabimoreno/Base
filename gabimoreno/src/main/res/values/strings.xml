@@ -30,7 +30,6 @@
     <string name="premium_password_error_invalid">El password tiene menos de 4 caracteres</string>
     <string name="premium_error_generate_auth_cookie">Error de autenticación.\nAsegúrate de que los credenciales sean los correctos.</string>
     <string name="premium_error_token_expired">Accede de nuevo, por favor.\nEl token había expirado.</string>
-    <string name="premium_check_the_app">Puedes acceder al contenido a través del usuario de pruebas.\n\nLa duración de los audios será de 1 minuto de muestra.</string>
     <string name="premium_end_preview_message">Los audios de muestra durán 1 minuto</string>
     <string name="search">Búsqueda</string>
     <string name="new_premium_audio_channel_name">Nuevo Audio Premium</string>

@@ -24,7 +24,6 @@ import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
-import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,7 +35,6 @@ class PremiumViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val getPremiumAudiosUseCase: GetPremiumAudiosUseCase,
     private val isBearerTokenValid: IsBearerTokenValid,
-    private val remoteConfigProvider: RemoteConfigProvider,
     private val refreshPremiumAudiosUseCase: RefreshPremiumAudiosUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
@@ -179,9 +177,6 @@ class PremiumViewModel @Inject constructor(
             else -> null
         }
     }
-
-    fun getTrialEmail(): String = remoteConfigProvider.getTrialEmail()
-    fun getTrialPassword(): String = remoteConfigProvider.getTrialPassword()
 
     fun refreshContent(
         email: String,

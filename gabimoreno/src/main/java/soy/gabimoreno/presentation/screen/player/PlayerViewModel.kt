@@ -5,11 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_PLAYBACK_POSITION
@@ -17,7 +15,6 @@ import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.audio.Audio
-import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.framework.KLog
 import soy.gabimoreno.player.extension.currentPosition
@@ -60,8 +57,7 @@ class PlayerViewModel @Inject constructor(
             return 0f
         }
 
-    fun getCurrentPlaybackFormattedPosition(callback: () -> Unit): String {
-        stopAfter1Minute(callback)
+    fun getCurrentPlaybackFormattedPosition(): String {
         KLog.d(
             "currentPlaybackPosition: $currentPlaybackPosition, ${
                 formatLong(
@@ -220,19 +216,6 @@ class PlayerViewModel @Inject constructor(
     private fun getParameters(): Map<String, String> {
         return currentPlayingAudio.value?.toMap() ?: mapOf()
     }
-
-    private fun stopAfter1Minute(callback: () -> Unit) {
-        if (currentPlayingAudio.value is PremiumAudio && currentPlaybackPosition > ONE_MINUTE_IN_MILLIS) {
-            viewModelScope.launch(dispatcher) {
-                if (memberSession.getEmail() == remoteConfigProvider.getTrialEmail()) {
-                    tracker.trackEvent(PlayerTrackerEvent.StopAfter1Minute)
-                    stopPlayback()
-                    callback()
-                }
-            }
-        }
-    }
 }
 
 private const val PLAYBACK_POSITION_UPDATE_INTERVAL = 1_000L
-private const val ONE_MINUTE_IN_MILLIS = 60_000L
