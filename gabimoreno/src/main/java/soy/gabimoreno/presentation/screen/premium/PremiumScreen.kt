@@ -79,12 +79,8 @@ fun PremiumScreen(
     var showTokenExpiredError by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        val previousEmail = context.getEmail().first().ifBlank {
-            premiumViewModel.getTrialEmail()
-        }
-        val previousPassword = context.getPassword().first().ifBlank {
-            premiumViewModel.getTrialPassword()
-        }
+        val previousEmail = context.getEmail().first()
+        val previousPassword = context.getPassword().first()
 
         premiumViewModel.onViewScreen(
             email = previousEmail,
@@ -196,8 +192,6 @@ fun PremiumScreen(
                         )
                     }
                 }
-                Spacer()
-                Text(text = stringResource(id = R.string.premium_check_the_app))
             }
         }
 

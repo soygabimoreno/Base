@@ -163,8 +163,6 @@ fun PodcastPlayerBody(
             }
         }
 
-        // TODO: This triggers a crash: NullPointerException: Can't toast on a thread that has not called Looper.prepare()
-//        val context = LocalContext.current
         PodcastPlayerStatelessContent(
             audio = audio,
             imagePainter = imagePainter,
@@ -172,10 +170,7 @@ fun PodcastPlayerBody(
             yOffset = swipeableState.offset.value.roundToInt(),
             playPauseIcon = iconResId,
             playbackProgress = sliderProgress,
-            currentTime = playerViewModel.getCurrentPlaybackFormattedPosition {
-                // TODO: This triggers a crash: NullPointerException: Can't toast on a thread that has not called Looper.prepare()
-//                context.toast(R.string.premium_end_preview_message)
-            },
+            currentTime = playerViewModel.getCurrentPlaybackFormattedPosition(),
             totalTime = playerViewModel.currentAudioFormattedDuration,
             onRewind = {
                 playerViewModel.onRewindClicked()

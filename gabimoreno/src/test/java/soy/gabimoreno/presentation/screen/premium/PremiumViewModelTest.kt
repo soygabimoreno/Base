@@ -14,8 +14,12 @@ import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.domain.session.MemberSession
-import soy.gabimoreno.domain.usecase.*
-import soy.gabimoreno.remoteconfig.RemoteConfigProvider
+import soy.gabimoreno.domain.usecase.GetPremiumAudiosUseCase
+import soy.gabimoreno.domain.usecase.IsBearerTokenValid
+import soy.gabimoreno.domain.usecase.LoginUseCase
+import soy.gabimoreno.domain.usecase.LoginValidationUseCase
+import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosUseCase
+import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 
 @ExperimentalCoroutinesApi
 class PremiumViewModelTest {
@@ -28,7 +32,6 @@ class PremiumViewModelTest {
     private val loginUseCase: LoginUseCase = relaxedMockk()
     private val getPremiumAudiosUseCase: GetPremiumAudiosUseCase = relaxedMockk()
     private val isBearerTokenValid: IsBearerTokenValid = relaxedMockk()
-    private val remoteConfigProvider: RemoteConfigProvider = relaxedMockk()
     private val refreshPremiumAudiosUseCase: RefreshPremiumAudiosUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: PremiumViewModel
@@ -44,7 +47,6 @@ class PremiumViewModelTest {
             loginUseCase = loginUseCase,
             getPremiumAudiosUseCase = getPremiumAudiosUseCase,
             isBearerTokenValid = isBearerTokenValid,
-            remoteConfigProvider = remoteConfigProvider,
             refreshPremiumAudiosUseCase = refreshPremiumAudiosUseCase,
             dispatcher = testDispatcher
         )
