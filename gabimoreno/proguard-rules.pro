@@ -15,7 +15,7 @@
 -dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
 -dontwarn org.conscrypt.Conscrypt$Version
 -dontwarn org.conscrypt.Conscrypt
--dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.conscrypt.CDonscryptHostnameVerifier
 -dontwarn org.junit.jupiter.api.extension.AfterAllCallback
 -dontwarn org.junit.jupiter.api.extension.ParameterResolver
 -dontwarn org.junit.jupiter.api.extension.TestInstancePostProcessor
