@@ -2,7 +2,7 @@ buildscript {
     extra.apply {
         set("version_kotlin", "1.8.21")
         set("version_android_gradle_plugin", "8.0.2")
-        set("version_google_services", "4.3.14")
+        set("version_google_services", "4.3.15")
         set("version_compose", "1.4.3")
         set("version_compose_compiler", "1.4.7")
         set("version_compose_nav", "2.4.2")
@@ -25,7 +25,7 @@ buildscript {
     dependencies {
         classpath("com.google.gms:google-services:${rootProject.extra["version_google_services"]}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${rootProject.extra["version_hilt"]}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.5")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.7")
         classpath("app.cash.paparazzi:paparazzi-gradle-plugin:${rootProject.extra["version_paparazzi"]}")
     }
 }
