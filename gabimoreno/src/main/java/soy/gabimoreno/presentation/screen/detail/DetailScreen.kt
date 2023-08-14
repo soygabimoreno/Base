@@ -49,8 +49,6 @@ fun DetailScreen(
     val playerViewModel = ViewModelProvider.playerViewModel
     val premiumViewModel = ViewModelProvider.premiumViewModel
 
-    // Check
-
     var audios: List<Audio>? = null
     var audio: Audio? = null
     when (feature) {
