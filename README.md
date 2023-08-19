@@ -1,10 +1,10 @@
-# Gabi Moreno
+# Base
 
 This is the base of the multi-module repo.
 
-## App Gabi Moreno
+## App Los androides by Gabi Moreno
 
-This is the module corresponding to the app Gabi Moreno.
+This is the module corresponding to the app Los androides by Gabi Moreno.
 
 Download it from [Google Play](https://gabimoreno.soy/app).
 
@@ -37,4 +37,13 @@ This is an open source project. **Feel free to request issues**.
 
 And for sure, **Pull Requests are opened** and super-well received.
 
-Thank you very much! 🤗
+#### Configuration
+
+Take into account you should add something like this in your `local.properties` to build the
+project:
+
+```
+CLARITY_PROJECT_ID=foo
+```
+
+Thank you very much for being part of this project! 🤗
