@@ -33,9 +33,11 @@ It's using:
 
 I am [Gabi Moreno](https://gabimoreno.soy).
 
-This is an open source project. **Feel free to request issues**.
+This is an open source project. Feel free to request [**issues
+**](https://github.com/soygabimoreno/Base/issues).
 
-And for sure, **Pull Requests are opened** and super-well received.
+And for sure, **[Pull Requests](https://github.com/soygabimoreno/Base/pulls)** are opened and
+super-well received.
 
 #### Configuration
 
