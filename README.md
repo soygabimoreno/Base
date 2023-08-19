@@ -32,7 +32,7 @@ It's using:
 ### Collaborate
 
 I am [Gabi Moreno](https://gabimoreno.soy).
-
+d
 This is an open source project. Feel free to request *
 *[issues](https://github.com/soygabimoreno/Base/issues)**.
 
