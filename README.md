@@ -1,15 +1,12 @@
 # Base
-
 This is the base of the multi-module repo.
 
 ## App Los androides by Gabi Moreno
-
 This is the module corresponding to the app Los androides by Gabi Moreno.
 
 Download it from [Google Play](https://gabimoreno.soy/app).
 
 ### Stack
-
 It's using:
 
 - MVVM with coroutines
@@ -30,7 +27,6 @@ It's using:
 - ...
 
 ### Collaborate
-
 I am [Gabi Moreno](https://gabimoreno.soy).
 
 This is an open source project. Feel free to request **[issues](https://github.com/soygabimoreno/Base/issues)**.
@@ -38,7 +34,6 @@ This is an open source project. Feel free to request **[issues](https://github.c
 And for sure, **[Pull Requests](https://github.com/soygabimoreno/Base/pulls)** are opened and super-well received.
 
 #### Configuration
-
 Take into account you should add something like this in your `local.properties` to build the
 project:
 
