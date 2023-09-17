@@ -22,7 +22,6 @@ It's using:
 - MockK
 - Kluent
 - MockWebServer
-- Paparazzi
 - ...
 
 ## Special Thanks

@@ -15,7 +15,6 @@ buildscript {
         set("version_glide", "4.12.0")
         set("version_retrofit", "2.9.0")
         set("version_accompanist", "0.12.0")
-        set("version_paparazzi", "1.0.0")
         set("version_detekt", "1.19.0")
         set("version_room", "2.5.1")
         set("version_gson", "2.9.0")
@@ -26,7 +25,6 @@ buildscript {
         classpath("com.google.gms:google-services:${rootProject.extra["version_google_services"]}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${rootProject.extra["version_hilt"]}")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.7")
-        classpath("app.cash.paparazzi:paparazzi-gradle-plugin:${rootProject.extra["version_paparazzi"]}")
     }
 }
 
