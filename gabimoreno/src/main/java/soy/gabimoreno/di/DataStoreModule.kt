@@ -7,7 +7,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.domain.session.MemberSession
-import soy.gabimoreno.domain.usecase.*
+import soy.gabimoreno.domain.usecase.GetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
+import soy.gabimoreno.domain.usecase.IsBearerTokenValid
+import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
+import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
+import soy.gabimoreno.domain.usecase.SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
+import soy.gabimoreno.domain.usecase.SetJwtAuthTokenUseCase
 import soy.gabimoreno.framework.datastore.DataStoreMemberSession
 import javax.inject.Singleton
 
