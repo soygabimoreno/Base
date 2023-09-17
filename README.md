@@ -23,7 +23,6 @@ It's using:
 - MockK
 - Kluent
 - MockWebServer
-- Paparazzi
 - ...
 
 ### Collaborate
