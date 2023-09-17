@@ -18,7 +18,6 @@ buildscript {
         set("version_detekt", "1.19.0")
         set("version_room", "2.5.1")
         set("version_gson", "2.9.0")
-        set("version_moshi", "1.15.0")
     }
 
     dependencies {

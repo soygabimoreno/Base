@@ -149,8 +149,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["version_retrofit"]}")
     implementation("com.squareup.retrofit2:converter-moshi:${rootProject.extra["version_retrofit"]}")
 
-    implementation("com.squareup.moshi:moshi:${rootProject.extra["version_moshi"]}")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:${rootProject.extra["version_moshi"]}")
+    implementation(libs.moshi)
+    kapt(libs.moshi.codegen)
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
 
