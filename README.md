@@ -39,6 +39,10 @@ project:
 
 ```
 CLARITY_PROJECT_ID=foo
+keystore.keyAlias=foo
+keystore.storeFile=foo
+keystore.storePassword=foo
+keystore.keyPassword=foo
 ```
 
 Thank you very much for being part of this project! 🤗
