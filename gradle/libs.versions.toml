@@ -1,0 +1,8 @@
+[versions]
+moshi = "1.15.0"
+
+[libraries]
+moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
+moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+
+[plugins]
