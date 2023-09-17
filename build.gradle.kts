@@ -1,7 +1,7 @@
 buildscript {
     extra.apply {
         set("version_kotlin", "1.8.21")
-        set("version_android_gradle_plugin", "8.0.2")
+        set("version_android_gradle_plugin", "8.1.1")
         set("version_google_services", "4.3.15")
         set("version_compose", "1.4.3")
         set("version_compose_compiler", "1.4.7")
