@@ -3,6 +3,7 @@ import java.util.Locale
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    id("org.jetbrains.compose")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -27,6 +28,7 @@ kotlin {
         ).forEach {
             it.binaries.framework {
                 baseName = "shared"
+                isStatic = true
             }
         }
     }
@@ -35,19 +37,23 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-
+                // TODO: Add dependencies here
             }
         }
 
         val androidUnitTest by getting {
             dependencies {
-
+                // TODO: Add dependencies here
             }
         }
 
         val commonMain by getting {
             dependencies {
-                //put your multiplatform dependencies here
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
             }
         }
         val commonTest by getting {
@@ -59,19 +65,19 @@ kotlin {
         if (isMacOS) {
             val iosX64Main by getting {
                 dependencies {
-                    //put your multiplatform dependencies here
+                    // TODO: Add dependencies here
                 }
             }
 
             val iosArm64Main by getting {
                 dependencies {
-                    //put your multiplatform dependencies here
+                    // TODO: Add dependencies here
                 }
             }
 
             val iosSimulatorArm64Main by getting {
                 dependencies {
-                    //put your multiplatform dependencies here
+                    // TODO: Add dependencies here
                 }
             }
         }
