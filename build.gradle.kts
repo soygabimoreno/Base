@@ -28,10 +28,10 @@ buildscript {
 }
 
 plugins {
-    id("com.android.application") version "${extra["version_android_gradle_plugin"]}" apply false
-    id("com.android.library") version "${extra["version_android_gradle_plugin"]}" apply false
-    kotlin("android") version "${extra["version_kotlin"]}" apply false
-    kotlin("multiplatform") version "${extra["version_kotlin"]}" apply false
+    kotlin("multiplatform").apply(false)
+    id("com.android.application").apply(false)
+    id("com.android.library").apply(false)
+    id("org.jetbrains.compose").apply(false)
     id("org.jetbrains.kotlin.jvm") version "${extra["version_kotlin"]}" apply false
     id("io.gitlab.arturbosch.detekt") version "${extra["version_detekt"]}"
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1" apply false

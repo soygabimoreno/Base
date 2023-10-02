@@ -63,6 +63,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:${rootProject.extra["version_hilt"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")
     implementation("androidx.hilt:hilt-navigation-compose:${rootProject.extra["version_hilt_navigation_compose"]}")
+    implementation("androidx.compose.runtime:runtime:${rootProject.extra["version_compose"]}")
 
     implementation("com.github.Jasonchenlijian:FastBle:2.4.0")
 
