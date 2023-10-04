@@ -64,6 +64,8 @@ private fun Article.getEpisodeUrl(): String {
 }
 
 private fun Article.getEpisodeCoverUrl(): String {
+    val episodeNumber = getEpisodeNumber()
+    if (episodeNumber == INVALID_EPISODE_NUMBER) return ""
     return "$GABI_MORENO_WEB_BASE_URL/$PODCAST_COVER_PREFIX${getEpisodeNumber()}$PODCAST_COVER_SUFFIX"
 }
 
@@ -73,6 +75,7 @@ private fun Article.getEpisodeNumber(): String {
     } else {
         title?.let { title ->
             val index = title.indexOfFirst { it == '.' }
+            if (index == -1) return INVALID_EPISODE_NUMBER
             title.substring(0, index)
         } ?: ""
     }
@@ -117,3 +120,6 @@ internal const val PODCAST_COVER_PREFIX =
 
 @VisibleForTesting
 internal const val PODCAST_COVER_SUFFIX = ".png"
+
+@VisibleForTesting
+internal const val INVALID_EPISODE_NUMBER = "-1"
