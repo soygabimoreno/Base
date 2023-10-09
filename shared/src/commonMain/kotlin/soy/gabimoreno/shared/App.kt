@@ -30,5 +30,4 @@ fun App() {
             Text(text = "Click me: $count")
         }
     }
-
 }
