@@ -1,8 +1,40 @@
 [versions]
+activity-compose = "1.7.2"
+androidx-junit = "1.1.5"
+core-ktx = "1.10.1"
+espresso-core = "3.5.1"
+fastble = "2.4.0"
+hilt-android = "2.46.1"
+hilt-navigation-compose = "1.0.0"
+junit = "4.13.2"
+kluent-android = "1.68"
+lifecycle-runtime-ktx = "2.6.1"
+material = "1.4.3"
+mockk = "1.12.4"
 moshi = "1.15.0"
+runtime = "1.4.3"
+ui = "1.4.3"
 
 [libraries]
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "ui" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
+ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+fastble = { module = "com.github.Jasonchenlijian:FastBle", version.ref = "fastble" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+junit = { module = "junit:junit", version.ref = "junit" }
+kluent-android = { module = "org.amshove.kluent:kluent-android", version.ref = "kluent-android" }
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+material = { module = "androidx.compose.material:material", version.ref = "material" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
+ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
+ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "ui" }
+ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "ui" }
 
 [plugins]
