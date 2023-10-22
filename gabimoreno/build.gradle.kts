@@ -125,79 +125,79 @@ dependencies {
     implementation(project(":modules:remote-config"))
     implementation(project(":shared"))
 
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation(libs.core.ktx)
+    implementation(libs.google.material)
 
-    implementation("androidx.compose.ui:ui:${rootProject.extra["version_compose"]}")
-    implementation("androidx.compose.material:material:${rootProject.extra["version_compose"]}")
-    implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["version_compose"]}")
-    implementation("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["version_compose"]}")
-    implementation("androidx.navigation:navigation-compose:2.7.0-beta01")
+    implementation(libs.material)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.ui)
+    implementation(libs.ui.tooling.preview)
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:${rootProject.extra["version_compose_activity"]}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-    implementation("androidx.compose.runtime:runtime:${rootProject.extra["version_compose"]}")
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.runtime)
 
     implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx")
 
-    implementation("com.google.dagger:hilt-android:${rootProject.extra["version_hilt"]}")
-    kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:${rootProject.extra["version_hilt_navigation_compose"]}")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.hilt.navigation.compose)
 
-    implementation("com.squareup.retrofit2:retrofit:${rootProject.extra["version_retrofit"]}")
-    implementation("com.squareup.retrofit2:converter-moshi:${rootProject.extra["version_retrofit"]}")
+    implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
 
     implementation(libs.moshi)
     kapt(libs.moshi.codegen)
 
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.2")
+    implementation(libs.logging.interceptor)
 
-    implementation("com.prof18.rssparser:rssparser:4.0.2")
+    implementation(libs.rssparser)
 
-    implementation("com.google.android.exoplayer:exoplayer:${rootProject.extra["version_exo_player"]}")
-    implementation("com.google.android.exoplayer:extension-mediasession:${rootProject.extra["version_exo_player"]}")
+    implementation(libs.exoplayer)
+    implementation(libs.extension.mediasession)
 
-    implementation("com.github.bumptech.glide:glide:${rootProject.extra["version_glide"]}")
+    implementation(libs.glide)
 
-    implementation("com.google.accompanist:accompanist-insets:${rootProject.extra["version_accompanist"]}")
-    implementation("com.google.accompanist:accompanist-coil:${rootProject.extra["version_accompanist"]}")
+    implementation(libs.accompanist.insets)
+    implementation(libs.accompanist.coil)
 
-    implementation("io.arrow-kt:arrow-core:1.0.1")
+    implementation(libs.arrow.core)
 
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.androidx.datastore.preferences)
 
-    implementation("androidx.room:room-runtime:${rootProject.extra["version_room"]}")
-    kapt("androidx.room:room-compiler:${rootProject.extra["version_room"]}")
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
 
-    implementation("com.google.code.gson:gson:${rootProject.extra["version_gson"]}")
+    implementation(libs.gson)
 
-    implementation("com.microsoft.clarity:clarity:1.3.0")
+    implementation(libs.clarity)
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.amshove.kluent:kluent:1.68")
-    testImplementation("io.mockk:mockk:1.12.4")
-    testImplementation("org.robolectric:robolectric:4.8.1")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation(libs.junit)
+    testImplementation(libs.kluent)
+    testImplementation(libs.mockk)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.kotlinx.coroutines.test)
 
-    testImplementation("app.cash.turbine:turbine:0.12.3")
+    testImplementation(libs.turbine)
 
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${rootProject.extra["version_compose"]}")
-    androidTestImplementation("org.amshove.kluent:kluent-android:1.68")
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(libs.kluent.android)
 
-    androidTestImplementation("com.google.dagger:hilt-android-testing:${rootProject.extra["version_hilt"]}")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")
-    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
-    androidTestImplementation("com.jakewharton.espresso:okhttp3-idling-resource:1.0.0")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.okhttp3.idling.resource)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 
-    debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["version_compose"]}")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:${rootProject.extra["version_compose"]}")
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
 
 fun isLocalBuild(): Boolean {
