@@ -127,54 +127,38 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.google.material)
-
-    implementation(libs.material)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.ui)
-    implementation(libs.ui.tooling.preview)
-
+    implementation(libs.compose.material)
+    implementation(libs.material.icons.extended)
+    implementation(libs.navigation.compose)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.runtime)
-
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.compose.runtime)
     implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx")
-
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
-
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
-
     implementation(libs.moshi)
     kapt(libs.moshi.codegen)
-
     implementation(libs.logging.interceptor)
-
     implementation(libs.rssparser)
-
     implementation(libs.exoplayer)
     implementation(libs.extension.mediasession)
-
     implementation(libs.glide)
-
     implementation(libs.accompanist.insets)
     implementation(libs.accompanist.coil)
-
     implementation(libs.arrow.core)
-
-    implementation(libs.androidx.datastore.preferences)
-
-    implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
-
+    implementation(libs.datastore.preferences)
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
     implementation(libs.gson)
-
     implementation(libs.clarity)
 
     testImplementation(libs.junit)
@@ -182,22 +166,20 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.robolectric)
     testImplementation(libs.kotlinx.coroutines.test)
-
     testImplementation(libs.turbine)
 
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(libs.kluent.android)
-
     androidTestImplementation(libs.hilt.android.testing)
     kaptAndroidTest(libs.hilt.android.compiler)
     androidTestImplementation(libs.mockwebserver)
     androidTestImplementation(libs.okhttp3.idling.resource)
     androidTestImplementation(libs.kotlinx.coroutines.test)
 
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
 }
 
 fun isLocalBuild(): Boolean {

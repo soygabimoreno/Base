@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    testImplementation("junit:junit:4.13.2")
-    implementation("io.mockk:mockk:1.12.4")
-    implementation("io.kotest:kotest-assertions-core:5.5.4")
+    testImplementation(libs.junit)
+    implementation(libs.mockk)
+    implementation(libs.kotest)
 }

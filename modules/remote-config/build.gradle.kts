@@ -35,16 +35,14 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("com.google.android.material:material:1.5.0")
-
-    implementation("com.google.dagger:hilt-android:${rootProject.extra["version_hilt"]}")
-    kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["version_hilt"]}")
-
+    implementation(libs.core.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.google.material)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
     implementation("com.google.firebase:firebase-config-ktx:21.1.1")
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.amshove.kluent:kluent-android:1.68")
-    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation(libs.junit)
+    testImplementation(libs.kluent.android)
+    testImplementation(libs.mockk)
 }

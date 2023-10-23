@@ -55,16 +55,15 @@ dependencies {
     implementation(project(":modules:framework"))
 
     implementation(libs.core.ktx)
-    implementation(libs.ui)
-    implementation(libs.material)
-    implementation(libs.ui.tooling.preview)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material)
+    implementation(libs.compose.ui.tooling.preview)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
-    implementation(libs.runtime)
-
+    implementation(libs.compose.runtime)
     implementation(libs.fastble)
 
     testImplementation(libs.junit)
@@ -73,7 +72,7 @@ dependencies {
 
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(libs.compose.ui.test.junit4)
 
-    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.compose.ui.tooling)
 }
