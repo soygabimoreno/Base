@@ -13,4 +13,4 @@ interface PostService {
     ): List<PostApiModel>
 }
 
-private const val POSTS_PER_PAGE = 200
+private const val POSTS_PER_PAGE = 100
