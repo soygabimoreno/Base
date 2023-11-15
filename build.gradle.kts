@@ -1,6 +1,5 @@
 buildscript {
     extra.apply {
-        set("version_google_services", "4.3.15")
         set("version_compose_compiler", "1.4.7")
         set("version_hilt", "2.46.1")
         set("version_detekt", "1.19.0")
@@ -8,7 +7,6 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.google.gms:google-services:${rootProject.extra["version_google_services"]}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${rootProject.extra["version_hilt"]}")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.7")
     }

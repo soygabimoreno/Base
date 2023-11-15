@@ -4,7 +4,7 @@ import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.google.gms.google-services")
+    alias(libs.plugins.google.services)
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.firebase.crashlytics")
