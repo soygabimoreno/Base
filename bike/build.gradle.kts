@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "soy.gabimoreno.bike"
-    compileSdk = 33
+    compileSdk = extra["compileSdk.version"]?.toString()?.toInt()
 
     defaultConfig {
         applicationId = "soy.gabimoreno.bike"
-        minSdk = 23
-        targetSdk = 33
+        minSdk = extra["minSdk.version"]?.toString()?.toInt()
+        targetSdk = extra["targetSdk.version"]?.toString()?.toInt()
         versionCode = 1
         versionName = "1.0"
 
