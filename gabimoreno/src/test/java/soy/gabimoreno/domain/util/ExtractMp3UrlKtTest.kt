@@ -57,7 +57,62 @@ class ExtractMp3UrlKtTest {
 
         result shouldBeEqualTo MP3_URL
     }
+
+    @Test
+    fun `GIVEN a content with another MP3 url before WHEN call THEN get the expected mp3 url`() {
+        val rendered = "<div class=\"typography\">\n" +
+            "<div id=\"ez-toc-container\" class=\"ez-toc-v2_0_59 counter-hierarchy ez-toc-counter ez-toc-custom ez-toc-container-direction\">\n" +
+            "<div class=\"ez-toc-title-container\">\n" +
+            "<span class=\"ez-toc-title-toggle\"></span></div>\n" +
+            "<nav><ul class='ez-toc-list ez-toc-list-level-1 ' ><li class='ez-toc-page-1 ez-toc-heading-level-2'><a class=\"ez-toc-link ez-toc-heading-1\" href=\"https://gabimoreno.soy/ui-testing-android/#Episodio_150_%E2%80%93_Domina_el_UI_Testing_en_ANDROID_con_estos_tips\" title=\"Episodio 150 &#8211; Domina el UI Testing en ANDROID con estos tips\">Episodio 150 &#8211; Domina el UI Testing en ANDROID con estos tips</a></li><li class='ez-toc-page-1 ez-toc-heading-level-2'><a class=\"ez-toc-link ez-toc-heading-2\" href=\"https://gabimoreno.soy/ui-testing-android/#Podcast_Premium\" title=\"Podcast Premium\">Podcast Premium</a><ul class='ez-toc-list-level-3' ><li class='ez-toc-heading-level-3'><a class=\"ez-toc-link ez-toc-heading-3\" href=\"https://gabimoreno.soy/ui-testing-android/#Links_del_invitado\" title=\"Links del invitado\">Links del invitado</a></li><li class='ez-toc-page-1 ez-toc-heading-level-3'><a class=\"ez-toc-link ez-toc-heading-4\" href=\"https://gabimoreno.soy/ui-testing-android/#Links_de_menciones_UI_Tests_en_Android\" title=\"Links de menciones (UI Tests en Android)\">Links de menciones (UI Tests en Android)</a></li><li class='ez-toc-page-1 ez-toc-heading-level-3'><a class=\"ez-toc-link ez-toc-heading-5\" href=\"https://gabimoreno.soy/ui-testing-android/#Patrones_de_diseno_de_UI_Tests\" title=\"Patrones de diseño de UI Tests\">Patrones de diseño de UI Tests</a></li></ul></li></ul></nav></div>\n" +
+            "<h2 class=\"wp-block-heading\"><span class=\"ez-toc-section\" id=\"Episodio_150_%E2%80%93_Domina_el_UI_Testing_en_ANDROID_con_estos_tips\"></span>Episodio 150 &#8211; Domina el UI Testing en ANDROID con estos tips<span class=\"ez-toc-section-end\"></span></h2>\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "<p>En esta charla técnica, exploraremos el fascinante mundo del UI Testing en Android con Sergio Sastre.</p>\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "<p>¿Alguna vez te has preguntado cómo asegurar que las interfaces de usuario (UI) en tus apps Android funcionen a la perfección? Aquí está tu respuesta.</p>\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "<p>¿Viste ya la <a href=\"https://gabimoreno.soy/senior-arquitectura-testing\">entrevista a XurxoDev</a>?</p>\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "<figure class=\"wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio\"><div class=\"wp-block-embed__wrapper\">\n" +
+            "<iframe title=\"Domina el UI Testing en ANDROID con estos tips\" width=\"500\" height=\"281\" src=\"https://www.youtube.com/embed/1TOzPnLsYRc?list=PLwRXwAGGsPEAzeOiKzupkCGSsUBRP-sj5\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>\n" +
+            "</div></figure>\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "<figure class=\"wp-block-audio\"><audio controls src=\"$OTHER_MP3_URL\"></audio></figure>\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "<hr class=\"wp-block-separator has-alpha-channel-opacity\"/>\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "<h2 class=\"wp-block-heading\"><span class=\"ez-toc-section\" id=\"Podcast_Premium\"></span>Podcast Premium<span class=\"ez-toc-section-end\"></span></h2>\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "<figure class=\"wp-block-audio\"><audio controls src=\"$MP3_URL\"></audio></figure>\n" +
+            "</div>"
+
+        val result = rendered.extractMp3Url()
+
+        result shouldBeEqualTo MP3_URL
+    }
 }
+
+private const val PREFIX = "https://gabimoreno.soy/wp-content/uploads/"
+internal const val OTHER_PREFIX = "https://foo/"
 
 private const val MP3_URL =
     "${PREFIX}GABI-MORENO-Premium-sample.mp3"
+
+private const val OTHER_MP3_URL =
+    "${OTHER_PREFIX}foo.mp3"
