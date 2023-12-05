@@ -27,12 +27,12 @@ android {
     }
 
     namespace = "soy.gabimoreno"
-    compileSdk = 33
+    compileSdk = extra["compileSdk.version"]?.toString()?.toInt()
 
     defaultConfig {
         applicationId = "soy.gabimoreno"
-        minSdk = 23
-        targetSdk = 33
+        minSdk = extra["minSdk.version"]?.toString()?.toInt()
+        targetSdk = extra["targetSdk.version"]?.toString()?.toInt()
         versionCode = 50
         versionName = "1.2.7"
 
