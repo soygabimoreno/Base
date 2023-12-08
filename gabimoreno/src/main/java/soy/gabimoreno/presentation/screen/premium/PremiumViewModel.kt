@@ -17,6 +17,7 @@ import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.model.content.PremiumAudio
+import soy.gabimoreno.domain.model.login.Status
 import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.GetPremiumAudiosUseCase
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
@@ -116,8 +117,8 @@ class PremiumViewModel @Inject constructor(
                                         }
                                     }
                                 }, { member ->
-                                    val isUserActive = member.isActive
-                                    memberSession.setActive(isUserActive)
+                                    val isActive = member.isActive || member.status == Status.FREE
+                                    memberSession.setActive(isActive)
                                     loginSuccessPerform(email, password)
                                 }
                             )

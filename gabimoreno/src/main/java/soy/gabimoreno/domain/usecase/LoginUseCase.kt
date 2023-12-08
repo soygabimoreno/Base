@@ -9,7 +9,7 @@ import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
-    private val repository: LoginDatasource,
+    private val loginDatasource: LoginDatasource,
     private val remoteConfigProvider: RemoteConfigProvider,
     private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase,
     private val resetJwtAuthTokenUseCase: ResetJwtAuthTokenUseCase,
@@ -19,7 +19,7 @@ class LoginUseCase @Inject constructor(
         email: String,
         password: String,
     ): Either<Throwable, Member> {
-        return repository.generateAuthCookie(email, password)
+        return loginDatasource.generateAuthCookie(email, password)
             .map { authCookie ->
                 if (!authCookie.isStatusOK()) return Throwable().left()
                 val tokenCredentials = remoteConfigProvider.getTokenCredentials()
@@ -27,11 +27,11 @@ class LoginUseCase @Inject constructor(
                 val tokenCredentialPassword = tokenCredentials.password
                 if (tokenCredentialUsername.isBlank()) return Throwable().left()
                 if (tokenCredentialPassword.isBlank()) return Throwable().left()
-                return repository.obtainToken(tokenCredentialUsername, tokenCredentialPassword)
+                return loginDatasource.obtainToken(tokenCredentialUsername, tokenCredentialPassword)
                     .map { jwtAuth ->
                         val token = jwtAuth.token
                         setJwtAuthTokenUseCase(token)
-                        return repository.getMember(email)
+                        return loginDatasource.getMember(email)
                     }.mapLeft {
                         resetJwtAuthTokenUseCase()
                         return TokenExpiredException().left()

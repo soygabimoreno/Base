@@ -16,6 +16,7 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.remote.datasource.login.RemoteLoginDatasource
 import soy.gabimoreno.domain.model.login.JwtAuth
 import soy.gabimoreno.domain.model.login.Member
+import soy.gabimoreno.domain.model.login.Status
 import soy.gabimoreno.fake.buildAuthCookie
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import soy.gabimoreno.remoteconfig.TokenCredentials
@@ -65,7 +66,10 @@ class LoginUseCaseTest {
                 )
             } returns jwtAuth.right()
 
-            val member = Member(isActive = true)
+            val member = Member(
+                status = Status.ACTIVE,
+                isActive = true
+            )
             coEvery { repository.getMember(email) } returns member.right()
 
             val result = useCase(email, password)
@@ -73,8 +77,10 @@ class LoginUseCaseTest {
             result.isRight().shouldBeTrue()
             coVerifyOnce { repository.generateAuthCookie(email, password) }
             coVerifyOnce {
-                repository.obtainToken(tokenCredentialUsername,
-                                       tokenCredentialPassword)
+                repository.obtainToken(
+                    tokenCredentialUsername,
+                    tokenCredentialPassword
+                )
             }
             coVerifyOnce { setJwtAuthTokenUseCase(jwtAuth.token) }
             coVerifyOnce { repository.getMember(email) }
@@ -234,8 +240,10 @@ class LoginUseCaseTest {
             result.isLeft().shouldBeTrue()
             coVerifyOnce { repository.generateAuthCookie(email, password) }
             coVerifyOnce {
-                repository.obtainToken(tokenCredentialUsername,
-                                       tokenCredentialPassword)
+                repository.obtainToken(
+                    tokenCredentialUsername,
+                    tokenCredentialPassword
+                )
             }
             coVerifyOnce { resetJwtAuthTokenUseCase() }
             coVerifyNever { repository.getMember(email) }
