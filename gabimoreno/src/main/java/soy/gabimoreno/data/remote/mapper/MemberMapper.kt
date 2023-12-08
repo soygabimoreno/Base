@@ -8,5 +8,6 @@ fun List<MemberApiModel>.toDomain(): Member {
 }
 
 fun MemberApiModel.toDomain() = Member(
+    status = statusApiModel.toDomain(),
     isActive = isActive
 )

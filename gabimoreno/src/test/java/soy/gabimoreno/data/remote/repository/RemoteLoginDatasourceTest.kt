@@ -13,6 +13,7 @@ import soy.gabimoreno.data.remote.datasource.login.RemoteLoginDatasource
 import soy.gabimoreno.data.remote.model.AuthCookieApiModel
 import soy.gabimoreno.data.remote.model.JwtAuthApiModel
 import soy.gabimoreno.data.remote.model.MemberApiModel
+import soy.gabimoreno.data.remote.model.StatusApiModel
 import soy.gabimoreno.data.remote.service.LoginService
 
 @ExperimentalCoroutinesApi
@@ -110,4 +111,9 @@ class RemoteLoginDatasourceTest {
         }
 }
 
-private fun buildMembers() = listOf(MemberApiModel(isActive = true))
+private fun buildMembers() = listOf(
+    MemberApiModel(
+        statusApiModel = StatusApiModel.ACTIVE,
+        isActive = true
+    )
+)
