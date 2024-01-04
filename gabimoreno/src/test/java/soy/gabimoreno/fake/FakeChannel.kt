@@ -1,11 +1,13 @@
 package soy.gabimoreno.fake
 
-import com.prof.rssparser.*
+import com.prof.rssparser.Article
+import com.prof.rssparser.Channel
+import com.prof.rssparser.Image
+import com.prof.rssparser.ItunesArticleData
+import com.prof.rssparser.ItunesChannelData
+import com.prof.rssparser.ItunesOwner
 import soy.gabimoreno.data.remote.mapper.ANCHOR_MESSAGE
 import soy.gabimoreno.data.remote.mapper.IVOOX_URL
-import soy.gabimoreno.data.remote.mapper.PODCAST_COVER_PREFIX
-import soy.gabimoreno.data.remote.mapper.PODCAST_COVER_SUFFIX
-import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 
 fun buildChannel(url: String): Channel {
     return Channel(
@@ -83,8 +85,7 @@ private fun buildItunesArticleData(duration: String?) = ItunesArticleData(
 private const val EPISODE_ID = "guid"
 private const val EPISODE_NUMBER = "1234"
 private const val EPISODE_AUDIO_URL = "audio"
-private const val EPISODE_IMAGE_URL =
-    "$GABI_MORENO_WEB_BASE_URL/$PODCAST_COVER_PREFIX$EPISODE_NUMBER$PODCAST_COVER_SUFFIX"
+private const val EPISODE_IMAGE_URL = "episodeImageUrl"
 private const val EPISODE_TITLE = "$EPISODE_NUMBER. Title"
 private const val EPISODE_AUDIO_LENGTH_IN_SECONDS = 896
 private const val EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED = "01:51:15"
