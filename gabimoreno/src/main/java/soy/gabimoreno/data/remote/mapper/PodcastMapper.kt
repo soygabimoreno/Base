@@ -64,9 +64,11 @@ private fun Article.getEpisodeUrl(): String {
 }
 
 private fun Article.getEpisodeCoverUrl(): String {
-    val episodeNumber = getEpisodeNumber()
-    if (episodeNumber == INVALID_EPISODE_NUMBER) return ""
-    return "$GABI_MORENO_WEB_BASE_URL/$PODCAST_COVER_PREFIX${getEpisodeNumber()}$PODCAST_COVER_SUFFIX"
+    return if (itunesArticleData?.image != null) {
+        this.itunesArticleData?.image!!
+    } else {
+        ""
+    }
 }
 
 private fun Article.getEpisodeNumber(): String {
@@ -113,10 +115,6 @@ internal const val EPISODE_AUDIO_LENGTH_DEFAULT_DURATION = 0
 private const val HOURS_MINUTES_SECONDS_PATTERN = "HH:mm:ss"
 private const val ONE_MINUTE_IN_SECONDS = 60
 private const val ONE_HOUR_IN_SECONDS = 60 * ONE_MINUTE_IN_SECONDS
-
-@VisibleForTesting
-internal const val PODCAST_COVER_PREFIX =
-    "images/podcast-los-androides/cover-podcast-los-androides-"
 
 @VisibleForTesting
 internal const val PODCAST_COVER_SUFFIX = ".png"
