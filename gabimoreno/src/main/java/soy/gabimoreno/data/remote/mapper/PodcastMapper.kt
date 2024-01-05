@@ -63,13 +63,7 @@ private fun Article.getEpisodeUrl(): String {
     return "$GABI_MORENO_WEB_BASE_URL/${getEpisodeNumber()}"
 }
 
-private fun Article.getEpisodeCoverUrl(): String {
-    return if (itunesArticleData?.image != null) {
-        this.itunesArticleData?.image!!
-    } else {
-        ""
-    }
-}
+private fun Article.getEpisodeCoverUrl(): String = itunesArticleData?.image.orEmpty()
 
 private fun Article.getEpisodeNumber(): String {
     val episodeNumber = if (itunesArticleData != null && itunesArticleData?.episode != null) {
