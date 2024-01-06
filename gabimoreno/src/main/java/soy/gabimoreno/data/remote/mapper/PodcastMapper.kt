@@ -81,8 +81,9 @@ private fun Article.getEpisodeNumber(): String {
 private fun ItunesArticleData?.getAudioLengthInSeconds(): Int {
     if (this == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
     val duration = this.duration
-    if (duration?.toIntOrNull() != null) {
-        return duration.toInt()
+    val durationInteger = duration?.toIntOrNull()
+    if (durationInteger != null) {
+        return durationInteger
     } else {
         if (duration == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
         val dateFormat = SimpleDateFormat(HOURS_MINUTES_SECONDS_PATTERN, Locale.ROOT)
