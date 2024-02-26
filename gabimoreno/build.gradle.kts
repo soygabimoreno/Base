@@ -1,5 +1,6 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import org.jetbrains.compose.ComposePlugin.CommonComponentsDependencies.resources
 
 plugins {
     id("com.android.application")
@@ -33,8 +34,8 @@ android {
         applicationId = "soy.gabimoreno"
         minSdk = extra["minSdk.version"]?.toString()?.toInt()
         targetSdk = extra["targetSdk.version"]?.toString()?.toInt()
-        versionCode = 51
-        versionName = "1.2.8"
+        versionCode = 53
+        versionName = "1.2.9"
 
         testInstrumentationRunner = "soy.gabimoreno.di.HiltTestRunner"
         vectorDrawables {
