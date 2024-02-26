@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import soy.gabimoreno.R
@@ -55,7 +54,6 @@ class MediaPlayerNotificationManager(
                 setUseStopAction(true)
                 setUseNextActionInCompactView(true)
                 setUsePreviousActionInCompactView(true)
-                setControlDispatcher(DefaultControlDispatcher(0L, 0L))
             }
     }
 
