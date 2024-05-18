@@ -32,6 +32,7 @@ import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.AudioImage
 import soy.gabimoreno.presentation.ui.BackButton
 import soy.gabimoreno.presentation.ui.EmphasisText
+import soy.gabimoreno.presentation.ui.SelectableEmphasisText
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
 import soy.gabimoreno.util.formatMillisecondsAsDate
 import soy.gabimoreno.util.toDurationMinutes
@@ -155,7 +156,7 @@ fun DetailScreen(
 
                     Spacer(modifier = Modifier.height(Spacing.s16))
 
-                    EmphasisText(
+                    SelectableEmphasisText(
                         text = audio.description.parseFromHtmlFormat()
                     )
                 }
