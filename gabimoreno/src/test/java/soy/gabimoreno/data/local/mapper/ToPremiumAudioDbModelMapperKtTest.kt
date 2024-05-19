@@ -20,7 +20,8 @@ class ToPremiumAudioDbModelMapperKtTest {
             val imageUrl = imageUrl
             val thumbnailUrl = thumbnailUrl
             val pubDateMillis = pubDateMillis
-            val audioLengthInSeconds = audioLengthInSeconds
+            val category = category
+            val excerpt = excerpt
 
             val result = premiumAudio.toPremiumAudioDbModel()
             result.id shouldBe id
@@ -33,6 +34,8 @@ class ToPremiumAudioDbModelMapperKtTest {
             result.thumbnailUrl shouldBe thumbnailUrl
             result.pubDateMillis shouldBe pubDateMillis
             result.audioLengthInSeconds shouldBeEqualTo audioLengthInSeconds
+            result.category shouldBeEqualTo category
+            result.excerpt shouldBeEqualTo excerpt
         }
     }
 }

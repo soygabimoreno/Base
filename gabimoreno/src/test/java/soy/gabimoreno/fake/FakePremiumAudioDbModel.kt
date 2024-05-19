@@ -21,5 +21,6 @@ fun buildPremiumAudioDbModel(): PremiumAudioDbModel = PremiumAudioDbModel(
     title = "This is a title",
     audioLengthInSeconds = 2700,
     description = "This is a description",
-    category = Category.PREMIUM
+    category = Category.PREMIUM,
+    excerpt = "excerpt"
 )

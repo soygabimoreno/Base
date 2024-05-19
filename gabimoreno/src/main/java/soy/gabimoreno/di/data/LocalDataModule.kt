@@ -21,7 +21,9 @@ object LocalDataModule {
             application,
             GabiMorenoDatabase::class.java,
             "gabimoreno-db",
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     fun provideLocalPremiumAudioDataSource(

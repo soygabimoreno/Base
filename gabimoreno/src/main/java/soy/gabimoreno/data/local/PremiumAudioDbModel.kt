@@ -19,4 +19,5 @@ data class PremiumAudioDbModel(
     val pubDateMillis: Long,
     val audioLengthInSeconds: Int,
     val category: Category,
+    val excerpt: String,
 )

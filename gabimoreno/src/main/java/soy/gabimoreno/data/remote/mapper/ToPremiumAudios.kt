@@ -24,7 +24,8 @@ fun List<Post>.toPremiumAudios(): List<PremiumAudio> {
                     thumbnailUrl = post.category.coverUrl,
                     pubDateMillis = post.pubDateMillis,
                     audioLengthInSeconds = EMPTY_AUDIO_LENGTH_IN_SECONDS, // TODO: This is unknown for now
-                    category = post.category
+                    category = post.category,
+                    excerpt = post.excerpt
                 )
             )
         }

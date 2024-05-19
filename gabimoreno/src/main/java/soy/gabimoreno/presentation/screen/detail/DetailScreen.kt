@@ -21,8 +21,10 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.remote.mapper.EMPTY_AUDIO_LENGTH_IN_SECONDS
+import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.domain.model.audio.Audio
+import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.framework.parseFromHtmlFormat
 import soy.gabimoreno.presentation.navigation.Feature
 import soy.gabimoreno.presentation.screen.ViewModelProvider
@@ -153,12 +155,18 @@ fun DetailScreen(
                             detailViewModel.onShareClicked(currentContext, audio)
                         }
                     }
-
                     Spacer(modifier = Modifier.height(Spacing.s16))
-
-                    SelectableEmphasisText(
-                        text = audio.description.parseFromHtmlFormat()
-                    )
+                    if (audio is PremiumAudio) {
+                        SelectableEmphasisText(
+                            text = audio.excerpt.parseFromHtmlFormat()
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(Spacing.s16))
+                    if (audio !is PremiumAudio || audio.category != Category.PREMIUM_AUDIO_COURSES) {
+                        SelectableEmphasisText(
+                            text = audio.description.parseFromHtmlFormat()
+                        )
+                    }
                 }
             }
         }

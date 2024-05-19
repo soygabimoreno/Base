@@ -12,9 +12,11 @@ fun List<PostApiModel>.toDomain(): List<Post> = map { it.toDomain() }
 
 fun PostApiModel.toDomain(): Post {
     val renderedContent = contentApiModel.rendered
+    val excerpt = excerptApiModel.rendered
     return Post(
         id = id,
         title = titleApiModel.rendered,
+        excerpt = excerpt,
         content = renderedContent,
         audioUrl = renderedContent.extractMp3Url(),
         author = findAuthorDisplayNameById(authorId) ?: UNKNOWN_AUTHOR_DISPLAY_NAME,

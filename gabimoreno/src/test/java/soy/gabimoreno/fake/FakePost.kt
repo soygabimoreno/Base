@@ -18,5 +18,6 @@ fun buildPost() = Post(
     subcategoryTitle = "subcategoryTitle",
     url = "https://example.com",
     pubDateMillis = 1000L,
-    category = Category.PREMIUM_ALGORITHMS
+    category = Category.PREMIUM_ALGORITHMS,
+    excerpt = "excerpt"
 )
