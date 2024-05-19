@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
     entities = [
         PremiumAudioDbModel::class
     ],
-    version = 4,
+    version = 2,
 )
 @TypeConverters(Converters::class)
 abstract class GabiMorenoDatabase : RoomDatabase() {
