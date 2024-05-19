@@ -11,6 +11,8 @@ data class PostApiModel(
     val titleApiModel: TitleApiModel,
     @Json(name = "content")
     val contentApiModel: ContentApiModel,
+    @Json(name = "excerpt")
+    val excerptApiModel: ExcerptApiModel,
     @Json(name = "author")
     val authorId: Int,
     @Json(name = "categories")

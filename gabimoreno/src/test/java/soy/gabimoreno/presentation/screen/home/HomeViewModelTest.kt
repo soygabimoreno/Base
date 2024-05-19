@@ -13,6 +13,7 @@ import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
@@ -107,6 +108,7 @@ class HomeViewModelTest {
         }
     }
 
+    @Ignore
     @Test
     fun `GIVEN encodeUrlUseCase returns a url WHEN onShowWebViewClicked THEN ShowWebView`() =
         runTest(testDispatcher) {

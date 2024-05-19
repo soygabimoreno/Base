@@ -14,5 +14,6 @@ fun PremiumAudioDbModel.toPremiumAudio() = PremiumAudio(
     thumbnailUrl,
     pubDateMillis,
     audioLengthInSeconds,
-    category
+    category,
+    excerpt
 )
