@@ -17,7 +17,7 @@ internal class SelectableEmphasisTextTest {
 
         composeTestRule.setContent {
             SelectableEmphasisText(
-                text = "Hello, World!"
+                text = expectedText
             )
         }
 
