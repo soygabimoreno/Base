@@ -6,12 +6,12 @@ buildscript {
 }
 
 plugins {
-    kotlin("multiplatform").apply(false)
-    id("com.android.application").apply(false)
-    id("com.android.library").apply(false)
-    id("org.jetbrains.compose").apply(false)
-    id("io.gitlab.arturbosch.detekt") version libs.versions.detekt.get()
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version libs.versions.secrets.gradle.plugin.get() apply false
+    alias(libs.plugins.kotlinMultiplatform).apply(false)
+    alias(libs.plugins.androidApplication).apply(false)
+    alias(libs.plugins.androidLibrary).apply(false)
+    alias(libs.plugins.jetbrainsCompose).apply(false)
+    alias(libs.plugins.detekt.gradle.plugin)
+    alias(libs.plugins.secrets.gradle.plugin) apply false
 }
 
 apply(from = "gradle-scripts/detekt.gradle")
