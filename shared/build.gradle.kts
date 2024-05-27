@@ -1,9 +1,9 @@
 import java.util.Locale
 
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
-    id("org.jetbrains.compose")
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsCompose)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -86,9 +86,9 @@ kotlin {
 
 android {
     namespace = "soy.gabimoreno.shared"
-    compileSdk = 33
+    compileSdk = libs.versions.sdk.compile.get().toInt()
     defaultConfig {
-        minSdk = 23
+        minSdk = libs.versions.sdk.minimum.get().toInt()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
