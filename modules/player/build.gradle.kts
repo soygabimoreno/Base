@@ -1,15 +1,15 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.androidLibrary)
     id("org.jetbrains.kotlin.android")
 }
 
 @Suppress("UnstableApiUsage")
 android {
     namespace = "soy.gabimoreno.player"
-    compileSdk = 33
+    compileSdk = libs.versions.sdk.compile.get().toInt()
 
     defaultConfig {
-        minSdk = 23
+        minSdk = libs.versions.sdk.minimum.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

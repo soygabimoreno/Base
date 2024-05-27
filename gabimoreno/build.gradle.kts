@@ -3,14 +3,14 @@ import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import org.jetbrains.compose.ComposePlugin.CommonComponentsDependencies.resources
 
 plugins {
-    id("com.android.application")
+    alias(libs.plugins.androidApplication)
     kotlin("android")
     alias(libs.plugins.google.services)
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.firebase.crashlytics")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("org.jetbrains.compose")
+    alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.jetbrainsCompose)
 }
 
 @Suppress("UnstableApiUsage")
@@ -28,12 +28,12 @@ android {
     }
 
     namespace = "soy.gabimoreno"
-    compileSdk = extra["compileSdk.version"]?.toString()?.toInt()
+    compileSdk = libs.versions.sdk.compile.get().toInt()
 
     defaultConfig {
         applicationId = "soy.gabimoreno"
-        minSdk = extra["minSdk.version"]?.toString()?.toInt()
-        targetSdk = extra["targetSdk.version"]?.toString()?.toInt()
+        minSdk = libs.versions.sdk.minimum.get().toInt()
+        targetSdk = libs.versions.sdk.target.get().toInt()
         versionCode = 54
         versionName = "1.3.0"
 

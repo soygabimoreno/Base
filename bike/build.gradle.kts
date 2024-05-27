@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    alias(libs.plugins.androidApplication)
     kotlin("android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "soy.gabimoreno.bike"
-    compileSdk = extra["compileSdk.version"]?.toString()?.toInt()
+    compileSdk = libs.versions.sdk.compile.get().toInt()
 
     defaultConfig {
         applicationId = "soy.gabimoreno.bike"
-        minSdk = extra["minSdk.version"]?.toString()?.toInt()
-        targetSdk = extra["targetSdk.version"]?.toString()?.toInt()
+        minSdk = libs.versions.sdk.minimum.get().toInt()
+        targetSdk = libs.versions.sdk.target.get().toInt()
         versionCode = 1
         versionName = "1.0"
 
