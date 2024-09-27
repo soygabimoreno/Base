@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
@@ -162,6 +163,7 @@ fun PremiumScreen(
                     value = emailTextFieldValue,
                     placeholderText = stringResource(id = R.string.premium_email),
                     showError = showInvalidEmailFormatError,
+                    keyboardType = KeyboardType.Email,
                     errorText = stringResource(id = R.string.premium_email_error_invalid_format)
                 ) {
                     emailTextFieldValue = it
@@ -172,6 +174,7 @@ fun PremiumScreen(
                     value = passwordTextFieldValue,
                     placeholderText = stringResource(id = R.string.premium_password),
                     showError = showInvalidPasswordError,
+                    keyboardType = KeyboardType.Password,
                     errorText = stringResource(id = R.string.premium_password_error_invalid),
                     visualTransformation = PasswordVisualTransformation()
                 ) {
