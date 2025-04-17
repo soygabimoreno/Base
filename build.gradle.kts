@@ -10,13 +10,10 @@ plugins {
     alias(libs.plugins.androidApplication).apply(false)
     alias(libs.plugins.androidLibrary).apply(false)
     alias(libs.plugins.jetbrainsCompose).apply(false)
+    alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.detekt.gradle.plugin)
     alias(libs.plugins.secrets.gradle.plugin) apply false
 }
 
 apply(from = "gradle-scripts/detekt.gradle")
 apply(from = "gradle-scripts/ktlint.gradle.kts")
-
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
-}
