@@ -5,12 +5,13 @@ plugins {
     alias(libs.plugins.androidApplication)
     kotlin("android")
     alias(libs.plugins.google.services)
-    kotlin("kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.firebase.crashlytics")
     alias(libs.plugins.secrets.gradle.plugin)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 @Suppress("UnstableApiUsage")
@@ -108,6 +109,10 @@ android {
         compose = true
     }
 
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}"
@@ -140,12 +145,12 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
     implementation(libs.moshi)
-    kapt(libs.moshi.codegen)
+    ksp(libs.moshi.codegen)
     implementation(libs.logging.interceptor)
     implementation(libs.rssparser)
     implementation(libs.exoplayer)
@@ -156,7 +161,7 @@ dependencies {
     implementation(libs.arrow.core)
     implementation(libs.datastore.preferences)
     implementation(libs.room.runtime)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.gson)
     implementation(libs.clarity)
 
@@ -172,7 +177,7 @@ dependencies {
     androidTestImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(libs.kluent.android)
     androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.hilt.android.compiler)
+    kspAndroidTest(libs.hilt.android.compiler)
     androidTestImplementation(libs.mockwebserver)
     androidTestImplementation(libs.okhttp3.idling.resource)
     androidTestImplementation(libs.kotlinx.coroutines.test)
