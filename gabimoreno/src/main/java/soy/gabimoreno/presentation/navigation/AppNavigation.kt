@@ -145,7 +145,14 @@ private fun NavGraphBuilder.composable(
 }
 
 private inline fun <reified T> NavBackStackEntry.findArg(arg: NavArg): T {
-    val value = arguments?.get(arg.key)
-    requireNotNull(value)
-    return value as T
+    val arguments = requireNotNull(arguments) { "No arguments found in NavBackStackEntry" }
+    return when (T::class) {
+        String::class -> arguments.getString(arg.key) as T
+        Int::class -> arguments.getInt(arg.key) as T
+        Long::class -> arguments.getLong(arg.key) as T
+        Boolean::class -> arguments.getBoolean(arg.key) as T
+        Float::class -> arguments.getFloat(arg.key) as T
+        Double::class -> arguments.getDouble(arg.key) as T
+        else -> throw IllegalArgumentException("Unsupported argument type")
+    }
 }

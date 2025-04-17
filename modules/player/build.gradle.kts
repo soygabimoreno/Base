@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-@Suppress("UnstableApiUsage")
 android {
     namespace = "soy.gabimoreno.player"
     compileSdk = libs.versions.sdk.compile.get().toInt()
