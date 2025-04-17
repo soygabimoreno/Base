@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 @Suppress("UnstableApiUsage")
@@ -39,7 +39,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.google.material)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.compose.ui)
     implementation(libs.palette)
 
