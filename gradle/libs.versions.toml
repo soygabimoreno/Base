@@ -1,53 +1,55 @@
 [versions]
-sdk-compile = "34"
-sdk-target = "34"
+sdk-compile = "35"
+sdk-target = "35"
 sdk-minimum = "23"
-agp = "8.2.0"
-kotlin = "1.9.20"
+agp = "8.6.1"
+kotlin = "2.1.20"
 accompanist-coil = "0.12.0"
 accompanist-insets = "0.12.0"
-androidx-junit = "1.1.5"
-appcompat = "1.6.1"
-arrow-core = "1.0.1"
+androidx-junit = "1.2.1"
+appcompat = "1.7.0"
+arrow-core = "1.2.0"
 clarity = "1.3.0"
 crashlytics = "2.9.7"
-activity-compose = "1.8.1"
-compose-runtime = "1.5.4"
-compose-ui = "1.5.4"
-compose-ui-test-manifest = "1.5.4"
+activity-compose = "1.10.1"
+compose-runtime = "1.7.8"
+compose-ui = "1.7.8"
+compose-ui-test-manifest = "1.7.8"
 compose-compiler = "1.5.5"
-navigation-compose = "2.7.5"
-hilt-navigation-compose = "1.1.0"
+navigation-compose = "2.8.9"
+hilt-navigation-compose = "1.2.0"
 converter-moshi = "2.9.0"
-core-ktx = "1.12.0"
-datastore-preferences = "1.0.0"
-detekt = "1.19.0"
-espresso-core = "3.5.1"
+core-ktx = "1.16.0"
+datastore-preferences = "1.1.4"
+detekt = "1.23.8"
+espresso-core = "3.6.1"
 exoplayer = "2.19.1"
 fastble = "2.4.0"
-glide = "4.12.0"
-google-material = "1.10.0"
-google-services = "4.4.0"
-gson = "2.10.1"
-hilt-android = "2.48.1"
+glide = "4.16.0"
+google-material = "1.12.0"
+google-services = "4.4.2"
+gson = "2.11.0"
+hilt-android = "2.56.1"
 secrets-gradle-plugin = "2.0.1"
 compose-plugin = "1.6.10"
 
+firebaseBom = "33.12.0"
+
 junit = "4.13.2"
 kluent-android = "1.73"
-kotlinx-coroutines-test = "1.7.1"
+kotlinx-coroutines-test = "1.10.1"
 kotest = "5.5.4"
-lifecycle-runtime-ktx = "2.6.2"
-logging-interceptor = "4.9.2"
-material = "1.5.4"
-mockk = "1.12.4"
-mockwebserver = "4.9.3"
+lifecycle-runtime-ktx = "2.8.7"
+logging-interceptor = "4.12.0"
+material = "1.7.8"
+mockk = "1.13.10"
+mockwebserver = "4.12.0"
 moshi = "1.15.0"
 okhttp3-idling-resource = "1.0.0"
 palette = "1.0.0"
 retrofit = "2.9.0"
 robolectric = "4.10.3"
-room-runtime = "2.6.1"
+room-runtime = "2.7.0"
 rssparser = "4.0.2"
 turbine = "0.12.3"
 
@@ -101,6 +103,13 @@ palette = { module = "androidx.palette:palette-ktx", version.ref = "palette" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 rssparser = { module = "com.prof18.rssparser:rssparser", version.ref = "rssparser" }
 
+# Firebase
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-config = { module = "com.google.firebase:firebase-config-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
+
 # Tests
 junit = { module = "junit:junit", version.ref = "junit" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
@@ -132,3 +141,4 @@ jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets-gradle-plugin" }
 detekt-gradle-plugin = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

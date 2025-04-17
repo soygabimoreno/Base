@@ -26,7 +26,7 @@ object AudioModule {
     @ServiceScoped
     fun provideAudioAttributes(): AudioAttributes =
         AudioAttributes.Builder()
-            .setContentType(C.CONTENT_TYPE_MUSIC)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .setUsage(C.USAGE_MEDIA)
             .build()
 
