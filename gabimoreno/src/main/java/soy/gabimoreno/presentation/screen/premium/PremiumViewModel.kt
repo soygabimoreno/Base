@@ -43,7 +43,7 @@ class PremiumViewModel @Inject constructor(
     var viewState by mutableStateOf<ViewState>(ViewState.Loading)
         private set
 
-    private val _viewEventFlow = MutableSharedFlow<PremiumViewModel.ViewEvent>()
+    private val _viewEventFlow = MutableSharedFlow<ViewEvent>()
     val viewEventFlow = _viewEventFlow.asSharedFlow()
 
     fun onViewScreen(
@@ -133,7 +133,7 @@ class PremiumViewModel @Inject constructor(
     ) {
         viewModelScope.launch(dispatcher) {
             viewState = ViewState.Loading
-            val categories = Category.values().toList()
+            val categories = Category.entries
             getPremiumAudiosUseCase(categories)
                 .fold(
                     {
@@ -195,12 +195,12 @@ class PremiumViewModel @Inject constructor(
             val password: String,
         ) : ViewEvent()
 
-        object ShowAccessAgain : ViewEvent()
-        object ShowLoading : ViewEvent()
-        object HideLoading : ViewEvent()
+        data object ShowAccessAgain : ViewEvent()
+        data object ShowLoading : ViewEvent()
+        data object HideLoading : ViewEvent()
 
-        object ShowInvalidEmailFormatError : ViewEvent()
-        object ShowInvalidPasswordError : ViewEvent()
+        data object ShowInvalidEmailFormatError : ViewEvent()
+        data object ShowInvalidPasswordError : ViewEvent()
         data class ShowPremium(
             val email: String,
             val password: String,
@@ -219,7 +219,7 @@ class PremiumViewModel @Inject constructor(
     }
 
     sealed class ViewState {
-        object Loading : ViewState() // TODO: Use it instead of the view event
+        data object Loading : ViewState() // TODO: Use it instead of the view event
         data class Error(val throwable: Throwable) :
             ViewState() // TODO: Use it instead of the view event
 
