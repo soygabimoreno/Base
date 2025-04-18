@@ -29,7 +29,6 @@ import soy.gabimoreno.framework.parseFromHtmlFormat
 import soy.gabimoreno.presentation.navigation.Feature
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
-import soy.gabimoreno.presentation.screen.premium.PremiumViewModel
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.AudioImage
 import soy.gabimoreno.presentation.ui.BackButton
@@ -62,11 +61,9 @@ fun DetailScreen(
         }
 
         Feature.PREMIUM -> {
-            val viewState = premiumViewModel.viewState
-            if (viewState is PremiumViewModel.ViewState.Content) {
-                audios = viewState.premiumAudios
-                audio = premiumViewModel.findPremiumAudioFromId(audioId)
-            }
+            val viewState = premiumViewModel.state
+            audios = viewState.premiumAudios
+            audio = premiumViewModel.findPremiumAudioFromId(audioId)
         }
     }
 
