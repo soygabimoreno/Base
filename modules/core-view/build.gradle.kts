@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-@Suppress("UnstableApiUsage")
 android {
     namespace = "soy.gabimoreno.core.view"
     compileSdk = libs.versions.sdk.compile.get().toInt()

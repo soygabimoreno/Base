@@ -66,7 +66,6 @@ android {
             extra["alwaysUpdateBuildId"] = false
             splits {
                 abi.isEnable = false
-                density.isEnable = false
             }
             configure<CrashlyticsExtension> {
                 mappingFileUploadEnabled = false

@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-@Suppress("UnstableApiUsage")
 android {
     namespace = "soy.gabimoreno.remoteconfig"
     compileSdk = libs.versions.sdk.compile.get().toInt()

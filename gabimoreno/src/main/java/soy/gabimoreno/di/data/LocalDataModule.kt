@@ -22,7 +22,7 @@ object LocalDataModule {
             GabiMorenoDatabase::class.java,
             "gabimoreno-db",
         )
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(false)
             .build()
 
     @Provides

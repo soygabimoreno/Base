@@ -1,13 +1,13 @@
 package soy.gabimoreno.data.remote.model
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Feed
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Feed
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.HistoryEdu
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.TipsAndUpdates
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -39,7 +39,7 @@ enum class Category(
     PREMIUM_AUDIO_COURSES(
         263,
         "AudioCursos",
-        Icons.Default.MenuBook,
+        Icons.AutoMirrored.Filled.MenuBook,
         "${COVER_URL_PREFIX}audiocursos$COVER_URL_SUFFIX"
     ),
     PREMIUM_AUDIO_TIPS(
@@ -63,7 +63,7 @@ enum class Category(
     PREMIUM_NEWS(
         266,
         "Noticias",
-        Icons.Default.Feed,
+        Icons.AutoMirrored.Filled.Feed,
         "${COVER_URL_PREFIX}noticias$COVER_URL_SUFFIX"
     ),
     PREMIUM_TECH_TALKS(
