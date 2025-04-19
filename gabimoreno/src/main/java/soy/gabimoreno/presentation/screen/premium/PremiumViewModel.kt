@@ -40,11 +40,36 @@ class PremiumViewModel @Inject constructor(
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    var viewState by mutableStateOf<ViewState>(ViewState.Loading)
+    var state by mutableStateOf(PremiumState())
         private set
 
-    private val _viewEventFlow = MutableSharedFlow<ViewEvent>()
-    val viewEventFlow = _viewEventFlow.asSharedFlow()
+    private val eventChannel = MutableSharedFlow<PremiumEvent>()
+    val events = eventChannel.asSharedFlow()
+
+    fun onAction(action: PremiumAction) {
+        when (action) {
+            is PremiumAction.OnViewScreen -> onViewScreen(action.email, action.password)
+            is PremiumAction.OnEmailChanged -> {
+                println(action.email)
+                state = state.copy(email = action.email)
+            }
+
+            is PremiumAction.OnPasswordChanged -> {
+                println(action.password)
+                state = state.copy(password = action.password)
+            }
+
+            is PremiumAction.OnPremiumItemClicked -> {
+                viewModelScope.launch {
+                    eventChannel.emit(PremiumEvent.ShowDetail(action.premiumAudioId))
+                }
+            }
+
+            PremiumAction.OnLoginClicked -> onLoginClicked()
+            PremiumAction.OnLogoutClicked -> onLogoutClicked()
+            PremiumAction.OnRefreshContent -> refreshContent()
+        }
+    }
 
     fun onViewScreen(
         email: String,
@@ -55,7 +80,7 @@ class PremiumViewModel @Inject constructor(
             val isActive = memberSession.isActive()
             when {
                 !isActive -> {
-                    ViewEvent.ShowAccess(email, password).emit()
+                    showAccess(email, password)
                 }
 
                 isActive -> {
@@ -67,53 +92,65 @@ class PremiumViewModel @Inject constructor(
                 }
 
                 else -> {
-                    ViewEvent.HideLoading.emit()
+                    state = state.copy(
+                        isLoading = false,
+                        shouldShowAccess = true
+                    )
                 }
             }
         }
     }
 
-    fun onLoginClicked(
-        email: String,
-        password: String,
-    ) {
-        val parameters = mapOf(TRACKER_KEY_EMAIL to email)
-        tracker.trackEvent(PremiumTrackerEvent.ClickLogin(parameters))
-        login(email, password)
+    private fun showAccess(email: String, password: String) {
+        state = state.copy(
+            isLoading = false,
+            shouldShowAccess = true,
+            email = email,
+            password = password
+        )
     }
 
-    private fun login(
-        email: String,
-        password: String,
-    ) {
-        viewState = ViewState.Loading
+    private fun onLoginClicked() {
+        val parameters = mapOf(TRACKER_KEY_EMAIL to state.email)
+        tracker.trackEvent(PremiumTrackerEvent.ClickLogin(parameters))
+        login(state.email, state.password)
+    }
+
+    private fun login(email: String, password: String) {
+        state = state.copy(isLoading = true)
         loginValidationUseCase(email, password)
             .fold(
                 {
                     when (it) {
                         LoginValidationUseCase.Error.InvalidEmailFormat -> {
-                            ViewEvent.ShowInvalidEmailFormatError.emit()
+                            state =
+                                state.copy(
+                                    showInvalidEmailFormatError = true,
+                                    showInvalidPasswordError = false,
+                                    isLoading = false
+                                )
                         }
 
                         LoginValidationUseCase.Error.InvalidPassword -> {
-                            ViewEvent.ShowInvalidPasswordError.emit()
+                            state = state.copy(
+                                showInvalidPasswordError = true,
+                                showInvalidEmailFormatError = false,
+                                isLoading = false
+                            )
                         }
                     }
                 }, {
-                    ViewEvent.ShowLoading.emit()
                     viewModelScope.launch(dispatcher) {
                         loginUseCase(email, password)
                             .fold(
                                 {
-                                    viewState = ViewState.Error(it)
-                                    ViewEvent.HideLoading.emit()
                                     when (it) {
                                         is TokenExpiredException -> {
-                                            ViewEvent.ShowTokenExpiredError(email, password).emit()
+                                            showTokenExpiredError()
                                         }
 
                                         else -> {
-                                            ViewEvent.ShowLoginError(email, password).emit()
+                                            showLoginError()
                                         }
                                     }
                                 }, { member ->
@@ -127,30 +164,54 @@ class PremiumViewModel @Inject constructor(
             )
     }
 
-    private fun loginSuccessPerform(
-        email: String,
-        password: String,
-    ) {
+    private fun showLoginError() {
+        state = state.copy(
+            shouldShowAccess = true,
+            shouldShowPremium = false,
+            isLoading = false
+        )
+        viewModelScope.launch {
+            eventChannel.emit(PremiumEvent.ShowLoginError)
+        }
+    }
+
+    private fun showTokenExpiredError() {
+        state = state.copy(
+            shouldShowAccess = true,
+            shouldShowPremium = false,
+            isLoading = false
+        )
+        viewModelScope.launch {
+            eventChannel.emit(PremiumEvent.ShowTokenExpiredError)
+        }
+    }
+
+    private fun loginSuccessPerform(email: String, password: String) {
         viewModelScope.launch(dispatcher) {
-            viewState = ViewState.Loading
+            state = state.copy(isLoading = true)
             val categories = Category.entries
             getPremiumAudiosUseCase(categories)
                 .fold(
                     {
-                        viewState = ViewState.Error(it)
-                        ViewEvent.HideLoading.emit()
-                        ViewEvent.ShowLoginError(email, password).emit()
+                        eventChannel.emit(PremiumEvent.Error(it))
+                        showLoginError()
                     },
                     { premiumAudios ->
-                        viewState = ViewState.Content(premiumAudios)
-                        ViewEvent.HideLoading.emit()
-                        ViewEvent.ShowPremium(email, password, premiumAudios).emit()
+                        state = state.copy(
+                            showInvalidEmailFormatError = false,
+                            showInvalidPasswordError = false,
+                            shouldShowPremium = true,
+                            shouldShowAccess = false,
+                            isLoading = false,
+                            premiumAudios = premiumAudios
+                        )
+                        saveCredentialsInDataStore(email, password)
                     }
                 )
         }
     }
 
-    fun saveCredentialsInDataStore(
+    private fun saveCredentialsInDataStore(
         email: String,
         password: String,
     ) {
@@ -159,70 +220,24 @@ class PremiumViewModel @Inject constructor(
         }
     }
 
-    fun onLogoutClicked() {
+    private fun onLogoutClicked() {
         viewModelScope.launch(dispatcher) {
             memberSession.setActive(false)
-        }
-        ViewEvent.ShowAccessAgain.emit()
-    }
-
-    private fun ViewEvent.emit() {
-        viewModelScope.launch(dispatcher) {
-            _viewEventFlow.emit(this@emit)
+            state = state.copy(
+                shouldShowAccess = true,
+                shouldShowPremium = false
+            )
         }
     }
 
     fun findPremiumAudioFromId(id: String): PremiumAudio? {
-        return when (viewState) {
-            is ViewState.Content -> (viewState as ViewState.Content).premiumAudios.find { it.id == id }
-            else -> null
-        }
+        return state.premiumAudios.find { it.id == id }
     }
 
-    fun refreshContent(
-        email: String,
-        password: String,
-    ) {
+    private fun refreshContent() {
         viewModelScope.launch(dispatcher) {
             refreshPremiumAudiosUseCase()
-            loginSuccessPerform(email, password)
+            loginSuccessPerform(state.email, state.password)
         }
-    }
-
-    sealed class ViewEvent {
-        data class ShowAccess(
-            val email: String,
-            val password: String,
-        ) : ViewEvent()
-
-        data object ShowAccessAgain : ViewEvent()
-        data object ShowLoading : ViewEvent()
-        data object HideLoading : ViewEvent()
-
-        data object ShowInvalidEmailFormatError : ViewEvent()
-        data object ShowInvalidPasswordError : ViewEvent()
-        data class ShowPremium(
-            val email: String,
-            val password: String,
-            val premiumAudios: List<PremiumAudio>,
-        ) : ViewEvent()
-
-        data class ShowLoginError(
-            val email: String,
-            val password: String,
-        ) : ViewEvent()
-
-        data class ShowTokenExpiredError(
-            val email: String,
-            val password: String,
-        ) : ViewEvent()
-    }
-
-    sealed class ViewState {
-        data object Loading : ViewState() // TODO: Use it instead of the view event
-        data class Error(val throwable: Throwable) :
-            ViewState() // TODO: Use it instead of the view event
-
-        data class Content(val premiumAudios: List<PremiumAudio>) : ViewState()
     }
 }

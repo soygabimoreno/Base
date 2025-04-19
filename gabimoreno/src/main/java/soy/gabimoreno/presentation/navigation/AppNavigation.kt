@@ -11,7 +11,7 @@ import androidx.navigation.navigation
 import soy.gabimoreno.presentation.AppState
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
-import soy.gabimoreno.presentation.screen.premium.PremiumScreen
+import soy.gabimoreno.presentation.screen.premium.PremiumScreenRoot
 import soy.gabimoreno.presentation.screen.webview.WebViewScreen
 
 @Composable
@@ -89,7 +89,7 @@ private fun NavGraphBuilder.premiumNav(
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.PREMIUM)) {
             appState.setStartDestination(Feature.PREMIUM)
-            PremiumScreen { premiumAudioId ->
+            PremiumScreenRoot { premiumAudioId ->
                 navController.navigateToDetailFromPremium(premiumAudioId)
             }
         }

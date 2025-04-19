@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
@@ -19,6 +21,8 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -41,10 +45,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -63,127 +68,93 @@ import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
 
 @Composable
-fun PremiumScreen(
+fun PremiumScreenRoot(
     onItemClicked: (premiumAudioId: String) -> Unit,
 ) {
     val context = LocalContext.current
-
     val premiumViewModel = ViewModelProvider.premiumViewModel
-
-    var email by remember { mutableStateOf(EMPTY_EMAIL) }
-    var password by remember { mutableStateOf(EMPTY_PASSWORD) }
-    var premiumAudios by remember { mutableStateOf(EMPTY_PREMIUM_AUDIOS) }
-
-    var showLoading by remember { mutableStateOf(true) }
-    var showAccess by remember { mutableStateOf(false) }
-    var showInvalidEmailFormatError by remember { mutableStateOf(false) }
-    var showInvalidPasswordError by remember { mutableStateOf(false) }
-    var showPremium by remember { mutableStateOf(false) }
-    var showLoginError by remember { mutableStateOf(false) }
-    var showTokenExpiredError by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val previousEmail = context.getEmail().first()
         val previousPassword = context.getPassword().first()
 
-        premiumViewModel.onViewScreen(
-            email = previousEmail,
-            password = previousPassword
-        )
-        premiumViewModel.viewEventFlow.collect { viewEvent ->
-            when (viewEvent) {
-                is PremiumViewModel.ViewEvent.ShowAccess -> {
-                    showLoading = false
-                    showAccess = true
+        premiumViewModel.onAction(PremiumAction.OnViewScreen(previousEmail, previousPassword))
 
-                    email = viewEvent.email
-                    password = viewEvent.password
+        premiumViewModel.events.collect { event ->
+            when (event) {
+                is PremiumEvent.Error -> {
+                    context.toast(context.getString(R.string.unexpected_error))
                 }
 
-                is PremiumViewModel.ViewEvent.ShowAccessAgain -> {
-                    showAccess = true
-                    showPremium = false
+                PremiumEvent.ShowLoginError -> {
+                    context.toast(context.getString(R.string.premium_error_generate_auth_cookie))
                 }
 
-                PremiumViewModel.ViewEvent.ShowLoading -> {
-                    showLoading = true
+                PremiumEvent.ShowTokenExpiredError -> {
+                    context.toast(context.getString(R.string.premium_error_token_expired))
                 }
 
-                PremiumViewModel.ViewEvent.HideLoading -> {
-                    showLoading = false
-                }
-
-                PremiumViewModel.ViewEvent.ShowInvalidEmailFormatError -> {
-                    showInvalidPasswordError = false
-                    showInvalidEmailFormatError = true
-                }
-
-                PremiumViewModel.ViewEvent.ShowInvalidPasswordError -> {
-                    showInvalidEmailFormatError = false
-                    showInvalidPasswordError = true
-                }
-
-                is PremiumViewModel.ViewEvent.ShowPremium -> {
-                    showInvalidEmailFormatError = false
-                    showInvalidPasswordError = false
-                    showPremium = true
-                    premiumViewModel.saveCredentialsInDataStore(viewEvent.email, viewEvent.password)
-                    premiumAudios = viewEvent.premiumAudios
-                }
-
-                is PremiumViewModel.ViewEvent.ShowLoginError -> {
-                    showLoginError = true
-                    showAccess = true
-
-                    email = viewEvent.email
-                    password = viewEvent.password
-                }
-
-                is PremiumViewModel.ViewEvent.ShowTokenExpiredError -> {
-                    showTokenExpiredError = true
-                    showAccess = true
-
-                    email = viewEvent.email
-                    password = viewEvent.password
+                is PremiumEvent.ShowDetail -> {
+                    println("premiumAudioId: ${event.premiumAudioId}")
+                    onItemClicked(event.premiumAudioId)
                 }
             }
         }
     }
 
+    PremiumScreen(
+        state = premiumViewModel.state,
+        onAction = premiumViewModel::onAction
+    )
+}
+
+@Composable
+fun PremiumScreen(
+    state: PremiumState,
+    onAction: (PremiumAction) -> Unit,
+) {
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .windowInsetsPadding(WindowInsets.safeDrawing)
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
     ) {
-        if (showAccess && !showPremium) {
+        if (state.shouldShowAccess && !state.shouldShowPremium) {
             Column(modifier = Modifier.padding(Spacing.s16)) {
                 Text(
                     text = stringResource(id = R.string.premium_login).uppercase(),
                     style = MaterialTheme.typography.h6
                 )
                 Spacer()
-                var emailTextFieldValue by remember { mutableStateOf(TextFieldValue(email)) }
                 LoginOutlinedTextField(
-                    value = emailTextFieldValue,
+                    value = state.email,
                     placeholderText = stringResource(id = R.string.premium_email),
-                    showError = showInvalidEmailFormatError,
-                    keyboardType = KeyboardType.Email,
-                    errorText = stringResource(id = R.string.premium_email_error_invalid_format)
-                ) {
-                    emailTextFieldValue = it
-                }
+                    showError = state.showInvalidEmailFormatError,
+                    errorText = stringResource(id = R.string.premium_email_error_invalid_format),
+                    onValueChange = { onAction(PremiumAction.OnEmailChanged(it)) }
+                )
                 Spacer()
-                var passwordTextFieldValue by remember { mutableStateOf(TextFieldValue(password)) }
                 LoginOutlinedTextField(
-                    value = passwordTextFieldValue,
+                    value = state.password,
                     placeholderText = stringResource(id = R.string.premium_password),
-                    showError = showInvalidPasswordError,
-                    keyboardType = KeyboardType.Password,
+                    showError = state.showInvalidPasswordError,
                     errorText = stringResource(id = R.string.premium_password_error_invalid),
-                    visualTransformation = PasswordVisualTransformation()
-                ) {
-                    passwordTextFieldValue = it
-                }
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions =
+                        KeyboardActions(
+                            onAny = {
+                                focusManager.clearFocus()
+                                onAction(PremiumAction.OnLoginClicked)
+                            },
+                        ),
+                    onValueChange = { onAction(PremiumAction.OnPasswordChanged(it)) }
+                )
                 Spacer()
                 Box(
                     contentAlignment = Alignment.Center,
@@ -193,16 +164,13 @@ fun PremiumScreen(
                         text = stringResource(id = R.string.premium_login),
                         height = Spacing.s48
                     ) {
-                        premiumViewModel.onLoginClicked(
-                            emailTextFieldValue.text,
-                            passwordTextFieldValue.text
-                        )
+                        onAction(PremiumAction.OnLoginClicked)
                     }
                 }
             }
         }
 
-        if (showPremium) {
+        if (state.shouldShowPremium) {
             Box(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -221,29 +189,20 @@ fun PremiumScreen(
                         .padding(top = Spacing.s8, end = Spacing.s8)
                         .clip(CircleShape)
                         .clickable {
-                            premiumViewModel.onLogoutClicked()
+                            onAction(PremiumAction.OnLogoutClicked)
                         }
                         .padding(Spacing.s8)
                 )
             }
             Spacer()
-            PremiumContent(premiumAudios, onItemClicked) {
-                premiumViewModel.refreshContent(email, password)
-            }
-        }
-
-        if (showLoginError) {
-            showLoginError = false
-            context.toast(stringResource(id = R.string.premium_error_generate_auth_cookie))
-        }
-
-        if (showTokenExpiredError) {
-            showTokenExpiredError = false
-            context.toast(stringResource(id = R.string.premium_error_token_expired))
+            PremiumContent(
+                premiumAudios = state.premiumAudios,
+                onItemClicked = { onAction(PremiumAction.OnPremiumItemClicked(it)) },
+                onPullRefreshTriggered = { onAction(PremiumAction.OnRefreshContent) })
         }
     }
 
-    ShowLoading(showLoading)
+    ShowLoading(state.isLoading)
 }
 
 @Composable
@@ -333,7 +292,3 @@ private fun ShowLoading(showLoading: Boolean) {
 private fun Spacer() {
     Spacer(modifier = Modifier.height(Spacing.s16))
 }
-
-private const val EMPTY_EMAIL = ""
-private const val EMPTY_PASSWORD = ""
-private val EMPTY_PREMIUM_AUDIOS = emptyList<PremiumAudio>()
