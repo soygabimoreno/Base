@@ -175,8 +175,6 @@ class PremiumViewModel @Inject constructor(
         }
     }
 
-    // Commit in the main branch (just for learning purposes)
-
     private fun showTokenExpiredError() {
         state = state.copy(
             shouldShowAccess = true,
