@@ -5,6 +5,7 @@ sdk-minimum = "23"
 agp = "8.6.1"
 kotlin = "2.1.20"
 ksp = "2.1.20-1.0.31"
+coilCompose = "2.6.0"
 accompanist-coil = "0.12.0"
 accompanist-insets = "0.12.0"
 androidx-junit = "1.2.1"
@@ -48,13 +49,14 @@ mockwebserver = "4.12.0"
 moshi = "1.15.2"
 okhttp3-idling-resource = "1.0.0"
 palette = "1.0.0"
-retrofit = "2.9.0"
+retrofit = "2.11.0"
 robolectric = "4.10.3"
 room-runtime = "2.7.0"
 rssparser = "4.0.2"
 turbine = "0.12.3"
 
 [libraries]
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 accompanist-coil = { module = "com.google.accompanist:accompanist-coil", version.ref = "accompanist-coil" }
 accompanist-insets = { module = "com.google.accompanist:accompanist-insets", version.ref = "accompanist-insets" }
 

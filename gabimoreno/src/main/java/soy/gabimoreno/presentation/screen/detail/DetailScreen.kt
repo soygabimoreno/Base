@@ -56,7 +56,7 @@ fun DetailScreen(
     when (feature) {
         Feature.PODCAST -> {
             audios =
-                (homeViewModel.viewState as HomeViewModel.ViewState.Content).episodesWrapper.episodes
+                (homeViewModel.viewState as HomeViewModel.ViewState.Success).episodes
             audio = homeViewModel.findEpisodeFromId(audioId)
         }
 
