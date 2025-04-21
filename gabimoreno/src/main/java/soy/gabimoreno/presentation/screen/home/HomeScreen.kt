@@ -91,7 +91,7 @@ fun HomeScreen(
                         }
                     }
 
-                    is HomeViewModel.ViewState.Content -> {
+                    is HomeViewModel.ViewState.Success -> {
                         item {
                             StaggeredVerticalGrid(
                                 crossAxisCount = 2,
@@ -100,7 +100,7 @@ fun HomeScreen(
                             ) {
                                 val searchText = searchTextState.text
 
-                                val episodes = viewState.episodesWrapper.episodes
+                                val episodes = viewState.episodes
                                 val filteredEpisodes = if (searchText.isBlank()) {
                                     episodes
                                 } else {
