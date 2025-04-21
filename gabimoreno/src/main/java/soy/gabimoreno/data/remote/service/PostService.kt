@@ -10,7 +10,9 @@ interface PostService {
     suspend fun getPosts(
         @Query("categories") categoriesQuery: String,
         @Query("per_page") postsPerPage: Int = POSTS_PER_PAGE,
+        @Query("page") page: Int = POSTS_PAGE
     ): List<PostApiModel>
 }
 
-private const val POSTS_PER_PAGE = 100
+internal const val POSTS_PER_PAGE = 20
+internal const val POSTS_PAGE = 1

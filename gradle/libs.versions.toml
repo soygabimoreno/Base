@@ -6,7 +6,6 @@ agp = "8.6.1"
 kotlin = "2.1.20"
 ksp = "2.1.20-1.0.31"
 coilCompose = "2.6.0"
-accompanist-coil = "0.12.0"
 accompanist-insets = "0.12.0"
 androidx-junit = "1.2.1"
 appcompat = "1.7.0"
@@ -54,10 +53,10 @@ robolectric = "4.10.3"
 room-runtime = "2.7.0"
 rssparser = "4.0.2"
 turbine = "0.12.3"
+pagingCompose = "3.3.6"
 
 [libraries]
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
-accompanist-coil = { module = "com.google.accompanist:accompanist-coil", version.ref = "accompanist-coil" }
 accompanist-insets = { module = "com.google.accompanist:accompanist-insets", version.ref = "accompanist-insets" }
 
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -73,6 +72,7 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-runtime" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
+room-paging = { module = "androidx.room:room-paging", version.ref = "room-runtime" }
 
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow-core" }
 
@@ -105,6 +105,8 @@ converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.r
 palette = { module = "androidx.palette:palette-ktx", version.ref = "palette" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 rssparser = { module = "com.prof18.rssparser:rssparser", version.ref = "rssparser" }
+paging-runtime = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingCompose" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "pagingCompose" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }

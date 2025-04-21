@@ -15,10 +15,14 @@ class RemotePremiumAudiosDataSource @Inject constructor(
 
     override suspend fun getPremiumAudios(
         categories: List<Category>,
+        postsPerPage: Int,
+        page: Int,
     ): Either<Throwable, List<PremiumAudio>> {
         return Either.catch {
             postService.getPosts(
-                categories.toQueryValue()
+                categories.toQueryValue(),
+                postsPerPage = postsPerPage,
+                page = page
             )
                 .toDomain()
                 .toPremiumAudios()

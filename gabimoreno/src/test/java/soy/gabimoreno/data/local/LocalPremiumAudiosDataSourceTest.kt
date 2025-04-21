@@ -1,5 +1,6 @@
 package soy.gabimoreno.data.local
 
+import androidx.paging.PagingSource
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -71,6 +72,31 @@ class LocalPremiumAudiosDataSourceTest {
         val result = datasource.getPremiumAudios()
 
         result shouldBeEqualTo premiumAudios
+    }
+
+    @Test
+    fun `WHEN getPremiumAudiosPagingSource THEN paging source is get from the database`() =
+        runTest {
+            val pagingSource: PagingSource<Int, PremiumAudioDbModel> = mockk()
+            every { premiumAudioDbModelDao.getPremiumAudioDbModelsPagingSource() } returns pagingSource
+
+            val result = datasource.getPremiumAudiosPagingSource()
+
+            result shouldBeEqualTo pagingSource
+            verifyOnce {
+                premiumAudioDbModelDao.getPremiumAudioDbModelsPagingSource()
+            }
+        }
+
+    @Test
+    fun `WHEN getPremiumAudioById THEN they are get from the database`() = runTest {
+        val premiumAudio = buildPremiumAudios().first()
+        val premiumAudioDbModel = premiumAudio.toPremiumAudioDbModel()
+        every { premiumAudioDbModelDao.getPremiumAudioDbModelById(premiumAudio.id) } returns premiumAudioDbModel
+
+        val result = datasource.getPremiumAudioById(premiumAudio.id)
+
+        result shouldBeEqualTo premiumAudio
     }
 
     @Test
