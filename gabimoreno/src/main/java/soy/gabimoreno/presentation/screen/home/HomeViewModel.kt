@@ -16,7 +16,6 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.di.Main
 import soy.gabimoreno.domain.model.podcast.Episode
-import soy.gabimoreno.domain.model.podcast.EpisodesWrapper
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
@@ -47,12 +46,14 @@ class HomeViewModel @Inject constructor(
     fun searchPodcasts() {
         viewModelScope.launch(dispatcher) {
             viewState = ViewState.Loading
-            podcastDatasource.getEpisodes().fold(
+            podcastDatasource.getEpisodesStream().fold(
                 { failure ->
                     viewState = ViewState.Error(failure)
                 },
-                { episodesWrapper ->
-                    viewState = ViewState.Content(episodesWrapper)
+                { episodesFlow ->
+                    episodesFlow.collect { episodes ->
+                        viewState = ViewState.Success(episodes)
+                    }
                 }
             )
         }
@@ -98,7 +99,7 @@ class HomeViewModel @Inject constructor(
 
     fun findEpisodeFromId(id: String): Episode? {
         return when (viewState) {
-            is ViewState.Content -> (viewState as ViewState.Content).episodesWrapper.episodes.find { it.id == id }
+            is ViewState.Success -> (viewState as ViewState.Success).episodes.find { it.id == id }
             else -> null
         }
     }
@@ -108,8 +109,9 @@ class HomeViewModel @Inject constructor(
     }
 
     sealed class ViewState {
-        object Loading : ViewState()
+        data object Loading : ViewState()
         data class Error(val throwable: Throwable) : ViewState()
-        data class Content(val episodesWrapper: EpisodesWrapper) : ViewState()
+        data class Success(val episodes: List<Episode>) : ViewState()
+//        data class Content(val episodesWrapper: EpisodesWrapper) : ViewState()
     }
 }
