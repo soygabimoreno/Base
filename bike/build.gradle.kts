@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "soy.gabimoreno.bike"
-    compileSdk = libs.versions.sdk.compile.get().toInt()
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "soy.gabimoreno.bike"
-        minSdk = libs.versions.sdk.minimum.get().toInt()
-        targetSdk = libs.versions.sdk.target.get().toInt()
+        minSdk = 31
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 

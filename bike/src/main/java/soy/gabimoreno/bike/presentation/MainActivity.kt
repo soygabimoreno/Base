@@ -9,7 +9,6 @@ import android.os.CountDownTimer
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -17,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.clj.fastble.BleManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import soy.gabimoreno.bike.R
 import soy.gabimoreno.bike.framework.PermissionRequester
 import soy.gabimoreno.bike.framework.openAppSettings
@@ -30,7 +28,6 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    @RequiresApi(Build.VERSION_CODES.S)
     private val bluetoothScanPermission = PermissionRequester(
         activity = this,
         permission = Manifest.permission.BLUETOOTH_SCAN,
@@ -43,7 +40,6 @@ class MainActivity : ComponentActivity() {
         }
     )
 
-    @RequiresApi(Build.VERSION_CODES.S)
     private val bluetoothConnectPermission = PermissionRequester(
         activity = this,
         permission = Manifest.permission.BLUETOOTH_CONNECT,
