@@ -40,13 +40,11 @@ class PremiumAudiosRemoteMediatorTest {
     private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
         SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase = relaxedMockk()
 
-    private lateinit var remoteMediator: PremiumAudiosRemoteMediator
-    private val PAGE_SIZE = 20
-    private val categories = listOf(Category.PREMIUM)
+    private lateinit var mediator: PremiumAudiosRemoteMediator
 
     @Before
     fun setUp() {
-        remoteMediator = PremiumAudiosRemoteMediator(
+        mediator = PremiumAudiosRemoteMediator(
             localPremiumAudiosDataSource,
             remotePremiumAudiosDataSource,
             refreshPremiumAudiosFromRemoteUseCase,
@@ -71,7 +69,9 @@ class PremiumAudiosRemoteMediatorTest {
             )
         } returns true
 
-        remoteMediator.initialize() shouldBe InitializeAction.LAUNCH_INITIAL_REFRESH
+        val result = mediator.initialize()
+
+        result shouldBe InitializeAction.LAUNCH_INITIAL_REFRESH
     }
 
     @Test
@@ -83,12 +83,14 @@ class PremiumAudiosRemoteMediatorTest {
             )
         } returns false
 
-        remoteMediator.initialize() shouldBe InitializeAction.SKIP_INITIAL_REFRESH
+        val result = mediator.initialize()
+
+        result shouldBe InitializeAction.SKIP_INITIAL_REFRESH
     }
 
     @Test
     fun `WHEN load PREPEND THEN endOfPaginationReached is true`() = runTest {
-        val result = remoteMediator.load(LoadType.PREPEND, emptyPagingState)
+        val result = mediator.load(LoadType.PREPEND, emptyPagingState)
 
         assertMediatorSuccess(result, true)
     }
@@ -104,7 +106,7 @@ class PremiumAudiosRemoteMediatorTest {
         coEvery { saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(any()) } returns Unit
         coEvery { localPremiumAudiosDataSource.savePremiumAudios(premiumAudios) } returns Unit
 
-        val result = remoteMediator.load(LoadType.REFRESH, emptyPagingState)
+        val result = mediator.load(LoadType.REFRESH, emptyPagingState)
 
         assertMediatorSuccess(result, premiumAudios.isEmpty())
 
@@ -123,7 +125,7 @@ class PremiumAudiosRemoteMediatorTest {
             remotePremiumAudiosDataSource.getPremiumAudios(categories, PAGE_SIZE, 1)
         } returns error.left()
 
-        val result = remoteMediator.load(LoadType.REFRESH, emptyPagingState)
+        val result = mediator.load(LoadType.REFRESH, emptyPagingState)
 
         result shouldBeInstanceOf MediatorResult.Error::class
         (result as MediatorResult.Error).throwable shouldBe error
@@ -137,7 +139,7 @@ class PremiumAudiosRemoteMediatorTest {
             remotePremiumAudiosDataSource.getPremiumAudios(categories, PAGE_SIZE, 1)
         } throws error
 
-        val result = remoteMediator.load(LoadType.REFRESH, emptyPagingState)
+        val result = mediator.load(LoadType.REFRESH, emptyPagingState)
 
         result shouldBeInstanceOf MediatorResult.Error::class
         (result as MediatorResult.Error).throwable shouldBe error
@@ -147,7 +149,7 @@ class PremiumAudiosRemoteMediatorTest {
     fun `GIVEN null lastItem WHEN load APPEND THEN endOfPaginationReached is true`() = runTest {
         coEvery { localPremiumAudiosDataSource.getTotalPremiumAudios() } returns 10
 
-        val result = remoteMediator.load(LoadType.APPEND, emptyPagingState)
+        val result = mediator.load(LoadType.APPEND, emptyPagingState)
 
         assertMediatorSuccess(result, true)
     }
@@ -163,7 +165,7 @@ class PremiumAudiosRemoteMediatorTest {
         } returns premiumAudios.right()
         coEvery { localPremiumAudiosDataSource.savePremiumAudios(premiumAudios) } returns Unit
 
-        val result = remoteMediator.load(LoadType.APPEND, pagingStateWithItem())
+        val result = mediator.load(LoadType.APPEND, pagingStateWithItem())
 
         assertMediatorSuccess(result, premiumAudios.isEmpty())
 
@@ -171,32 +173,35 @@ class PremiumAudiosRemoteMediatorTest {
             remotePremiumAudiosDataSource.getPremiumAudios(categories, PAGE_SIZE, 3)
         }
     }
+}
 
-    private val emptyPagingState = PagingState<Int, PremiumAudioDbModel>(
-        pages = listOf(),
-        anchorPosition = null,
+private fun pagingStateWithItem(): PagingState<Int, PremiumAudioDbModel> {
+    val item = mockk<PremiumAudioDbModel>()
+    return PagingState(
+        pages = listOf(
+            PagingSource.LoadResult.Page(
+                data = listOf(item),
+                prevKey = null,
+                nextKey = null
+            )
+        ),
+        anchorPosition = 0,
         config = PagingConfig(pageSize = PAGE_SIZE),
         leadingPlaceholderCount = 0
     )
-
-    private fun pagingStateWithItem(): PagingState<Int, PremiumAudioDbModel> {
-        val item = mockk<PremiumAudioDbModel>()
-        return PagingState(
-            pages = listOf(
-                PagingSource.LoadResult.Page(
-                    data = listOf(item),
-                    prevKey = null,
-                    nextKey = null
-                )
-            ),
-            anchorPosition = 0,
-            config = PagingConfig(pageSize = PAGE_SIZE),
-            leadingPlaceholderCount = 0
-        )
-    }
-
-    private fun assertMediatorSuccess(result: MediatorResult, endReached: Boolean) {
-        result shouldBeInstanceOf MediatorResult.Success::class
-        (result as MediatorResult.Success).endOfPaginationReached shouldBe endReached
-    }
 }
+
+private fun assertMediatorSuccess(result: MediatorResult, endReached: Boolean) {
+    result shouldBeInstanceOf MediatorResult.Success::class
+    (result as MediatorResult.Success).endOfPaginationReached shouldBe endReached
+}
+
+private val emptyPagingState = PagingState<Int, PremiumAudioDbModel>(
+    pages = listOf(),
+    anchorPosition = null,
+    config = PagingConfig(pageSize = PAGE_SIZE),
+    leadingPlaceholderCount = 0
+)
+
+private const val PAGE_SIZE = 20
+private val categories = listOf(Category.PREMIUM)
