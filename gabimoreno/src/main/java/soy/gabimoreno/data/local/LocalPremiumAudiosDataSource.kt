@@ -1,5 +1,6 @@
 package soy.gabimoreno.data.local
 
+import androidx.paging.PagingSource
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -21,6 +22,10 @@ class LocalPremiumAudiosDataSource @Inject constructor(
         premiumAudioDbModelDao.count() <= 0
     }
 
+    suspend fun getTotalPremiumAudios(): Int = withContext(dispatcher) {
+        premiumAudioDbModelDao.count()
+    }
+
     suspend fun savePremiumAudios(premiumAudios: List<PremiumAudio>) = withContext(dispatcher) {
         premiumAudioDbModelDao.insertPremiumAudioDbModels(
             premiumAudios.map {
@@ -33,6 +38,14 @@ class LocalPremiumAudiosDataSource @Inject constructor(
         premiumAudioDbModelDao.getPremiumAudioDbModels().map {
             it.toPremiumAudio()
         }
+    }
+
+    fun getPremiumAudiosPagingSource(): PagingSource<Int, PremiumAudioDbModel> {
+        return premiumAudioDbModelDao.getPremiumAudioDbModelsPagingSource()
+    }
+
+    suspend fun getPremiumAudioById(id: String): PremiumAudio? = withContext(dispatcher) {
+        premiumAudioDbModelDao.getPremiumAudioDbModelById(id)?.toPremiumAudio()
     }
 
     suspend fun reset() = withContext(dispatcher) {

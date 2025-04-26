@@ -6,7 +6,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -46,7 +45,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -56,15 +54,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
+import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.systemBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
-import soy.gabimoreno.framework.calculatePaletteColor
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.ArrowDownButton
@@ -122,20 +120,9 @@ fun PodcastPlayerBody(
     }
 
     val backgroundColor = MaterialTheme.colors.background
-    var gradientColor by remember {
+    val gradientColor by remember {
         mutableStateOf(backgroundColor)
     }
-
-    val imageRequest = ImageRequest.Builder(LocalContext.current)
-        .data(audio.imageUrl)
-        .target {
-            calculatePaletteColor(it) { color ->
-                gradientColor = color
-            }
-        }
-        .build()
-
-    val imagePainter = rememberCoilPainter(request = imageRequest)
 
     val isPlaying = playerViewModel.podcastIsPlaying
     val iconResId =
@@ -166,7 +153,6 @@ fun PodcastPlayerBody(
 
         PodcastPlayerStatelessContent(
             audio = audio,
-            imagePainter = imagePainter,
             gradientColor = gradientColor,
             yOffset = swipeableState.offset.value.roundToInt(),
             playPauseIcon = iconResId,
@@ -219,7 +205,6 @@ fun PodcastPlayerBody(
 @Composable
 fun PodcastPlayerStatelessContent(
     audio: Audio,
-    imagePainter: Painter,
     gradientColor: Color,
     yOffset: Int,
     @DrawableRes playPauseIcon: Int,
@@ -276,12 +261,17 @@ fun PodcastPlayerStatelessContent(
                                 .aspectRatio(1f)
                                 .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f))
                         ) {
-                            Image(
-                                painter = imagePainter,
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(audio.imageUrl)
+                                    .crossfade(true)
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .build(),
                                 contentDescription = stringResource(R.string.podcast_thumbnail),
                                 contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .fillMaxSize()
+                                error = painterResource(R.drawable.ic_baseline_mic_24),
+                                modifier = Modifier.fillMaxSize()
                             )
                         }
 
@@ -407,7 +397,6 @@ fun PodcastPlayerPreview() {
                 audioLengthInSeconds = 2700,
                 description = "This is a description"
             ),
-            imagePainter = painterResource(id = R.drawable.ic_baseline_mic_24),
             gradientColor = Color.DarkGray,
             yOffset = 0,
             playPauseIcon = R.drawable.ic_baseline_play_arrow_24,

@@ -14,11 +14,11 @@ import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.domain.session.MemberSession
-import soy.gabimoreno.domain.usecase.GetPremiumAudiosUseCase
+import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
+import soy.gabimoreno.domain.usecase.GetPremiumAudiosManagedUseCase
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
-import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 
 @ExperimentalCoroutinesApi
@@ -30,9 +30,9 @@ class PremiumViewModelTest {
         relaxedMockk()
     private val memberSession: MemberSession = relaxedMockk()
     private val loginUseCase: LoginUseCase = relaxedMockk()
-    private val getPremiumAudiosUseCase: GetPremiumAudiosUseCase = relaxedMockk()
+    private val getPremiumAudiosMediatorUseCase: GetPremiumAudiosManagedUseCase = relaxedMockk()
+    private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase = relaxedMockk()
     private val isBearerTokenValid: IsBearerTokenValid = relaxedMockk()
-    private val refreshPremiumAudiosUseCase: RefreshPremiumAudiosUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: PremiumViewModel
 
@@ -45,9 +45,9 @@ class PremiumViewModelTest {
             saveCredentialsInDataStoreUseCase = saveCredentialsInDataStoreUseCase,
             memberSession = memberSession,
             loginUseCase = loginUseCase,
-            getPremiumAudiosUseCase = getPremiumAudiosUseCase,
+            getPremiumAudiosMediatorUseCase = getPremiumAudiosMediatorUseCase,
+            getPremiumAudioByIdUseCase = getPremiumAudioByIdUseCase,
             isBearerTokenValid = isBearerTokenValid,
-            refreshPremiumAudiosUseCase = refreshPremiumAudiosUseCase,
             dispatcher = testDispatcher
         )
     }

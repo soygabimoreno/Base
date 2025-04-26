@@ -15,6 +15,7 @@ import soy.gabimoreno.domain.repository.podcast.RemotePodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.DefaultPremiumAudiosRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
+import soy.gabimoreno.domain.usecase.SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
 import javax.inject.Singleton
 
 @Module
@@ -33,10 +34,12 @@ object RepositoryModule {
         localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
         remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
         refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
+        saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase: SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
     ): PremiumAudiosRepository = DefaultPremiumAudiosRepository(
         localPremiumAudiosDataSource,
         remotePremiumAudiosDataSource,
-        refreshPremiumAudiosFromRemoteUseCase
+        refreshPremiumAudiosFromRemoteUseCase,
+        saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
     )
 
     @Provides

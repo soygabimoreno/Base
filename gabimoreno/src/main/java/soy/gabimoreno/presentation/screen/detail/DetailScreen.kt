@@ -63,7 +63,7 @@ fun DetailScreen(
         Feature.PREMIUM -> {
             val viewState = premiumViewModel.state
             audios = viewState.premiumAudios
-            audio = premiumViewModel.findPremiumAudioFromId(audioId)
+            audio = premiumViewModel.state.selectedPremiumAudio
         }
     }
 
