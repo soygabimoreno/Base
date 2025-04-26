@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -51,6 +50,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -114,6 +116,7 @@ fun PremiumScreen(
     onAction: (PremiumAction) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
+    val premiumAudiosFlow = state.premiumAudioFlow.collectAsLazyPagingItems()
 
     Column(
         modifier = Modifier
@@ -196,7 +199,7 @@ fun PremiumScreen(
             }
             Spacer()
             PremiumContent(
-                premiumAudios = state.premiumAudios,
+                premiumAudios = premiumAudiosFlow,
                 onItemClicked = { onAction(PremiumAction.OnPremiumItemClicked(it)) },
                 onPullRefreshTriggered = { onAction(PremiumAction.OnRefreshContent) })
         }
@@ -207,7 +210,7 @@ fun PremiumScreen(
 
 @Composable
 fun PremiumContent(
-    premiumAudios: List<PremiumAudio>,
+    premiumAudios: LazyPagingItems<PremiumAudio>,
     onItemClicked: (premiumAudioId: String) -> Unit,
     onPullRefreshTriggered: () -> Unit,
 ) {
@@ -223,11 +226,27 @@ fun PremiumContent(
 
     val pullRefreshState = rememberPullRefreshState(refreshing, ::refresh)
 
-    Box(Modifier.pullRefresh(pullRefreshState)) {
-        LazyColumn {
-            items(premiumAudios) { premiumAudio ->
-                PremiumItem(premiumAudio, onItemClicked)
+    Box(
+        Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
+    ) {
+        when {
+            premiumAudios.loadState.refresh is LoadState.Loading && premiumAudios.itemCount == 0 -> {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
             }
+
+            else ->
+                LazyColumn {
+                    items(premiumAudios.itemCount) {
+                        premiumAudios[it]?.let { premiumAudio ->
+                            PremiumItem(premiumAudio, onItemClicked)
+                        }
+                    }
+                }
         }
         PullRefreshIndicator(
             refreshing = refreshing,

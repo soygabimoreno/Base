@@ -19,7 +19,8 @@ import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.domain.model.login.Status
 import soy.gabimoreno.domain.session.MemberSession
-import soy.gabimoreno.domain.usecase.GetPremiumAudiosUseCase
+import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
+import soy.gabimoreno.domain.usecase.GetPremiumAudiosManagedUseCase
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
@@ -34,9 +35,9 @@ class PremiumViewModel @Inject constructor(
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase,
     private val memberSession: MemberSession,
     private val loginUseCase: LoginUseCase,
-    private val getPremiumAudiosUseCase: GetPremiumAudiosUseCase,
+    private val getPremiumAudiosMediatorUseCase: GetPremiumAudiosManagedUseCase,
+    private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase,
     private val isBearerTokenValid: IsBearerTokenValid,
-    private val refreshPremiumAudiosUseCase: RefreshPremiumAudiosUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -61,6 +62,15 @@ class PremiumViewModel @Inject constructor(
 
             is PremiumAction.OnPremiumItemClicked -> {
                 viewModelScope.launch {
+                    val selectedAudio =
+                        getPremiumAudioByIdUseCase(action.premiumAudioId).getOrNull()
+                    state =
+                        state.copy(
+                            selectedPremiumAudio = selectedAudio,
+                            premiumAudios = if (selectedAudio == null) EMPTY_PREMIUM_AUDIOS else
+                                listOf(selectedAudio)
+                        )
+
                     eventChannel.emit(PremiumEvent.ShowDetail(action.premiumAudioId))
                 }
             }
@@ -190,24 +200,22 @@ class PremiumViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             state = state.copy(isLoading = true)
             val categories = Category.entries
-            getPremiumAudiosUseCase(categories)
-                .fold(
-                    {
-                        eventChannel.emit(PremiumEvent.Error(it))
-                        showLoginError()
-                    },
-                    { premiumAudios ->
-                        state = state.copy(
-                            showInvalidEmailFormatError = false,
-                            showInvalidPasswordError = false,
-                            shouldShowPremium = true,
-                            shouldShowAccess = false,
-                            isLoading = false,
-                            premiumAudios = premiumAudios
-                        )
-                        saveCredentialsInDataStore(email, password)
-                    }
-                )
+            getPremiumAudiosMediatorUseCase(categories).fold(
+                {
+                    eventChannel.emit(PremiumEvent.Error(it))
+                    showLoginError()
+                }, { premiumAudioFlow ->
+                    state = state.copy(
+                        showInvalidEmailFormatError = false,
+                        showInvalidPasswordError = false,
+                        shouldShowAccess = false,
+                        shouldShowPremium = true,
+                        isLoading = false,
+                        premiumAudioFlow = premiumAudioFlow
+                    )
+                    saveCredentialsInDataStore(email, password)
+                }
+            )
         }
     }
 
@@ -230,13 +238,8 @@ class PremiumViewModel @Inject constructor(
         }
     }
 
-    fun findPremiumAudioFromId(id: String): PremiumAudio? {
-        return state.premiumAudios.find { it.id == id }
-    }
-
     private fun refreshContent() {
         viewModelScope.launch(dispatcher) {
-            refreshPremiumAudiosUseCase()
             loginSuccessPerform(state.email, state.password)
         }
     }
