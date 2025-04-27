@@ -38,6 +38,7 @@ project:
 
 ```
 CLARITY_PROJECT_ID=foo
+MASTER_KEY=foo
 keystore.keyAlias=foo
 keystore.storeFile=foo
 keystore.storePassword=foo

@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.androidLibrary)
     kotlin("android")
@@ -7,10 +9,13 @@ plugins {
 android {
     namespace = "soy.gabimoreno.remoteconfig"
     compileSdk = libs.versions.sdk.compile.get().toInt()
+    val localProperties = gradleLocalProperties(rootDir, providers)
+    val masterKey = localProperties.getProperty("MASTER_KEY") ?: error("MASTER_KEY not found")
 
     defaultConfig {
         minSdk = libs.versions.sdk.minimum.get().toInt()
 
+        buildConfigField("String", "MASTER_KEY", "\"$masterKey\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -30,6 +35,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_21.toString()
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

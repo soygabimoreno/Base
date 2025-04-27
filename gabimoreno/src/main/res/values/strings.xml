@@ -3,6 +3,7 @@
 
     <string name="nav_item_podcast">Podcast</string>
     <string name="nav_item_premium">Premium</string>
+    <string name="nav_item_courses">Audiocursos</string>
 
     <string name="playback_notification_channel_name">Los androides</string>
     <string name="playback_notification_channel_description">Te ayudo a CRECER en tu carrera profesional como DESARROLLADOR ANDROID. 💪🏼</string>
@@ -37,4 +38,6 @@
     <string name="new_premium_audio_channel_id">new_premium_audio_channel_id</string>
     <string name="app_will_show_notifications">La app te avisará cuando aparezca un nuevo audio</string>
     <string name="notifications_rationale">La app requiere notificaciones para avisarte cuando aparezca un nuevo audio</string>
+    <string name="course_thumbnail">Carátula del audiocurso</string>
+    <string name="course_active">Audiocurso activo</string>
 </resources>

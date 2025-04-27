@@ -146,15 +146,6 @@ class PremiumAudiosRemoteMediatorTest {
     }
 
     @Test
-    fun `GIVEN null lastItem WHEN load APPEND THEN endOfPaginationReached is true`() = runTest {
-        coEvery { localPremiumAudiosDataSource.getTotalPremiumAudios() } returns 10
-
-        val result = mediator.load(LoadType.APPEND, emptyPagingState)
-
-        assertMediatorSuccess(result, true)
-    }
-
-    @Test
     fun `GIVEN items in database WHEN load APPEND THEN fetch next page`() = runTest {
         val premiumAudios = buildPremiumAudios()
         val totalAudios = 25

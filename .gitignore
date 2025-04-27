@@ -86,3 +86,8 @@ lint/tmp/
 /.idea/
 
 .kotlin/
+
+.DS_Store
+**/.DS_Store
+
+gabimoreno/google-services.json
