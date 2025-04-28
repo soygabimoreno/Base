@@ -32,6 +32,7 @@ class HomeViewModel @Inject constructor(
 
     var viewState by mutableStateOf<ViewState>(ViewState.Loading)
         private set
+    private val _episodes = mutableListOf<Episode>()
 
     var appVersionName by mutableStateOf("")
 
@@ -51,8 +52,12 @@ class HomeViewModel @Inject constructor(
                     viewState = ViewState.Error(failure)
                 },
                 { episodesFlow ->
-                    episodesFlow.collect { episodes ->
-                        viewState = ViewState.Success(episodes)
+                    episodesFlow.collect { incomingEpisodes ->
+                        if (_episodes.size != incomingEpisodes.size) {
+                            _episodes.clear()
+                            _episodes.addAll(incomingEpisodes)
+                            viewState = ViewState.Success(_episodes.toList())
+                        }
                     }
                 }
             )
