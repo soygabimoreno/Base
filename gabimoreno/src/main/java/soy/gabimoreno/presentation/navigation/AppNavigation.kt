@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import soy.gabimoreno.presentation.AppState
+import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListScreenRoot
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
 import soy.gabimoreno.presentation.screen.premium.PremiumScreenRoot
@@ -25,6 +26,7 @@ fun AppNavigation(
     ) {
         podcastNav(navController, appState)
         premiumNav(navController, appState)
+        audioCoursesNav(navController, appState)
     }
 }
 
@@ -106,6 +108,23 @@ private fun NavGraphBuilder.premiumNav(
                     navController.goBack()
                 }
             )
+        }
+    }
+}
+
+private fun NavGraphBuilder.audioCoursesNav(
+    navController: NavController,
+    appState: AppState,
+) {
+    navigation(
+        startDestination = NavCommand.ContentType(Feature.COURSES).route,
+        route = Feature.COURSES.route
+    ) {
+        composable(navCommand = NavCommand.ContentType(Feature.COURSES)) {
+            appState.setStartDestination(Feature.COURSES)
+            AudioCoursesListScreenRoot { premiumAudioId ->
+                println("Navigate to detail $premiumAudioId")
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package soy.gabimoreno.presentation.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Diamond
 import androidx.compose.material.icons.filled.Podcasts
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -23,6 +24,11 @@ enum class NavItem(
         navCommand = NavCommand.ContentType(Feature.PREMIUM),
         icon = Icons.Default.WorkspacePremium,
         titleResId = R.string.nav_item_premium
+    ),
+    COURSES(
+        navCommand = NavCommand.ContentType(Feature.COURSES),
+        icon = Icons.Default.Diamond,
+        titleResId = R.string.nav_item_courses
     )
 }
 
@@ -70,5 +76,6 @@ enum class NavArg(
 ) {
     EpisodeId("episodeId", NavType.StringType),
     EncodedUrl("encodedUrl", NavType.StringType),
-    PremiumAudioId("premiumAudioId", NavType.StringType)
+    PremiumAudioId("premiumAudioId", NavType.StringType),
+    AudioCourseId("audioCourseId", NavType.StringType)
 }

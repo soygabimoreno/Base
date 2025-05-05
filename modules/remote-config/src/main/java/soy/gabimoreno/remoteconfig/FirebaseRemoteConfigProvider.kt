@@ -1,6 +1,6 @@
 package soy.gabimoreno.remoteconfig
 
-import com.google.firebase.remoteconfig.BuildConfig
+import android.util.Log
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.internal.ConfigFetchHandler
@@ -10,6 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class FirebaseRemoteConfigProvider @Inject constructor(
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
+    private val encryptor: SecureEncryptor
 ) : RemoteConfigProvider {
 
     init {
@@ -44,11 +45,25 @@ class FirebaseRemoteConfigProvider @Inject constructor(
     }
 
     override fun getTokenCredentials(): TokenCredentials {
-        val username = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_USERNAME)
-        val password = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_PASSWORD)
-        return TokenCredentials(username, password)
+        try {
+            val usernameEnc = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_USERNAME_ENCRYPTED)
+            val passwordEnc = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_PASSWORD_ENCRYPTED)
+            val username = encryptor.decrypt(usernameEnc)
+            val password = encryptor.decrypt(passwordEnc)
+
+            return TokenCredentials(username, password)
+        } catch (e: Exception) {
+            Log.e(
+                "FirebaseRemoteConfigProvider",
+                "Failed to decrypt token credentials ${e.message}"
+            )
+            return TokenCredentials(TOKEN_CREDENTIAL_USERNAME, TOKEN_CREDENTIAL_PASSWORD)
+        }
     }
 }
+
+private const val TOKEN_CREDENTIAL_USERNAME_ENCRYPTED = "TOKEN_CREDENTIAL_USERNAME_ENCRYPTED"
+private const val TOKEN_CREDENTIAL_PASSWORD_ENCRYPTED = "TOKEN_CREDENTIAL_PASSWORD_ENCRYPTED"
 
 private const val TOKEN_CREDENTIAL_USERNAME = "TOKEN_CREDENTIAL_USERNAME"
 private const val TOKEN_CREDENTIAL_PASSWORD = "TOKEN_CREDENTIAL_PASSWORD"

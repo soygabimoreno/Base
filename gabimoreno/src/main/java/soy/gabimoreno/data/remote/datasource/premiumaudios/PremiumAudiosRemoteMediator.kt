@@ -48,12 +48,6 @@ class PremiumAudiosRemoteMediator(
 
                 LoadType.APPEND -> {
                     val totalAudios = localPremiumAudiosDataSource.getTotalPremiumAudios()
-                    val endOfPaginationReached =
-                        state.lastItemOrNull() == null && totalAudios < state.config.pageSize
-                    if (endOfPaginationReached) {
-                        return MediatorResult.Success(endOfPaginationReached = true)
-                    }
-
                     ceil(totalAudios.toDouble() / state.config.pageSize.toDouble()).toInt() + 1
                 }
             }

@@ -3,6 +3,7 @@ package soy.gabimoreno.domain.usecase
 import arrow.core.left
 import arrow.core.right
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -65,6 +66,9 @@ class LoginUseCaseTest {
                     tokenCredentialPassword
                 )
             } returns jwtAuth.right()
+            coEvery {
+                repository.obtainToken(email, password)
+            } returns jwtAuth.right()
 
             val member = Member(
                 status = Status.ACTIVE,
@@ -82,7 +86,8 @@ class LoginUseCaseTest {
                     tokenCredentialPassword
                 )
             }
-            coVerifyOnce { setJwtAuthTokenUseCase(jwtAuth.token) }
+            coVerifyOnce { repository.obtainToken(email, password) }
+            coVerify(exactly = 2) { setJwtAuthTokenUseCase(token) }
             coVerifyOnce { repository.getMember(email) }
             coVerifyNever { resetJwtAuthTokenUseCase() }
         }
@@ -203,6 +208,9 @@ class LoginUseCaseTest {
                     tokenCredentialUsername,
                     tokenCredentialPassword
                 )
+            } returns jwtAuth.right()
+            coEvery {
+                repository.obtainToken(email, password)
             } returns jwtAuth.right()
 
             coEvery { repository.getMember(email) } returns Throwable().left()
