@@ -71,6 +71,26 @@ enum class Category(
         "Charlas Técnicas",
         Icons.Default.Code,
         "${COVER_URL_PREFIX}charlas-tecnicas$COVER_URL_SUFFIX"
+    ),
+    AUDIO_COURSES(
+        294,
+        "AudioCursos",
+        Icons.AutoMirrored.Filled.MenuBook,
+        "${COVER_URL_PREFIX}audiocursos$COVER_URL_SUFFIX"
+    ),
+}
+
+fun getPremiumCategories(): List<Category> {
+    return listOf(
+        Category.PREMIUM,
+        Category.PREMIUM_ALGORITHMS,
+        Category.PREMIUM_ANDROID_STORIES,
+        Category.PREMIUM_AUDIO_COURSES,
+        Category.PREMIUM_AUDIO_TIPS,
+        Category.PREMIUM_BIOGRAPHIES,
+        Category.PREMIUM_INTERVIEWS,
+        Category.PREMIUM_NEWS,
+        Category.PREMIUM_TECH_TALKS
     )
 }
 
@@ -80,5 +100,5 @@ fun List<Category>.toQueryValue(): String {
     return ids.joinToString(",")
 }
 
-private const val COVER_URL_PREFIX = "https://gabimoreno.soy/images/premium/cover-"
-private const val COVER_URL_SUFFIX = ".png"
+internal const val COVER_URL_PREFIX = "https://gabimoreno.soy/images/premium/cover-"
+internal const val COVER_URL_SUFFIX = ".png"

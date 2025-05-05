@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import soy.gabimoreno.data.remote.model.Category
+import soy.gabimoreno.data.remote.model.getPremiumCategories
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
@@ -51,12 +52,10 @@ class PremiumViewModel @Inject constructor(
         when (action) {
             is PremiumAction.OnViewScreen -> onViewScreen(action.email, action.password)
             is PremiumAction.OnEmailChanged -> {
-                println(action.email)
                 state = state.copy(email = action.email)
             }
 
             is PremiumAction.OnPasswordChanged -> {
-                println(action.password)
                 state = state.copy(password = action.password)
             }
 
@@ -199,7 +198,7 @@ class PremiumViewModel @Inject constructor(
     private fun loginSuccessPerform(email: String, password: String) {
         viewModelScope.launch(dispatcher) {
             state = state.copy(isLoading = true)
-            val categories = Category.entries
+            val categories = getPremiumCategories()
             getPremiumAudiosMediatorUseCase(categories).fold(
                 {
                     eventChannel.emit(PremiumEvent.Error(it))

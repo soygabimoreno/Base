@@ -65,6 +65,9 @@ fun DetailScreen(
             audios = viewState.premiumAudios
             audio = premiumViewModel.state.selectedPremiumAudio
         }
+
+        else -> Unit
+
     }
 
     LaunchedEffect(Unit) {

@@ -27,12 +27,11 @@ fun PostApiModel.toDomain(): Post {
     )
 }
 
-private fun String.toMillis(): Long? {
+internal fun String.toMillis(): Long? {
     val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
     val date = formatter.parse(this)
     return date?.time
 }
 
-
-private const val EMPTY_PUB_DATE_MILLIS = 0L
-private const val UNKNOWN_AUTHOR_DISPLAY_NAME = "Unknown"
+internal const val EMPTY_PUB_DATE_MILLIS = 0L
+internal const val UNKNOWN_AUTHOR_DISPLAY_NAME = "Unknown"

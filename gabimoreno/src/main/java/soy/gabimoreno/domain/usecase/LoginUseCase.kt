@@ -2,6 +2,7 @@ package soy.gabimoreno.domain.usecase
 
 import arrow.core.Either
 import arrow.core.left
+import arrow.core.right
 import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.model.login.Member
@@ -27,15 +28,29 @@ class LoginUseCase @Inject constructor(
                 val tokenCredentialPassword = tokenCredentials.password
                 if (tokenCredentialUsername.isBlank()) return Throwable().left()
                 if (tokenCredentialPassword.isBlank()) return Throwable().left()
+
                 return loginDatasource.obtainToken(tokenCredentialUsername, tokenCredentialPassword)
                     .map { jwtAuth ->
                         val token = jwtAuth.token
                         setJwtAuthTokenUseCase(token)
-                        return loginDatasource.getMember(email)
+                        val member = loginDatasource.getMember(email)
+                        setUserToken(email, password)
+                        return member
                     }.mapLeft {
                         resetJwtAuthTokenUseCase()
                         return TokenExpiredException().left()
                     }
+            }
+    }
+
+    private suspend fun setUserToken(email: String, password: String) {
+        loginDatasource.obtainToken(email, password)
+            .map { jwtAuth ->
+                val token = jwtAuth.token
+                setJwtAuthTokenUseCase(token)
+            }.mapLeft {
+                resetJwtAuthTokenUseCase()
+                TokenExpiredException().left()
             }
     }
 }

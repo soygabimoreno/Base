@@ -232,7 +232,7 @@ fun PremiumContent(
             .pullRefresh(pullRefreshState)
     ) {
         when {
-            premiumAudios.loadState.refresh is LoadState.Loading && premiumAudios.itemCount == 0 -> {
+            premiumAudios.loadState.refresh is LoadState.Loading || premiumAudios.itemCount == 0 -> {
                 CircularProgressIndicator(
                     modifier = Modifier
                         .align(Alignment.Center)
