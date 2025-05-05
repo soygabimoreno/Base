@@ -1,4 +1,4 @@
-package soy.gabimoreno.data.local.audiocourses.model
+package soy.gabimoreno.data.local.audiocourse.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -22,5 +22,6 @@ data class AudioCourseItemDbModel(
     val id: String,
     val idAudioCourse: String,
     val title: String,
-    val url: String
+    val url: String,
+    val hasBeenListened: Boolean,
 )

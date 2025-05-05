@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import soy.gabimoreno.presentation.AppState
+import soy.gabimoreno.presentation.screen.courses.detail.AudioCoursesDetailScreenRoot
 import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListScreenRoot
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
@@ -117,14 +118,27 @@ private fun NavGraphBuilder.audioCoursesNav(
     appState: AppState,
 ) {
     navigation(
-        startDestination = NavCommand.ContentType(Feature.COURSES).route,
-        route = Feature.COURSES.route
+        startDestination = NavCommand.ContentType(Feature.AUDIOCOURSES).route,
+        route = Feature.AUDIOCOURSES.route
     ) {
-        composable(navCommand = NavCommand.ContentType(Feature.COURSES)) {
-            appState.setStartDestination(Feature.COURSES)
-            AudioCoursesListScreenRoot { premiumAudioId ->
-                println("Navigate to detail $premiumAudioId")
+        composable(navCommand = NavCommand.ContentType(Feature.AUDIOCOURSES)) {
+            appState.setStartDestination(Feature.AUDIOCOURSES)
+            AudioCoursesListScreenRoot { audioCourseId ->
+                navController.navigateToAudioCourseDetailFromPremium(audioCourseId)
             }
+        }
+        composable(
+            navCommand = NavCommand.ContentCoursesDetail(
+                Feature.AUDIOCOURSES,
+                listOf(NavArg.AudioCourseId)
+            )
+        ) {
+            AudioCoursesDetailScreenRoot(
+                audioCourseId = it.findArg(NavArg.AudioCourseId),
+                onBackClicked = {
+                    navController.goBack()
+                }
+            )
         }
     }
 }
@@ -142,6 +156,14 @@ private fun NavController.navigateToDetailFromPremium(premiumAudioId: String) {
             .createRoute(premiumAudioId)
     )
 }
+
+private fun NavController.navigateToAudioCourseDetailFromPremium(audioCourseId: String) {
+    navigate(
+        route = NavCommand.ContentCoursesDetail(Feature.AUDIOCOURSES, listOf(NavArg.AudioCourseId))
+            .createRoute(audioCourseId)
+    )
+}
+
 
 private fun NavController.navigateToWebView(encodedUrl: String) {
     navigate(route = NavCommand.ContentWebView(Feature.PODCAST).createRoute(encodedUrl))

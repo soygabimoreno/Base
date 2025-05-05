@@ -1,9 +1,10 @@
-package soy.gabimoreno.data.local
+package soy.gabimoreno.data.local.premiumaudio
 
 import androidx.paging.PagingSource
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import soy.gabimoreno.data.local.GabiMorenoDatabase
 import soy.gabimoreno.data.local.mapper.toPremiumAudio
 import soy.gabimoreno.data.local.mapper.toPremiumAudioDbModel
 import soy.gabimoreno.di.IO

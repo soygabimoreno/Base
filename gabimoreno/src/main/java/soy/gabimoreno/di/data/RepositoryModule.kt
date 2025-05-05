@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import soy.gabimoreno.data.local.audiocourses.LocalAudioCoursesDataSource
-import soy.gabimoreno.data.local.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
 import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
 import soy.gabimoreno.data.remote.datasource.podcast.PodcastDatasource

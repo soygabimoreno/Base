@@ -2,7 +2,6 @@ package soy.gabimoreno.domain.usecase
 
 import arrow.core.Either
 import arrow.core.left
-import arrow.core.right
 import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.model.login.Member
@@ -15,7 +14,6 @@ class LoginUseCase @Inject constructor(
     private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase,
     private val resetJwtAuthTokenUseCase: ResetJwtAuthTokenUseCase,
 ) {
-
     suspend operator fun invoke(
         email: String,
         password: String,

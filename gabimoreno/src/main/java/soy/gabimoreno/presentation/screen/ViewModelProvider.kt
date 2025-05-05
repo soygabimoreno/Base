@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.viewmodel.compose.viewModel
-import soy.gabimoreno.presentation.screen.courses.detail.AudioCoursesDetailViewModel
+import soy.gabimoreno.presentation.screen.courses.detail.AudioCourseDetailViewModel
 import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListViewModel
 import soy.gabimoreno.presentation.screen.detail.DetailViewModel
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
@@ -37,9 +37,9 @@ object ViewModelProvider {
         @Composable
         get() = localAudioCoursesListViewModel.current
 
-    val audioCoursesDetailViewModel: AudioCoursesDetailViewModel
+    val audioCourseDetailViewModel: AudioCourseDetailViewModel
         @Composable
-        get() = localAudioCoursesDetailViewModel.current
+        get() = localAudioCourseDetailViewModel.current
 }
 
 @Composable
@@ -50,14 +50,14 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     val webViewViewModel: WebViewViewModel = viewModel()
     val premiumViewModel: PremiumViewModel = viewModel()
     val audioCoursesListViewModel: AudioCoursesListViewModel = viewModel()
-    val audioCoursesDetailViewModel: AudioCoursesDetailViewModel = viewModel()
+    val audioCourseDetailViewModel: AudioCourseDetailViewModel = viewModel()
 
     CompositionLocalProvider(
         localHomeViewModel provides homeViewModel,
         localWebViewViewModel provides webViewViewModel,
         localPremiumViewModel provides premiumViewModel,
         localAudioCoursesListViewModel provides audioCoursesListViewModel,
-        localAudioCoursesDetailViewModel provides audioCoursesDetailViewModel,
+        localAudioCourseDetailViewModel provides audioCourseDetailViewModel,
     ) {
         CompositionLocalProvider(
             localDetailViewModel provides detailViewModel,
@@ -95,7 +95,7 @@ private val localAudioCoursesListViewModel = staticCompositionLocalOf<AudioCours
     error("No CoursesListViewModel provided")
 }
 
-private val localAudioCoursesDetailViewModel =
-    staticCompositionLocalOf<AudioCoursesDetailViewModel> {
-        error("No CoursesListViewModel provided")
+private val localAudioCourseDetailViewModel =
+    staticCompositionLocalOf<AudioCourseDetailViewModel> {
+        error("No AudioCoursesDetailViewModel provided")
     }

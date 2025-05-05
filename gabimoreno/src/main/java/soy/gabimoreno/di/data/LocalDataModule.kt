@@ -8,7 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import soy.gabimoreno.data.local.GabiMorenoDatabase
-import soy.gabimoreno.data.local.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.di.IO
 
 @Module

@@ -9,7 +9,6 @@ import javax.inject.Inject
 class GetAudioCoursesUseCase @Inject constructor(
     private val audioCoursesRepository: AudioCoursesRepository
 ) {
-
     suspend operator fun invoke(categories: List<Category>): Either<Throwable, List<AudioCourse>> {
         return audioCoursesRepository.getCourses(categories)
     }

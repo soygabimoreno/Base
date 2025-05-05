@@ -72,9 +72,9 @@ enum class Category(
         Icons.Default.Code,
         "${COVER_URL_PREFIX}charlas-tecnicas$COVER_URL_SUFFIX"
     ),
-    AUDIO_COURSES(
+    AUDIOCOURSES(
         294,
-        "AudioCursos",
+        "Audiocursos",
         Icons.AutoMirrored.Filled.MenuBook,
         "${COVER_URL_PREFIX}audiocursos$COVER_URL_SUFFIX"
     ),

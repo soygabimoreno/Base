@@ -10,7 +10,7 @@ import arrow.core.left
 import arrow.core.right
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import soy.gabimoreno.data.local.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.mapper.toPremiumAudio
 import soy.gabimoreno.data.remote.datasource.premiumaudios.PremiumAudiosRemoteMediator
 import soy.gabimoreno.data.remote.datasource.premiumaudios.RemotePremiumAudiosDataSource

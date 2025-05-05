@@ -1,8 +1,8 @@
 package soy.gabimoreno.fake
 
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseDbModel
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseItemDbModel
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseWithItems
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseDbModel
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseWithItems
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.content.AudioCourse
@@ -23,7 +23,7 @@ fun buildAudioCourse(): AudioCourse = AudioCourse(
     title = "This is a title",
     audioLengthInSeconds = 2700,
     description = "This is a description",
-    category = Category.AUDIO_COURSES,
+    category = Category.AUDIOCOURSES,
     excerpt = "excerpt",
     saga = Saga(author = "This is publisher", title = "This is saga title"),
     isPurchased = false,
@@ -59,7 +59,7 @@ fun buildAudioCourseDbModel() = AudioCourseDbModel(
     thumbnailUrl = "",
     pubDateMillis = 0,
     audioLengthInSeconds = 2700,
-    category = Category.AUDIO_COURSES,
+    category = Category.AUDIOCOURSES,
     isPurchased = false,
 )
 
@@ -73,7 +73,8 @@ fun buildAudioCourseItemDbModel(idAudioCourse: String = "1") = AudioCourseItemDb
     id = "${idAudioCourse}-1",
     idAudioCourse = idAudioCourse,
     title = "item title",
-    url = "item url"
+    url = "item url",
+    hasBeenListened = false
 )
 
 fun buildAudioCourseWithItems() = AudioCourseWithItems(
