@@ -11,7 +11,6 @@ class SubscribeToTopicUseCase @Inject constructor(
     private val firebaseMessaging: FirebaseMessaging,
     private val tracker: Tracker,
 ) {
-
     operator fun invoke(topic: String) {
         firebaseMessaging
             .subscribeToTopic(topic)

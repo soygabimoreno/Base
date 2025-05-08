@@ -7,7 +7,6 @@ class RefreshPremiumAudiosFromRemoteUseCase @Inject constructor(
     private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase: SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
     private val getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase: GetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
 ) {
-
     suspend operator fun invoke(
         currentTimeInMillis: Long,
         timeToRefreshInMillis: Long,

@@ -11,7 +11,6 @@ import javax.inject.Inject
 class GetPremiumAudiosManagedUseCase @Inject constructor(
     private val premiumAudiosRepository: PremiumAudiosRepository,
 ) {
-
     suspend operator fun invoke(categories: List<Category>):
             Either<Throwable, Flow<PagingData<PremiumAudio>>> {
         return premiumAudiosRepository.getPremiumAudioMediator(categories)

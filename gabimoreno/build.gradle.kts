@@ -173,6 +173,7 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.json)
 
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

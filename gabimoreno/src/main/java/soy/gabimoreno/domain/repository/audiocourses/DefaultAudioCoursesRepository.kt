@@ -3,7 +3,7 @@ package soy.gabimoreno.domain.repository.audiocourses
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import soy.gabimoreno.data.local.audiocourses.LocalAudioCoursesDataSource
+import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse

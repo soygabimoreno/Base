@@ -1,4 +1,4 @@
-package soy.gabimoreno.data.local
+package soy.gabimoreno.data.local.premiumaudio
 
 import androidx.paging.PagingSource
 import androidx.room.Dao

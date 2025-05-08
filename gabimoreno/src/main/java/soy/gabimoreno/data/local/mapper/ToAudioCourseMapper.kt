@@ -1,9 +1,8 @@
 package soy.gabimoreno.data.local.mapper
 
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseDbModel
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseItemDbModel
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseWithItems
-import soy.gabimoreno.domain.model.audio.Saga
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseDbModel
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseWithItems
 import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.domain.model.content.AudioCourseItem
 

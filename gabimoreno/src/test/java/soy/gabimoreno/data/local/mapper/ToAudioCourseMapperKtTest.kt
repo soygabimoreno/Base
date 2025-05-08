@@ -67,5 +67,4 @@ class ToAudioCourseMapperKtTest {
         result.audios[1].title shouldBe audioCourseWithItems.audios[1].title
         result.audios[1].url shouldBe audioCourseWithItems.audios[1].url
     }
-
 }

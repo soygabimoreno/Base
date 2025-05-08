@@ -7,7 +7,6 @@ import soy.gabimoreno.core.validator.isAValidEmail
 import javax.inject.Inject
 
 class LoginValidationUseCase @Inject constructor() {
-
     operator fun invoke(
         email: String,
         password: String,

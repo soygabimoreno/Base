@@ -5,7 +5,6 @@ import soy.gabimoreno.data.tracker.TrackerEvent
 import javax.inject.Inject
 
 class GetTrackingEventNameUseCase @Inject constructor() {
-
     operator fun invoke(trackerEvent: TrackerEvent): String {
         val javaClass = trackerEvent.javaClass
         val screen = javaClass.superclass.simpleName.toString()

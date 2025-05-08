@@ -1,12 +1,12 @@
-package soy.gabimoreno.data.local.audiocourses.dao
+package soy.gabimoreno.data.local.audiocourse.dao
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseDbModel
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseItemDbModel
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseWithItems
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseDbModel
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseWithItems
 import soy.gabimoreno.data.local.mapper.toAudioCourseDbModelMapper
 import soy.gabimoreno.data.remote.mapper.toAudioCourseItemDbModelMapper
 import soy.gabimoreno.domain.model.content.AudioCourse

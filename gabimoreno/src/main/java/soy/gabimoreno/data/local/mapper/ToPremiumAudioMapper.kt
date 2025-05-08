@@ -1,6 +1,6 @@
 package soy.gabimoreno.data.local.mapper
 
-import soy.gabimoreno.data.local.PremiumAudioDbModel
+import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.domain.model.content.PremiumAudio
 
 fun PremiumAudioDbModel.toPremiumAudio() = PremiumAudio(

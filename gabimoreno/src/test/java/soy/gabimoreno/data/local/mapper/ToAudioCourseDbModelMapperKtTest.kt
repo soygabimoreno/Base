@@ -25,6 +25,7 @@ class ToAudioCourseDbModelMapperKtTest {
             val isPurchased = isPurchased
 
             val result = audioCourse.toAudioCourseDbModelMapper()
+
             result.id shouldBe id
             result.title shouldBe title
             result.description shouldBe description

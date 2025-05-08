@@ -12,7 +12,7 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
-import soy.gabimoreno.data.local.audiocourses.LocalAudioCoursesDataSource
+import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse
@@ -39,13 +39,13 @@ class DefaultAudioCoursesRepositoryTest {
     @Test
     fun `GIVEN refresh is true WHEN getCourses THEN fetch from remote and save locally`() =
         runTest {
-            val categories = listOf(Category.AUDIO_COURSES)
+            val categories = listOf(Category.AUDIOCOURSES)
             val courses: List<AudioCourse> = relaxedMockk()
             coEvery { refreshPremiumAudiosFromRemoteUseCase(any(), any()) } returns true
             coEvery { remoteAudioCoursesDataSource.getAudioCourses(categories) } returns courses.right()
             coEvery { localAudioCoursesDataSource.getAudioCourses() } returns courses
 
-            val result = repository.getCourses(listOf(Category.AUDIO_COURSES))
+            val result = repository.getCourses(listOf(Category.AUDIOCOURSES))
 
             result shouldBeEqualTo courses.right()
             coVerifyOnce {
@@ -56,28 +56,30 @@ class DefaultAudioCoursesRepositoryTest {
 
     @Test
     fun `GIVEN local is empty WHEN getCourses THEN fetch from remote`() = runTest {
-        val categories = listOf(Category.AUDIO_COURSES)
+        val categories = listOf(Category.AUDIOCOURSES)
         val courses = listOf(relaxedMockk<AudioCourse>())
         coEvery { refreshPremiumAudiosFromRemoteUseCase(any(), any()) } returns false
         coEvery { localAudioCoursesDataSource.isEmpty() } returns true
         coEvery { remoteAudioCoursesDataSource.getAudioCourses(categories) } returns courses.right()
         coEvery { localAudioCoursesDataSource.getAudioCourses() } returns courses
 
-        val result = repository.getCourses(listOf(Category.AUDIO_COURSES))
+        val result = repository.getCourses(listOf(Category.AUDIOCOURSES))
 
         result shouldBeEqualTo courses.right()
-        coVerifyOnce { remoteAudioCoursesDataSource.getAudioCourses(categories) }
-        coVerifyOnce { localAudioCoursesDataSource.saveAudioCourses(courses) }
+        coVerifyOnce {
+            remoteAudioCoursesDataSource.getAudioCourses(categories)
+            localAudioCoursesDataSource.saveAudioCourses(courses)
+        }
     }
 
     @Test
     fun `GIVEN remote fails WHEN getCourses THEN return error`() = runTest {
-        val categories = listOf(Category.AUDIO_COURSES)
+        val categories = listOf(Category.AUDIOCOURSES)
         val error = Throwable("Network error")
         coEvery { refreshPremiumAudiosFromRemoteUseCase(any(), any()) } returns true
         coEvery { remoteAudioCoursesDataSource.getAudioCourses(categories) } returns error.left()
 
-        val result = repository.getCourses(listOf(Category.AUDIO_COURSES))
+        val result = repository.getCourses(listOf(Category.AUDIOCOURSES))
 
         result shouldBeEqualTo error.left()
     }
@@ -85,16 +87,18 @@ class DefaultAudioCoursesRepositoryTest {
     @Test
     fun `GIVEN no refresh and local is not empty WHEN getCourses THEN fetch from local only`() =
         runTest {
-            val categories = listOf(Category.AUDIO_COURSES)
+            val categories = listOf(Category.AUDIOCOURSES)
             val courses = listOf(relaxedMockk<AudioCourse>())
             coEvery { refreshPremiumAudiosFromRemoteUseCase(any(), any()) } returns false
             coEvery { localAudioCoursesDataSource.isEmpty() } returns false
             coEvery { localAudioCoursesDataSource.getAudioCourses() } returns courses
 
-            val result = repository.getCourses(listOf(Category.AUDIO_COURSES))
+            val result = repository.getCourses(listOf(Category.AUDIOCOURSES))
 
             result shouldBeEqualTo courses.right()
-            coVerifyNever { remoteAudioCoursesDataSource.getAudioCourses(categories) }
+            coVerifyNever {
+                remoteAudioCoursesDataSource.getAudioCourses(categories)
+            }
         }
 
     @Test

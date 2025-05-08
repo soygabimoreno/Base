@@ -1,10 +1,9 @@
-package soy.gabimoreno.data.local.audiocourses.dao
+package soy.gabimoreno.data.local.audiocourse.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Upsert
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseDbModel
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseDbModel
 
 @Dao
 interface AudioCourseDbModelDao {

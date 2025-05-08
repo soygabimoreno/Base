@@ -5,6 +5,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
+import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCoursesRepository
 
 class RefreshAudioCoursesUseCaseTest {
@@ -21,6 +22,6 @@ class RefreshAudioCoursesUseCaseTest {
     fun `WHEN invoked THEN calls repository reset`() = runTest {
         useCase()
 
-        coVerify(exactly = 1) { repository.reset() }
+        coVerifyOnce { repository.reset() }
     }
 }
