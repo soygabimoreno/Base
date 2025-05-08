@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package soy.gabimoreno.presentation.screen.courses
+package soy.gabimoreno.presentation.screen.courses.list
 
 import arrow.core.left
 import arrow.core.right
@@ -27,9 +27,6 @@ import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
 import soy.gabimoreno.domain.usecase.RefreshAudioCoursesUseCase
 import soy.gabimoreno.fake.buildAudioCourses
-import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListAction
-import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListEvent
-import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListViewModel
 
 
 class AudioCoursesListViewModelTest {
@@ -67,7 +64,7 @@ class AudioCoursesListViewModelTest {
             )
             advanceUntilIdle()
 
-            viewModel.state.audioCoursesList shouldBe expectedCourses
+            viewModel.state.audiocourses shouldBe expectedCourses
             viewModel.state.isLoading shouldBe false
         }
 
@@ -118,7 +115,7 @@ class AudioCoursesListViewModelTest {
     @Test
     fun `GIVEN user refreshes WHEN onAction THEN refresh use case is called`() =
         runTest {
-            val categories = listOf(Category.AUDIO_COURSES)
+            val categories = listOf(Category.AUDIOCOURSES)
             val expectedCourses = buildAudioCourses()
             coEvery { getCoursesUseCase(categories) } returns expectedCourses.right()
 

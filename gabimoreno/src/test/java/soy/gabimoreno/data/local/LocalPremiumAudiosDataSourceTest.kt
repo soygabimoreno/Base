@@ -13,6 +13,9 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.local.mapper.toPremiumAudioDbModel
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
+import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
 import soy.gabimoreno.fake.buildPremiumAudios
 
 @ExperimentalCoroutinesApi

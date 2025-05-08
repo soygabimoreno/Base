@@ -40,4 +40,7 @@
     <string name="notifications_rationale">La app requiere notificaciones para avisarte cuando aparezca un nuevo audio</string>
     <string name="course_thumbnail">Carátula del audiocurso</string>
     <string name="course_active">Audiocurso activo</string>
+    <string name="course_listened">Audiocurso escuchado</string>
+    <string name="course_link">Accede</string>
+
 </resources>

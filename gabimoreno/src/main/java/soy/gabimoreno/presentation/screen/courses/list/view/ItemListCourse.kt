@@ -89,7 +89,7 @@ fun ItemListCourse(
             )
             Text(
                 text = audioCourse.title,
-                fontSize = 18.sp,
+                style = MaterialTheme.typography.h6,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -102,7 +102,7 @@ fun ItemListCourse(
             )
             Text(
                 text = audioCourse.excerpt.removeHtmlTags(),
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onBackground,
                 lineHeight = 1.5.em,
                 modifier = Modifier

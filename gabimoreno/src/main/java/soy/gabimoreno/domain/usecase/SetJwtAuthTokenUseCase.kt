@@ -8,7 +8,6 @@ import javax.inject.Inject
 class SetJwtAuthTokenUseCase @Inject constructor(
     private val context: Context,
 ) {
-
     suspend operator fun invoke(token: String) {
         val bearerToken = "Bearer $token"
         APIClient.bearerToken = bearerToken

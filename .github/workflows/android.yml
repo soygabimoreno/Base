@@ -24,8 +24,9 @@ jobs:
 
       - name: Create local.properties
         run: |
-          echo "CLARITY_PROJECT_ID=${{secrets.CLARITY_PROJECT_ID}}" >> //home//runner//work//Base//Base//local.properties
-          echo "MASTER_KEY=${{secrets.MASTER_KEY}}" >> //home//runner//work//Base//Base//local.properties
+          echo "sdk.dir=/usr/local/lib/android/sdk" > ./local.properties
+          echo "CLARITY_PROJECT_ID=${{secrets.CLARITY_PROJECT_ID}}" >> ./local.properties
+          echo "MASTER_KEY=${{secrets.MASTER_KEY}}" >> ./local.properties
         shell: bash
 
       - name: Decode and set up google-services.json

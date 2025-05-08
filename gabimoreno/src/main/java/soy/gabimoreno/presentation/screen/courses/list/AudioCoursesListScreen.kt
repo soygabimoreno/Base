@@ -40,7 +40,6 @@ fun AudioCoursesListScreenRoot(
 ) {
     val context = LocalContext.current
     val coursesListViewModel = ViewModelProvider.audioCoursesListViewModel
-
     LaunchedEffect(Unit) {
         coursesListViewModel.events.collect { event ->
             when (event) {
@@ -112,12 +111,12 @@ private fun CoursesListScreenScreen(
                         .padding(horizontal = Spacing.s8),
                     verticalArrangement = Arrangement.spacedBy(Spacing.s16),
                 ) {
-                    items(state.audioCoursesList.size) { index ->
+                    items(state.audiocourses.size) { index ->
                         ItemListCourse(
-                            audioCourse = state.audioCoursesList[index],
-                            onItemClick = { onAction(AudioCoursesListAction.OnItemClicked(state.audioCoursesList[index].id)) }
+                            audioCourse = state.audiocourses[index],
+                            onItemClick = { onAction(AudioCoursesListAction.OnItemClicked(state.audiocourses[index].id)) }
                         )
-                        if (state.audioCoursesList.size == index + 1)
+                        if (state.audiocourses.size == index + 1)
                             Spacer(modifier = Modifier.padding(bottom = Spacing.s16))
                     }
                 }

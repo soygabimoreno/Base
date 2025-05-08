@@ -13,7 +13,6 @@ import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 
-
 class GetAudioCoursesUseCaseTest {
 
     private val repository = mockk<AudioCoursesRepository>()
@@ -26,7 +25,7 @@ class GetAudioCoursesUseCaseTest {
 
     @Test
     fun `GIVEN repository returns Right WHEN invoked THEN returns list of AudioCourse`() = runTest {
-        val categories = listOf(Category.AUDIO_COURSES)
+        val categories = listOf(Category.AUDIOCOURSES)
         val expectedCourses = listOf(relaxedMockk<AudioCourse>())
         coEvery { repository.getCourses(categories) } returns expectedCourses.right()
 
@@ -37,7 +36,7 @@ class GetAudioCoursesUseCaseTest {
 
     @Test
     fun `GIVEN repository returns Left WHEN invoked THEN returns error`() = runTest {
-        val categories = listOf(Category.AUDIO_COURSES)
+        val categories = listOf(Category.AUDIOCOURSES)
         val error = Throwable("Network error")
         coEvery { repository.getCourses(categories) } returns error.left()
 

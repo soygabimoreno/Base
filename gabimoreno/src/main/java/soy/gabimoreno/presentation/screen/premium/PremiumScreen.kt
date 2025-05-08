@@ -219,7 +219,7 @@ fun PremiumContent(
 
     fun refresh() = refreshScope.launch {
         refreshing = true
-        delay(1500)
+        delay(REFRESH_DELAY)
         onPullRefreshTriggered()
         refreshing = false
     }
@@ -311,3 +311,5 @@ private fun ShowLoading(showLoading: Boolean) {
 private fun Spacer() {
     Spacer(modifier = Modifier.height(Spacing.s16))
 }
+
+private const val REFRESH_DELAY = 1500L

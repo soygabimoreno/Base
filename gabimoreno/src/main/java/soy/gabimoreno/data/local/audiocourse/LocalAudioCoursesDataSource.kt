@@ -1,4 +1,4 @@
-package soy.gabimoreno.data.local.audiocourses
+package soy.gabimoreno.data.local.audiocourse
 
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.CoroutineDispatcher

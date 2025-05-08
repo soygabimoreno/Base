@@ -1,4 +1,4 @@
-package soy.gabimoreno.data.local.audiocourses.model
+package soy.gabimoreno.data.local.audiocourse.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

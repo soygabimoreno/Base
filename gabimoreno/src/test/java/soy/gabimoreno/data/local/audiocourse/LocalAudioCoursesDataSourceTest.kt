@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package soy.gabimoreno.data.local.audiocourses
+package soy.gabimoreno.data.local.audiocourse
 
 import io.mockk.coEvery
 import io.mockk.every
@@ -20,9 +20,9 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.local.GabiMorenoDatabase
-import soy.gabimoreno.data.local.audiocourses.dao.AudioCourseDbModelDao
-import soy.gabimoreno.data.local.audiocourses.dao.AudioCourseItemDbModelDao
-import soy.gabimoreno.data.local.audiocourses.dao.AudioCourseTransactionDao
+import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseDbModelDao
+import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseItemDbModelDao
+import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseTransactionDao
 import soy.gabimoreno.fake.buildAudioCourseWithItems
 import soy.gabimoreno.fake.buildAudioCourses
 import soy.gabimoreno.fake.buildAudioCoursesDbModel
@@ -63,7 +63,9 @@ class LocalAudioCoursesDataSourceTest {
         val result = dataSource.isEmpty()
 
         result shouldBe true
-        coVerifyOnce { audioCourseDbModelDao.count() }
+        coVerifyOnce {
+            audioCourseDbModelDao.count()
+        }
     }
 
 
@@ -74,7 +76,9 @@ class LocalAudioCoursesDataSourceTest {
         val result = dataSource.isEmpty()
 
         result shouldBe false
-        coVerifyOnce { audioCourseDbModelDao.count() }
+        coVerifyOnce {
+            audioCourseDbModelDao.count()
+        }
     }
 
     @Test
@@ -83,7 +87,9 @@ class LocalAudioCoursesDataSourceTest {
 
         dataSource.saveAudioCourses(audioCourses)
 
-        coVerifyOnce { audioCourseTransactionDao.upsertAudioCoursesWithItems(audioCourses) }
+        coVerifyOnce {
+            audioCourseTransactionDao.upsertAudioCoursesWithItems(audioCourses)
+        }
     }
 
     @Test
@@ -116,18 +122,21 @@ class LocalAudioCoursesDataSourceTest {
 
     @Test
     fun `GIVEN no course in DB WHEN getAudioCourseById THEN return null`() = runTest {
-        coEvery { audioCourseTransactionDao.getAudioCoursesWithItems("1-1") } returns null
+        val id = "1-1"
+        coEvery { audioCourseTransactionDao.getAudioCoursesWithItems(id) } returns null
 
-        val result = dataSource.getAudioCourseById("1-1")
+        val result = dataSource.getAudioCourseById(id)
 
         result shouldBe null
-        coVerifyOnce { audioCourseTransactionDao.getAudioCoursesWithItems("1-1") }
+        coVerifyOnce { audioCourseTransactionDao.getAudioCoursesWithItems(id) }
     }
 
     @Test
     fun `WHEN reset THEN call deleteAllAudioCourseDbModels`() = runTest {
         dataSource.reset()
 
-        coVerifyOnce { audioCourseDbModelDao.deleteAllAudioCourseDbModels() }
+        coVerifyOnce {
+            audioCourseDbModelDao.deleteAllAudioCourseDbModels()
+        }
     }
 }

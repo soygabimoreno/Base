@@ -1,6 +1,8 @@
 package soy.gabimoreno.data.remote.mapper
 
-import soy.gabimoreno.data.local.audiocourses.model.AudioCourseItemDbModel
+import soy.gabimoreno.core.removeHtmlTags
+import soy.gabimoreno.coreview.decodeUnicodeEscapedText
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
 import soy.gabimoreno.data.remote.mapper.category.toCategory
 import soy.gabimoreno.data.remote.mapper.category.toSubcategory
 import soy.gabimoreno.data.remote.model.Category
@@ -17,14 +19,14 @@ fun CourseApiModel.toDomain(): AudioCourse {
     val content = contentApiModel.rendered
     return AudioCourse(
         id = id.toString(),
-        title = titleApiModel.rendered,
+        title = titleApiModel.rendered.removeHtmlTags(),
         description = content,
-        excerpt = excerpt,
-        category = categoryIds.toCategory() ?: Category.AUDIO_COURSES,
+        excerpt = excerpt.removeHtmlTags(),
+        category = categoryIds.toCategory() ?: Category.AUDIOCOURSES,
         url = url,
         saga = Saga(
             author = findAuthorDisplayNameById(authorId) ?: UNKNOWN_AUTHOR_DISPLAY_NAME,
-            categoryIds.toSubcategory()?.title ?: Category.AUDIO_COURSES.title
+            categoryIds.toSubcategory()?.title ?: Category.AUDIOCOURSES.title
         ),
         pubDateMillis = dateString.toMillis() ?: EMPTY_PUB_DATE_MILLIS,
         videoUrl = content.extractLoomUrl() ?: "",
@@ -37,26 +39,26 @@ fun CourseApiModel.toDomain(): AudioCourse {
 
 fun List<AudioCourseItemDbModel>.toAudioCourseMapper(): List<AudioCourseItem> = map {
     val audioCourseList = mutableListOf<AudioCourseItem>()
-
     this.forEach { audioCourse ->
         audioCourseList.add(
             AudioCourseItem(
                 id = audioCourse.id,
                 title = audioCourse.title,
                 url = audioCourse.url,
+                hasBeenListened = audioCourse.hasBeenListened
             )
         )
     }
-
     return audioCourseList
 }
 
 internal fun AudioCourseItem.toAudioCourseItemDbModelMapper(idAudioCourse: String): AudioCourseItemDbModel =
     AudioCourseItemDbModel(
         id = id,
-        title = title,
+        title = decodeUnicodeEscapedText(title),
         url = url,
         idAudioCourse = idAudioCourse,
+        hasBeenListened = false
     )
 
 internal fun String.isRestrictedByRcp(): Boolean {

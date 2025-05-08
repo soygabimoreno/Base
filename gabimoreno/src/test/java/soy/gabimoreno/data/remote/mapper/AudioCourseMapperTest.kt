@@ -3,6 +3,7 @@ package soy.gabimoreno.data.remote.mapper
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
+import soy.gabimoreno.core.removeHtmlTags
 import soy.gabimoreno.data.remote.model.course.CourseApiModel
 import soy.gabimoreno.data.remote.model.course.OgImageApiModel
 import soy.gabimoreno.data.remote.model.course.YoastHeadJsonApiModel
@@ -23,7 +24,7 @@ class AudioCourseMapperTest {
         with(result) {
             id shouldBeEqualTo ID.toString()
             title shouldBeEqualTo TITLE
-            excerpt shouldBeEqualTo EXCERPT
+            excerpt shouldBeEqualTo EXCERPT.removeHtmlTags()
             videoUrl shouldBeEqualTo VIDEO_URL
             thumbnailUrl shouldBeEqualTo YOAST_HEAD_JSON
             audioLengthInSeconds shouldBeEqualTo EMPTY_AUDIO_LENGTH_IN_SECONDS
@@ -56,6 +57,8 @@ class AudioCourseMapperTest {
 
         result.size shouldBeEqualTo 2
         result[0].id shouldBeEqualTo "1-1"
+        result[0].url shouldBeEqualTo "item url"
+        result[1].id shouldBeEqualTo "1-2"
         result[1].url shouldBeEqualTo "url2"
     }
 

@@ -8,7 +8,6 @@ import javax.inject.Inject
 class SaveCredentialsInDataStoreUseCase @Inject constructor(
     private val context: Context,
 ) {
-
     suspend operator fun invoke(
         email: String,
         password: String,

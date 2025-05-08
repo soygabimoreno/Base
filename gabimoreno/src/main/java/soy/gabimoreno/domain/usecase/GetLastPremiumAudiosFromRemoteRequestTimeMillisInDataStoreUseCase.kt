@@ -8,7 +8,6 @@ import javax.inject.Inject
 class GetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase @Inject constructor(
     private val context: Context,
 ) {
-
     operator fun invoke(): Flow<Long> =
         context.getLastPremiumAudiosFromRemoteRequestTimeMillis()
 }

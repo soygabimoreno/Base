@@ -26,7 +26,7 @@ class RemoteAudioCoursesDataSourceTest {
 
     @Test
     fun `GIVEN audioCourses WHEN getAudioCourses THEN get the expected result`() = runTest {
-        val categories = listOf(Category.AUDIO_COURSES)
+        val categories = listOf(Category.AUDIOCOURSES)
         val categoriesQuery = categories.toQueryValue()
         val apiModelList: List<CourseApiModel> = relaxedMockk()
         coEvery { postService.getAudioCourses(categoriesQuery) } returns apiModelList
@@ -39,7 +39,7 @@ class RemoteAudioCoursesDataSourceTest {
 
     @Test
     fun `GIVEN a failure audioCourses WHEN audioCourses THEN get the expected error`() = runTest {
-        val categories = listOf(Category.AUDIO_COURSES)
+        val categories = listOf(Category.AUDIOCOURSES)
         val categoriesQuery = categories.toQueryValue()
         coEvery { postService.getAudioCourses(categoriesQuery) } throws Throwable()
 

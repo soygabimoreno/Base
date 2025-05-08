@@ -26,7 +26,7 @@ enum class NavItem(
         titleResId = R.string.nav_item_premium
     ),
     COURSES(
-        navCommand = NavCommand.ContentType(Feature.COURSES),
+        navCommand = NavCommand.ContentType(Feature.AUDIOCOURSES),
         icon = Icons.Default.Diamond,
         titleResId = R.string.nav_item_courses
     )
@@ -45,6 +45,17 @@ sealed class NavCommand(
     ) : NavCommand(
         feature,
         "detail",
+        navArgs
+    ) {
+        fun createRoute(audioId: String) = "${feature.route}/$subRoute/$audioId"
+    }
+
+    class ContentCoursesDetail(
+        feature: Feature,
+        navArgs: List<NavArg>,
+    ) : NavCommand(
+        feature,
+        "audiocoursedetail",
         navArgs
     ) {
         fun createRoute(audioId: String) = "${feature.route}/$subRoute/$audioId"

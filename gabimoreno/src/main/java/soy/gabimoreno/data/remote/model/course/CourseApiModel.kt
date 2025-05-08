@@ -27,4 +27,3 @@ class CourseApiModel(
     @Json(name = "yoast_head_json")
     val yoastHeadJsonApiModel: YoastHeadJsonApiModel,
 )
-

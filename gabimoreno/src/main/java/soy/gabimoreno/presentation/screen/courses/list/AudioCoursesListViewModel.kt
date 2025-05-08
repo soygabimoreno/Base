@@ -38,11 +38,11 @@ class AudioCoursesListViewModel @Inject constructor(
     private fun onViewScreen() {
         state = state.copy(isLoading = true)
         viewModelScope.launch(dispatcher) {
-            getCoursesUseCase(categories = listOf(Category.AUDIO_COURSES))
+            getCoursesUseCase(categories = listOf(Category.AUDIOCOURSES))
                 .onRight { audioCourses ->
                     state = state.copy(
                         isLoading = false,
-                        audioCoursesList = audioCourses
+                        audiocourses = audioCourses
                     )
                 }
                 .onLeft { throwable: Throwable ->
@@ -76,10 +76,12 @@ class AudioCoursesListViewModel @Inject constructor(
     private fun refreshContent() {
         viewModelScope.launch(dispatcher) {
             state = state.copy(isRefreshing = true)
-            delay(1500)
+            delay(REFRESH_DELAY)
             refreshAudioCoursesUseCase()
             onViewScreen()
             state = state.copy(isRefreshing = false)
         }
     }
 }
+
+private const val REFRESH_DELAY = 1500L

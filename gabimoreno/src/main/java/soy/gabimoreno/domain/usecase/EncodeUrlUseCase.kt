@@ -12,7 +12,6 @@ import javax.inject.Inject
 class EncodeUrlUseCase @Inject constructor(
     private val tracker: Tracker,
 ) {
-
     operator fun invoke(url: String): String {
         return try {
             URLEncoder.encode(url, StandardCharsets.UTF_8.toString())

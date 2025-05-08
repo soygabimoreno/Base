@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class FirebaseRemoteConfigProvider @Inject constructor(
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
-    private val encryptor: SecureEncryptor
+    private val secureEncryptor: SecureEncryptor
 ) : RemoteConfigProvider {
 
     init {
@@ -46,10 +46,10 @@ class FirebaseRemoteConfigProvider @Inject constructor(
 
     override fun getTokenCredentials(): TokenCredentials {
         try {
-            val usernameEnc = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_USERNAME_ENCRYPTED)
-            val passwordEnc = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_PASSWORD_ENCRYPTED)
-            val username = encryptor.decrypt(usernameEnc)
-            val password = encryptor.decrypt(passwordEnc)
+            val usernameEncrypted = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_USERNAME_ENCRYPTED)
+            val passwordEncrypted = firebaseRemoteConfig.getString(TOKEN_CREDENTIAL_PASSWORD_ENCRYPTED)
+            val username = secureEncryptor.decrypt(usernameEncrypted)
+            val password = secureEncryptor.decrypt(passwordEncrypted)
 
             return TokenCredentials(username, password)
         } catch (e: Exception) {

@@ -8,7 +8,6 @@ import javax.inject.Inject
 class GetPremiumAudioByIdUseCase @Inject constructor(
     private val premiumAudiosRepository: PremiumAudiosRepository,
 ) {
-
     suspend operator fun invoke(idPremiumAudio: String): Either<Throwable, PremiumAudio> {
         return premiumAudiosRepository.getPremiumAudioById(idPremiumAudio)
     }
