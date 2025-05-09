@@ -17,6 +17,7 @@ class RefreshPremiumAudiosFromRemoteUseCaseTest {
 
     private val getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
         GetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase = mockk()
+
     private lateinit var useCase: RefreshPremiumAudiosFromRemoteUseCase
 
     @Before

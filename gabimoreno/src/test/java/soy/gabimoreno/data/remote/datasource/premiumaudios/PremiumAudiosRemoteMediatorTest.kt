@@ -111,7 +111,6 @@ class PremiumAudiosRemoteMediatorTest {
         assertMediatorSuccess(result, premiumAudios.isEmpty())
 
         coVerifyOnce {
-            localPremiumAudiosDataSource.reset()
             saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(any())
             localPremiumAudiosDataSource.savePremiumAudios(premiumAudios)
         }

@@ -2,8 +2,11 @@
 
 package soy.gabimoreno.presentation.screen.premium
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,10 +29,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -97,7 +103,6 @@ fun PremiumScreenRoot(
                 }
 
                 is PremiumEvent.ShowDetail -> {
-                    println("premiumAudioId: ${event.premiumAudioId}")
                     onItemClicked(event.premiumAudioId)
                 }
             }
@@ -201,6 +206,7 @@ fun PremiumScreen(
             PremiumContent(
                 premiumAudios = premiumAudiosFlow,
                 onItemClicked = { onAction(PremiumAction.OnPremiumItemClicked(it)) },
+                onListenedToggled = { onAction(PremiumAction.OnListenedToggled(it)) },
                 onPullRefreshTriggered = { onAction(PremiumAction.OnRefreshContent) })
         }
     }
@@ -212,6 +218,7 @@ fun PremiumScreen(
 fun PremiumContent(
     premiumAudios: LazyPagingItems<PremiumAudio>,
     onItemClicked: (premiumAudioId: String) -> Unit,
+    onListenedToggled: (premiumAudio: PremiumAudio) -> Unit,
     onPullRefreshTriggered: () -> Unit,
 ) {
     val refreshScope = rememberCoroutineScope()
@@ -243,7 +250,11 @@ fun PremiumContent(
                 LazyColumn {
                     items(premiumAudios.itemCount) {
                         premiumAudios[it]?.let { premiumAudio ->
-                            PremiumItem(premiumAudio, onItemClicked)
+                            PremiumItem(
+                                premiumAudio = premiumAudio,
+                                onItemClicked = onItemClicked,
+                                onListenedToggled = onListenedToggled
+                            )
                         }
                     }
                 }
@@ -260,7 +271,13 @@ fun PremiumContent(
 fun PremiumItem(
     premiumAudio: PremiumAudio,
     onItemClicked: (premiumAudioId: String) -> Unit,
+    onListenedToggled: (premiumAudio: PremiumAudio) -> Unit,
 ) {
+    val iconColor by animateColorAsState(
+        targetValue = if (premiumAudio.hasBeenListened) Orange else Black.copy(alpha = 0.2f),
+        animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
+        label = "checkIconColorAnimation"
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -276,19 +293,36 @@ fun PremiumItem(
                     }
                 SolidColor(backgroundColor)
             }, alpha = 0.5f)
-            .padding(horizontal = Spacing.s16, vertical = Spacing.s32)
+            .padding(horizontal = Spacing.s16, vertical = Spacing.s16),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Icon(
             imageVector = premiumAudio.category.icon,
-            contentDescription = premiumAudio.category.title
+            contentDescription = premiumAudio.category.title,
+            modifier = Modifier.weight(0.10f),
         )
         Spacer(modifier = Modifier.width(Spacing.s16))
         Text(
             text = premiumAudio.title,
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(end = Spacing.s16)
+            modifier = Modifier
+                .padding(end = Spacing.s16)
+                .weight(0.70f),
         )
+        IconButton(
+            modifier = Modifier.weight(0.10f),
+            onClick = { onListenedToggled(premiumAudio) },
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(Spacing.s32),
+                imageVector = Icons.Default.Check,
+                contentDescription = stringResource(R.string.premium_audio_listened),
+                tint = iconColor,
+            )
+        }
     }
 }
 
@@ -313,3 +347,4 @@ private fun Spacer() {
 }
 
 private const val REFRESH_DELAY = 1500L
+private const val CHANGE_COLOR_ANIMATION_DURATION = 300

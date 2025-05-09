@@ -15,13 +15,11 @@ import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
-import soy.gabimoreno.domain.usecase.RefreshAudioCoursesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class AudioCoursesListViewModel @Inject constructor(
     private val getCoursesUseCase: GetAudioCoursesUseCase,
-    private val refreshAudioCoursesUseCase: RefreshAudioCoursesUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -35,10 +33,13 @@ class AudioCoursesListViewModel @Inject constructor(
         onViewScreen()
     }
 
-    private fun onViewScreen() {
+    private fun onViewScreen(forceRefresh: Boolean = false) {
         state = state.copy(isLoading = true)
         viewModelScope.launch(dispatcher) {
-            getCoursesUseCase(categories = listOf(Category.AUDIOCOURSES))
+            getCoursesUseCase(
+                categories = listOf(Category.AUDIOCOURSES),
+                forceRefresh = forceRefresh
+            )
                 .onRight { audioCourses ->
                     state = state.copy(
                         isLoading = false,
@@ -60,10 +61,11 @@ class AudioCoursesListViewModel @Inject constructor(
 
     fun onAction(action: AudioCoursesListAction) {
         when (action) {
-            is AudioCoursesListAction.OnItemClicked -> {}
             AudioCoursesListAction.OnRefreshContent -> {
                 refreshContent()
             }
+
+            else -> Unit
         }
     }
 
@@ -77,8 +79,7 @@ class AudioCoursesListViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             state = state.copy(isRefreshing = true)
             delay(REFRESH_DELAY)
-            refreshAudioCoursesUseCase()
-            onViewScreen()
+            onViewScreen(forceRefresh = true)
             state = state.copy(isRefreshing = false)
         }
     }

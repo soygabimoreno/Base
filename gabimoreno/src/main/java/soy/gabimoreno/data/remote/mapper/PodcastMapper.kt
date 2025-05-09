@@ -52,7 +52,8 @@ fun Article.toDomain(
             pubDateMillis = Date(pubDate).time,
             title = title ?: "",
             audioLengthInSeconds = itunesArticleData.getAudioLengthInSeconds(),
-            description = description
+            description = description,
+            hasBeenListened = false,
         )
     }
 }

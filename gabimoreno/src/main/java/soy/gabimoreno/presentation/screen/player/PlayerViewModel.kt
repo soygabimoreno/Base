@@ -4,10 +4,17 @@ import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.common.annotations.VisibleForTesting
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_PLAYBACK_POSITION
@@ -16,6 +23,8 @@ import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.session.MemberSession
+import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
+import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
 import soy.gabimoreno.framework.KLog
 import soy.gabimoreno.player.extension.currentPosition
 import soy.gabimoreno.player.extension.isPlayEnabled
@@ -35,6 +44,8 @@ class PlayerViewModel @Inject constructor(
     private val tracker: Tracker,
     private val memberSession: MemberSession,
     private val remoteConfigProvider: RemoteConfigProvider,
+    private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
+    private val markAudioCourseAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -44,7 +55,11 @@ class PlayerViewModel @Inject constructor(
 
     var showPlayerFullScreen by mutableStateOf(false)
 
-    var currentPlaybackPosition by mutableStateOf(0L)
+    private var currentPlaybackPosition by mutableStateOf(0L)
+
+    internal var hasTriggeredEightyPercent by mutableStateOf(false)
+
+    internal var lastAudioIdListened by mutableStateOf("")
 
     val podcastIsPlaying: Boolean
         get() = playbackState.value?.isPlaying == true
@@ -56,6 +71,20 @@ class PlayerViewModel @Inject constructor(
             }
             return 0f
         }
+
+    init {
+        var previousAudioId: String? = null
+        snapshotFlow { currentPlayingAudio.value?.id }
+            .distinctUntilChanged()
+            .onEach { newId ->
+                previousAudioId?.let { audioId ->
+                    markAudioAsListened(audioId)
+                }
+                hasTriggeredEightyPercent = false
+                previousAudioId = newId
+            }
+            .launchIn(viewModelScope)
+    }
 
     fun getCurrentPlaybackFormattedPosition(): String {
         KLog.d(
@@ -186,9 +215,28 @@ class PlayerViewModel @Inject constructor(
         val currentPosition = playbackState.value?.currentPosition
         if (currentPosition != null && currentPosition != currentPlaybackPosition) {
             currentPlaybackPosition = currentPosition
+            val progress = currentPlaybackPosition.toFloat() / currentAudioDuration
+            if (progress >= SET_AUDIO_AS_LISTENED) {
+                markAudioAsListened(currentPlayingAudio.value?.id ?: "")
+            }
         }
         delay(PLAYBACK_POSITION_UPDATE_INTERVAL)
         updateCurrentPlaybackPosition()
+    }
+
+    internal fun markAudioAsListened(audioId: String) {
+        if (hasTriggeredEightyPercent || lastAudioIdListened == audioId) return
+
+        hasTriggeredEightyPercent = true
+        lastAudioIdListened = audioId
+
+        viewModelScope.launch {
+            if (audioId.contains("-")) {
+                markAudioCourseAsListenedUseCase(audioId, true)
+            } else {
+                markPremiumAudioAsListenedUseCase(audioId, true)
+            }
+        }
     }
 
     private fun formatLong(value: Long): String {
@@ -219,3 +267,4 @@ class PlayerViewModel @Inject constructor(
 }
 
 private const val PLAYBACK_POSITION_UPDATE_INTERVAL = 1_000L
+private const val SET_AUDIO_AS_LISTENED = 0.8

@@ -15,5 +15,6 @@ fun PremiumAudio.toPremiumAudioDbModel() = PremiumAudioDbModel(
     pubDateMillis,
     audioLengthInSeconds,
     category,
-    excerpt
+    excerpt,
+    hasBeenListened,
 )

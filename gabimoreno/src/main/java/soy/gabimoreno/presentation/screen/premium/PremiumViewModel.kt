@@ -10,14 +10,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.data.remote.model.getPremiumCategories
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EMAIL
 import soy.gabimoreno.data.tracker.main.PremiumTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.exception.TokenExpiredException
-import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.domain.model.login.Status
 import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
@@ -25,7 +23,7 @@ import soy.gabimoreno.domain.usecase.GetPremiumAudiosManagedUseCase
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
-import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosUseCase
+import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import javax.inject.Inject
 
@@ -39,6 +37,7 @@ class PremiumViewModel @Inject constructor(
     private val getPremiumAudiosMediatorUseCase: GetPremiumAudiosManagedUseCase,
     private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase,
     private val isBearerTokenValid: IsBearerTokenValid,
+    private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -77,6 +76,22 @@ class PremiumViewModel @Inject constructor(
             PremiumAction.OnLoginClicked -> onLoginClicked()
             PremiumAction.OnLogoutClicked -> onLogoutClicked()
             PremiumAction.OnRefreshContent -> refreshContent()
+            is PremiumAction.OnListenedToggled -> {
+                viewModelScope.launch {
+                    markPremiumAudioAsListenedUseCase(
+                        idPremiumAudio = action.premiumAudio.id,
+                        hasBeenListened = !action.premiumAudio.hasBeenListened
+                    )
+                    val premiumAudioList = state.premiumAudios.map { premiumAudio ->
+                        if (premiumAudio.id == action.premiumAudio.id) {
+                            premiumAudio.copy(hasBeenListened = !action.premiumAudio.hasBeenListened)
+                        } else {
+                            premiumAudio
+                        }
+                    }
+                    state = state.copy(premiumAudios = premiumAudioList)
+                }
+            }
         }
     }
 

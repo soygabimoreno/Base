@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 import soy.gabimoreno.data.local.audiocourse.model.AudioCourseDbModel
 import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
 import soy.gabimoreno.data.local.audiocourse.model.AudioCourseWithItems
@@ -16,7 +17,11 @@ interface AudioCourseTransactionDao {
 
     @Transaction
     @Query("SELECT * FROM AudioCourseDbModel WHERE id = :id")
-    suspend fun getAudioCoursesWithItems(id: String): AudioCourseWithItems?
+    fun getAudioCourseWithItems(id: String): Flow<AudioCourseWithItems?>
+
+    @Transaction
+    @Query("SELECT * FROM AudioCourseDbModel")
+    suspend fun getAudioCoursesWithItems(): List<AudioCourseWithItems>
 
     @Transaction
     suspend fun upsertAudioCoursesWithItems(

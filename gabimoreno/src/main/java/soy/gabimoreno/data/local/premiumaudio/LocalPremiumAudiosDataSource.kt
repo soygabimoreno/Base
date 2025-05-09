@@ -28,11 +28,15 @@ class LocalPremiumAudiosDataSource @Inject constructor(
     }
 
     suspend fun savePremiumAudios(premiumAudios: List<PremiumAudio>) = withContext(dispatcher) {
-        premiumAudioDbModelDao.insertPremiumAudioDbModels(
+        premiumAudioDbModelDao.upsertPremiumAudioDbModels(
             premiumAudios.map {
                 it.toPremiumAudioDbModel()
             },
         )
+    }
+
+    suspend fun updateHasBeenListened(id: String, hasBeenListened: Boolean) = withContext(dispatcher) {
+        premiumAudioDbModelDao.updateHasBeenListened(id, hasBeenListened)
     }
 
     suspend fun getPremiumAudios(): List<PremiumAudio> = withContext(dispatcher) {
