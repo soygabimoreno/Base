@@ -25,14 +25,12 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
-import soy.gabimoreno.domain.usecase.RefreshAudioCoursesUseCase
 import soy.gabimoreno.fake.buildAudioCourses
 
 
 class AudioCoursesListViewModelTest {
 
     private val getCoursesUseCase = relaxedMockk<GetAudioCoursesUseCase>()
-    private val refreshAudioCoursesUseCase = relaxedMockk<RefreshAudioCoursesUseCase>()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: AudioCoursesListViewModel
 
@@ -41,7 +39,6 @@ class AudioCoursesListViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel = AudioCoursesListViewModel(
             getCoursesUseCase,
-            refreshAudioCoursesUseCase,
             testDispatcher
         )
     }
@@ -59,7 +56,6 @@ class AudioCoursesListViewModelTest {
 
             viewModel = AudioCoursesListViewModel(
                 getCoursesUseCase = getCoursesUseCase,
-                refreshAudioCoursesUseCase = refreshAudioCoursesUseCase,
                 dispatcher = testDispatcher
             )
             advanceUntilIdle()
@@ -81,7 +77,6 @@ class AudioCoursesListViewModelTest {
 
         viewModel = AudioCoursesListViewModel(
             getCoursesUseCase,
-            refreshAudioCoursesUseCase,
             testDispatcher
         )
         advanceUntilIdle()
@@ -103,7 +98,6 @@ class AudioCoursesListViewModelTest {
 
         viewModel = AudioCoursesListViewModel(
             getCoursesUseCase = getCoursesUseCase,
-            refreshAudioCoursesUseCase = refreshAudioCoursesUseCase,
             dispatcher = testDispatcher
         )
         advanceUntilIdle()
@@ -123,7 +117,7 @@ class AudioCoursesListViewModelTest {
             advanceUntilIdle()
 
             coVerifyOnce {
-                refreshAudioCoursesUseCase()
+                getCoursesUseCase(categories, forceRefresh = true)
             }
             viewModel.state.isRefreshing shouldBe false
         }

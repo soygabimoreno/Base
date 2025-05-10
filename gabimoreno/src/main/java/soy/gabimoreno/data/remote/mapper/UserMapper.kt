@@ -16,5 +16,5 @@ fun UserApiModel.toDomain() = User(
     nickname = nickname,
     description = description,
     capabilities = capabilities,
-    avatar = avatar
+    avatar = avatar,
 )

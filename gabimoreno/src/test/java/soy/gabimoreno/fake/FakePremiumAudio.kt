@@ -22,5 +22,6 @@ fun buildPremiumAudio(): PremiumAudio = PremiumAudio(
     audioLengthInSeconds = 2700,
     description = "This is a description",
     category = Category.PREMIUM,
-    excerpt = "excerpt"
+    excerpt = "excerpt",
+    hasBeenListened = false
 )

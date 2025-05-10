@@ -57,12 +57,12 @@ class LocalPremiumAudiosDataSourceTest {
     fun `WHEN savePremiumAudios THEN they are inserted into the database`() = runTest {
         val premiumAudios = buildPremiumAudios()
         val premiumAudioDbModels = premiumAudios.map { it.toPremiumAudioDbModel() }
-        every { premiumAudioDbModelDao.insertPremiumAudioDbModels(premiumAudioDbModels) } returns Unit
+        every { premiumAudioDbModelDao.upsertPremiumAudioDbModels(premiumAudioDbModels) } returns Unit
 
         datasource.savePremiumAudios(premiumAudios)
 
         verifyOnce {
-            premiumAudioDbModelDao.insertPremiumAudioDbModels(premiumAudioDbModels)
+            premiumAudioDbModelDao.upsertPremiumAudioDbModels(premiumAudioDbModels)
         }
     }
 

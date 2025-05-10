@@ -58,7 +58,7 @@ internal fun AudioCourseItem.toAudioCourseItemDbModelMapper(idAudioCourse: Strin
         title = decodeUnicodeEscapedText(title),
         url = url,
         idAudioCourse = idAudioCourse,
-        hasBeenListened = false
+        hasBeenListened = hasBeenListened
     )
 
 internal fun String.isRestrictedByRcp(): Boolean {

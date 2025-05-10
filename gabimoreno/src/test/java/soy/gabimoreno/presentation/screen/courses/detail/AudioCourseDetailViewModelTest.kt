@@ -8,6 +8,7 @@ import io.mockk.coEvery
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
@@ -21,11 +22,14 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.domain.usecase.GetAudioCourseByIdUseCase
+import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
 import soy.gabimoreno.fake.buildAudioCourse
 
 class AudioCourseDetailViewModelTest {
 
     private val getAudioCourseByIdUseCase = relaxedMockk<GetAudioCourseByIdUseCase>()
+    private val markAudioCourseItemAsListenedUseCase =
+        relaxedMockk<MarkAudioCourseItemAsListenedUseCase>()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: AudioCourseDetailViewModel
 
@@ -34,6 +38,7 @@ class AudioCourseDetailViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel = AudioCourseDetailViewModel(
             getAudioCourseByIdUseCase,
+            markAudioCourseItemAsListenedUseCase
         )
     }
 
@@ -45,7 +50,7 @@ class AudioCourseDetailViewModelTest {
     @Test
     fun `GIVEN success WHEN onViewScreen THEN state is updated`() = runTest {
         val audioCourse = buildAudioCourse()
-        coEvery { getAudioCourseByIdUseCase(audioCourse.id) } returns audioCourse.right()
+        coEvery { getAudioCourseByIdUseCase(audioCourse.id) } returns flowOf(audioCourse).right()
 
         viewModel.onViewScreen(audioCourse.id)
         advanceUntilIdle()

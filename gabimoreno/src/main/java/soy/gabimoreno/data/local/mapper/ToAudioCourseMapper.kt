@@ -25,7 +25,8 @@ fun AudioCourseItemDbModel.toAudioCourseItem(): AudioCourseItem {
     return AudioCourseItem(
         id = id,
         title = title,
-        url = url
+        url = url,
+        hasBeenListened = hasBeenListened
     )
 }
 

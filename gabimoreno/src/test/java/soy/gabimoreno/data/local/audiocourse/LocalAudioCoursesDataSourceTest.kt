@@ -7,6 +7,8 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -107,28 +109,28 @@ class LocalAudioCoursesDataSourceTest {
     @Test
     fun `GIVEN matching course in DB WHEN getAudioCourseById THEN return mapped course`() =
         runTest {
-            val audioCoursesWithItems = buildAudioCourseWithItems()
+            val audioCourseWithItems = buildAudioCourseWithItems()
             coEvery {
-                audioCourseTransactionDao.getAudioCoursesWithItems(audioCoursesWithItems.course.id)
-            } returns audioCoursesWithItems
+                audioCourseTransactionDao.getAudioCourseWithItems(audioCourseWithItems.course.id)
+            } returns flowOf(audioCourseWithItems)
 
-            val result = dataSource.getAudioCourseById(audioCoursesWithItems.course.id)
+            val result = dataSource.getAudioCourseById(audioCourseWithItems.course.id).first()
 
-            result?.id shouldBeEqualTo audioCoursesWithItems.course.id
+            result?.id shouldBeEqualTo audioCourseWithItems.course.id
             coVerifyOnce {
-                audioCourseTransactionDao.getAudioCoursesWithItems(audioCoursesWithItems.course.id)
+                audioCourseTransactionDao.getAudioCourseWithItems(audioCourseWithItems.course.id)
             }
         }
 
     @Test
     fun `GIVEN no course in DB WHEN getAudioCourseById THEN return null`() = runTest {
         val id = "1-1"
-        coEvery { audioCourseTransactionDao.getAudioCoursesWithItems(id) } returns null
+        coEvery { audioCourseTransactionDao.getAudioCourseWithItems(id) } returns flowOf(null)
 
-        val result = dataSource.getAudioCourseById(id)
+        val result = dataSource.getAudioCourseById(id).first()
 
         result shouldBe null
-        coVerifyOnce { audioCourseTransactionDao.getAudioCoursesWithItems(id) }
+        coVerifyOnce { audioCourseTransactionDao.getAudioCourseWithItems(id) }
     }
 
     @Test

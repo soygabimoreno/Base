@@ -20,4 +20,5 @@ data class PremiumAudioDbModel(
     val audioLengthInSeconds: Int,
     val category: Category,
     val excerpt: String,
+    val hasBeenListened: Boolean,
 )

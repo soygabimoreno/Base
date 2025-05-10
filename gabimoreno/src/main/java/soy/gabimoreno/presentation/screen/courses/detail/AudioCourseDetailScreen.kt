@@ -177,6 +177,13 @@ fun AudioCourseDetailScreen(
                                     state.audioCourse.audios[index]
                                 )
                             )
+                        },
+                        onItemListenedToggled = {
+                            onAction(
+                                AudioCourseDetailAction.OnAudioItemListenedToggled(
+                                    state.audioCourse.audios[index]
+                                )
+                            )
                         }
                     )
                     Box(

@@ -11,6 +11,7 @@ import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCoursesReposito
 class RefreshAudioCoursesUseCaseTest {
 
     private val repository = mockk<DefaultAudioCoursesRepository>(relaxed = true)
+
     private lateinit var useCase: RefreshAudioCoursesUseCase
 
     @Before

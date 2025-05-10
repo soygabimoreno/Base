@@ -2,6 +2,8 @@ package soy.gabimoreno.data.local.audiocourse
 
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import soy.gabimoreno.data.local.GabiMorenoDatabase
 import soy.gabimoreno.data.local.mapper.toAudioCourse
@@ -32,14 +34,27 @@ class LocalAudioCoursesDataSource @Inject constructor(
         audioCourseTransactionDao.upsertAudioCoursesWithItems(audioCourses)
     }
 
+    suspend fun updateHasBeenListened(id: String, hasBeenListened: Boolean) =
+        withContext(dispatcher) {
+            audioCourseItemDbModelDao.updateHasBeenListened(id, hasBeenListened)
+        }
+
     suspend fun getAudioCourses(): List<AudioCourse> = withContext(dispatcher) {
         audioCourseDbModelDao.getAudioCourseDbModels().map {
             it.toAudioCourseMapper()
         }
     }
 
-    suspend fun getAudioCourseById(id: String): AudioCourse? = withContext(dispatcher) {
-        audioCourseTransactionDao.getAudioCoursesWithItems(id)?.toAudioCourse()
+    suspend fun getAudioCoursesWithItems(): List<AudioCourse> = withContext(dispatcher) {
+        audioCourseTransactionDao.getAudioCoursesWithItems().map {
+            it.toAudioCourse()
+        }
+    }
+
+    fun getAudioCourseById(id: String): Flow<AudioCourse?> {
+        return audioCourseTransactionDao
+            .getAudioCourseWithItems(id)
+            .map { it?.toAudioCourse() }
     }
 
     suspend fun reset() = withContext(dispatcher) {

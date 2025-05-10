@@ -11,4 +11,5 @@ interface Audio {
     val thumbnailUrl: String
     val pubDateMillis: Long
     val audioLengthInSeconds: Int
+    val hasBeenListened: Boolean
 }

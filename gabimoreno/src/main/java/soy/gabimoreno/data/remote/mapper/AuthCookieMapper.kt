@@ -8,5 +8,5 @@ fun AuthCookieApiModel.toDomain() = AuthCookie(
     cookie = cookie,
     cookieAdmin = cookieAdmin,
     cookieName = cookieName,
-    user = userApiModel.toDomain()
+    user = userApiModel.toDomain(),
 )

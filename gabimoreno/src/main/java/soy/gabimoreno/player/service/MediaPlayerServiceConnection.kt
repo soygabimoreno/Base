@@ -19,6 +19,7 @@ class MediaPlayerServiceConnection @Inject constructor(
 
     var playbackState = mutableStateOf<PlaybackStateCompat?>(null)
     var currentPlayingAudio = mutableStateOf<Audio?>(null)
+    var onAudioChanged: (() -> Unit)? = null
 
     lateinit var mediaController: MediaControllerCompat
 
@@ -116,6 +117,7 @@ class MediaPlayerServiceConnection @Inject constructor(
                     it.id == metadata.description?.mediaId
                 }
             }
+            onAudioChanged?.invoke()
         }
 
         override fun onSessionDestroyed() {

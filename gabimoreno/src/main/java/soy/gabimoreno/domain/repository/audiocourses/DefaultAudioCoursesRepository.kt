@@ -3,6 +3,9 @@ package soy.gabimoreno.domain.repository.audiocourses
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
 import soy.gabimoreno.data.remote.model.Category
@@ -19,29 +22,50 @@ class DefaultAudioCoursesRepository @Inject constructor(
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
 ) : AudioCoursesRepository {
     override suspend fun getCourses(
-        categories: List<Category>
+        categories: List<Category>,
+        forceRefresh: Boolean
     ): Either<Throwable, List<AudioCourse>> {
-        if (refreshPremiumAudiosFromRemoteUseCase(
+        val shouldRefresh = forceRefresh ||
+            refreshPremiumAudiosFromRemoteUseCase(
                 currentTimeInMillis = System.currentTimeMillis(),
                 timeToRefreshInMillis = TWELVE_HOURS_IN_MILLIS
-            ) || localAudioCoursesDataSource.isEmpty()
-        ) {
-            remoteAudioCoursesDataSource.getAudioCourses(categories)
-                .fold(
-                    ifLeft = {
-                        return it.left()
-                    },
-                    ifRight = { audioCourses ->
-                        localAudioCoursesDataSource.saveAudioCourses(audioCourses)
-                    }
-                )
+            ) ||
+            localAudioCoursesDataSource.isEmpty()
+
+        if (!shouldRefresh) {
+            return localAudioCoursesDataSource.getAudioCourses().right()
         }
-        return localAudioCoursesDataSource.getAudioCourses().right()
+
+        val localAudioCoursesSnapshot = localAudioCoursesDataSource.getAudioCoursesWithItems()
+            .flatMap { it.audios }
+            .associateBy { it.id }
+
+        return remoteAudioCoursesDataSource.getAudioCourses(categories)
+            .onRight { remoteAudioCourses ->
+                val mergedCourses = remoteAudioCourses.map { remoteCourse ->
+                    val mergedItems = remoteCourse.audios.map { remoteItem ->
+                        val localItem = localAudioCoursesSnapshot[remoteItem.id]
+                        remoteItem.copy(hasBeenListened = localItem?.hasBeenListened ?: false)
+                    }
+                    remoteCourse.copy(audios = mergedItems)
+                }
+
+                localAudioCoursesDataSource.saveAudioCourses(mergedCourses)
+            }
     }
 
-    override suspend fun getCourseById(idCourse: String): Either<Throwable, AudioCourse> {
-        return localAudioCoursesDataSource.getAudioCourseById(idCourse)?.right()
-            ?: Throwable("AudioCourse not found").left()
+    override suspend fun getCourseById(idCourse: String): Either<Throwable, Flow<AudioCourse>> {
+        val audioCourseFlow = localAudioCoursesDataSource.getAudioCourseById(idCourse)
+        val first = audioCourseFlow.first()
+        return if (first != null) {
+            audioCourseFlow.filterNotNull().right()
+        } else {
+            Throwable("AudioCourse not found").left()
+        }
+    }
+
+    override suspend fun markAudioCourseItemAsListened(id: String, hasBeenListened: Boolean) {
+        localAudioCoursesDataSource.updateHasBeenListened(id, hasBeenListened)
     }
 
     override suspend fun reset() {

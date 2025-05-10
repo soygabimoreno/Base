@@ -2,9 +2,8 @@ package soy.gabimoreno.data.local.premiumaudio
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 
 @Dao
 interface PremiumAudioDbModelDao {
@@ -20,8 +19,11 @@ interface PremiumAudioDbModelDao {
     @Query("SELECT COUNT(id) FROM PremiumAudioDbModel")
     fun count(): Int
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPremiumAudioDbModels(premiumAudioDbModels: List<PremiumAudioDbModel>)
+    @Upsert()
+    fun upsertPremiumAudioDbModels(premiumAudioDbModels: List<PremiumAudioDbModel>)
+
+    @Query("UPDATE PremiumAudioDbModel SET hasBeenListened = :hasBeenListened WHERE id = :id")
+    fun updateHasBeenListened(id: String, hasBeenListened: Boolean)
 
     @Query("DELETE FROM PremiumAudioDbModel")
     fun deleteAllPremiumAudioDbModels()
