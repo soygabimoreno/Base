@@ -7,5 +7,5 @@ fun JwtAuthApiModel.toDomain() = JwtAuth(
     token = token,
     userEmail = userEmail,
     userNiceName = userNiceName,
-    userDisplayName = userDisplayName
+    userDisplayName = userDisplayName,
 )

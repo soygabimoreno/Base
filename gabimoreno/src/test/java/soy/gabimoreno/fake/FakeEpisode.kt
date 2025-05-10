@@ -19,5 +19,6 @@ fun buildEpisode() = Episode(
     pubDateMillis = 0,
     title = "This is a title",
     audioLengthInSeconds = 2700,
-    description = "This is a description"
+    description = "This is a description",
+    hasBeenListened = false
 )

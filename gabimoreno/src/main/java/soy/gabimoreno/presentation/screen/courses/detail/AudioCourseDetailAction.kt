@@ -4,5 +4,6 @@ import soy.gabimoreno.domain.model.content.AudioCourseItem
 
 sealed interface AudioCourseDetailAction {
     data class OnAudioCourseItemClicked(val audioCourseItem: AudioCourseItem) : AudioCourseDetailAction
+    data class OnAudioItemListenedToggled(val audioCourseItem: AudioCourseItem) : AudioCourseDetailAction
     data object OnBackClicked : AudioCourseDetailAction
 }

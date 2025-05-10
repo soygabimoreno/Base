@@ -62,12 +62,25 @@ class PremiumAudiosRemoteMediator(
                 MediatorResult.Error(it)
             }, { premiumAudios ->
                 if (loadType == LoadType.REFRESH) {
+                    val localPremiumAudiosById = localPremiumAudiosDataSource
+                        .getPremiumAudios()
+                        .associateBy { it.id }
+
+                    val mergedPremiumAudios = premiumAudios.map { remotePremiumAudio ->
+                        val localPremiumAudio = localPremiumAudiosById[remotePremiumAudio.id]
+                        remotePremiumAudio.copy(
+                            hasBeenListened = localPremiumAudio?.hasBeenListened ?: false
+                        )
+                    }
+
                     localPremiumAudiosDataSource.reset()
                     saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
                         System.currentTimeMillis()
                     )
+                    localPremiumAudiosDataSource.savePremiumAudios(mergedPremiumAudios)
+                } else {
+                    localPremiumAudiosDataSource.savePremiumAudios(premiumAudios)
                 }
-                localPremiumAudiosDataSource.savePremiumAudios(premiumAudios)
                 MediatorResult.Success(
                     endOfPaginationReached = premiumAudios.isEmpty()
                 )

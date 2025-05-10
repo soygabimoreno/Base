@@ -8,14 +8,26 @@ import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.domain.model.content.AudioCourseItem
 
-fun buildAudioCourses() = listOf(
-    buildAudioCourse().copy(id = "1"),
-    buildAudioCourse().copy(id = "2"),
-    buildAudioCourse().copy(id = "3")
+fun buildAudioCourses(hasBeenListened: Boolean = false): List<AudioCourse> =
+    (1..3).map { index ->
+        buildAudioCourse(
+            hasBeenListened = hasBeenListened,
+            courseId = index.toString()
+        )
+    }
+
+fun buildAudioCourseItems(hasBeenListened: Boolean, courseIndex: Int) = listOf(
+    buildAudioCourseItem().copy(id = "${courseIndex}-1", hasBeenListened = hasBeenListened),
+    buildAudioCourseItem().copy(id = "${courseIndex}-2", hasBeenListened = hasBeenListened),
+    buildAudioCourseItem().copy(id = "${courseIndex}-3", hasBeenListened = hasBeenListened),
 )
 
-fun buildAudioCourse(): AudioCourse = AudioCourse(
-    id = "1",
+fun buildAudioCourse(
+    hasBeenListened: Boolean = false,
+    courseId: String = "1",
+    audios: List<AudioCourseItem> = buildAudioCourseItems(hasBeenListened, courseId.toInt())
+): AudioCourse = AudioCourse(
+    id = courseId,
     url = "",
     videoUrl = "",
     thumbnailUrl = "",
@@ -27,13 +39,7 @@ fun buildAudioCourse(): AudioCourse = AudioCourse(
     excerpt = "excerpt",
     saga = Saga(author = "This is publisher", title = "This is saga title"),
     isPurchased = false,
-    audios = buildAudioCourseItems()
-)
-
-fun buildAudioCourseItems() = listOf(
-    buildAudioCourseItem().copy(id = "1"),
-    buildAudioCourseItem().copy(id = "2"),
-    buildAudioCourseItem().copy(id = "3")
+    audios = audios
 )
 
 fun buildAudioCourseItem() = AudioCourseItem(

@@ -59,6 +59,10 @@ class DefaultPremiumAudiosRepository @Inject constructor(
         }
     }
 
+    override suspend fun markPremiumAudioAsListened(id: String, hasBeenListened: Boolean) {
+        localPremiumAudiosDataSource.updateHasBeenListened(id, hasBeenListened)
+    }
+
     override suspend fun getPremiumAudioById(idPremiumAudio: String): Either<Throwable, PremiumAudio> {
         return localPremiumAudiosDataSource.getPremiumAudioById(idPremiumAudio)?.right()
             ?: Throwable("PremiumAudio not found").left()

@@ -11,11 +11,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.domain.usecase.GetAudioCourseByIdUseCase
+import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class AudioCourseDetailViewModel @Inject constructor(
-    private val getAudioCourseByIdUseCase: GetAudioCourseByIdUseCase
+    private val getAudioCourseByIdUseCase: GetAudioCourseByIdUseCase,
+    private val markAudioAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase
 ) : ViewModel() {
     var state by mutableStateOf(AudioCourseDetailState())
         private set
@@ -28,7 +30,9 @@ class AudioCourseDetailViewModel @Inject constructor(
         viewModelScope.launch {
             getAudioCourseByIdUseCase(audioCourseId)
                 .onRight { audioCourse ->
-                    state = state.copy(isLoading = false, audioCourse = audioCourse)
+                    audioCourse.collect {
+                        state = state.copy(isLoading = false, audioCourse = it)
+                    }
                 }
                 .onLeft {
                     eventChannel.emit(AudioCourseDetailEvent.Error(it))
@@ -43,6 +47,27 @@ class AudioCourseDetailViewModel @Inject constructor(
                 prepateToPlayAudio(action.audioCourseItem.id)
                 viewModelScope.launch {
                     eventChannel.emit(AudioCourseDetailEvent.PlayAudio)
+                }
+            }
+
+            is AudioCourseDetailAction.OnAudioItemListenedToggled -> {
+                viewModelScope.launch {
+                    markAudioAsListenedUseCase(
+                        idAudioCourseItem = action.audioCourseItem.id,
+                        hasBeenListened = !action.audioCourseItem.hasBeenListened
+                    )
+                    val audioCourseItems = state.audioCourse?.audios?.map { audioCourseItem ->
+                        if (audioCourseItem.id == action.audioCourseItem.id) {
+                            audioCourseItem.copy(hasBeenListened = !action.audioCourseItem.hasBeenListened)
+                        } else {
+                            audioCourseItem
+                        }
+                    }
+                    state = state.copy(
+                        audioCourse = state.audioCourse?.copy(
+                            audios = audioCourseItems ?: emptyList()
+                        )
+                    )
                 }
             }
 
@@ -64,7 +89,8 @@ class AudioCourseDetailViewModel @Inject constructor(
                     imageUrl = audioCourse.thumbnailUrl,
                     thumbnailUrl = audioCourse.thumbnailUrl,
                     pubDateMillis = audioCourse.pubDateMillis,
-                    audioLengthInSeconds = audioCourse.audioLengthInSeconds
+                    audioLengthInSeconds = audioCourse.audioLengthInSeconds,
+                    hasBeenListened = audioCourseItem.hasBeenListened
                 )
                 if (episode.id == audioCourseId) audio = episode
                 episode

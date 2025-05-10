@@ -14,4 +14,5 @@ data class Episode(
     override val thumbnailUrl: String,
     override val pubDateMillis: Long,
     override val audioLengthInSeconds: Int,
+    override val hasBeenListened: Boolean,
 ) : Audio

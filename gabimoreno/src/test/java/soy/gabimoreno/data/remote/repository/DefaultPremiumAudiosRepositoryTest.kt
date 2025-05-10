@@ -10,6 +10,7 @@ import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Before
 import org.junit.Test
+import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
@@ -18,11 +19,12 @@ import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.repository.premiumaudios.DefaultPremiumAudiosRepository
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import soy.gabimoreno.domain.usecase.SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
+import soy.gabimoreno.fake.buildPremiumAudio
 
 @ExperimentalCoroutinesApi
 class DefaultPremiumAudiosRepositoryTest {
 
-    private val localPremiumAudiosDataSource: LocalPremiumAudiosDataSource = mockk()
+    private val localPremiumAudiosDataSource = relaxedMockk<LocalPremiumAudiosDataSource>()
     private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource = mockk()
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase =
         mockk()
@@ -66,5 +68,27 @@ class DefaultPremiumAudiosRepositoryTest {
             runCatching {
                 flow.collect {}
             }.isFailure shouldBe true
+        }
+
+    @Test
+    fun `GIVEN audio is listened WHEN markPremiumAudioAsListened THEN field is updated`() =
+        runTest {
+            val premiumAudio = buildPremiumAudio()
+            repository.markPremiumAudioAsListened(premiumAudio.id, true)
+
+            coVerifyOnce {
+                localPremiumAudiosDataSource.updateHasBeenListened(premiumAudio.id, true)
+            }
+        }
+
+    @Test
+    fun `GIVEN audio is unlistened WHEN markPremiumAudioAsListened THEN field is updated`() =
+        runTest {
+            val premiumAudio = buildPremiumAudio()
+            repository.markPremiumAudioAsListened(premiumAudio.id, false)
+
+            coVerifyOnce {
+                localPremiumAudiosDataSource.updateHasBeenListened(premiumAudio.id, false)
+            }
         }
 }

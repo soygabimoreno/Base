@@ -15,6 +15,7 @@ data class PremiumAudio(
     override val thumbnailUrl: String,
     override val pubDateMillis: Long,
     override val audioLengthInSeconds: Int,
+    override val hasBeenListened: Boolean,
     val category: Category,
     val excerpt: String,
 ) : Audio

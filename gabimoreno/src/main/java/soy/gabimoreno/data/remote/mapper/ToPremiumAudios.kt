@@ -25,7 +25,8 @@ fun List<Post>.toPremiumAudios(): List<PremiumAudio> {
                     pubDateMillis = post.pubDateMillis,
                     audioLengthInSeconds = EMPTY_AUDIO_LENGTH_IN_SECONDS, // TODO: This is unknown for now
                     category = post.category,
-                    excerpt = post.excerpt
+                    excerpt = post.excerpt,
+                    hasBeenListened = false,
                 )
             )
         }

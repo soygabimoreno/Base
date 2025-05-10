@@ -13,6 +13,9 @@ interface AudioCourseItemDbModelDao {
     @Upsert()
     fun upsertAudioCourseItems(audioCourseItems: List<AudioCourseItemDbModel>)
 
+    @Query("UPDATE audioCourseItems SET hasBeenListened = :hasBeenListened WHERE id = :id")
+    fun updateHasBeenListened(id: String, hasBeenListened: Boolean)
+
     @Query("SELECT COUNT(*) FROM AudioCourseItems WHERE idAudioCourse = :audioCourseId")
     fun countAudioCourseItemsByAudioCourseId(audioCourseId: String): Int
 

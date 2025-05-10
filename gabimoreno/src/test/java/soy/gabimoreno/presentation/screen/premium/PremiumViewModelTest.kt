@@ -19,6 +19,7 @@ import soy.gabimoreno.domain.usecase.GetPremiumAudiosManagedUseCase
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
+import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 
 @ExperimentalCoroutinesApi
@@ -34,6 +35,8 @@ class PremiumViewModelTest {
     private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase = relaxedMockk()
     private val isBearerTokenValid: IsBearerTokenValid = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
+    private val markPremiumAudioAsListenedUseCase =
+        relaxedMockk<MarkPremiumAudioAsListenedUseCase>()
     private lateinit var viewModel: PremiumViewModel
 
     @Before
@@ -48,6 +51,7 @@ class PremiumViewModelTest {
             getPremiumAudiosMediatorUseCase = getPremiumAudiosMediatorUseCase,
             getPremiumAudioByIdUseCase = getPremiumAudioByIdUseCase,
             isBearerTokenValid = isBearerTokenValid,
+            markPremiumAudioAsListenedUseCase = markPremiumAudioAsListenedUseCase,
             dispatcher = testDispatcher
         )
     }
