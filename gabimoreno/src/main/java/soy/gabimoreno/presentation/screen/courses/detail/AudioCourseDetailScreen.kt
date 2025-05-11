@@ -167,7 +167,10 @@ fun AudioCourseDetailScreen(
                     .border(1.dp, Black.copy(alpha = 0.2f)),
                 verticalArrangement = Arrangement.spacedBy(Spacing.s16),
             ) {
-                items(state.audioCourse.audios.size) { index ->
+                items(
+                    count = state.audioCourse.audios.size,
+                    key = { state.audioCourse.audios[it].id }
+                ) { index ->
                     ItemAudioCourse(
                         audioCourseItem = state.audioCourse.audios[index],
                         audioCourseTitle = state.audioCourse.title,
