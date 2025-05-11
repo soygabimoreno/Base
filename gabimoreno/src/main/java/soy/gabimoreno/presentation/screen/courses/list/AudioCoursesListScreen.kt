@@ -111,7 +111,10 @@ private fun CoursesListScreenScreen(
                         .padding(horizontal = Spacing.s8),
                     verticalArrangement = Arrangement.spacedBy(Spacing.s16),
                 ) {
-                    items(state.audiocourses.size) { index ->
+                    items(
+                        count = state.audiocourses.size,
+                        key = { state.audiocourses[it].id }
+                    ) { index ->
                         ItemListCourse(
                             audioCourse = state.audiocourses[index],
                             onItemClick = { onAction(AudioCoursesListAction.OnItemClicked(state.audiocourses[index].id)) }
