@@ -8,11 +8,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.GetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
+import soy.gabimoreno.domain.usecase.GetShouldIReloadAudioCoursesUseCase
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.domain.usecase.SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
 import soy.gabimoreno.domain.usecase.SetJwtAuthTokenUseCase
+import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 import soy.gabimoreno.framework.datastore.DataStoreMemberSession
 import javax.inject.Singleton
 
@@ -61,4 +63,16 @@ object DataStoreModule {
     fun provideGetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
         @ApplicationContext context: Context,
     ) = GetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(context)
+
+    @Provides
+    @Singleton
+    fun provideGetShouldIReloadAudioCoursesUseCase(
+        @ApplicationContext context: Context,
+    ) = GetShouldIReloadAudioCoursesUseCase(context)
+
+    @Provides
+    @Singleton
+    fun provideSetShouldIReloadAudioCoursesUseCase(
+        @ApplicationContext context: Context,
+    ) = SetShouldIReloadAudioCoursesUseCase(context)
 }

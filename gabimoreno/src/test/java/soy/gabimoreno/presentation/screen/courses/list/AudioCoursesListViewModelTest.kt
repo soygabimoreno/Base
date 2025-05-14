@@ -8,6 +8,7 @@ import io.mockk.coEvery
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
@@ -25,20 +26,29 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
+import soy.gabimoreno.domain.usecase.GetShouldIReloadAudioCoursesUseCase
+import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 import soy.gabimoreno.fake.buildAudioCourses
 
 
 class AudioCoursesListViewModelTest {
 
     private val getCoursesUseCase = relaxedMockk<GetAudioCoursesUseCase>()
+    private val getShouldIReloadAudioCoursesUseCase =
+        relaxedMockk<GetShouldIReloadAudioCoursesUseCase>()
+    private val setShouldIReloadAudioCoursesUseCase =
+        relaxedMockk<SetShouldIReloadAudioCoursesUseCase>()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: AudioCoursesListViewModel
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+        coEvery { getShouldIReloadAudioCoursesUseCase() } returns flowOf(false)
         viewModel = AudioCoursesListViewModel(
             getCoursesUseCase,
+            getShouldIReloadAudioCoursesUseCase,
+            setShouldIReloadAudioCoursesUseCase,
             testDispatcher
         )
     }
@@ -56,6 +66,8 @@ class AudioCoursesListViewModelTest {
 
             viewModel = AudioCoursesListViewModel(
                 getCoursesUseCase = getCoursesUseCase,
+                getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
+                setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
                 dispatcher = testDispatcher
             )
             advanceUntilIdle()
@@ -77,6 +89,8 @@ class AudioCoursesListViewModelTest {
 
         viewModel = AudioCoursesListViewModel(
             getCoursesUseCase,
+            getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
+            setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
             testDispatcher
         )
         advanceUntilIdle()
@@ -98,6 +112,8 @@ class AudioCoursesListViewModelTest {
 
         viewModel = AudioCoursesListViewModel(
             getCoursesUseCase = getCoursesUseCase,
+            getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
+            setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
             dispatcher = testDispatcher
         )
         advanceUntilIdle()
