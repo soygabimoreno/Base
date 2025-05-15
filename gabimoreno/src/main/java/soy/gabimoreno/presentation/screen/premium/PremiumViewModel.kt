@@ -24,7 +24,9 @@ import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
+import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
+import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,6 +40,8 @@ class PremiumViewModel @Inject constructor(
     private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase,
     private val isBearerTokenValid: IsBearerTokenValid,
     private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
+    private val setShouldIReloadAudioCoursesUseCase: SetShouldIReloadAudioCoursesUseCase,
+    private val resetJwtAuthTokenUseCase: ResetJwtAuthTokenUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -181,6 +185,7 @@ class PremiumViewModel @Inject constructor(
                                     val isActive = member.isActive || member.status == Status.FREE
                                     memberSession.setActive(isActive)
                                     loginSuccessPerform(email, password)
+                                    setShouldIReloadAudioCoursesUseCase(true)
                                 }
                             )
                     }
@@ -249,6 +254,8 @@ class PremiumViewModel @Inject constructor(
                 shouldShowAccess = true,
                 shouldShowPremium = false
             )
+            resetJwtAuthTokenUseCase()
+            setShouldIReloadAudioCoursesUseCase(true)
         }
     }
 
