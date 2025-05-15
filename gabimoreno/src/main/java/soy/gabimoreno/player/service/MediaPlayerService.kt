@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.media.MediaBrowserServiceCompat
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource
@@ -16,6 +18,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import soy.gabimoreno.player.exoplayer.AudioMediaSource
 import soy.gabimoreno.player.exoplayer.MediaPlaybackPreparer
 import soy.gabimoreno.player.exoplayer.MediaPlayerNotificationListener
@@ -38,6 +43,8 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
+
+    private var progressJob: Job? = null
 
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var mediaSessionConnector: MediaSessionConnector
@@ -93,6 +100,48 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         ) {
             currentDuration = exoPlayer.duration
         }
+        exoPlayer.addListener(progressListener)
+    }
+
+    private val progressListener = object : Player.Listener {
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            if (isPlaying) {
+                startProgressUpdates()
+            } else {
+                stopProgressUpdates()
+            }
+        }
+    }
+
+    private fun startProgressUpdates() {
+        if (progressJob?.isActive == true) return
+
+        progressJob = serviceScope.launch(Dispatchers.Main) {
+            while (isActive) {
+                val position = exoPlayer.currentPosition
+                val duration = exoPlayer.duration.takeIf { it > 0 } ?: 1L
+                val progress = position.toFloat() / duration
+
+                updatePlaybackState(progress)
+
+                delay(POSITION_UPDATE_INTERVAL)
+            }
+        }
+    }
+
+    private fun stopProgressUpdates() {
+        progressJob?.cancel()
+    }
+
+    private fun updatePlaybackState(progress: Float) {
+        val state = PlaybackStateCompat.Builder()
+            .setState(PlaybackStateCompat.STATE_PLAYING, exoPlayer.currentPosition, 1f)
+            .setExtras(Bundle().apply {
+                putFloat(PROGRESS_EXTRA, progress)
+            })
+            .build()
+
+        mediaSession.setPlaybackState(state)
     }
 
     override fun onStartCommand(
@@ -160,6 +209,8 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     override fun onDestroy() {
         super.onDestroy()
         serviceScope.cancel()
+        exoPlayer.removeListener(progressListener)
+        stopProgressUpdates()
         exoPlayer.release()
     }
 
@@ -179,3 +230,5 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 const val MEDIA_ROOT_ID = "TUVESUFfUk9PVF9JRA" // TODO: change it
 const val START_MEDIA_PLAYBACK_ACTION = "START_MEDIA_PLAYBACK_ACTION"
 const val REFRESH_MEDIA_BROWSER_CHILDREN = "REFRESH_MEDIA_BROWSER_CHILDREN"
+const val PROGRESS_EXTRA = "PROGRESS"
+private const val POSITION_UPDATE_INTERVAL = 1_000L
