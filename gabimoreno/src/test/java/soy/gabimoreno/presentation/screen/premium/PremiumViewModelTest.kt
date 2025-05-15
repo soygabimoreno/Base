@@ -20,7 +20,9 @@ import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
+import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
+import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 
 @ExperimentalCoroutinesApi
 class PremiumViewModelTest {
@@ -37,6 +39,9 @@ class PremiumViewModelTest {
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private val markPremiumAudioAsListenedUseCase =
         relaxedMockk<MarkPremiumAudioAsListenedUseCase>()
+    private val setShouldIReloadAudioCoursesUseCase =
+        relaxedMockk<SetShouldIReloadAudioCoursesUseCase>()
+    private val resetJwtAuthTokenUseCase = relaxedMockk<ResetJwtAuthTokenUseCase>()
     private lateinit var viewModel: PremiumViewModel
 
     @Before
@@ -52,6 +57,8 @@ class PremiumViewModelTest {
             getPremiumAudioByIdUseCase = getPremiumAudioByIdUseCase,
             isBearerTokenValid = isBearerTokenValid,
             markPremiumAudioAsListenedUseCase = markPremiumAudioAsListenedUseCase,
+            setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
+            resetJwtAuthTokenUseCase = resetJwtAuthTokenUseCase,
             dispatcher = testDispatcher
         )
     }

@@ -10,16 +10,21 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
+import soy.gabimoreno.domain.usecase.GetShouldIReloadAudioCoursesUseCase
+import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class AudioCoursesListViewModel @Inject constructor(
     private val getCoursesUseCase: GetAudioCoursesUseCase,
+    private val getShouldIReloadAudioCoursesUseCase: GetShouldIReloadAudioCoursesUseCase,
+    private val setShouldIReloadAudioCoursesUseCase: SetShouldIReloadAudioCoursesUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -30,7 +35,18 @@ class AudioCoursesListViewModel @Inject constructor(
     val events = eventChannel.asSharedFlow()
 
     init {
-        onViewScreen()
+        viewModelScope.launch(dispatcher) {
+            getShouldIReloadAudioCoursesUseCase()
+                .distinctUntilChanged()
+                .collect { shouldIReload ->
+                    if (shouldIReload) {
+                        setShouldIReloadAudioCoursesUseCase(false)
+                        onViewScreen(forceRefresh = true)
+                    } else {
+                        onViewScreen()
+                    }
+                }
+        }
     }
 
     private fun onViewScreen(forceRefresh: Boolean = false) {

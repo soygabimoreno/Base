@@ -55,9 +55,11 @@ fun DetailScreen(
     var audio: Audio? = null
     when (feature) {
         Feature.PODCAST -> {
-            audios =
-                (homeViewModel.viewState as HomeViewModel.ViewState.Success).episodes
-            audio = homeViewModel.findEpisodeFromId(audioId)
+            val viewState = homeViewModel.viewState
+            if (viewState is HomeViewModel.ViewState.Success) {
+                audios = viewState.episodes
+                audio = homeViewModel.findEpisodeFromId(audioId)
+            }
         }
 
         Feature.PREMIUM -> {
