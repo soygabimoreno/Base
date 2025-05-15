@@ -7,6 +7,9 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.player.exoplayer.AudioMediaSource
 import soy.gabimoreno.player.extension.currentPosition
@@ -38,6 +41,9 @@ class MediaPlayerServiceConnection @Inject constructor(
     ).apply {
         connect()
     }
+
+    private val _progressFlow = MutableStateFlow(0f)
+    val progressFlow: StateFlow<Float> = _progressFlow.asStateFlow()
 
     fun playAudios(audios: List<Audio>) {
         mediaSource.setAudios(audios)
@@ -108,6 +114,9 @@ class MediaPlayerServiceConnection @Inject constructor(
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             super.onPlaybackStateChanged(state)
             playbackState.value = state
+
+            val progress = state?.extras?.getFloat(PROGRESS_EXTRA, 0f) ?: 0f
+            _progressFlow.value = progress
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {

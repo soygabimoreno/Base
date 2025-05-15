@@ -2,12 +2,12 @@ package soy.gabimoreno.presentation.screen.player
 
 import android.support.v4.media.MediaBrowserCompat
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.common.annotations.VisibleForTesting
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -55,7 +55,7 @@ class PlayerViewModel @Inject constructor(
 
     var showPlayerFullScreen by mutableStateOf(false)
 
-    private var currentPlaybackPosition by mutableStateOf(0L)
+    private var currentPlaybackPosition by mutableLongStateOf(0L)
 
     internal var hasTriggeredEightyPercent by mutableStateOf(false)
 
@@ -77,13 +77,19 @@ class PlayerViewModel @Inject constructor(
         snapshotFlow { currentPlayingAudio.value?.id }
             .distinctUntilChanged()
             .onEach { newId ->
-                previousAudioId?.let { audioId ->
-                    markAudioAsListened(audioId)
+                if (previousAudioId != newId) {
+                    hasTriggeredEightyPercent = false
+                    previousAudioId = newId
                 }
-                hasTriggeredEightyPercent = false
-                previousAudioId = newId
             }
             .launchIn(viewModelScope)
+        viewModelScope.launch {
+            mediaPlayerServiceConnection.progressFlow.collect { progress ->
+                if (progress >= SET_AUDIO_AS_LISTENED) {
+                    markAudioAsListened(currentPlayingAudio.value?.id.orEmpty())
+                }
+            }
+        }
     }
 
     fun getCurrentPlaybackFormattedPosition(): String {
@@ -215,10 +221,6 @@ class PlayerViewModel @Inject constructor(
         val currentPosition = playbackState.value?.currentPosition
         if (currentPosition != null && currentPosition != currentPlaybackPosition) {
             currentPlaybackPosition = currentPosition
-            val progress = currentPlaybackPosition.toFloat() / currentAudioDuration
-            if (progress >= SET_AUDIO_AS_LISTENED) {
-                markAudioAsListened(currentPlayingAudio.value?.id ?: "")
-            }
         }
         delay(PLAYBACK_POSITION_UPDATE_INTERVAL)
         updateCurrentPlaybackPosition()
