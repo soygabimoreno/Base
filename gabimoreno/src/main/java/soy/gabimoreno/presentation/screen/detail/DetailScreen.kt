@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -30,10 +31,12 @@ import soy.gabimoreno.presentation.navigation.Feature
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
 import soy.gabimoreno.presentation.theme.Spacing
+import soy.gabimoreno.presentation.theme.White
 import soy.gabimoreno.presentation.ui.AudioImage
 import soy.gabimoreno.presentation.ui.BackButton
 import soy.gabimoreno.presentation.ui.EmphasisText
 import soy.gabimoreno.presentation.ui.SelectableEmphasisText
+import soy.gabimoreno.presentation.ui.button.AnimatedIconButton
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
 import soy.gabimoreno.util.formatMillisecondsAsDate
 import soy.gabimoreno.util.toDurationMinutes
@@ -69,7 +72,6 @@ fun DetailScreen(
         }
 
         else -> Unit
-
     }
 
     LaunchedEffect(Unit) {
@@ -136,7 +138,9 @@ fun DetailScreen(
 
                     Spacer(modifier = Modifier.height(Spacing.s16))
 
-                    Row {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         PrimaryButton(
                             text = playButtonText,
                             height = Spacing.s48
@@ -149,9 +153,13 @@ fun DetailScreen(
 
                         Spacer(modifier = Modifier.weight(1f))
 
-                        soy.gabimoreno.presentation.ui.IconButton(
+                        AnimatedIconButton(
+                            showAnimation = (
+                                playerViewModel.currentPlayingAudio.value?.id == audio.id &&
+                                    playerViewModel.hasTriggeredEightyPercent),
                             imageVector = Icons.Default.Share,
                             contentDescription = stringResource(R.string.share),
+                            tint = White,
                             padding = Spacing.s16
                         ) {
                             detailViewModel.onShareClicked(currentContext, audio)
