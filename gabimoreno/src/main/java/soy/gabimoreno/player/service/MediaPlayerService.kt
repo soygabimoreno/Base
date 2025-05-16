@@ -21,6 +21,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import soy.gabimoreno.di.CacheProvider
 import soy.gabimoreno.player.exoplayer.AudioMediaSource
 import soy.gabimoreno.player.exoplayer.MediaPlaybackPreparer
 import soy.gabimoreno.player.exoplayer.MediaPlayerNotificationListener
@@ -212,6 +213,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         exoPlayer.removeListener(progressListener)
         stopProgressUpdates()
         exoPlayer.release()
+        CacheProvider.release()
     }
 
     private fun preparePlayer(
