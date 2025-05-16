@@ -13,4 +13,5 @@ interface PremiumAudiosRepository {
 
     suspend fun markPremiumAudioAsListened(id: String, hasBeenListened: Boolean)
     suspend fun getPremiumAudioById(idPremiumAudio: String): Either<Throwable, PremiumAudio>
+    suspend fun markAllPremiumAudiosAsUnlistened()
 }

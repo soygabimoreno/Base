@@ -4,6 +4,7 @@
     <string name="nav_item_podcast">Podcast</string>
     <string name="nav_item_premium">Premium</string>
     <string name="nav_item_courses">Audiocursos</string>
+    <string name="nav_item_profile">Perfil</string>
 
     <string name="playback_notification_channel_name">Los androides</string>
     <string name="playback_notification_channel_description">Te ayudo a CRECER en tu carrera profesional como DESARROLLADOR ANDROID. 💪🏼</string>
@@ -21,16 +22,25 @@
     <string name="forward_10_seconds">Avanzar 10 segundos</string>
     <string name="skip_to_previous">Ir al anterior</string>
     <string name="skip_to_next">Ir al siguiente</string>
+    <string name="login_title">Acceder a mi cuenta</string>
+    <string name="logout_title">Cerrar sesión</string>
+    <string name="logout_question">¿Quieres cerrar la sesión?</string>
     <string name="premium_description">Desde aquí podrás acceder al contenido premium.\n\nDisponible a partir del lunes 12 de septiembre.</string>
     <string name="premium_premium">Premium</string>
     <string name="premium_login">Acceder</string>
     <string name="premium_logout">Salir</string>
     <string name="premium_email">Email</string>
     <string name="premium_password">Password</string>
+    <string name="non_premium_image_cd">Logotipo comunidad Los Androides Premium</string>
+    <string name="non_premium_title">Consigue un mejor trabajo como </string>
+    <string name="non_premium_title_span">Android Developer</string>
+    <string name="non_premium_text">Si ya eres miembro puedes acceder a los audios premium pulsando en el botón de login.</string>
+    <string name="non_premium_info_link">Más información</string>
     <string name="premium_email_error_invalid_format">El email no tiene el formato adecuado</string>
     <string name="premium_password_error_invalid">El password tiene menos de 4 caracteres</string>
     <string name="premium_error_generate_auth_cookie">Error de autenticación.\nAsegúrate de que los credenciales sean los correctos.</string>
     <string name="premium_error_token_expired">Accede de nuevo, por favor.\nEl token había expirado.</string>
+    <string name="premium_login_success">Login correcto</string>
     <string name="premium_end_preview_message">Los audios de muestra durán 1 minuto</string>
     <string name="premium_audio_listened">Premium audio escuchado</string>
     <string name="search">Búsqueda</string>
@@ -43,5 +53,13 @@
     <string name="course_active">Audiocurso activo</string>
     <string name="course_listened">Audiocurso escuchado</string>
     <string name="course_link">Accede al audiocurso completo</string>
-
+    <string name="profile_info_email">Sesión iniciada con el</string>
+    <string name="profile_no_session">No se ha iniciado sesión</string>
+    <string name="profile_reset_audiocourses">Resetear audiocursos escuchados</string>
+    <string name="profile_reset_premium">Resetear audios premium escuchados</string>
+    <string name="profile_reset_success_premium">Reseteados audios premium escuchados.</string>
+    <string name="profile_reset_success_audiocurses">Reseteados audios cursos escuchados.</string>
+    <string name="profile_reset_dialog_title">¿Estás seguro?</string>
+    <string name="profile_reset_dialog_text">Se resetearan todos las marcar de los audios escuchados.</string>
+    <string name="profile_reset_dialog_confirm">Resetear</string>
 </resources>

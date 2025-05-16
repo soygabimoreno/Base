@@ -13,5 +13,6 @@ interface AudioCoursesRepository {
 
     suspend fun getCourseById(idCourse: String): Either<Throwable, Flow<AudioCourse>>
     suspend fun markAudioCourseItemAsListened(id: String, hasBeenListened: Boolean)
+    suspend fun markAllAudioCourseItemAsUnlistened()
     suspend fun reset()
 }

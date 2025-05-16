@@ -21,6 +21,7 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.local.GabiMorenoDatabase
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseDbModelDao
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseItemDbModelDao
@@ -131,6 +132,19 @@ class LocalAudioCoursesDataSourceTest {
 
         result shouldBe null
         coVerifyOnce { audioCourseTransactionDao.getAudioCourseWithItems(id) }
+    }
+
+    @Test
+    fun `GIVEN dataSource WHEN markAllAudioCourseItemAsUnlistened THEN dao is called`() = runTest {
+        every {
+            audioCourseItemDbModelDao.markAllAudioCourseItemAsUnlistened()
+        } returns Unit
+
+        dataSource.markAllAudioCourseItemAsUnlistened()
+
+        verifyOnce {
+            audioCourseItemDbModelDao.markAllAudioCourseItemAsUnlistened()
+        }
     }
 
     @Test

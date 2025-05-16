@@ -14,20 +14,23 @@ import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListScreenRoo
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
 import soy.gabimoreno.presentation.screen.premium.PremiumScreenRoot
+import soy.gabimoreno.presentation.screen.profile.ProfileScreenRoot
 import soy.gabimoreno.presentation.screen.webview.WebViewScreen
 
 @Composable
 fun AppNavigation(
     navController: NavHostController,
     appState: AppState,
+    onRequireAuth: () -> Unit
 ) {
     NavHost(
         navController = navController,
         startDestination = appState.startDestination
     ) {
         podcastNav(navController, appState)
-        premiumNav(navController, appState)
+        premiumNav(navController, appState, onRequireAuth)
         audioCoursesNav(navController, appState)
+        profileNav(navController, appState, onRequireAuth)
     }
 }
 
@@ -85,6 +88,7 @@ private fun NavGraphBuilder.podcastNav(
 private fun NavGraphBuilder.premiumNav(
     navController: NavController,
     appState: AppState,
+    onRequireAuth: () -> Unit,
 ) {
     navigation(
         startDestination = NavCommand.ContentType(Feature.PREMIUM).route,
@@ -92,9 +96,12 @@ private fun NavGraphBuilder.premiumNav(
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.PREMIUM)) {
             appState.setStartDestination(Feature.PREMIUM)
-            PremiumScreenRoot { premiumAudioId ->
-                navController.navigateToDetailFromPremium(premiumAudioId)
-            }
+            PremiumScreenRoot(
+                onRequireAuth = onRequireAuth,
+                onItemClicked = { premiumAudioId ->
+                    navController.navigateToDetailFromPremium(premiumAudioId)
+                }
+            )
         }
         composable(
             navCommand = NavCommand.ContentDetail(
@@ -139,6 +146,22 @@ private fun NavGraphBuilder.audioCoursesNav(
                     navController.goBack()
                 }
             )
+        }
+    }
+}
+
+private fun NavGraphBuilder.profileNav(
+    navController: NavController,
+    appState: AppState,
+    onRequireAuth: () -> Unit,
+) {
+    navigation(
+        startDestination = NavCommand.ContentType(Feature.PROFILE).route,
+        route = Feature.PROFILE.route
+    ) {
+        composable(navCommand = NavCommand.ContentType(Feature.PROFILE)) {
+            appState.setStartDestination(Feature.PROFILE)
+            ProfileScreenRoot(onRequireAuth)
         }
     }
 }

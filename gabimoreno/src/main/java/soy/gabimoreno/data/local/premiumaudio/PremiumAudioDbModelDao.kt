@@ -22,6 +22,9 @@ interface PremiumAudioDbModelDao {
     @Upsert()
     fun upsertPremiumAudioDbModels(premiumAudioDbModels: List<PremiumAudioDbModel>)
 
+    @Query("UPDATE PremiumAudioDbModel SET hasBeenListened = 0")
+    fun markAllPremiumAudiosAsUnlistened()
+
     @Query("UPDATE PremiumAudioDbModel SET hasBeenListened = :hasBeenListened WHERE id = :id")
     fun updateHasBeenListened(id: String, hasBeenListened: Boolean)
 

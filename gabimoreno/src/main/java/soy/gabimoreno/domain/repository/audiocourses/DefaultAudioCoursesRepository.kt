@@ -68,6 +68,10 @@ class DefaultAudioCoursesRepository @Inject constructor(
         localAudioCoursesDataSource.updateHasBeenListened(id, hasBeenListened)
     }
 
+    override suspend fun markAllAudioCourseItemAsUnlistened() {
+        localAudioCoursesDataSource.markAllAudioCourseItemAsUnlistened()
+    }
+
     override suspend fun reset() {
         localAudioCoursesDataSource.reset()
     }

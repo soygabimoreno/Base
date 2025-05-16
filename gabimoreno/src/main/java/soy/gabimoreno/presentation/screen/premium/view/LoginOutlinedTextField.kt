@@ -8,15 +8,18 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import soy.gabimoreno.framework.toast
+import soy.gabimoreno.presentation.theme.White
 
 @Composable
 fun LoginOutlinedTextField(
@@ -32,6 +35,7 @@ fun LoginOutlinedTextField(
         ),
     keyboardActions: KeyboardActions = KeyboardActions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    leadingIcon: ImageVector,
     onValueChange: (String) -> Unit,
 ) {
     OutlinedTextField(
@@ -39,6 +43,7 @@ fun LoginOutlinedTextField(
         onValueChange = { onValueChange(it) },
         placeholder = { Text(text = placeholderText) },
         maxLines = 1,
+        leadingIcon = { Icon(leadingIcon, placeholderText) },
         trailingIcon = {
             if (showError) {
                 val context = LocalContext.current
@@ -57,6 +62,9 @@ fun LoginOutlinedTextField(
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            backgroundColor = White.copy(alpha = 0.1f),
+        )
     )
 }

@@ -39,6 +39,10 @@ class LocalPremiumAudiosDataSource @Inject constructor(
         premiumAudioDbModelDao.updateHasBeenListened(id, hasBeenListened)
     }
 
+    suspend fun markAllPremiumAudiosAsUnlistened() = withContext(dispatcher) {
+        premiumAudioDbModelDao.markAllPremiumAudiosAsUnlistened()
+    }
+
     suspend fun getPremiumAudios(): List<PremiumAudio> = withContext(dispatcher) {
         premiumAudioDbModelDao.getPremiumAudioDbModels().map {
             it.toPremiumAudio()

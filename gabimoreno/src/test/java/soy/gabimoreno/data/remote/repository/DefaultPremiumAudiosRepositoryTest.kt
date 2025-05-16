@@ -91,4 +91,18 @@ class DefaultPremiumAudiosRepositoryTest {
                 localPremiumAudiosDataSource.updateHasBeenListened(premiumAudio.id, false)
             }
         }
+
+    @Test
+    fun `GIVEN repository WHEN markAllPremiumAudiosAsUnlistened THEN local dataSource is called`() =
+        runTest {
+            coEvery {
+                localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
+            } returns Unit
+
+            repository.markAllPremiumAudiosAsUnlistened()
+
+            coVerifyOnce {
+                localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
+            }
+        }
 }
