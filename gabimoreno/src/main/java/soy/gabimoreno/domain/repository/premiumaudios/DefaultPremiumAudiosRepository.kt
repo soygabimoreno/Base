@@ -68,6 +68,10 @@ class DefaultPremiumAudiosRepository @Inject constructor(
             ?: Throwable("PremiumAudio not found").left()
     }
 
+    override suspend fun markAllPremiumAudiosAsUnlistened() {
+        return localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
+    }
+
     suspend fun reset() {
         localPremiumAudiosDataSource.reset()
     }

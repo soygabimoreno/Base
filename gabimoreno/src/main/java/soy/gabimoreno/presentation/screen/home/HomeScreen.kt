@@ -2,8 +2,13 @@ package soy.gabimoreno.presentation.screen.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -56,8 +61,8 @@ fun HomeScreen(
         Column {
             Text(
                 homeViewModel.appVersionName, modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(start = Spacing.s16, top = Spacing.s4, bottom = Spacing.s4)
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+                    .padding(start = Spacing.s16, bottom = Spacing.s4)
             )
             OutlinedTextField(
                 value = searchTextState,

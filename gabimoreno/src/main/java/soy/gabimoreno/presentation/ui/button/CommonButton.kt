@@ -27,10 +27,11 @@ fun CommonButton(
     text: String,
     height: Dp,
     background: Color,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .defaultMinSize(Spacing.oddSpacing200)
             .height(height)
             .clip(CircleShape)

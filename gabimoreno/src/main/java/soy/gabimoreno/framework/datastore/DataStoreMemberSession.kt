@@ -20,4 +20,8 @@ class DataStoreMemberSession @Inject constructor(
     override suspend fun getEmail(): String {
         return context.getEmail().first()
     }
+
+    override suspend fun setEmail(email: String?) {
+        return context.setEmail(email)
+    }
 }

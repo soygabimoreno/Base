@@ -13,9 +13,9 @@ fun Context.getEmail(): Flow<String> {
         }
 }
 
-suspend fun Context.setEmail(email: String) {
+suspend fun Context.setEmail(email: String?) {
     dataStore.edit { settings ->
-        settings[key] = email
+        settings[key] = email ?: EMPTY_EMAIL
     }
 }
 

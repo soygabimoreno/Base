@@ -207,6 +207,20 @@ class DefaultAudioCoursesRepositoryTest {
         }
 
     @Test
+    fun `GIVEN repository WHEN markAllAudioCourseItemAsUnlistened THEN local dataSource is called`() =
+        runTest {
+            coEvery {
+                localAudioCoursesDataSource.markAllAudioCourseItemAsUnlistened()
+            } returns Unit
+
+            repository.markAllAudioCourseItemAsUnlistened()
+
+            coVerifyOnce {
+                localAudioCoursesDataSource.markAllAudioCourseItemAsUnlistened()
+            }
+        }
+
+    @Test
     fun `WHEN reset THEN call reset on local`() = runTest {
         coEvery { localAudioCoursesDataSource.reset() } returns Unit
 

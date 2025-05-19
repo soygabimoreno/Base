@@ -103,6 +103,19 @@ class LocalPremiumAudiosDataSourceTest {
     }
 
     @Test
+    fun `GIVEN datasource WHEN markAllPremiumAudiosAsUnlistened THEN dao is called`() = runTest {
+        every {
+            premiumAudioDbModelDao.markAllPremiumAudiosAsUnlistened()
+        } returns Unit
+
+        datasource.markAllPremiumAudiosAsUnlistened()
+
+        verifyOnce {
+            premiumAudioDbModelDao.markAllPremiumAudiosAsUnlistened()
+        }
+    }
+
+    @Test
     fun `WHEN reset THEN the database is empty`() = runTest {
         // TODO: Maybe should I use the `gabimoreno-db-test` for this purpose?
     }

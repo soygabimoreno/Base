@@ -4,6 +4,7 @@ package soy.gabimoreno.presentation.screen.premium
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,17 +25,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -49,61 +50,65 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import soy.gabimoreno.R
 import soy.gabimoreno.domain.model.content.PremiumAudio
-import soy.gabimoreno.framework.datastore.getEmail
-import soy.gabimoreno.framework.datastore.getPassword
+import soy.gabimoreno.framework.datastore.isMemberActive
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
-import soy.gabimoreno.presentation.screen.premium.view.LoginOutlinedTextField
 import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
-import soy.gabimoreno.presentation.ui.button.PrimaryButton
 
 @Composable
 fun PremiumScreenRoot(
+    onRequireAuth: () -> Unit,
     onItemClicked: (premiumAudioId: String) -> Unit,
 ) {
     val context = LocalContext.current
     val premiumViewModel = ViewModelProvider.premiumViewModel
 
     LaunchedEffect(Unit) {
-        val previousEmail = context.getEmail().first()
-        val previousPassword = context.getPassword().first()
-
-        premiumViewModel.onAction(PremiumAction.OnViewScreen(previousEmail, previousPassword))
-
-        premiumViewModel.events.collect { event ->
-            when (event) {
-                is PremiumEvent.Error -> {
-                    context.toast(context.getString(R.string.unexpected_error))
+        launch {
+            context.isMemberActive()
+                .distinctUntilChanged()
+                .collect { isMemberActive ->
+                    premiumViewModel.onViewScreen(isMemberActive)
                 }
+        }
+        launch {
+            premiumViewModel.events.collect { event ->
+                when (event) {
+                    is PremiumEvent.Error -> {
+                        context.toast(context.getString(R.string.unexpected_error))
+                    }
 
-                PremiumEvent.ShowLoginError -> {
-                    context.toast(context.getString(R.string.premium_error_generate_auth_cookie))
-                }
+                    PremiumEvent.ShowTokenExpiredError -> {
+                        context.toast(context.getString(R.string.premium_error_token_expired))
+                    }
 
-                PremiumEvent.ShowTokenExpiredError -> {
-                    context.toast(context.getString(R.string.premium_error_token_expired))
-                }
-
-                is PremiumEvent.ShowDetail -> {
-                    onItemClicked(event.premiumAudioId)
+                    is PremiumEvent.ShowDetail -> {
+                        onItemClicked(event.premiumAudioId)
+                    }
                 }
             }
         }
@@ -111,7 +116,13 @@ fun PremiumScreenRoot(
 
     PremiumScreen(
         state = premiumViewModel.state,
-        onAction = premiumViewModel::onAction
+        onAction = { action ->
+            when (action) {
+                is PremiumAction.OnLoginClicked -> onRequireAuth()
+                else -> Unit
+            }
+            premiumViewModel.onAction(action)
+        }
     )
 }
 
@@ -120,7 +131,6 @@ fun PremiumScreen(
     state: PremiumState,
     onAction: (PremiumAction) -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
     val premiumAudiosFlow = state.premiumAudioFlow.collectAsLazyPagingItems()
 
     Column(
@@ -128,90 +138,101 @@ fun PremiumScreen(
             .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
     ) {
-        if (state.shouldShowAccess && !state.shouldShowPremium) {
-            Column(modifier = Modifier.padding(Spacing.s16)) {
-                Text(
-                    text = stringResource(id = R.string.premium_login).uppercase(),
-                    style = MaterialTheme.typography.h6
-                )
-                Spacer()
-                LoginOutlinedTextField(
-                    value = state.email,
-                    placeholderText = stringResource(id = R.string.premium_email),
-                    showError = state.showInvalidEmailFormatError,
-                    errorText = stringResource(id = R.string.premium_email_error_invalid_format),
-                    onValueChange = { onAction(PremiumAction.OnEmailChanged(it)) }
-                )
-                Spacer()
-                LoginOutlinedTextField(
-                    value = state.password,
-                    placeholderText = stringResource(id = R.string.premium_password),
-                    showError = state.showInvalidPasswordError,
-                    errorText = stringResource(id = R.string.premium_password_error_invalid),
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        autoCorrectEnabled = false,
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done,
-                    ),
-                    keyboardActions =
-                        KeyboardActions(
-                            onAny = {
-                                focusManager.clearFocus()
-                                onAction(PremiumAction.OnLoginClicked)
-                            },
-                        ),
-                    onValueChange = { onAction(PremiumAction.OnPasswordChanged(it)) }
-                )
-                Spacer()
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    PrimaryButton(
-                        text = stringResource(id = R.string.premium_login),
-                        height = Spacing.s48
-                    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(id = R.string.nav_item_premium).uppercase(),
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(top = Spacing.s16, start = Spacing.s16)
+            )
+            Icon(
+                imageVector = if (state.shouldIAccessPremium)
+                    Icons.AutoMirrored.Filled.Logout else Icons.Default.Person,
+                contentDescription = stringResource(
+                    if (state.shouldIAccessPremium)
+                        R.string.premium_logout else R.string.premium_login
+                ),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = Spacing.s8, end = Spacing.s8)
+                    .clip(CircleShape)
+                    .clickable {
                         onAction(PremiumAction.OnLoginClicked)
                     }
-                }
-            }
-        }
-
-        if (state.shouldShowPremium) {
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(id = R.string.nav_item_premium).uppercase(),
-                    style = MaterialTheme.typography.h5,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(top = Spacing.s16, start = Spacing.s16)
-                )
-                Icon(
-                    Icons.AutoMirrored.Filled.Logout,
-                    contentDescription = stringResource(R.string.premium_logout),
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = Spacing.s8, end = Spacing.s8)
-                        .clip(CircleShape)
-                        .clickable {
-                            onAction(PremiumAction.OnLogoutClicked)
-                        }
-                        .padding(Spacing.s8)
-                )
-            }
+                    .padding(Spacing.s8)
+            )
             Spacer()
-            PremiumContent(
-                premiumAudios = premiumAudiosFlow,
-                onItemClicked = { onAction(PremiumAction.OnPremiumItemClicked(it)) },
-                onListenedToggled = { onAction(PremiumAction.OnListenedToggled(it)) },
-                onPullRefreshTriggered = { onAction(PremiumAction.OnRefreshContent) })
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            if (state.shouldIAccessPremium) {
+                PremiumContent(
+                    premiumAudios = premiumAudiosFlow,
+                    onItemClicked = { onAction(PremiumAction.OnPremiumItemClicked(it)) },
+                    onListenedToggled = { onAction(PremiumAction.OnListenedToggled(it)) },
+                    onPullRefreshTriggered = { onAction(PremiumAction.OnRefreshContent) })
+            } else {
+                NonPremiumContent()
+            }
+            ShowLoading(state.isLoading)
         }
     }
+}
 
-    ShowLoading(state.isLoading)
+@Composable
+fun NonPremiumContent() {
+    val uriHandler = LocalUriHandler.current
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(Spacing.s16),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_premium_logo),
+            contentDescription = stringResource(R.string.non_premium_image_cd),
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .width(350.dp)
+        )
+        Spacer()
+        val annotatedLoginString = buildAnnotatedString {
+            append(stringResource(R.string.non_premium_title))
+            append(" ")
+            withStyle(
+                SpanStyle(color = Orange, fontWeight = FontWeight.Bold)
+            ) {
+                append(stringResource(R.string.non_premium_title_span))
+            }
+        }
+        Text(
+            text = annotatedLoginString,
+            style = MaterialTheme.typography.h5,
+        )
+        Box(modifier = Modifier.weight(0.60f))
+        Text(
+            stringResource(R.string.non_premium_text),
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Justify
+        )
+        Box(modifier = Modifier.weight(0.05f))
+        TextButton(
+            onClick = {
+                uriHandler.openUri(URL_ANDROIDES_PREMIUM)
+            }) {
+            Text(
+                stringResource(R.string.non_premium_info_link),
+                fontWeight = FontWeight.SemiBold,
+                textDecoration = TextDecoration.Underline
+            )
+        }
+        Box(modifier = Modifier.weight(0.25f))
+    }
 }
 
 @Composable
@@ -348,3 +369,4 @@ private fun Spacer() {
 
 private const val REFRESH_DELAY = 1500L
 private const val CHANGE_COLOR_ANIMATION_DURATION = 300
+private const val URL_ANDROIDES_PREMIUM = "https://gabimoreno.soy/los-androides-premium"
