@@ -157,7 +157,7 @@ class AuthViewModel @Inject constructor(
 
     private fun showLoginError() {
         state = state.copy(
-            shouldShowAccess = false,
+            shouldShowAccess = true,
             isLoading = false
         )
         viewModelScope.launch {
@@ -167,7 +167,7 @@ class AuthViewModel @Inject constructor(
 
     private fun showTokenExpiredError() {
         state = state.copy(
-            shouldShowAccess = false,
+            shouldShowAccess = true,
             isLoading = false
         )
         viewModelScope.launch {
@@ -177,8 +177,8 @@ class AuthViewModel @Inject constructor(
 
     private fun loginSuccessPerform(email: String, password: String) {
         viewModelScope.launch {
-            saveCredentialsInDataStoreUseCase(email, password)
             setShouldIReloadAudioCoursesUseCase(true)
+            saveCredentialsInDataStoreUseCase(email, password)
             eventChannel.emit(AuthEvent.OnLoginEvent)
             state = state.copy(
                 isLoading = false,

@@ -52,7 +52,6 @@ fun ProfileScreenRoot(
 ) {
     val context = LocalContext.current
     val profileViewModel = ViewModelProvider.profileViewModel
-
     LaunchedEffect(Unit) {
         launch {
             context.getEmail()
