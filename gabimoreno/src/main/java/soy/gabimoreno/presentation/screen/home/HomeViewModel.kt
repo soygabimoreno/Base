@@ -19,6 +19,8 @@ import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
+import soy.gabimoreno.domain.usecase.GetShouldIReversePodcastOrderUseCase
+import soy.gabimoreno.domain.usecase.SetShouldIReversePodcastOrderUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,12 +29,17 @@ class HomeViewModel @Inject constructor(
     private val tracker: Tracker,
     getAppVersionNameUseCase: GetAppVersionNameUseCase,
     private val encodeUrlUseCase: EncodeUrlUseCase,
+    private val getShouldIReversePodcastOrderUseCase: GetShouldIReversePodcastOrderUseCase,
+    private val setShouldIReversePodcastOrderUseCase: SetShouldIReversePodcastOrderUseCase,
     @Main private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     var viewState by mutableStateOf<ViewState>(ViewState.Loading)
         private set
     private val _episodes = mutableListOf<Episode>()
+
+    var shouldIReversePodcastOrder by mutableStateOf(false)
+        private set
 
     var appVersionName by mutableStateOf("")
 
@@ -42,6 +49,9 @@ class HomeViewModel @Inject constructor(
     init {
         appVersionName = getAppVersionNameUseCase()
         searchPodcasts()
+        viewModelScope.launch(dispatcher) {
+            shouldIReversePodcastOrder = getShouldIReversePodcastOrderUseCase()
+        }
     }
 
     fun searchPodcasts() {
@@ -56,6 +66,11 @@ class HomeViewModel @Inject constructor(
                         if (_episodes.size != incomingEpisodes.size) {
                             _episodes.clear()
                             _episodes.addAll(incomingEpisodes)
+                            viewState = ViewState.Success(_episodes.toList())
+                        }
+                        val isFirstPodcast = Regex("^1\\..*")
+                        if (isFirstPodcast.matches(incomingEpisodes.last().title) && shouldIReversePodcastOrder) {
+                            _episodes.reverse()
                             viewState = ViewState.Success(_episodes.toList())
                         }
                     }
@@ -107,6 +122,16 @@ class HomeViewModel @Inject constructor(
             is ViewState.Success -> (viewState as ViewState.Success).episodes.find { it.id == id }
             else -> null
         }
+    }
+
+    fun toggleShouldIReversePodcastOrder() {
+        shouldIReversePodcastOrder = !shouldIReversePodcastOrder
+        viewState = ViewState.Loading
+        viewModelScope.launch(dispatcher) {
+            setShouldIReversePodcastOrderUseCase(shouldIReversePodcastOrder)
+        }
+        _episodes.reverse()
+        viewState = ViewState.Success(_episodes.toList())
     }
 
     sealed class ViewEvent {

@@ -20,6 +20,7 @@ import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
+import soy.gabimoreno.domain.usecase.RefreshAudioCoursesUseCase
 import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
@@ -35,6 +36,7 @@ class AuthViewModel @Inject constructor(
     private val isBearerTokenValid: IsBearerTokenValid,
     private val setShouldIReloadAudioCoursesUseCase: SetShouldIReloadAudioCoursesUseCase,
     private val resetJwtAuthTokenUseCase: ResetJwtAuthTokenUseCase,
+    private val refreshAudioCoursesUseCase: RefreshAudioCoursesUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -192,6 +194,7 @@ class AuthViewModel @Inject constructor(
             memberSession.setActive(false)
             memberSession.setEmail(email = null)
             resetJwtAuthTokenUseCase()
+            refreshAudioCoursesUseCase()
             state = state.copy(
                 isLoading = false,
                 shouldShowAccess = true,

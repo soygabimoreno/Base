@@ -19,6 +19,7 @@ import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.LoginUseCase
 import soy.gabimoreno.domain.usecase.LoginValidationUseCase
+import soy.gabimoreno.domain.usecase.RefreshAudioCoursesUseCase
 import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
@@ -34,6 +35,7 @@ class AuthViewModelTest {
     private val loginUseCase: LoginUseCase = relaxedMockk()
     private val isBearerTokenValid: IsBearerTokenValid = relaxedMockk()
     private val resetJwtAuthTokenUseCase = relaxedMockk<ResetJwtAuthTokenUseCase>()
+    private val refreshAudioCoursesUseCase = relaxedMockk<RefreshAudioCoursesUseCase>()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private val setShouldIReloadAudioCoursesUseCase =
         relaxedMockk<SetShouldIReloadAudioCoursesUseCase>()
@@ -51,6 +53,7 @@ class AuthViewModelTest {
             isBearerTokenValid = isBearerTokenValid,
             setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
             resetJwtAuthTokenUseCase = resetJwtAuthTokenUseCase,
+            refreshAudioCoursesUseCase = refreshAudioCoursesUseCase,
             dispatcher = testDispatcher
         )
     }

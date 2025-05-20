@@ -25,6 +25,8 @@ import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
+import soy.gabimoreno.domain.usecase.GetShouldIReversePodcastOrderUseCase
+import soy.gabimoreno.domain.usecase.SetShouldIReversePodcastOrderUseCase
 
 @ExperimentalCoroutinesApi
 class HomeViewModelTest {
@@ -33,6 +35,8 @@ class HomeViewModelTest {
     private val tracker: Tracker = relaxedMockk()
     private val getAppVersionNameUseCase: GetAppVersionNameUseCase = relaxedMockk()
     private val encodeUrlUseCase: EncodeUrlUseCase = relaxedMockk()
+    private val getShouldIReversePodcastOrderUseCase: GetShouldIReversePodcastOrderUseCase = relaxedMockk()
+    private val setShouldIReversePodcastOrderUseCase: SetShouldIReversePodcastOrderUseCase = relaxedMockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: HomeViewModel
 
@@ -44,6 +48,8 @@ class HomeViewModelTest {
             tracker,
             getAppVersionNameUseCase,
             encodeUrlUseCase,
+            getShouldIReversePodcastOrderUseCase,
+            setShouldIReversePodcastOrderUseCase,
             testDispatcher
         )
     }

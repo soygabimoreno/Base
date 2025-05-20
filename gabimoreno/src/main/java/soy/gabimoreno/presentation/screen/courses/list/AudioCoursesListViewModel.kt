@@ -52,26 +52,34 @@ class AudioCoursesListViewModel @Inject constructor(
     private fun onViewScreen(forceRefresh: Boolean = false) {
         state = state.copy(isLoading = true)
         viewModelScope.launch(dispatcher) {
-            getCoursesUseCase(
-                categories = listOf(Category.AUDIOCOURSES),
-                forceRefresh = forceRefresh
-            )
-                .onRight { audioCourses ->
-                    state = state.copy(
-                        isLoading = false,
-                        audiocourses = audioCourses
+            try {
+                viewModelScope.launch(dispatcher) {
+                    getCoursesUseCase(
+                        categories = listOf(Category.AUDIOCOURSES),
+                        forceRefresh = forceRefresh
                     )
-                }
-                .onLeft { throwable: Throwable ->
-                    when (throwable) {
-                        is TokenExpiredException -> {
-                            showTokenExpiredError()
+                        .onRight { audioCourses ->
+                            state = state.copy(
+                                isLoading = false,
+                                audiocourses = audioCourses,
+                            )
                         }
-
-                        else -> eventChannel.emit(AudioCoursesListEvent.Error(throwable))
-                    }
-                    state = state.copy(isLoading = false)
+                        .onLeft { throwable: Throwable ->
+                            handleThrowable(throwable)
+                            state = state.copy(isLoading = false)
+                        }
                 }
+            } catch (e: Exception) {
+                handleThrowable(e)
+                state = state.copy(isLoading = false)
+            }
+        }
+    }
+
+    private suspend fun handleThrowable(throwable: Throwable) {
+        when (throwable) {
+            is TokenExpiredException -> showTokenExpiredError()
+            else -> eventChannel.emit(AudioCoursesListEvent.Error(throwable))
         }
     }
 

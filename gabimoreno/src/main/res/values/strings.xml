@@ -13,6 +13,8 @@
     <string name="share_podcast_content">Escucha esto️: %1$s %2$s</string>
     <string name="try_again">Prueba de nuevo</string>
     <string name="podcast_thumbnail">Carátula del episodio</string>
+    <string name="podcast_sort_desc">Mostrar podcast en orden descendente</string>
+    <string name="podcast_sort_asc">Mostrar podcast en orden ascendente </string>
     <string name="back">Atrás</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
