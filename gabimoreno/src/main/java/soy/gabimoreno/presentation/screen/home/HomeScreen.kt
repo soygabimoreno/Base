@@ -1,22 +1,32 @@
 package soy.gabimoreno.presentation.screen.home
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,12 +34,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.core.normalizeText
 import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkEpisodeNumber
@@ -50,12 +61,10 @@ fun HomeScreen(
     val scrollState = rememberLazyListState()
     val homeViewModel = ViewModelProvider.homeViewModel
     val viewState = homeViewModel.viewState
-
+    var searchTextState by remember { mutableStateOf(TextFieldValue("")) }
     LaunchedEffect(Unit) {
         homeViewModel.onViewScreen()
     }
-
-    var searchTextState by remember { mutableStateOf(TextFieldValue("")) }
 
     Surface {
         Column {
@@ -64,22 +73,57 @@ fun HomeScreen(
                     .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
                     .padding(start = Spacing.s16, bottom = Spacing.s4)
             )
-            OutlinedTextField(
-                value = searchTextState,
-                onValueChange = { value ->
-                    searchTextState = value
-                },
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = stringResource(id = R.string.search)
-                    )
-                },
-                modifier = Modifier
-                    .padding(start = Spacing.s16, bottom = Spacing.s16, end = Spacing.s16)
-                    .fillMaxWidth()
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = searchTextState,
+                    onValueChange = { value ->
+                        searchTextState = value
+                    },
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = stringResource(id = R.string.search)
+                        )
+                    },
+                    modifier = Modifier
+                        .padding(start = Spacing.s16, bottom = Spacing.s16, end = Spacing.s16)
+                        .weight(0.95f)
+                )
+                IconButton(
+                    onClick = { homeViewModel.toggleShouldIReversePodcastOrder() },
+                    modifier = Modifier
+                        .padding(bottom = Spacing.s16, end = Spacing.s16)
+                ) {
+                    AnimatedContent(
+                        targetState = homeViewModel.shouldIReversePodcastOrder,
+                        transitionSpec = {
+                            scaleIn(tween(300)) togetherWith scaleOut(tween(500))
+                        },
+                        label = "IconTransition"
+                    ) { reversed ->
+                        if (reversed) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Sort,
+                                contentDescription = stringResource(R.string.podcast_sort_desc),
+                                modifier = Modifier
+                                    .rotate(180f)
+                                    .size(Spacing.s48)
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Sort,
+                                contentDescription = stringResource(R.string.podcast_sort_asc),
+                                modifier = Modifier.size(Spacing.s48)
+                            )
+                        }
+                    }
+                }
+            }
             LazyColumn(state = scrollState) {
                 when (viewState) {
                     is HomeViewModel.ViewState.Error -> {
