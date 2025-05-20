@@ -17,7 +17,7 @@ interface AudioCourseItemDbModelDao {
     fun updateHasBeenListened(id: String, hasBeenListened: Boolean)
 
     @Query("UPDATE AudioCourseItems SET hasBeenListened = 0")
-    fun markAllAudioCourseItemAsUnlistened()
+    fun markAllAudioCourseItemsAsUnlistened()
 
     @Query("SELECT COUNT(*) FROM AudioCourseItems WHERE idAudioCourse = :audioCourseId")
     fun countAudioCourseItemsByAudioCourseId(audioCourseId: String): Int

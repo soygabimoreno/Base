@@ -57,8 +57,8 @@ class LocalAudioCoursesDataSource @Inject constructor(
             .map { it?.toAudioCourse() }
     }
 
-    suspend fun markAllAudioCourseItemAsUnlistened() = withContext(dispatcher) {
-        audioCourseItemDbModelDao.markAllAudioCourseItemAsUnlistened()
+    suspend fun markAllAudioCourseItemsAsUnlistened() = withContext(dispatcher) {
+        audioCourseItemDbModelDao.markAllAudioCourseItemsAsUnlistened()
     }
 
     suspend fun reset() = withContext(dispatcher) {

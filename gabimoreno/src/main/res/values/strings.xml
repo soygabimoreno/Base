@@ -34,7 +34,7 @@
     <string name="non_premium_image_cd">Logotipo comunidad Los Androides Premium</string>
     <string name="non_premium_title">Consigue un mejor trabajo como </string>
     <string name="non_premium_title_span">Android Developer</string>
-    <string name="non_premium_text">Si ya eres miembro puedes acceder a los audios premium pulsando en el botón de login.</string>
+    <string name="non_premium_text">Si ya eres miembro, accede a los audios premium logueándote desde el perfil.</string>
     <string name="non_premium_info_link">Más información</string>
     <string name="premium_email_error_invalid_format">El email no tiene el formato adecuado</string>
     <string name="premium_password_error_invalid">El password tiene menos de 4 caracteres</string>
@@ -60,6 +60,6 @@
     <string name="profile_reset_success_premium">Reseteados audios premium escuchados.</string>
     <string name="profile_reset_success_audiocurses">Reseteados audios cursos escuchados.</string>
     <string name="profile_reset_dialog_title">¿Estás seguro?</string>
-    <string name="profile_reset_dialog_text">Se resetearan todos las marcar de los audios escuchados.</string>
+    <string name="profile_reset_dialog_text">Se resetearan todos las marcas de los audios escuchados.</string>
     <string name="profile_reset_dialog_confirm">Resetear</string>
 </resources>

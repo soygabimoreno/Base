@@ -7,6 +7,6 @@ class SetAllAudiocoursesAsUnlistenedUseCase @Inject constructor(
     private val audioCoursesRepository: AudioCoursesRepository,
 ) {
     suspend operator fun invoke() {
-        audioCoursesRepository.markAllAudioCourseItemAsUnlistened()
+        audioCoursesRepository.markAllAudioCourseItemsAsUnlistened()
     }
 }

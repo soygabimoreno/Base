@@ -86,7 +86,6 @@ fun PremiumScreenRoot(
 ) {
     val context = LocalContext.current
     val premiumViewModel = ViewModelProvider.premiumViewModel
-
     LaunchedEffect(Unit) {
         launch {
             context.isMemberActive()

@@ -135,15 +135,15 @@ class LocalAudioCoursesDataSourceTest {
     }
 
     @Test
-    fun `GIVEN dataSource WHEN markAllAudioCourseItemAsUnlistened THEN dao is called`() = runTest {
+    fun `GIVEN dataSource WHEN markAllAudioCourseItemsAsUnlistened THEN dao is called`() = runTest {
         every {
-            audioCourseItemDbModelDao.markAllAudioCourseItemAsUnlistened()
+            audioCourseItemDbModelDao.markAllAudioCourseItemsAsUnlistened()
         } returns Unit
 
-        dataSource.markAllAudioCourseItemAsUnlistened()
+        dataSource.markAllAudioCourseItemsAsUnlistened()
 
         verifyOnce {
-            audioCourseItemDbModelDao.markAllAudioCourseItemAsUnlistened()
+            audioCourseItemDbModelDao.markAllAudioCourseItemsAsUnlistened()
         }
     }
 

@@ -1,6 +1,8 @@
 package soy.gabimoreno.domain.usecase
 
+import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.just
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -21,13 +23,13 @@ class SetAllAudiocoursesAsUnlistenedUseCaseTest {
     @Test
     fun `GIVEN useCase WHEN invoke THEN repository is called`() = runTest {
         coEvery {
-            audioCoursesRepository.markAllAudioCourseItemAsUnlistened()
-        } returns Unit
+            audioCoursesRepository.markAllAudioCourseItemsAsUnlistened()
+        } just Runs
 
         useCase()
 
         coVerifyOnce {
-            audioCoursesRepository.markAllAudioCourseItemAsUnlistened()
+            audioCoursesRepository.markAllAudioCourseItemsAsUnlistened()
         }
     }
 }
