@@ -41,10 +41,10 @@ import soy.gabimoreno.R
 import soy.gabimoreno.framework.datastore.getEmail
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
-import soy.gabimoreno.presentation.screen.profile.view.CustomDialog
 import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
+import soy.gabimoreno.presentation.ui.dialog.CustomDialog
 
 @Composable
 fun ProfileScreenRoot(
@@ -175,7 +175,8 @@ fun ProfileScreen(
             confirmText = stringResource(R.string.profile_reset_dialog_confirm),
             dismissText = stringResource(R.string.close),
             onConfirm = { onAction(ProfileAction.OnConfirmDialog) },
-            onDismiss = { onAction(ProfileAction.OnDismissDialog) }
+            onDismiss = { onAction(ProfileAction.OnDismissDialog) },
+            typeDialog = soy.gabimoreno.presentation.ui.dialog.TypeDialog.CONFIRMATION
         )
 }
 

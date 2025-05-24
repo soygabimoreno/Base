@@ -64,4 +64,21 @@
     <string name="profile_reset_dialog_title">¿Estás seguro?</string>
     <string name="profile_reset_dialog_text">Se resetearan todos las marcas de los audios escuchados.</string>
     <string name="profile_reset_dialog_confirm">Resetear</string>
+    <string name="dialog_info_header_cd">Diálogo de información</string>
+    <string name="dialog_success_header_cd">Diálogo de exíto en la operación</string>
+    <string name="dialog_error_header_cd">Diálogo de error</string>
+    <string name="dialog_confirmation_header_cd">Diálogo de confirmación</string>
+    <string name="review_dialog_title">¿Te gusta nuestra app?</string>
+    <string name="review_title_do_want_to_rate_app">¡Genial!</string>
+    <string name="review_text_do_want_to_rate_app">Nos encantaría que la valoraras en Google Play. ¡Tu opinión nos ayuda a seguir mejorando!</string>
+    <string name="review_title_email_comment">Vaya, lo sentimos</string>
+    <string name="review_text_email_comment">¿Nos cuentas cómo podríamos mejorar? Tu opinión es muy valiosa para nosotros.</string>
+    <string name="review_dialog_rate_app_yes">Sí</string>
+    <string name="review_dialog_rate_app_no">No</string>
+    <string name="review_dialog_dont_ask_again">No volver a preguntar</string>
+    <string name="review_dialog_done">¡Gracias por tu ayuda!</string>
+    <string name="review_feedback_email_destination">hola@gabimoreno.soy</string>
+    <string name="review_feedback_email_subject">Sugerencia sobre la app</string>
+    <string name="review_feedback_email_body">Hola, me gustaría sugerir…</string>
+    <string name="review_feedback_email_error">No se encontró una app de correo instalada</string>
 </resources>
