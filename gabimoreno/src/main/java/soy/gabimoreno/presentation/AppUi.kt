@@ -26,6 +26,7 @@ import soy.gabimoreno.presentation.screen.ProvideMultiViewModel
 import soy.gabimoreno.presentation.screen.auth.AuthBottomSheetController
 import soy.gabimoreno.presentation.screen.auth.AuthModalBottomSheetRoot
 import soy.gabimoreno.presentation.screen.player.PlayerScreen
+import soy.gabimoreno.presentation.screen.review.ReviewDialog
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.ui.AudioBottomBar
 
@@ -72,7 +73,10 @@ fun AppUi(
                         }
                     }
                 }
-                PlayerScreen(backDispatcher)
+                Box {
+                    PlayerScreen(backDispatcher)
+                    ReviewDialog()
+                }
             }
         }
     }

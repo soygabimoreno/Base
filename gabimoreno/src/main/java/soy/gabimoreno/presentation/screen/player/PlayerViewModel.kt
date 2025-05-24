@@ -23,6 +23,7 @@ import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.session.MemberSession
+import soy.gabimoreno.domain.usecase.CheckShouldIShowInAppReviewUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
 import soy.gabimoreno.framework.KLog
@@ -46,6 +47,7 @@ class PlayerViewModel @Inject constructor(
     private val remoteConfigProvider: RemoteConfigProvider,
     private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
     private val markAudioCourseAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
+    private val checkShouldIShowInAppReviewUseCase: CheckShouldIShowInAppReviewUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -226,13 +228,14 @@ class PlayerViewModel @Inject constructor(
         updateCurrentPlaybackPosition()
     }
 
-    internal fun markAudioAsListened(audioId: String) {
+    private fun markAudioAsListened(audioId: String) {
         if (hasTriggeredEightyPercent || lastAudioIdListened == audioId) return
 
         hasTriggeredEightyPercent = true
         lastAudioIdListened = audioId
 
         viewModelScope.launch {
+            checkShouldIShowInAppReviewUseCase()
             if (audioId.contains("-")) {
                 markAudioCourseAsListenedUseCase(audioId, true)
             } else {
