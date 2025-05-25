@@ -166,6 +166,8 @@ dependencies {
     implementation(libs.clarity)
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+    implementation(libs.playinapp.review)
+    implementation(libs.playinapp.review.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.kluent)

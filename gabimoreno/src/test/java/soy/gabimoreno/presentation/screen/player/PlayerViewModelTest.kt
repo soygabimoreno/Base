@@ -14,6 +14,7 @@ import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.session.MemberSession
+import soy.gabimoreno.domain.usecase.CheckShouldIShowInAppReviewUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
 import soy.gabimoreno.fake.buildAudio
@@ -32,6 +33,8 @@ class PlayerViewModelTest {
         relaxedMockk<MarkAudioCourseItemAsListenedUseCase>()
     private val markPremiumAudioAsListenedUseCase =
         relaxedMockk<MarkPremiumAudioAsListenedUseCase>()
+    private val checkShouldIShowInAppReviewUseCase =
+        relaxedMockk<CheckShouldIShowInAppReviewUseCase>()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: PlayerViewModel
 
@@ -44,6 +47,7 @@ class PlayerViewModelTest {
             remoteConfigProvider,
             markPremiumAudioAsListenedUseCase,
             markAudioCourseItemAsListenedUseCase,
+            checkShouldIShowInAppReviewUseCase,
             testDispatcher
         )
     }
