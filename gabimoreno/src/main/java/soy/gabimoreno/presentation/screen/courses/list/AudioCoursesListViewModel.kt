@@ -12,11 +12,13 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReloadAudioCoursesUseCase
+import soy.gabimoreno.domain.usecase.RefreshBearerTokenUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 import javax.inject.Inject
 
@@ -25,6 +27,7 @@ class AudioCoursesListViewModel @Inject constructor(
     private val getCoursesUseCase: GetAudioCoursesUseCase,
     private val getShouldIReloadAudioCoursesUseCase: GetShouldIReloadAudioCoursesUseCase,
     private val setShouldIReloadAudioCoursesUseCase: SetShouldIReloadAudioCoursesUseCase,
+    private val refreshBearerTokenUseCase: RefreshBearerTokenUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -53,22 +56,20 @@ class AudioCoursesListViewModel @Inject constructor(
         state = state.copy(isLoading = true)
         viewModelScope.launch(dispatcher) {
             try {
-                viewModelScope.launch(dispatcher) {
-                    getCoursesUseCase(
-                        categories = listOf(Category.AUDIOCOURSES),
-                        forceRefresh = forceRefresh
-                    )
-                        .onRight { audioCourses ->
-                            state = state.copy(
-                                isLoading = false,
-                                audiocourses = audioCourses,
-                            )
-                        }
-                        .onLeft { throwable: Throwable ->
-                            handleThrowable(throwable)
-                            state = state.copy(isLoading = false)
-                        }
-                }
+                getCoursesUseCase(
+                    categories = listOf(Category.AUDIOCOURSES),
+                    forceRefresh = forceRefresh
+                )
+                    .onRight { audioCourses ->
+                        state = state.copy(
+                            isLoading = false,
+                            audiocourses = audioCourses,
+                        )
+                    }
+                    .onLeft { throwable: Throwable ->
+                        handleThrowable(throwable)
+                        state = state.copy(isLoading = false)
+                    }
             } catch (e: Exception) {
                 handleThrowable(e)
                 state = state.copy(isLoading = false)
@@ -77,9 +78,27 @@ class AudioCoursesListViewModel @Inject constructor(
     }
 
     private suspend fun handleThrowable(throwable: Throwable) {
-        when (throwable) {
-            is TokenExpiredException -> showTokenExpiredError()
+        when {
+            throwable is TokenExpiredException -> refreshToken()
+            throwable is HttpException && throwable.code() == TOKEN_EXPIRED_CODE -> refreshToken()
             else -> eventChannel.emit(AudioCoursesListEvent.Error(throwable))
+        }
+    }
+
+    private fun refreshToken() {
+        if (state.hasRefreshTokenBeenCalled) {
+            showTokenExpiredError()
+        } else {
+            state = state.copy(hasRefreshTokenBeenCalled = true)
+            viewModelScope.launch(dispatcher) {
+                refreshBearerTokenUseCase()
+                    .onRight {
+                        onViewScreen(forceRefresh = true)
+                    }
+                    .onLeft {
+                        showTokenExpiredError()
+                    }
+            }
         }
     }
 
@@ -110,3 +129,4 @@ class AudioCoursesListViewModel @Inject constructor(
 }
 
 private const val REFRESH_DELAY = 1500L
+private const val TOKEN_EXPIRED_CODE = 403

@@ -7,11 +7,11 @@ import org.amshove.kluent.shouldBe
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
-import soy.gabimoreno.data.remote.service.PostService
+import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.data.remote.model.course.CourseApiModel
 import soy.gabimoreno.data.remote.model.toQueryValue
-import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.data.remote.service.PostService
 
 
 class RemoteAudioCoursesDataSourceTest {

@@ -6,4 +6,5 @@ data class AudioCoursesListState(
     val isLoading: Boolean = true,
     val isRefreshing: Boolean = false,
     val audiocourses: List<AudioCourse> = emptyList(),
+    val hasRefreshTokenBeenCalled: Boolean = false,
 )

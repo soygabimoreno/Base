@@ -16,6 +16,7 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPremiumAudiosManagedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
+import soy.gabimoreno.domain.usecase.RefreshBearerTokenUseCase
 
 @ExperimentalCoroutinesApi
 class PremiumViewModelTest {
@@ -24,6 +25,7 @@ class PremiumViewModelTest {
     private val getPremiumAudioByIdUseCase = relaxedMockk<GetPremiumAudioByIdUseCase>()
     private val markPremiumAudioAsListenedUseCase =
         relaxedMockk<MarkPremiumAudioAsListenedUseCase>()
+    private val refreshBearerTokenUseCase = relaxedMockk<RefreshBearerTokenUseCase>()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
@@ -44,6 +46,7 @@ class PremiumViewModelTest {
                 getPremiumAudiosMediatorUseCase,
                 getPremiumAudioByIdUseCase,
                 markPremiumAudioAsListenedUseCase,
+                refreshBearerTokenUseCase,
                 testDispatcher
             )
 
@@ -61,6 +64,7 @@ class PremiumViewModelTest {
                 getPremiumAudiosMediatorUseCase,
                 getPremiumAudioByIdUseCase,
                 markPremiumAudioAsListenedUseCase,
+                refreshBearerTokenUseCase,
                 testDispatcher
             )
 
