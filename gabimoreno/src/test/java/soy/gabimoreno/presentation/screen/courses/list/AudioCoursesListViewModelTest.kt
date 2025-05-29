@@ -5,6 +5,7 @@ package soy.gabimoreno.presentation.screen.courses.list
 import arrow.core.left
 import arrow.core.right
 import io.mockk.coEvery
+import io.mockk.coVerify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -27,9 +28,9 @@ import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReloadAudioCoursesUseCase
+import soy.gabimoreno.domain.usecase.RefreshBearerTokenUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 import soy.gabimoreno.fake.buildAudioCourses
-
 
 class AudioCoursesListViewModelTest {
 
@@ -38,6 +39,7 @@ class AudioCoursesListViewModelTest {
         relaxedMockk<GetShouldIReloadAudioCoursesUseCase>()
     private val setShouldIReloadAudioCoursesUseCase =
         relaxedMockk<SetShouldIReloadAudioCoursesUseCase>()
+    private val refreshBearerTokenUseCase = relaxedMockk<RefreshBearerTokenUseCase>()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: AudioCoursesListViewModel
 
@@ -49,6 +51,7 @@ class AudioCoursesListViewModelTest {
             getCoursesUseCase,
             getShouldIReloadAudioCoursesUseCase,
             setShouldIReloadAudioCoursesUseCase,
+            refreshBearerTokenUseCase,
             testDispatcher
         )
     }
@@ -68,6 +71,7 @@ class AudioCoursesListViewModelTest {
                 getCoursesUseCase = getCoursesUseCase,
                 getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
                 setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
+                refreshBearerTokenUseCase = refreshBearerTokenUseCase,
                 dispatcher = testDispatcher
             )
             advanceUntilIdle()
@@ -76,10 +80,11 @@ class AudioCoursesListViewModelTest {
             viewModel.state.isLoading shouldBe false
         }
 
-
-    @Test
+    @Test()
     fun `GIVEN token expired WHEN onViewScreen THEN callback is called`() = runTest {
         coEvery { getCoursesUseCase(any()) } returns TokenExpiredException().left()
+        coEvery { refreshBearerTokenUseCase() } returns TokenExpiredException().left()
+
         val eventChannel = Channel<AudioCoursesListEvent>(Channel.UNLIMITED)
         val job = launch {
             viewModel.events.collect {
@@ -88,15 +93,48 @@ class AudioCoursesListViewModelTest {
         }
 
         viewModel = AudioCoursesListViewModel(
-            getCoursesUseCase,
+            getCoursesUseCase = getCoursesUseCase,
             getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
             setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
-            testDispatcher
+            refreshBearerTokenUseCase = refreshBearerTokenUseCase,
+            dispatcher = testDispatcher
         )
+
         advanceUntilIdle()
 
         eventChannel.receive() shouldBeEqualTo AudioCoursesListEvent.ShowTokenExpiredError
         job.cancel()
+    }
+
+    @Test
+    fun `GIVEN token expired THEN token refreshed and courses loaded`() = runTest {
+        val dummyCourses = buildAudioCourses()
+        val categories = listOf(Category.AUDIOCOURSES)
+        val forceRefresh = false
+
+        coEvery { getCoursesUseCase(any()) } returnsMany listOf(
+            TokenExpiredException().left(),
+            dummyCourses.right()
+        )
+        coEvery { refreshBearerTokenUseCase() } returns Unit.right()
+
+        viewModel = AudioCoursesListViewModel(
+            getCoursesUseCase = getCoursesUseCase,
+            getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
+            setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
+            refreshBearerTokenUseCase = refreshBearerTokenUseCase,
+            dispatcher = testDispatcher
+        )
+
+        advanceUntilIdle()
+
+        viewModel.state.audiocourses shouldBeEqualTo dummyCourses
+        coVerifyOnce {
+            refreshBearerTokenUseCase()
+        }
+        coVerify(exactly = 2) {
+            getCoursesUseCase(categories, forceRefresh)
+        }
     }
 
     @Test
@@ -114,6 +152,7 @@ class AudioCoursesListViewModelTest {
             getCoursesUseCase = getCoursesUseCase,
             getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
             setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
+            refreshBearerTokenUseCase = refreshBearerTokenUseCase,
             dispatcher = testDispatcher
         )
         advanceUntilIdle()

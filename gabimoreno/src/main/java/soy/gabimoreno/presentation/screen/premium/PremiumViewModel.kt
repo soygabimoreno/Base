@@ -10,11 +10,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import soy.gabimoreno.data.remote.model.getPremiumCategories
 import soy.gabimoreno.di.IO
+import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPremiumAudiosManagedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
+import soy.gabimoreno.domain.usecase.RefreshBearerTokenUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +25,7 @@ class PremiumViewModel @Inject constructor(
     private val getPremiumAudiosMediatorUseCase: GetPremiumAudiosManagedUseCase,
     private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase,
     private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
+    private val refreshBearerTokenUseCase: RefreshBearerTokenUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -87,9 +91,9 @@ class PremiumViewModel @Inject constructor(
             state = state.copy(isLoading = true)
             val categories = getPremiumCategories()
             getPremiumAudiosMediatorUseCase(categories)
-                .onLeft {
-                    eventChannel.emit(PremiumEvent.Error(it))
-                    showLoginError()
+                .onLeft { throwable: Throwable ->
+                    handleThrowable(throwable)
+                    state = state.copy(isLoading = false)
                 }
                 .onRight { premiumAudioFlow ->
                     state = state.copy(
@@ -97,6 +101,32 @@ class PremiumViewModel @Inject constructor(
                         premiumAudioFlow = premiumAudioFlow,
                     )
                 }
+        }
+    }
+
+    private suspend fun handleThrowable(throwable: Throwable) {
+        when {
+            throwable is TokenExpiredException -> refreshToken()
+            throwable is HttpException && throwable.code() == TOKEN_EXPIRED_CODE -> refreshToken()
+            else -> eventChannel.emit(PremiumEvent.Error(throwable))
+        }
+    }
+
+
+    private fun refreshToken() {
+        if (state.hasRefreshTokenBeenCalled) {
+            showLoginError()
+        } else {
+            state = state.copy(hasRefreshTokenBeenCalled = true)
+            viewModelScope.launch(dispatcher) {
+                refreshBearerTokenUseCase()
+                    .onRight {
+                        onViewScreen(state.shouldIAccessPremium)
+                    }
+                    .onLeft {
+                        showLoginError()
+                    }
+            }
         }
     }
 
@@ -116,3 +146,5 @@ class PremiumViewModel @Inject constructor(
         }
     }
 }
+
+private const val TOKEN_EXPIRED_CODE = 403
