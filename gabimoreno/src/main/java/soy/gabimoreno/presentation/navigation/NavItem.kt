@@ -35,7 +35,7 @@ enum class NavItem(
         navCommand = NavCommand.ContentType(Feature.PROFILE),
         icon = Icons.Default.Person,
         titleResId = R.string.nav_item_profile
-    )
+    ),
 }
 
 sealed class NavCommand(
@@ -67,6 +67,17 @@ sealed class NavCommand(
         fun createRoute(audioId: String) = "${feature.route}/$subRoute/$audioId"
     }
 
+    class ContentPlaylistDetail(
+        feature: Feature,
+        navArgs: List<NavArg>,
+    ) : NavCommand(
+        feature,
+        "playlistdetail",
+        navArgs
+    ) {
+        fun createRoute(playlistId: String) = "${feature.route}/$subRoute/$playlistId"
+    }
+
     class ContentWebView(feature: Feature) : NavCommand(
         feature,
         "webView",
@@ -94,5 +105,6 @@ enum class NavArg(
     EpisodeId("episodeId", NavType.StringType),
     EncodedUrl("encodedUrl", NavType.StringType),
     PremiumAudioId("premiumAudioId", NavType.StringType),
-    AudioCourseId("audioCourseId", NavType.StringType)
+    AudioCourseId("audioCourseId", NavType.StringType),
+    PlaylistId("playlistId", NavType.StringType)
 }

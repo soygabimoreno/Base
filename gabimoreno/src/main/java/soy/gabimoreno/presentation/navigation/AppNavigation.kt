@@ -13,6 +13,8 @@ import soy.gabimoreno.presentation.screen.courses.detail.AudioCoursesDetailScree
 import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListScreenRoot
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
+import soy.gabimoreno.presentation.screen.playlist.detail.PlaylistDetailScreenRoot
+import soy.gabimoreno.presentation.screen.playlist.list.PlaylistScreenRoot
 import soy.gabimoreno.presentation.screen.premium.PremiumScreenRoot
 import soy.gabimoreno.presentation.screen.profile.ProfileScreenRoot
 import soy.gabimoreno.presentation.screen.webview.WebViewScreen
@@ -31,6 +33,7 @@ fun AppNavigation(
         premiumNav(navController, appState, onRequireAuth)
         audioCoursesNav(navController, appState)
         profileNav(navController, appState, onRequireAuth)
+        playlistNav(navController, appState)
     }
 }
 
@@ -131,7 +134,7 @@ private fun NavGraphBuilder.audioCoursesNav(
         composable(navCommand = NavCommand.ContentType(Feature.AUDIOCOURSES)) {
             appState.setStartDestination(Feature.AUDIOCOURSES)
             AudioCoursesListScreenRoot { audioCourseId ->
-                navController.navigateToAudioCourseDetailFromPremium(audioCourseId)
+                navController.navigateToAudioCourseDetailFromAudiocourses(audioCourseId)
             }
         }
         composable(
@@ -161,7 +164,49 @@ private fun NavGraphBuilder.profileNav(
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.PROFILE)) {
             appState.setStartDestination(Feature.PROFILE)
-            ProfileScreenRoot(onRequireAuth)
+            ProfileScreenRoot(
+                onPlaylistClicked = {
+                    navController.navigate(
+                        route = NavCommand.ContentType(Feature.PLAYLISTS).route
+                    )
+                },
+                onToggleBottomSheet = onRequireAuth
+            )
+        }
+    }
+}
+
+private fun NavGraphBuilder.playlistNav(
+    navController: NavController,
+    appState: AppState,
+) {
+    navigation(
+        startDestination = NavCommand.ContentType(Feature.PLAYLISTS).route,
+        route = Feature.PLAYLISTS.route
+    ) {
+        composable(navCommand = NavCommand.ContentType(Feature.PLAYLISTS)) {
+            appState.setStartDestination(Feature.PLAYLISTS)
+            PlaylistScreenRoot(
+                onBackClicked = {
+                    navController.goBackOrNavigateTo(Feature.PROFILE.route)
+                },
+                onItemClick = { playlistId ->
+                    navController.navigateToPlaylistDetailFromPlaylist(playlistId)
+                }
+            )
+        }
+        composable(
+            navCommand = NavCommand.ContentPlaylistDetail(
+                Feature.PLAYLISTS,
+                listOf(NavArg.PlaylistId)
+            )
+        ) {
+            PlaylistDetailScreenRoot(
+                playlistId = it.findArg(NavArg.PlaylistId),
+                onBackClicked = {
+                    navController.goBack()
+                }
+            )
         }
     }
 }
@@ -180,13 +225,19 @@ private fun NavController.navigateToDetailFromPremium(premiumAudioId: String) {
     )
 }
 
-private fun NavController.navigateToAudioCourseDetailFromPremium(audioCourseId: String) {
+private fun NavController.navigateToAudioCourseDetailFromAudiocourses(audioCourseId: String) {
     navigate(
         route = NavCommand.ContentCoursesDetail(Feature.AUDIOCOURSES, listOf(NavArg.AudioCourseId))
             .createRoute(audioCourseId)
     )
 }
 
+private fun NavController.navigateToPlaylistDetailFromPlaylist(playlistId: String) {
+    navigate(
+        route = NavCommand.ContentPlaylistDetail(Feature.PLAYLISTS, listOf(NavArg.PlaylistId))
+            .createRoute(playlistId)
+    )
+}
 
 private fun NavController.navigateToWebView(encodedUrl: String) {
     navigate(route = NavCommand.ContentWebView(Feature.PODCAST).createRoute(encodedUrl))
@@ -194,6 +245,16 @@ private fun NavController.navigateToWebView(encodedUrl: String) {
 
 private fun NavController.goBack() {
     popBackStack()
+}
+
+fun NavController.goBackOrNavigateTo(route: String) {
+    val wasPopped = popBackStack()
+    if (!wasPopped) navigate(route) {
+        popUpTo(graph.startDestinationId) {
+            inclusive = false
+        }
+        launchSingleTop = true
+    }
 }
 
 private fun NavGraphBuilder.composable(
