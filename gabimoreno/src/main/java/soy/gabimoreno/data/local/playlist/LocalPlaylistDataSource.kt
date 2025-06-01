@@ -1,0 +1,143 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
+package soy.gabimoreno.data.local.playlist
+
+import com.google.common.annotations.VisibleForTesting
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.withContext
+import soy.gabimoreno.data.local.GabiMorenoDatabase
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseDbModel
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
+import soy.gabimoreno.data.local.mapper.toPlaylistAudioItem
+import soy.gabimoreno.data.local.mapper.toPlaylistMapper
+import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
+import soy.gabimoreno.data.local.playlist.model.PlaylistWithItems
+import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
+import soy.gabimoreno.di.IO
+import soy.gabimoreno.domain.model.content.Playlist
+import javax.inject.Inject
+
+class LocalPlaylistDataSource @Inject constructor(
+    gabiMorenoDatabase: GabiMorenoDatabase,
+    @IO private val dispatcher: CoroutineDispatcher,
+) {
+
+    @VisibleForTesting
+    val playlistDbModelDao = gabiMorenoDatabase.playlistDbModelDao()
+
+    @VisibleForTesting
+    val playlistItemDbModelDao = gabiMorenoDatabase.playlistItemDbModelDao()
+
+    @VisibleForTesting
+    val playlistTransactionDao = gabiMorenoDatabase.playlistTransactionDao()
+
+    @VisibleForTesting
+    val audioCourseDbModelDao = gabiMorenoDatabase.audioCourseDbModelDao()
+
+    @VisibleForTesting
+    val audioCourseItemDbModelDao = gabiMorenoDatabase.audioCourseItemDbModelDao()
+
+    @VisibleForTesting
+    val premiumAudioDbModelDao = gabiMorenoDatabase.premiumAudioDbModelDao()
+
+    suspend fun isEmpty(): Boolean = withContext(dispatcher) {
+        playlistDbModelDao.getTotalPlaylists() <= 0
+    }
+
+    suspend fun insertPlaylist(name: String, description: String): Playlist =
+        withContext(dispatcher) {
+            val lastPosition = playlistDbModelDao.getTotalPlaylists()
+            val playlistId = playlistDbModelDao.insertPlaylistDbModel(
+                playlistDbModel = PlaylistDbModel(
+                    title = name,
+                    description = description,
+                    position = lastPosition
+                )
+            )
+            Playlist(
+                id = playlistId.toInt(),
+                title = name,
+                description = description,
+                items = emptyList(),
+                position = lastPosition
+            )
+        }
+
+    suspend fun savePlaylist(playlists: List<Playlist>) = withContext(dispatcher) {
+        playlistTransactionDao.upsertPlaylistsWithItems(playlists)
+    }
+
+    suspend fun getAllPlaylists(): List<Playlist> = withContext(dispatcher) {
+        val playlistsWithItems = playlistTransactionDao.getPlaylistsWithItems()
+        val allItemIds = playlistsWithItems.flatMap { it.items }.map { it.id }.toSet()
+        val resources = loadAudioResources(allItemIds)
+
+        playlistsWithItems.map { it.mapToPlaylist(resources) }
+    }
+
+    fun getPlaylistById(idPlaylist: Int): Flow<Playlist?> {
+        return playlistTransactionDao.getPlaylistWithItemsById(idPlaylist)
+            .mapLatest { playlistWithItems ->
+                if (playlistWithItems == null) return@mapLatest null
+
+                val itemIds = playlistWithItems.items
+                    .map { playlistItemDbModel -> playlistItemDbModel.id }.toSet()
+                val resources = loadAudioResources(itemIds)
+
+                playlistWithItems.mapToPlaylist(resources)
+            }
+            .flowOn(dispatcher)
+    }
+
+    suspend fun resetPlaylistById(idPlaylist: Int) = withContext(dispatcher) {
+        playlistItemDbModelDao.deletePlaylistItemsDbModelByPlaylistId(idPlaylist)
+    }
+
+    suspend fun deleteAllPlaylists() = withContext(dispatcher) {
+        playlistDbModelDao.deleteAllPlaylistDbModels()
+    }
+
+    private suspend fun loadAudioResources(ids: Set<String>): AudioResources {
+        val premiumAudioMap = premiumAudioDbModelDao
+            .getPremiumAudiosByIds(ids)
+            .associateBy { it.id }
+
+        val audioCoursesMap = audioCourseDbModelDao
+            .getAudioCoursesByIds(ids)
+            .associateBy { it.id }
+
+        val audioCourseItemsMap = audioCourseItemDbModelDao
+            .getAudioCourseItemsByIds(ids)
+            .associateBy { it.id }
+
+        return AudioResources(premiumAudioMap, audioCoursesMap, audioCourseItemsMap)
+    }
+
+    private fun PlaylistWithItems.mapToPlaylist(resources: AudioResources): Playlist {
+        val playlistItems = items
+            .sortedBy { it.position }
+            .mapNotNull { item ->
+                val position = item.position
+                if (item.id.contains("-")) {
+                    val course = resources.audioCourses[item.id]
+                    val courseItem = resources.audioCourseItems[item.id]
+                    if (course == null || courseItem == null) return@mapNotNull null
+                    courseItem.toPlaylistAudioItem(course, position)
+                } else {
+                    resources.premiumAudios[item.id]?.toPlaylistAudioItem(position)
+                }
+            }
+
+        return playlist.toPlaylistMapper(playlistItems)
+    }
+
+    private data class AudioResources(
+        val premiumAudios: Map<String, PremiumAudioDbModel>,
+        val audioCourses: Map<String, AudioCourseDbModel>,
+        val audioCourseItems: Map<String, AudioCourseItemDbModel>,
+    )
+}

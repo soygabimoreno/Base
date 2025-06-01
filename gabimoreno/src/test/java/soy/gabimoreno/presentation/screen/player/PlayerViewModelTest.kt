@@ -1,9 +1,13 @@
 package soy.gabimoreno.presentation.screen.player
 
 import io.mockk.every
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
@@ -35,11 +39,12 @@ class PlayerViewModelTest {
         relaxedMockk<MarkPremiumAudioAsListenedUseCase>()
     private val checkShouldIShowInAppReviewUseCase =
         relaxedMockk<CheckShouldIShowInAppReviewUseCase>()
-    private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
+    private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: PlayerViewModel
 
     @Before
     fun setUp() {
+        Dispatchers.setMain(testDispatcher)
         viewModel = PlayerViewModel(
             mediaPlayerServiceConnection,
             tracker,
@@ -50,6 +55,11 @@ class PlayerViewModelTest {
             checkShouldIShowInAppReviewUseCase,
             testDispatcher
         )
+    }
+
+    @After
+    fun tearDownDispatcher() {
+        Dispatchers.resetMain()
     }
 
     @Test

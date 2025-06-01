@@ -10,6 +10,12 @@ interface AudioCourseItemDbModelDao {
     @Query("SELECT * FROM AudioCourseItems WHERE idAudioCourse = :audioCourseId")
     fun getAudioCourseItemsByAudioCourseId(audioCourseId: String): List<AudioCourseItemDbModel>
 
+    @Query("SELECT * FROM AudioCourseItems WHERE id = :idAudioCourseItem")
+    fun getAudioCourseItemById(idAudioCourseItem: String): AudioCourseItemDbModel?
+
+    @Query("SELECT * FROM AudioCourseItems WHERE id IN (:ids)")
+    suspend fun getAudioCourseItemsByIds(ids: Set<String>): List<AudioCourseItemDbModel>
+
     @Upsert()
     fun upsertAudioCourseItems(audioCourseItems: List<AudioCourseItemDbModel>)
 

@@ -3,6 +3,8 @@ package soy.gabimoreno.data.local.mapper
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseDbModel
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
 import soy.gabimoreno.fake.buildAudioCourseDbModel
 import soy.gabimoreno.fake.buildAudioCourseItemDbModel
 import soy.gabimoreno.fake.buildAudioCourseWithItems
@@ -66,5 +68,30 @@ class ToAudioCourseMapperKtTest {
         result.audios[1].id shouldBe audioCourseWithItems.audios[1].id
         result.audios[1].title shouldBe audioCourseWithItems.audios[1].title
         result.audios[1].url shouldBe audioCourseWithItems.audios[1].url
+    }
+
+    @Test
+    fun `GIVEN valid models WHEN toPlaylistAudioItem THEN returns correct PlaylistAudioItem`() {
+        val audioCourseDbModel = buildAudioCourseDbModel()
+        val audioCourseItemDbModel =
+            buildAudioCourseItemDbModel(idAudioCourse = audioCourseDbModel.id)
+        val position = 2
+
+        val result = audioCourseItemDbModel.toPlaylistAudioItem(audioCourseDbModel, position)
+
+        result.id shouldBeEqualTo audioCourseItemDbModel.id
+        result.title shouldBeEqualTo audioCourseItemDbModel.title
+        result.url shouldBeEqualTo audioCourseItemDbModel.url
+        result.audioUrl shouldBeEqualTo audioCourseItemDbModel.url
+        result.description shouldBeEqualTo audioCourseDbModel.description
+        result.saga shouldBeEqualTo audioCourseDbModel.saga
+        result.imageUrl shouldBeEqualTo audioCourseDbModel.thumbnailUrl
+        result.thumbnailUrl shouldBeEqualTo audioCourseDbModel.thumbnailUrl
+        result.pubDateMillis shouldBeEqualTo audioCourseDbModel.pubDateMillis
+        result.audioLengthInSeconds shouldBeEqualTo audioCourseDbModel.audioLengthInSeconds
+        result.hasBeenListened shouldBeEqualTo audioCourseItemDbModel.hasBeenListened
+        result.category shouldBeEqualTo audioCourseDbModel.category
+        result.excerpt shouldBeEqualTo audioCourseDbModel.excerpt
+        result.position shouldBeEqualTo position
     }
 }

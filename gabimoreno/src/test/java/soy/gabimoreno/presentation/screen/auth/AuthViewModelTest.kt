@@ -24,7 +24,6 @@ import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 
-
 class AuthViewModelTest {
 
     private val tracker: Tracker = relaxedMockk()

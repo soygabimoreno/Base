@@ -19,7 +19,6 @@ import kotlinx.coroutines.test.setMain
 import org.amshove.kluent.shouldBe
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.domain.usecase.GetInAppReviewCounterUseCase
@@ -74,7 +73,6 @@ class ReviewDialogViewModelTest {
         viewModel.state.shouldntWeAskAgain shouldBe false
     }
 
-    @Ignore
     @Test
     fun `GIVEN counter is 3 WHEN init THEN should show review dialog`() = runTest {
         coEvery { getInAppReviewCounterUseCase() } returns flowOf(3)
@@ -91,7 +89,6 @@ class ReviewDialogViewModelTest {
         viewModel.state.reviewDialogStep shouldBe ReviewDialogStep.AskIfUserLikesTheApp
     }
 
-    @Ignore
     @Test
     fun `GIVEN counter is less than 3 WHEN init THEN should not show review dialog`() = runTest {
         coEvery { getInAppReviewCounterUseCase() } returns flowOf(2)
