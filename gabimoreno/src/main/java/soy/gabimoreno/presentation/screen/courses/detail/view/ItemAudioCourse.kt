@@ -15,11 +15,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,6 +36,7 @@ import soy.gabimoreno.domain.model.content.AudioCourseItem
 import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.theme.PurpleDark
+import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
 
@@ -42,7 +45,8 @@ fun ItemAudioCourse(
     audioCourseItem: AudioCourseItem,
     audioCourseTitle: String,
     onItemClicked: (audioCourseItem: AudioCourseItem) -> Unit,
-    onItemListenedToggled: (audioCourseItem: AudioCourseItem) -> Unit
+    onItemListenedToggled: (audioCourseItem: AudioCourseItem) -> Unit,
+    onAddToPlaylistClicked: (audioCourseItemId: String) -> Unit
 ) {
     val iconColor by animateColorAsState(
         targetValue = if (audioCourseItem.hasBeenListened) PurpleDark else Black.copy(alpha = 0.1f),
@@ -77,11 +81,24 @@ fun ItemAudioCourse(
         ) {
             Icon(
                 modifier = Modifier
-                    .weight(0.15f)
+                    .weight(0.10f)
                     .size(Spacing.s32),
                 imageVector = Icons.Default.Check,
                 contentDescription = stringResource(R.string.course_listened),
                 tint = iconColor,
+            )
+        }
+        Spacer(modifier = Modifier.width(Spacing.s8))
+        IconButton(
+            modifier = Modifier.weight(0.10f),
+            onClick = { onAddToPlaylistClicked(audioCourseItem.id) },
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(Spacing.s32),
+                imageVector = Icons.Default.LibraryMusic,
+                contentDescription = stringResource(R.string.playlists_add_audio_to_playlist),
+                tint = PurpleLight,
             )
         }
     }
@@ -110,7 +127,8 @@ fun ItemAudioCoursePreview() {
                     hasBeenListened = true
                 ),
                 onItemClicked = {},
-                onItemListenedToggled = {}
+                onItemListenedToggled = {},
+                onAddToPlaylistClicked = {}
             )
             Spacer(
                 modifier = Modifier
@@ -127,7 +145,8 @@ fun ItemAudioCoursePreview() {
                     hasBeenListened = false
                 ),
                 onItemClicked = {},
-                onItemListenedToggled = {}
+                onItemListenedToggled = {},
+                onAddToPlaylistClicked = {}
             )
         }
     }

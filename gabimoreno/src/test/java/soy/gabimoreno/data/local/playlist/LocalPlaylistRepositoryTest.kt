@@ -19,6 +19,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.local.GabiMorenoDatabase
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
@@ -153,6 +154,49 @@ class LocalPlaylistRepositoryTest {
 
         result shouldBe null
     }
+
+    @Test
+    fun `GIVEN a valid playlistId WHEN getPlaylistIdsByItemId THEN playlistIds are returned`() =
+        runTest {
+            val playlist1 = buildPlaylist()
+            val playlist2 = buildPlaylist(2)
+            val playlistIds = listOf(playlist1.id, playlist2.id)
+            coEvery {
+                playlistTransactionDao.getPlaylistIdsByItemId(playlist1.items.first().id)
+            } returns playlistIds
+
+            val result = playlistDataSource.getPlaylistIdsByItemId(playlist1.items.first().id)
+
+            result shouldBeEqualTo playlistIds
+            coVerifyOnce {
+                playlistTransactionDao.getPlaylistIdsByItemId(playlist1.items.first().id)
+            }
+        }
+
+    @Test
+    fun `GIVEN playlistIds WHEN upsertPlaylistItemsDbModel THEN upserts items with correct positions`() =
+        runTest {
+            val playlistItemId = "audio-123"
+            val playlistIds = listOf(1, 2, 3)
+            val lastPosition = 5
+            val expectedItems = listOf(
+                PlaylistItemsDbModel(id = playlistItemId, playlistId = 1, position = 5),
+                PlaylistItemsDbModel(id = playlistItemId, playlistId = 2, position = 6),
+                PlaylistItemsDbModel(id = playlistItemId, playlistId = 3, position = 7)
+            )
+            val expectedResult: List<Long> = listOf(1001, 1002, 1003)
+
+            coEvery { playlistItemDbModelDao.getTotalPlaylistItems() } returns lastPosition
+            coEvery { playlistItemDbModelDao.upsertPlaylistItemsDbModel(expectedItems) } returns expectedResult
+
+            val result = playlistDataSource.upsertPlaylistItemsDbModel(playlistItemId, playlistIds)
+
+            result shouldBeEqualTo expectedResult
+            coVerifyOnce {
+                playlistItemDbModelDao.getTotalPlaylistItems()
+                playlistItemDbModelDao.upsertPlaylistItemsDbModel(expectedItems)
+            }
+        }
 
     private fun createMockedDatabase(): GabiMorenoDatabase = mockk {
         every { premiumAudioDbModelDao() } returns premiumAudioDbModelDao

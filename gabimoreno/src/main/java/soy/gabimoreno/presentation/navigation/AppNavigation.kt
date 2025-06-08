@@ -13,6 +13,7 @@ import soy.gabimoreno.presentation.screen.courses.detail.AudioCoursesDetailScree
 import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListScreenRoot
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
+import soy.gabimoreno.presentation.screen.playlist.audio.PlaylistAudioItemRoot
 import soy.gabimoreno.presentation.screen.playlist.detail.PlaylistDetailScreenRoot
 import soy.gabimoreno.presentation.screen.playlist.list.PlaylistScreenRoot
 import soy.gabimoreno.presentation.screen.premium.PremiumScreenRoot
@@ -103,6 +104,14 @@ private fun NavGraphBuilder.premiumNav(
                 onRequireAuth = onRequireAuth,
                 onItemClicked = { premiumAudioId ->
                     navController.navigateToDetailFromPremium(premiumAudioId)
+                },
+                onPlaylistClicked = {
+                    navController.navigate(
+                        route = NavCommand.ContentType(Feature.PLAYLISTS).route
+                    )
+                },
+                onAddToPlaylistClicked = { audioItemId ->
+                    navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
                 }
             )
         }
@@ -133,9 +142,16 @@ private fun NavGraphBuilder.audioCoursesNav(
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.AUDIOCOURSES)) {
             appState.setStartDestination(Feature.AUDIOCOURSES)
-            AudioCoursesListScreenRoot { audioCourseId ->
-                navController.navigateToAudioCourseDetailFromAudiocourses(audioCourseId)
-            }
+            AudioCoursesListScreenRoot(
+                onItemClicked = { audioCourseId ->
+                    navController.navigateToAudioCourseDetailFromAudiocourses(audioCourseId)
+                },
+                onPlaylistClicked = {
+                    navController.navigate(
+                        route = NavCommand.ContentType(Feature.PLAYLISTS).route
+                    )
+                },
+            )
         }
         composable(
             navCommand = NavCommand.ContentCoursesDetail(
@@ -147,6 +163,9 @@ private fun NavGraphBuilder.audioCoursesNav(
                 audioCourseId = it.findArg(NavArg.AudioCourseId),
                 onBackClicked = {
                     navController.goBack()
+                },
+                onAddToPlaylistClicked = { audioItemId ->
+                    navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
                 }
             )
         }
@@ -208,6 +227,19 @@ private fun NavGraphBuilder.playlistNav(
                 }
             )
         }
+        composable(
+            navCommand = NavCommand.ContentAudioItemDetail(
+                Feature.PLAYLISTS,
+                listOf(NavArg.AudioItemId)
+            )
+        ) {
+            PlaylistAudioItemRoot(
+                playlistAudioId = it.findArg(NavArg.AudioItemId),
+                onBackClicked = {
+                    navController.goBack()
+                },
+            )
+        }
     }
 }
 
@@ -236,6 +268,13 @@ private fun NavController.navigateToPlaylistDetailFromPlaylist(playlistId: Strin
     navigate(
         route = NavCommand.ContentPlaylistDetail(Feature.PLAYLISTS, listOf(NavArg.PlaylistId))
             .createRoute(playlistId)
+    )
+}
+
+private fun NavController.navigateToPlaylistAudioItem(audioItemId: String) {
+    navigate(
+        route = NavCommand.ContentAudioItemDetail(Feature.PLAYLISTS, listOf(NavArg.AudioItemId))
+            .createRoute(audioItemId)
     )
 }
 

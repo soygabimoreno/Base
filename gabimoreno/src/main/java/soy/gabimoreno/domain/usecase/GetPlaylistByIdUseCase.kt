@@ -7,9 +7,9 @@ import soy.gabimoreno.domain.repository.playlist.PlaylistRepository
 import javax.inject.Inject
 
 class GetPlaylistByIdUseCase @Inject constructor(
-    private val playlistDRepository: PlaylistRepository
+    private val playlistRepository: PlaylistRepository
 ) {
     operator fun invoke(idPlaylist: Int): Either<Throwable, Flow<Playlist?>> {
-        return playlistDRepository.getPlaylistById(idPlaylist)
+        return playlistRepository.getPlaylistById(idPlaylist)
     }
 }

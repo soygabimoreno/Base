@@ -1,8 +1,6 @@
 package soy.gabimoreno.data.remote.repository
 
 import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
 import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.every
@@ -17,6 +15,8 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.domain.model.content.Playlist
 import soy.gabimoreno.domain.repository.playlist.DefaultPlaylistRepository
+import soy.gabimoreno.ext.left
+import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildPlaylist
 
 class DefaultPlaylistRepositoryTest {
@@ -161,6 +161,64 @@ class DefaultPlaylistRepositoryTest {
             result.getOrNull() shouldBeEqualTo Unit
             coVerifyOnce {
                 localPlaylistDataSource.deleteAllPlaylists()
+            }
+        }
+
+    @Test
+    fun `GIVEN a valid playlistId WHEN getPlaylistIdsByItemId THEN playlistIds are returned`() =
+        runTest {
+            val playlist1 = buildPlaylist()
+            val playlist2 = buildPlaylist(2)
+            val playlistIds = listOf(playlist1.id, playlist2.id)
+            coEvery {
+                localPlaylistDataSource.getPlaylistIdsByItemId(playlist1.items.first().id)
+            } returns playlistIds
+
+            val result = repository.getPlaylistIdsByItemId(playlist1.items.first().id)
+
+            result shouldBeInstanceOf Either.Right::class
+            result.getOrNull() shouldBeEqualTo playlistIds
+            coVerifyOnce {
+                localPlaylistDataSource.getPlaylistIdsByItemId(playlist1.items.first().id)
+            }
+        }
+
+    @Test
+    fun `GIVEN playlistIds WHEN upsertPlaylistItemsDbModel THEN upserts items with correct positions`() =
+        runTest {
+            val playlistItemId = "audio-123"
+            val playlistIds = listOf(1, 2)
+            val expectedIds = listOf(101L, 102L)
+            coEvery {
+                localPlaylistDataSource.upsertPlaylistItemsDbModel(playlistItemId, playlistIds)
+            } returns expectedIds
+
+            val result = repository.upsertPlaylistItems(playlistItemId, playlistIds)
+
+            result shouldBeEqualTo right(expectedIds)
+            coVerifyOnce {
+                localPlaylistDataSource.upsertPlaylistItemsDbModel(playlistItemId, playlistIds)
+            }
+        }
+
+    @Test
+    fun `GIVEN data source throws exception WHEN upsertPlaylistItemsDbModel THEN Left with throwable is returned`() =
+        runTest {
+            val playlistItemId = "audio-123"
+            val playlistIds = listOf(1, 2)
+            val exception = RuntimeException("Something went wrong")
+
+            coEvery {
+                localPlaylistDataSource.upsertPlaylistItemsDbModel(playlistItemId, playlistIds)
+            } throws exception
+
+            val result = runCatching {
+                repository.upsertPlaylistItems(playlistItemId, playlistIds)
+            }.getOrDefault(left(exception))
+
+            result shouldBeEqualTo left(exception)
+            coVerifyOnce {
+                localPlaylistDataSource.upsertPlaylistItemsDbModel(playlistItemId, playlistIds)
             }
         }
 }

@@ -61,6 +61,7 @@ import soy.gabimoreno.presentation.ui.BackButton
 fun AudioCoursesDetailScreenRoot(
     audioCourseId: String,
     onBackClicked: () -> Unit,
+    onAddToPlaylistClicked: (audioCourseId: String) -> Unit,
 ) {
     val context = LocalContext.current
     val coursesDetailViewModel = ViewModelProvider.audioCourseDetailViewModel
@@ -89,6 +90,7 @@ fun AudioCoursesDetailScreenRoot(
         onAction = { action ->
             when (action) {
                 is AudioCourseDetailAction.OnBackClicked -> onBackClicked()
+                is AudioCourseDetailAction.OnAddToPlaylistClicked -> onAddToPlaylistClicked(action.audioCourseId)
                 else -> Unit
             }
             coursesDetailViewModel.onAction(action)
@@ -185,6 +187,13 @@ fun AudioCourseDetailScreen(
                             onAction(
                                 AudioCourseDetailAction.OnAudioItemListenedToggled(
                                     state.audioCourse.audios[index]
+                                )
+                            )
+                        },
+                        onAddToPlaylistClicked = {
+                            onAction(
+                                AudioCourseDetailAction.OnAddToPlaylistClicked(
+                                    state.audioCourse.audios[index].id
                                 )
                             )
                         }
