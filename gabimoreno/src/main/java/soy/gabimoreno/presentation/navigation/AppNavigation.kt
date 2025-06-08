@@ -103,7 +103,12 @@ private fun NavGraphBuilder.premiumNav(
                 onRequireAuth = onRequireAuth,
                 onItemClicked = { premiumAudioId ->
                     navController.navigateToDetailFromPremium(premiumAudioId)
-                }
+                },
+                onPlaylistClicked = {
+                    navController.navigate(
+                        route = NavCommand.ContentType(Feature.PLAYLISTS).route
+                    )
+                },
             )
         }
         composable(
@@ -133,9 +138,16 @@ private fun NavGraphBuilder.audioCoursesNav(
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.AUDIOCOURSES)) {
             appState.setStartDestination(Feature.AUDIOCOURSES)
-            AudioCoursesListScreenRoot { audioCourseId ->
-                navController.navigateToAudioCourseDetailFromAudiocourses(audioCourseId)
-            }
+            AudioCoursesListScreenRoot(
+                onItemClicked = { audioCourseId ->
+                    navController.navigateToAudioCourseDetailFromAudiocourses(audioCourseId)
+                },
+                onPlaylistClicked = {
+                    navController.navigate(
+                        route = NavCommand.ContentType(Feature.PLAYLISTS).route
+                    )
+                },
+            )
         }
         composable(
             navCommand = NavCommand.ContentCoursesDetail(

@@ -35,6 +35,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -83,6 +84,7 @@ import soy.gabimoreno.presentation.theme.Spacing
 fun PremiumScreenRoot(
     onRequireAuth: () -> Unit,
     onItemClicked: (premiumAudioId: String) -> Unit,
+    onPlaylistClicked: () -> Unit,
 ) {
     val context = LocalContext.current
     val premiumViewModel = ViewModelProvider.premiumViewModel
@@ -118,6 +120,7 @@ fun PremiumScreenRoot(
         onAction = { action ->
             when (action) {
                 is PremiumAction.OnLoginClicked -> onRequireAuth()
+                is PremiumAction.OnPlaylistClicked -> onPlaylistClicked()
                 else -> Unit
             }
             premiumViewModel.onAction(action)
@@ -137,15 +140,27 @@ fun PremiumScreen(
             .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
     ) {
-        Box(
-            modifier = Modifier.fillMaxWidth()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Spacing.s16),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = stringResource(id = R.string.nav_item_premium).uppercase(),
                 style = MaterialTheme.typography.h5,
                 modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(top = Spacing.s16, start = Spacing.s16)
+                    .weight(0.8f)
+            )
+            Icon(
+                imageVector = Icons.Default.LibraryMusic,
+                contentDescription = "Playlist",
+                modifier = Modifier
+                    .padding(end = Spacing.s16)
+                    .clickable {
+                        onAction(PremiumAction.OnPlaylistClicked)
+                    }
             )
             Icon(
                 imageVector = if (state.shouldIAccessPremium)
@@ -155,15 +170,11 @@ fun PremiumScreen(
                         R.string.premium_logout else R.string.premium_login
                 ),
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = Spacing.s8, end = Spacing.s8)
                     .clip(CircleShape)
                     .clickable {
                         onAction(PremiumAction.OnLoginClicked)
                     }
-                    .padding(Spacing.s8)
             )
-            Spacer()
         }
         Box(
             modifier = Modifier

@@ -2,13 +2,16 @@
 
 package soy.gabimoreno.presentation.screen.courses.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -16,8 +19,11 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -37,6 +43,7 @@ import soy.gabimoreno.presentation.theme.Spacing
 @Composable
 fun AudioCoursesListScreenRoot(
     onItemClicked: (courseId: String) -> Unit,
+    onPlaylistClicked: () -> Unit,
 ) {
     val context = LocalContext.current
     val coursesListViewModel = ViewModelProvider.audioCoursesListViewModel
@@ -63,6 +70,7 @@ fun AudioCoursesListScreenRoot(
         onAction = { action ->
             when (action) {
                 is AudioCoursesListAction.OnItemClicked -> onItemClicked(action.courseId)
+                AudioCoursesListAction.OnPlaylistClicked -> onPlaylistClicked()
                 else -> Unit
             }
             coursesListViewModel.onAction(action)
@@ -84,12 +92,28 @@ private fun CoursesListScreenScreen(
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
     ) {
-        Text(
-            text = stringResource(id = R.string.nav_item_courses).uppercase(),
-            style = MaterialTheme.typography.h5,
+        Row(
             modifier = Modifier
-                .padding(top = Spacing.s16, start = Spacing.s16)
-        )
+                .fillMaxWidth()
+                .padding(Spacing.s16),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(id = R.string.nav_item_courses).uppercase(),
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier
+                    .weight(0.8f)
+            )
+            Icon(
+                imageVector = Icons.Default.LibraryMusic,
+                contentDescription = "Playlist",
+                modifier = Modifier
+                    .clickable {
+                        onAction(AudioCoursesListAction.OnPlaylistClicked)
+                    }
+            )
+        }
         Spacer(
             modifier = Modifier
                 .padding(top = Spacing.s8)
