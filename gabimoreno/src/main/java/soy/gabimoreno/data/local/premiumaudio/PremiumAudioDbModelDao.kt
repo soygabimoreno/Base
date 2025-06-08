@@ -16,6 +16,9 @@ interface PremiumAudioDbModelDao {
     @Query("SELECT * FROM PremiumAudioDbModel WHERE id = :id")
     fun getPremiumAudioDbModelById(id: String): PremiumAudioDbModel?
 
+    @Query("SELECT * FROM PremiumAudioDbModel WHERE id IN (:ids)")
+    suspend fun getPremiumAudiosByIds(ids: Set<String>): List<PremiumAudioDbModel>
+
     @Query("SELECT COUNT(id) FROM PremiumAudioDbModel")
     fun count(): Int
 

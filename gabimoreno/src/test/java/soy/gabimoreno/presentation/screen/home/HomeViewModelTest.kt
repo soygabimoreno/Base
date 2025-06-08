@@ -4,8 +4,8 @@ import app.cash.turbine.test
 import io.mockk.every
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -37,7 +37,7 @@ class HomeViewModelTest {
     private val encodeUrlUseCase: EncodeUrlUseCase = relaxedMockk()
     private val getShouldIReversePodcastOrderUseCase: GetShouldIReversePodcastOrderUseCase = relaxedMockk()
     private val setShouldIReversePodcastOrderUseCase: SetShouldIReversePodcastOrderUseCase = relaxedMockk()
-    private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
+    private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: HomeViewModel
 
     @Before

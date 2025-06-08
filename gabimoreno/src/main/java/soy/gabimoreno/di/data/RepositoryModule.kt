@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
+import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
 import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
@@ -14,6 +15,8 @@ import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCoursesRepository
 import soy.gabimoreno.domain.repository.login.LoginRepository
 import soy.gabimoreno.domain.repository.login.RemoteLoginRepository
+import soy.gabimoreno.domain.repository.playlist.DefaultPlaylistRepository
+import soy.gabimoreno.domain.repository.playlist.PlaylistRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.podcast.RemotePodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.DefaultPremiumAudiosRepository
@@ -66,5 +69,13 @@ object RepositoryModule {
         localAudioCoursesDataSource,
         remoteAudioCoursesDataSource,
         refreshPremiumAudiosFromRemoteUseCase
+    )
+
+    @Provides
+    @Singleton
+    fun providePlaylistRepository(
+        localPlaylistDataSource: LocalPlaylistDataSource,
+    ): PlaylistRepository = DefaultPlaylistRepository(
+        localPlaylistDataSource
     )
 }

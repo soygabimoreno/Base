@@ -5,4 +5,5 @@ enum class Feature(val route: String) {
     PREMIUM("premium"),
     AUDIOCOURSES("audiocourses"),
     PROFILE("profile"),
+    PLAYLISTS("playlists"),
 }

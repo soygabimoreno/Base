@@ -10,7 +10,6 @@ import kotlinx.coroutines.test.setMain
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
@@ -38,7 +37,6 @@ class PremiumViewModelTest {
         Dispatchers.resetMain()
     }
 
-    @Ignore
     @Test
     fun `GIVEN shouldIAccessPremium true WHEN onViewScreen THEN state is updated with access granted`() =
         runTest {
@@ -56,7 +54,6 @@ class PremiumViewModelTest {
             viewModel.state.shouldIAccessPremium shouldBeEqualTo true
         }
 
-    @Ignore
     @Test
     fun `GIVEN shouldIAccessPremium false WHEN onViewScreen THEN state is updated with access denied`() =
         runTest {

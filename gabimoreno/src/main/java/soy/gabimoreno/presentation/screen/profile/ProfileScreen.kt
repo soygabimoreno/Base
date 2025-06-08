@@ -21,11 +21,13 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -43,11 +45,13 @@ import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.Spacing
+import soy.gabimoreno.presentation.ui.button.FlatIconButton
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
 import soy.gabimoreno.presentation.ui.dialog.CustomDialog
 
 @Composable
 fun ProfileScreenRoot(
+    onPlaylistClicked: () -> Unit,
     onToggleBottomSheet: () -> Unit
 ) {
     val context = LocalContext.current
@@ -83,6 +87,7 @@ fun ProfileScreenRoot(
         state = profileViewModel.state,
         onAction = { action ->
             when (action) {
+                is ProfileAction.OnPlaylistClicked -> onPlaylistClicked()
                 is ProfileAction.OnToggleBottomSheet -> onToggleBottomSheet()
                 else -> Unit
             }
@@ -142,20 +147,31 @@ fun ProfileScreen(
             )
             Spacer(modifier = Modifier.padding(vertical = Spacing.s32))
             if (state.email.isNotBlank()) {
-                ResetAudioItem(
+                ProfileItem(
                     text = stringResource(R.string.profile_reset_premium),
                     onItemClicked = {
                         onAction(ProfileAction.OnResetPremiumAudioClicked)
                     }
                 )
             }
-            ResetAudioItem(
+            ProfileItem(
                 text = stringResource(R.string.profile_reset_audiocourses),
                 onItemClicked = {
                     onAction(ProfileAction.OnResetAudioCoursesClicked)
                 }
             )
-            Box(modifier = Modifier.weight(0.70f))
+            Box(modifier = Modifier.weight(0.10f))
+            FlatIconButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Spacing.s48)
+                    .background(Orange)
+                    .padding(horizontal = Spacing.s16),
+                text = stringResource(R.string.playlists_title),
+                icon = Icons.AutoMirrored.Filled.PlaylistAdd,
+                onItemClicked = { onAction(ProfileAction.OnPlaylistClicked) }
+            )
+            Box(modifier = Modifier.weight(0.50f))
             PrimaryButton(
                 text = stringResource(
                     if (state.email.isBlank())
@@ -181,9 +197,10 @@ fun ProfileScreen(
 }
 
 @Composable
-private fun ResetAudioItem(
+private fun ProfileItem(
     modifier: Modifier = Modifier,
     text: String,
+    icon: ImageVector = Icons.Default.DeleteSweep,
     onItemClicked: () -> Unit = {},
 ) {
     Row(
@@ -198,7 +215,7 @@ private fun ResetAudioItem(
             onClick = { onItemClicked() }
         ) {
             Icon(
-                imageVector = Icons.Default.DeleteSweep,
+                imageVector = icon,
                 contentDescription = null,
                 tint = Orange,
             )
