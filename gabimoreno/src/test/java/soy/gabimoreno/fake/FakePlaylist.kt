@@ -4,7 +4,6 @@ import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.content.Playlist
 import soy.gabimoreno.domain.model.content.PlaylistAudioItem
-import soy.gabimoreno.domain.model.content.PremiumAudio
 
 fun buildPlaylist(id: Int = 1) = Playlist(
     id = id,
@@ -14,8 +13,8 @@ fun buildPlaylist(id: Int = 1) = Playlist(
     position = 0
 )
 
-fun buildNewPlaylist() = Playlist(
-    id = 1,
+fun buildNewPlaylist(id: Int = 1) = Playlist(
+    id = id,
     title = "This is a title",
     description = "This is a description",
     items = emptyList(),

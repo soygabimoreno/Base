@@ -18,12 +18,14 @@ import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
+import soy.gabimoreno.data.local.mapper.toAudioCourseItem
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCoursesRepository
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import soy.gabimoreno.fake.buildAudioCourse
+import soy.gabimoreno.fake.buildAudioCourseItemDbModel
 import soy.gabimoreno.fake.buildAudioCourses
 
 class DefaultAudioCoursesRepositoryTest {
@@ -227,5 +229,36 @@ class DefaultAudioCoursesRepositoryTest {
         repository.reset()
 
         coVerifyOnce { localAudioCoursesDataSource.reset() }
+    }
+
+    @Test
+    fun `GIVEN audioCourseItemId WHEN getAudioCourseItem THEN return AudioCourseItem`() = runTest {
+        val audioCourseItem = buildAudioCourseItemDbModel()
+        coEvery {
+            localAudioCoursesDataSource.getAudioCourseItem(audioCourseItem.id)
+        } returns audioCourseItem
+
+        val result = repository.getAudioCourseItem(audioCourseItem.id)
+
+        result.isRight() shouldBe true
+        result.getOrNull() shouldBeEqualTo audioCourseItem.toAudioCourseItem()
+        coVerifyOnce {
+            localAudioCoursesDataSource.getAudioCourseItem(audioCourseItem.id)
+        }
+    }
+
+    @Test
+    fun `GIVEN audioCourseItemId WHEN getAudioCourseItem THEN return null`() = runTest {
+        val audioCourseItemId = "1"
+        coEvery {
+            localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
+        } returns null
+
+        val result = repository.getAudioCourseItem(audioCourseItemId)
+
+        result.isLeft() shouldBe true
+        coVerifyOnce {
+            localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
+        }
     }
 }

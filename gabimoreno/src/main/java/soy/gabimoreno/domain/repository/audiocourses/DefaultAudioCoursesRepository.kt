@@ -7,9 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
+import soy.gabimoreno.data.local.mapper.toAudioCourseItem
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse
+import soy.gabimoreno.domain.model.content.AudioCourseItem
 import soy.gabimoreno.domain.repository.premiumaudios.TWELVE_HOURS_IN_MILLIS
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import javax.inject.Inject
@@ -62,6 +64,13 @@ class DefaultAudioCoursesRepository @Inject constructor(
         } else {
             Throwable("AudioCourse not found").left()
         }
+    }
+
+    override suspend fun getAudioCourseItem(audioCourseItemId: String): Either<Throwable, AudioCourseItem> {
+        localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
+            ?.let { audioCourseItemDbModel ->
+                return audioCourseItemDbModel.toAudioCourseItem().right()
+            } ?: return Throwable("AudioCourseItem not found").left()
     }
 
     override suspend fun markAudioCourseItemAsListened(id: String, hasBeenListened: Boolean) {

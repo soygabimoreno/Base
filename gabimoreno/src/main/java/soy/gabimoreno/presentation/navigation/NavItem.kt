@@ -78,6 +78,17 @@ sealed class NavCommand(
         fun createRoute(playlistId: String) = "${feature.route}/$subRoute/$playlistId"
     }
 
+    class ContentAudioItemDetail(
+        feature: Feature,
+        navArgs: List<NavArg>,
+    ) : NavCommand(
+        feature,
+        "audioItemDetail",
+        navArgs
+    ) {
+        fun createRoute(audioItemId: String) = "${feature.route}/$subRoute/$audioItemId"
+    }
+
     class ContentWebView(feature: Feature) : NavCommand(
         feature,
         "webView",
@@ -106,5 +117,6 @@ enum class NavArg(
     EncodedUrl("encodedUrl", NavType.StringType),
     PremiumAudioId("premiumAudioId", NavType.StringType),
     AudioCourseId("audioCourseId", NavType.StringType),
-    PlaylistId("playlistId", NavType.StringType)
+    PlaylistId("playlistId", NavType.StringType),
+    AudioItemId("audioItemId", NavType.StringType)
 }

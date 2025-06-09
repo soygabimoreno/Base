@@ -15,6 +15,7 @@ import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
 import soy.gabimoreno.data.local.mapper.toPlaylistAudioItem
 import soy.gabimoreno.data.local.mapper.toPlaylistMapper
 import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
+import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistWithItems
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.di.IO
@@ -100,6 +101,27 @@ class LocalPlaylistDataSource @Inject constructor(
     suspend fun deleteAllPlaylists() = withContext(dispatcher) {
         playlistDbModelDao.deleteAllPlaylistDbModels()
     }
+
+    suspend fun getPlaylistIdsByItemId(playlistItemId: String): List<Int> =
+        withContext(dispatcher) {
+            playlistTransactionDao.getPlaylistIdsByItemId(playlistItemId)
+        }
+
+    suspend fun upsertPlaylistItemsDbModel(
+        playlistItemId: String,
+        playlistIds: List<Int>
+    ): List<Long> =
+        withContext(dispatcher) {
+            val lastPosition = playlistItemDbModelDao.getTotalPlaylistItems()
+            val playlistItems = playlistIds.mapIndexed { index, playlistId ->
+                PlaylistItemsDbModel(
+                    id = playlistItemId,
+                    playlistId = playlistId,
+                    position = index + lastPosition
+                )
+            }
+            playlistItemDbModelDao.upsertPlaylistItemsDbModel(playlistItems)
+        }
 
     private suspend fun loadAudioResources(ids: Set<String>): AudioResources {
         val premiumAudioMap = premiumAudioDbModelDao

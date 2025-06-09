@@ -8,4 +8,5 @@ sealed interface PremiumAction {
     data class OnPremiumItemClicked(val premiumAudioId: String) : PremiumAction
     data class OnListenedToggled(val premiumAudio: PremiumAudio) : PremiumAction
     data object OnPlaylistClicked : PremiumAction
+    data class OnAddToPlaylistClicked(val premiumAudioId: String) : PremiumAction
 }

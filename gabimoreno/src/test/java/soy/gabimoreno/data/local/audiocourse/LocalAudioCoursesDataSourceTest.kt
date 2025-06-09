@@ -26,6 +26,7 @@ import soy.gabimoreno.data.local.GabiMorenoDatabase
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseDbModelDao
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseItemDbModelDao
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseTransactionDao
+import soy.gabimoreno.fake.buildAudioCourseItemDbModel
 import soy.gabimoreno.fake.buildAudioCourseWithItems
 import soy.gabimoreno.fake.buildAudioCourses
 import soy.gabimoreno.fake.buildAudioCoursesDbModel
@@ -154,5 +155,29 @@ class LocalAudioCoursesDataSourceTest {
         coVerifyOnce {
             audioCourseDbModelDao.deleteAllAudioCourseDbModels()
         }
+    }
+
+    @Test
+    fun `GIVEN audioCourseItemId WHEN getAudioCourseItem THEN return AudioCourseItem`() = runTest {
+        val audioCourseItem = buildAudioCourseItemDbModel()
+        coEvery {
+            audioCourseItemDbModelDao.getAudioCourseItemById(audioCourseItem.id)
+        } returns audioCourseItem
+
+        val result = dataSource.getAudioCourseItem(audioCourseItem.id)
+
+        result shouldBe audioCourseItem
+    }
+
+    @Test
+    fun `GIVEN audioCourseItemId WHEN getAudioCourseItem THEN return null`() = runTest {
+        val audioCourseItemId = "1"
+        coEvery {
+            audioCourseItemDbModelDao.getAudioCourseItemById(audioCourseItemId)
+        } returns null
+
+        val result = dataSource.getAudioCourseItem(audioCourseItemId)
+
+        result shouldBe null
     }
 }

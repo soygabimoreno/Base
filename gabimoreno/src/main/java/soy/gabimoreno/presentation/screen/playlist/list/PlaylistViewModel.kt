@@ -23,11 +23,15 @@ class PlaylistViewModel @Inject constructor(
     private val insertPlaylistUseCase: InsertPlaylistUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
+    private var hasLoadedInitialData = false
 
     private val _state = MutableStateFlow(PlaylistState())
     val state = _state
         .onStart {
-            onScreenView()
+            if (!hasLoadedInitialData) {
+                onScreenView()
+                hasLoadedInitialData = true
+            }
         }
         .stateIn(
             scope = viewModelScope,
