@@ -185,7 +185,8 @@ fun PlaylistScreen(
             onClick = { onAction(PlaylistAction.OnAddNewPlaylistClicked) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(Spacing.s16),
+                .padding(Spacing.s16)
+                .padding(bottom = Spacing.s64),
             backgroundColor = Orange
         ) {
             Icon(
@@ -194,7 +195,6 @@ fun PlaylistScreen(
                 tint = White
             )
         }
-
     }
 }
 

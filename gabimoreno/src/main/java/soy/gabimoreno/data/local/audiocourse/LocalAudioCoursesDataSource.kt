@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import soy.gabimoreno.data.local.GabiMorenoDatabase
+import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
 import soy.gabimoreno.data.local.mapper.toAudioCourse
 import soy.gabimoreno.data.local.mapper.toAudioCourseMapper
 import soy.gabimoreno.di.IO
@@ -56,6 +57,11 @@ class LocalAudioCoursesDataSource @Inject constructor(
             .getAudioCourseWithItems(id)
             .map { it?.toAudioCourse() }
     }
+
+    suspend fun getAudioCourseItem(audioCourseItemId: String): AudioCourseItemDbModel? =
+        withContext(dispatcher) {
+            audioCourseItemDbModelDao.getAudioCourseItemById(audioCourseItemId)
+        }
 
     suspend fun markAllAudioCourseItemsAsUnlistened() = withContext(dispatcher) {
         audioCourseItemDbModelDao.markAllAudioCourseItemsAsUnlistened()

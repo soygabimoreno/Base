@@ -79,11 +79,13 @@ import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
+import soy.gabimoreno.presentation.theme.White
 
 @Composable
 fun PremiumScreenRoot(
     onRequireAuth: () -> Unit,
     onItemClicked: (premiumAudioId: String) -> Unit,
+    onAddToPlaylistClicked: (premiumAudioId: String) -> Unit,
     onPlaylistClicked: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -121,6 +123,7 @@ fun PremiumScreenRoot(
             when (action) {
                 is PremiumAction.OnLoginClicked -> onRequireAuth()
                 is PremiumAction.OnPlaylistClicked -> onPlaylistClicked()
+                is PremiumAction.OnAddToPlaylistClicked -> onAddToPlaylistClicked(action.premiumAudioId)
                 else -> Unit
             }
             premiumViewModel.onAction(action)
@@ -185,7 +188,9 @@ fun PremiumScreen(
                     premiumAudios = premiumAudiosFlow,
                     onItemClicked = { onAction(PremiumAction.OnPremiumItemClicked(it)) },
                     onListenedToggled = { onAction(PremiumAction.OnListenedToggled(it)) },
-                    onPullRefreshTriggered = { onAction(PremiumAction.OnRefreshContent) })
+                    onPullRefreshTriggered = { onAction(PremiumAction.OnRefreshContent) },
+                    onAddToPlaylistClicked = { onAction(PremiumAction.OnAddToPlaylistClicked(it)) }
+                )
             } else {
                 NonPremiumContent()
             }
@@ -251,6 +256,7 @@ fun PremiumContent(
     onItemClicked: (premiumAudioId: String) -> Unit,
     onListenedToggled: (premiumAudio: PremiumAudio) -> Unit,
     onPullRefreshTriggered: () -> Unit,
+    onAddToPlaylistClicked: (premiumAudioId: String) -> Unit,
 ) {
     val refreshScope = rememberCoroutineScope()
     var refreshing by remember { mutableStateOf(false) }
@@ -284,7 +290,8 @@ fun PremiumContent(
                             PremiumItem(
                                 premiumAudio = premiumAudio,
                                 onItemClicked = onItemClicked,
-                                onListenedToggled = onListenedToggled
+                                onListenedToggled = onListenedToggled,
+                                onAddToPlaylistClicked = onAddToPlaylistClicked
                             )
                         }
                     }
@@ -303,6 +310,7 @@ fun PremiumItem(
     premiumAudio: PremiumAudio,
     onItemClicked: (premiumAudioId: String) -> Unit,
     onListenedToggled: (premiumAudio: PremiumAudio) -> Unit,
+    onAddToPlaylistClicked: (premiumAudioId: String) -> Unit,
 ) {
     val iconColor by animateColorAsState(
         targetValue = if (premiumAudio.hasBeenListened) Orange else Black.copy(alpha = 0.2f),
@@ -352,6 +360,19 @@ fun PremiumItem(
                 imageVector = Icons.Default.Check,
                 contentDescription = stringResource(R.string.premium_audio_listened),
                 tint = iconColor,
+            )
+        }
+        Spacer(modifier = Modifier.width(Spacing.s16))
+        IconButton(
+            modifier = Modifier.weight(0.10f),
+            onClick = { onAddToPlaylistClicked(premiumAudio.id) },
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(Spacing.s32),
+                imageVector = Icons.Default.LibraryMusic,
+                contentDescription = stringResource(R.string.playlists_add_audio_to_playlist),
+                tint = White,
             )
         }
     }

@@ -40,4 +40,7 @@ interface PlaylistTransactionDao {
 
     @Upsert
     fun upsertItems(items: List<PlaylistItemsDbModel>)
+
+    @Query("SELECT playlistId FROM PlaylistItemsDbModel WHERE id = :playlistItemId")
+    suspend fun getPlaylistIdsByItemId(playlistItemId: String): List<Int>
 }

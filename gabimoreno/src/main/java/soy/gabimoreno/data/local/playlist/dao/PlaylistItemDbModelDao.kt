@@ -14,10 +14,13 @@ interface PlaylistItemDbModelDao {
     fun getPlaylistItemsDbModelOrdered(playlistId: Int): List<PlaylistItemsDbModel>
 
     @Upsert()
-    fun upsertPlaylistItemsDbModel(playlistItems: List<PlaylistItemsDbModel>)
+    fun upsertPlaylistItemsDbModel(playlistItems: List<PlaylistItemsDbModel>): List<Long>
 
     @Query("SELECT COUNT(*) FROM PlaylistItemsDbModel WHERE playlistId = :playlistId")
     fun getPlaylistItemsCountByPlaylistId(playlistId: Int): Int
+
+    @Query("SELECT COUNT(*) FROM PlaylistItemsDbModel")
+    fun getTotalPlaylistItems(): Int
 
     @Query("DELETE FROM PlaylistItemsDbModel WHERE playlistId = :playlistId")
     fun deletePlaylistItemsDbModelByPlaylistId(playlistId: Int)

@@ -6,9 +6,9 @@ import soy.gabimoreno.domain.repository.playlist.PlaylistRepository
 import javax.inject.Inject
 
 class SavePlaylistUseCase @Inject constructor(
-    private val playlistDRepository: PlaylistRepository
+    private val playlistRepository: PlaylistRepository
 ) {
     suspend operator fun invoke(playlist: Playlist): Either<Throwable, Unit> {
-        return playlistDRepository.savePlaylist(playlist)
+        return playlistRepository.savePlaylist(playlist)
     }
 }

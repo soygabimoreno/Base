@@ -34,6 +34,19 @@ class DefaultPlaylistRepository @Inject constructor(
         return localPlaylistDataSource.getPlaylistById(idPlaylist).let { Either.Right(it) }
     }
 
+    override suspend fun getPlaylistIdsByItemId(playlistItemId: String): Either<Throwable, List<Int>> {
+        return localPlaylistDataSource.getPlaylistIdsByItemId(playlistItemId)
+            .let { Either.Right(it) }
+    }
+
+    override suspend fun upsertPlaylistItems(
+        playlistItemId: String,
+        playlistIds: List<Int>
+    ): Either<Throwable, List<Long>> {
+        return localPlaylistDataSource.upsertPlaylistItemsDbModel(playlistItemId, playlistIds)
+            .let { Either.Right(it) }
+    }
+
     override suspend fun resetPlaylistById(idPlaylist: Int): Either<Throwable, Unit> {
         return localPlaylistDataSource.resetPlaylistById(idPlaylist).let { Either.Right(Unit) }
     }

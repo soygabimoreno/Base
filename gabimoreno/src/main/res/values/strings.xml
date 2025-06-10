@@ -88,4 +88,5 @@
     <string name="playlists_create_title_hint">Nombre de la playlist</string>
     <string name="playlists_create_error_empty">El nombre no puede estar vacío</string>
     <string name="playlists_create_description_hint">Descrición</string>
+    <string name="playlists_add_audio_to_playlist">Añadir audio a una playlist</string>
 </resources>
