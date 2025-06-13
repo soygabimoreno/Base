@@ -36,5 +36,6 @@ fun PremiumAudioDbModel.toPlaylistAudioItem(
     hasBeenListened = hasBeenListened,
     category = category,
     excerpt = excerpt,
-    position = position
+    position = position,
+    playlistItemId = null
 )

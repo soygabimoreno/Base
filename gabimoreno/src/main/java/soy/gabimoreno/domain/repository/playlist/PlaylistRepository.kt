@@ -10,11 +10,17 @@ interface PlaylistRepository {
     suspend fun savePlaylist(playlist: Playlist): Either<Throwable, Unit>
     suspend fun getAllPlaylists(): Either<Throwable, List<Playlist>>
     fun getPlaylistById(idPlaylist: Int): Either<Throwable, Flow<Playlist?>>
-    suspend fun getPlaylistIdsByItemId(playlistItemId: String): Either<Throwable, List<Int>>
+    suspend fun getPlaylistIdsByItemId(audioItemId: String): Either<Throwable, List<Int>>
     suspend fun upsertPlaylistItems(
-        playlistItemId: String,
+        audioId: String,
         playlistIds: List<Int>
     ): Either<Throwable, List<Long>>
+
     suspend fun resetPlaylistById(idPlaylist: Int): Either<Throwable, Unit>
+    suspend fun deletePlaylistItemById(
+        audioItemId: String,
+        playlistId: Int
+    ): Either<Throwable, Unit>
+
     suspend fun deleteAllPlaylists(): Either<Throwable, Unit>
 }

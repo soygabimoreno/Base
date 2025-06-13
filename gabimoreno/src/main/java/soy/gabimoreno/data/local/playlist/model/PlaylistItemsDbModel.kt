@@ -18,8 +18,9 @@ import androidx.room.PrimaryKey
     indices = [Index("playlistId")]
 )
 data class PlaylistItemsDbModel(
-    @PrimaryKey
-    val id: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = null,
+    val audioItemId: String,
     val playlistId: Int,
     val position: Int,
 )

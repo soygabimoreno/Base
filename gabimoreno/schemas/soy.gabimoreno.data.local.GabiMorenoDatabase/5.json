@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "403b0e484efb0a73b4ed7c2f2ecc70f2",
+    "identityHash": "d84838988c446dc26dd90730522a34cc",
     "entities": [
       {
         "tableName": "PremiumAudioDbModel",
@@ -281,11 +281,16 @@
       },
       {
         "tableName": "PlaylistItemsDbModel",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `playlistId` INTEGER NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`playlistId`) REFERENCES `PlaylistDbModel`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `audioItemId` TEXT NOT NULL, `playlistId` INTEGER NOT NULL, `position` INTEGER NOT NULL, FOREIGN KEY(`playlistId`) REFERENCES `PlaylistDbModel`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "audioItemId",
+            "columnName": "audioItemId",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -303,7 +308,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -336,7 +341,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '403b0e484efb0a73b4ed7c2f2ecc70f2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd84838988c446dc26dd90730522a34cc')"
     ]
   }
 }

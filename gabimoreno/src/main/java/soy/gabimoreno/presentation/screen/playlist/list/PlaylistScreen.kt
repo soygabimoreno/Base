@@ -41,7 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import soy.gabimoreno.R
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.playlist.view.PlaylistDialog
-import soy.gabimoreno.presentation.screen.playlist.list.view.PlaylistItem
+import soy.gabimoreno.presentation.screen.playlist.view.PlaylistItem
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.Spacing

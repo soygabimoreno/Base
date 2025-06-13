@@ -74,7 +74,7 @@ class LocalPlaylistDataSource @Inject constructor(
 
     suspend fun getAllPlaylists(): List<Playlist> = withContext(dispatcher) {
         val playlistsWithItems = playlistTransactionDao.getPlaylistsWithItems()
-        val allItemIds = playlistsWithItems.flatMap { it.items }.map { it.id }.toSet()
+        val allItemIds = playlistsWithItems.flatMap { it.items }.map { it.audioItemId }.toSet()
         val resources = loadAudioResources(allItemIds)
 
         playlistsWithItems.map { it.mapToPlaylist(resources) }
@@ -86,7 +86,7 @@ class LocalPlaylistDataSource @Inject constructor(
                 if (playlistWithItems == null) return@mapLatest null
 
                 val itemIds = playlistWithItems.items
-                    .map { playlistItemDbModel -> playlistItemDbModel.id }.toSet()
+                    .map { playlistItemDbModel -> playlistItemDbModel.audioItemId }.toSet()
                 val resources = loadAudioResources(itemIds)
 
                 playlistWithItems.mapToPlaylist(resources)
@@ -102,25 +102,33 @@ class LocalPlaylistDataSource @Inject constructor(
         playlistDbModelDao.deleteAllPlaylistDbModels()
     }
 
-    suspend fun getPlaylistIdsByItemId(playlistItemId: String): List<Int> =
+    suspend fun getPlaylistIdsByItemId(audioItemId: String): List<Int> =
         withContext(dispatcher) {
-            playlistTransactionDao.getPlaylistIdsByItemId(playlistItemId)
+            playlistTransactionDao.getPlaylistIdsByItemId(audioItemId)
         }
 
     suspend fun upsertPlaylistItemsDbModel(
-        playlistItemId: String,
+        audioId: String,
         playlistIds: List<Int>
     ): List<Long> =
         withContext(dispatcher) {
             val lastPosition = playlistItemDbModelDao.getTotalPlaylistItems()
             val playlistItems = playlistIds.mapIndexed { index, playlistId ->
                 PlaylistItemsDbModel(
-                    id = playlistItemId,
+                    audioItemId = audioId,
                     playlistId = playlistId,
                     position = index + lastPosition
                 )
             }
             playlistItemDbModelDao.upsertPlaylistItemsDbModel(playlistItems)
+        }
+
+    suspend fun deletePlaylistItemDbModelById(
+        audioItemId: String,
+        playlistId: Int
+    ) =
+        withContext(dispatcher) {
+            playlistItemDbModelDao.deletePlaylistItemDbModelById(audioItemId, playlistId)
         }
 
     private suspend fun loadAudioResources(ids: Set<String>): AudioResources {
@@ -144,14 +152,16 @@ class LocalPlaylistDataSource @Inject constructor(
             .sortedBy { it.position }
             .mapNotNull { item ->
                 val position = item.position
-                if (item.id.contains("-")) {
-                    val course = resources.audioCourses[item.id]
-                    val courseItem = resources.audioCourseItems[item.id]
+                val playlistItemId = item.id
+                val audioItem = if (item.audioItemId.contains("-")) {
+                    val course = resources.audioCourses[item.audioItemId]
+                    val courseItem = resources.audioCourseItems[item.audioItemId]
                     if (course == null || courseItem == null) return@mapNotNull null
                     courseItem.toPlaylistAudioItem(course, position)
                 } else {
-                    resources.premiumAudios[item.id]?.toPlaylistAudioItem(position)
+                    resources.premiumAudios[item.audioItemId]?.toPlaylistAudioItem(position)
                 }
+                audioItem?.copy(playlistItemId = playlistItemId)
             }
 
         return playlist.toPlaylistMapper(playlistItems)

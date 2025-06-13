@@ -221,4 +221,24 @@ class DefaultPlaylistRepositoryTest {
                 localPlaylistDataSource.upsertPlaylistItemsDbModel(playlistItemId, playlistIds)
             }
         }
+
+    @Test
+    fun `GIVEN valid playlistItemId WHEN deletePlaylistItemByPlaylistId THEN deletes playlist item`() =
+        runTest {
+            val audioItemId = "audio-123"
+            val playlistId = 1
+            coJustRun {
+                localPlaylistDataSource.deletePlaylistItemDbModelById(
+                    audioItemId,
+                    playlistId
+                )
+            }
+
+            val result = repository.deletePlaylistItemById(audioItemId, playlistId)
+
+            result shouldBeEqualTo right(Unit)
+            coVerifyOnce {
+                localPlaylistDataSource.deletePlaylistItemDbModelById(audioItemId, playlistId)
+            }
+        }
 }
