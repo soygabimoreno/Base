@@ -2,8 +2,9 @@ package soy.gabimoreno.domain.model.content
 
 data class Playlist(
     val id: Int,
-    val title: String,
+    val category: PlaylistCategory = PlaylistCategory.USER_PLAYLIST,
     val description: String,
-    val position: Int,
     val items: List<PlaylistAudioItem>,
+    val position: Int,
+    val title: String,
 )
