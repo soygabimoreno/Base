@@ -81,6 +81,7 @@
     <string name="review_feedback_email_subject">Sugerencia sobre la app</string>
     <string name="review_feedback_email_body">Hola, me gustaría sugerir…</string>
     <string name="review_feedback_email_error">No se encontró una app de correo instalada</string>
+    <string name="playlists_name">Playlist</string>
     <string name="playlists_title">Mis playlist</string>
     <string name="playlists_empty">Aún no has creado ninguna</string>
     <string name="playlists_create">Crear</string>
@@ -88,5 +89,7 @@
     <string name="playlists_create_title_hint">Nombre de la playlist</string>
     <string name="playlists_create_error_empty">El nombre no puede estar vacío</string>
     <string name="playlists_create_description_hint">Descrición</string>
-    <string name="playlists_add_audio_to_playlist">Añadir audio a una playlist</string>
+    <string name="playlists_add_audio_to_playlist">Añadir a playlist</string>
+    <string name="playlists_save">Guardar</string>
+    <string name="playlists_success_message">Cambios guardados con éxito</string>
 </resources>

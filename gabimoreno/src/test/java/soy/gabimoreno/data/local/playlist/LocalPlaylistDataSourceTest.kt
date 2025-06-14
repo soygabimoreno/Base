@@ -3,6 +3,7 @@
 package soy.gabimoreno.data.local.playlist
 
 import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +39,7 @@ import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
 import soy.gabimoreno.fake.buildPlaylist
 
-class LocalPlaylistRepositoryTest {
+class LocalPlaylistDataSourceTest {
 
     private val premiumAudioDbModelDao: PremiumAudioDbModelDao =
         relaxedMockk<PremiumAudioDbModelDao>()
@@ -81,11 +82,12 @@ class LocalPlaylistRepositoryTest {
             description = playlist.description,
             position = playlist.position
         )
-        val itemsDbModel = playlist.items.map {
+        val itemsDbModel = playlist.items.mapIndexed { index, playlistAudioItem ->
             PlaylistItemsDbModel(
-                id = it.id,
+                id = index,
+                audioItemId = playlistAudioItem.id,
                 playlistId = playlist.id,
-                position = it.position
+                position = playlistAudioItem.position
             )
         }
         val playlistWithItems = PlaylistWithItems(playlistDbModel, itemsDbModel)
@@ -115,6 +117,7 @@ class LocalPlaylistRepositoryTest {
         )
         val itemsDbModel = playlist.items.map {
             PlaylistItemsDbModel(
+                it.playlistItemId,
                 it.id,
                 playlist.id,
                 it.position,
@@ -139,7 +142,12 @@ class LocalPlaylistRepositoryTest {
 
         val result = playlistDataSource.getPlaylistById(playlist.id).first()
 
-        val expected = playlistDbModel.toPlaylistMapper(playlist.items)
+        val expected = playlistDbModel.toPlaylistMapper(
+            playlist.items.map { item ->
+                val dbModel = itemsDbModel.first { it.audioItemId == item.id }
+                item.copy(playlistItemId = dbModel.id)
+            }
+        )
         result shouldBeEqualTo expected
     }
 
@@ -180,9 +188,9 @@ class LocalPlaylistRepositoryTest {
             val playlistIds = listOf(1, 2, 3)
             val lastPosition = 5
             val expectedItems = listOf(
-                PlaylistItemsDbModel(id = playlistItemId, playlistId = 1, position = 5),
-                PlaylistItemsDbModel(id = playlistItemId, playlistId = 2, position = 6),
-                PlaylistItemsDbModel(id = playlistItemId, playlistId = 3, position = 7)
+                PlaylistItemsDbModel(audioItemId = playlistItemId, playlistId = 1, position = 5),
+                PlaylistItemsDbModel(audioItemId = playlistItemId, playlistId = 2, position = 6),
+                PlaylistItemsDbModel(audioItemId = playlistItemId, playlistId = 3, position = 7)
             )
             val expectedResult: List<Long> = listOf(1001, 1002, 1003)
 
@@ -195,6 +203,25 @@ class LocalPlaylistRepositoryTest {
             coVerifyOnce {
                 playlistItemDbModelDao.getTotalPlaylistItems()
                 playlistItemDbModelDao.upsertPlaylistItemsDbModel(expectedItems)
+            }
+        }
+
+    @Test
+    fun `GIVEN playlistItemId WHEN deletePlaylistItemDbModelByPlaylistId THEN delete item`() =
+        runTest {
+            val audioItemId = "audio-123"
+            val playlistId = 1
+            coJustRun {
+                playlistItemDbModelDao.deletePlaylistItemDbModelById(
+                    audioItemId,
+                    playlistId
+                )
+            }
+
+            playlistDataSource.deletePlaylistItemDbModelById(audioItemId, playlistId)
+
+            coVerifyOnce {
+                playlistItemDbModelDao.deletePlaylistItemDbModelById(audioItemId, playlistId)
             }
         }
 

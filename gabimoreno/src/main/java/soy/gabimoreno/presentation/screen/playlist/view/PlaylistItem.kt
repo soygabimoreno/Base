@@ -1,8 +1,12 @@
-package soy.gabimoreno.presentation.screen.playlist.list.view
+package soy.gabimoreno.presentation.screen.playlist.view
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,16 +16,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import soy.gabimoreno.R
 import soy.gabimoreno.domain.model.content.Playlist
 import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
@@ -34,9 +44,17 @@ import soy.gabimoreno.presentation.theme.White
 fun PlaylistItem(
     modifier: Modifier = Modifier,
     playlist: Playlist,
-    onItemClick: (String) -> Unit = {}
+    selectable: Boolean = false,
+    isPlaylistSelected: Boolean = false,
+    onItemClick: (String) -> Unit = {},
+    onToggleClick: (playlistId: Int) -> Unit = {}
 ) {
-    val isOdd = playlist.position % 2 == 1
+    val itemDefaultColor = if ((playlist.position % 2) == 1) Orange else PurpleLight
+    val iconColor by animateColorAsState(
+        targetValue = if (isPlaylistSelected) itemDefaultColor else Black.copy(alpha = 0.2f),
+        animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
+        label = "selectedPlaylistIconColorAnimation"
+    )
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -50,7 +68,7 @@ fun PlaylistItem(
             imageVector = Icons.Default.LibraryMusic,
             contentDescription = "Playlist",
             modifier = Modifier.size(Spacing.s64),
-            tint = if (isOdd) Orange else PurpleLight
+            tint = itemDefaultColor
         )
         Spacer(modifier = Modifier.width(Spacing.s16))
         Column(
@@ -66,7 +84,7 @@ fun PlaylistItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(Spacing.s4)
-                    .background(if (isOdd) Orange else PurpleLight)
+                    .background(itemDefaultColor)
             )
             Text(
                 playlist.description,
@@ -74,6 +92,26 @@ fun PlaylistItem(
                 fontWeight = FontWeight.Light,
                 modifier = Modifier.padding(top = Spacing.s4)
             )
+        }
+        if (selectable) {
+            Box(
+                modifier = Modifier
+                    .size(Spacing.s32)
+                    .border(1.dp, itemDefaultColor, shape = CircleShape)
+                    .padding(Spacing.s4),
+            ) {
+                IconButton(
+                    onClick = { onToggleClick(playlist.id) },
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(Spacing.s32),
+                        imageVector = Icons.Default.Check,
+                        contentDescription = stringResource(R.string.playlists_add_audio_to_playlist) + " " + playlist.title,
+                        tint = iconColor,
+                    )
+                }
+            }
         }
     }
 }
@@ -106,7 +144,9 @@ private fun PlaylistItemPreview() {
                     description = "Description 2",
                     items = emptyList(),
                     position = 1
-                )
+                ),
+                selectable = true,
+                isPlaylistSelected = true
             )
             PlaylistItem(
                 playlist = Playlist(
@@ -115,8 +155,12 @@ private fun PlaylistItemPreview() {
                     description = "Description 3",
                     items = emptyList(),
                     position = 2
-                )
+                ),
+                selectable = true,
+                isPlaylistSelected = false
             )
         }
     }
 }
+
+private const val CHANGE_COLOR_ANIMATION_DURATION = 300

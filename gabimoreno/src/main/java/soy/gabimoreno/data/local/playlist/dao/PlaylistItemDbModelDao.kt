@@ -22,6 +22,9 @@ interface PlaylistItemDbModelDao {
     @Query("SELECT COUNT(*) FROM PlaylistItemsDbModel")
     fun getTotalPlaylistItems(): Int
 
+    @Query("DELETE FROM PlaylistItemsDbModel WHERE audioItemId = :audioItemId AND playlistId = :playlistId")
+    fun deletePlaylistItemDbModelById(audioItemId: String, playlistId: Int)
+
     @Query("DELETE FROM PlaylistItemsDbModel WHERE playlistId = :playlistId")
     fun deletePlaylistItemsDbModelByPlaylistId(playlistId: Int)
 

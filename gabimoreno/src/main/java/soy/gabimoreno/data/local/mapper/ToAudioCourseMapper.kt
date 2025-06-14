@@ -67,6 +67,7 @@ fun AudioCourseItemDbModel.toPlaylistAudioItem(
         hasBeenListened = hasBeenListened,
         category = audioCourseDbModel.category,
         excerpt = audioCourseDbModel.excerpt,
-        position = position
+        position = position,
+        playlistItemId = null
     )
 }

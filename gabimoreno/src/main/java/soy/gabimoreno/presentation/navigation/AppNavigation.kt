@@ -238,6 +238,11 @@ private fun NavGraphBuilder.playlistNav(
                 onBackClicked = {
                     navController.goBack()
                 },
+                onNewPlaylistClicked = {
+                    navController.navigate(
+                        route = NavCommand.ContentType(Feature.PLAYLISTS).route
+                    )
+                }
             )
         }
     }

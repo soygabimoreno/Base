@@ -14,7 +14,8 @@ fun Playlist.toPlaylistDbModel() = PlaylistDbModel(
 )
 
 fun PlaylistAudioItem.toPlaylistItemDbModel(playlistId: Int) = PlaylistItemsDbModel(
-    id = id,
+    id = playlistItemId,
+    audioItemId = id,
     playlistId = playlistId,
     position = position
 )
@@ -33,4 +34,4 @@ fun PlaylistAudioItem.toPremiumAudioDbModel() = PremiumAudioDbModel(
     category = category,
     excerpt = excerpt,
     hasBeenListened = hasBeenListened,
-    )
+)

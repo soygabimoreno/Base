@@ -8,9 +8,9 @@ class SetPlaylistItemsUseCase @Inject constructor(
     private val repository: PlaylistRepository
 ) {
     suspend operator fun invoke(
-        playlistItemId: String,
+        audioId: String,
         playlistIds: List<Int>
     ): Either<Throwable, List<Long>> {
-        return repository.upsertPlaylistItems(playlistItemId, playlistIds)
+        return repository.upsertPlaylistItems(audioId, playlistIds)
     }
 }

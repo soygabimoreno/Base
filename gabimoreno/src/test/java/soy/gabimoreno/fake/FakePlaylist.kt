@@ -41,5 +41,6 @@ fun buildAudio(audioId: String, position: Int = 0) = PlaylistAudioItem(
     category = Category.PREMIUM,
     excerpt = "excerpt",
     hasBeenListened = false,
-    position = position
+    position = position,
+    playlistItemId = position
 )

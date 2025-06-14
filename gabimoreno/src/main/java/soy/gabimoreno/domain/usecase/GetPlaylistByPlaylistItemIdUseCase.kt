@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetPlaylistByPlaylistItemIdUseCase @Inject constructor(
     private val playlistRepository: PlaylistRepository
 ) {
-    suspend operator fun invoke(playlistItemId: String): Either<Throwable, List<Int>> {
-        return playlistRepository.getPlaylistIdsByItemId(playlistItemId)
+    suspend operator fun invoke(audioItemId: String): Either<Throwable, List<Int>> {
+        return playlistRepository.getPlaylistIdsByItemId(audioItemId)
     }
 }
