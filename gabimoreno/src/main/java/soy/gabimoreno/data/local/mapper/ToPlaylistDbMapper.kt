@@ -8,9 +8,10 @@ import soy.gabimoreno.domain.model.content.PlaylistAudioItem
 
 fun Playlist.toPlaylistDbModel() = PlaylistDbModel(
     id = id,
-    title = title,
+    categoryId = category.id,
     description = description,
     position = position,
+    title = title,
 )
 
 fun PlaylistAudioItem.toPlaylistItemDbModel(playlistId: Int) = PlaylistItemsDbModel(

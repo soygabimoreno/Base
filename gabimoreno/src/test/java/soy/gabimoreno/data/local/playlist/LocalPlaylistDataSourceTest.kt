@@ -110,10 +110,11 @@ class LocalPlaylistDataSourceTest {
     fun `GIVEN valid playlist WHEN getPlaylistById THEN mapped playlist is emitted`() = runTest {
         val playlist = buildPlaylist()
         val playlistDbModel = PlaylistDbModel(
-            playlist.id,
-            playlist.title,
-            playlist.description,
-            playlist.position,
+            id = playlist.id,
+            categoryId = playlist.category.id,
+            description = playlist.description,
+            position = playlist.position,
+            title = playlist.title,
         )
         val itemsDbModel = playlist.items.map {
             PlaylistItemsDbModel(

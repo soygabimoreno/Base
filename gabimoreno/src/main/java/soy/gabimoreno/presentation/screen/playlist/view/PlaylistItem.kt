@@ -22,7 +22,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,9 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import soy.gabimoreno.R
 import soy.gabimoreno.domain.model.content.Playlist
+import soy.gabimoreno.domain.model.content.PlaylistCategory
 import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
-import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
@@ -49,9 +48,8 @@ fun PlaylistItem(
     onItemClick: (String) -> Unit = {},
     onToggleClick: (playlistId: Int) -> Unit = {}
 ) {
-    val itemDefaultColor = if ((playlist.position % 2) == 1) Orange else PurpleLight
     val iconColor by animateColorAsState(
-        targetValue = if (isPlaylistSelected) itemDefaultColor else Black.copy(alpha = 0.2f),
+        targetValue = if (isPlaylistSelected) PurpleLight else Black.copy(alpha = 0.2f),
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
         label = "selectedPlaylistIconColorAnimation"
     )
@@ -65,10 +63,10 @@ fun PlaylistItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Icon(
-            imageVector = Icons.Default.LibraryMusic,
+            imageVector = playlist.category.icon,
             contentDescription = "Playlist",
             modifier = Modifier.size(Spacing.s64),
-            tint = itemDefaultColor
+            tint = playlist.category.color
         )
         Spacer(modifier = Modifier.width(Spacing.s16))
         Column(
@@ -84,7 +82,7 @@ fun PlaylistItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(Spacing.s4)
-                    .background(itemDefaultColor)
+                    .background(playlist.category.color)
             )
             Text(
                 playlist.description,
@@ -97,7 +95,11 @@ fun PlaylistItem(
             Box(
                 modifier = Modifier
                     .size(Spacing.s32)
-                    .border(1.dp, itemDefaultColor, shape = CircleShape)
+                    .border(
+                        1.dp,
+                        playlist.category.color,
+                        shape = CircleShape,
+                    )
                     .padding(Spacing.s4),
             ) {
                 IconButton(
@@ -151,9 +153,10 @@ private fun PlaylistItemPreview() {
             PlaylistItem(
                 playlist = Playlist(
                     id = 3,
-                    title = "Playlist 3",
-                    description = "Description 3",
+                    title = "Learning CI/CD",
+                    description = "Educational roadmap",
                     items = emptyList(),
+                    category = PlaylistCategory.ROADMAP_PLAYLIST,
                     position = 2
                 ),
                 selectable = true,
