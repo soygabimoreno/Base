@@ -3,6 +3,7 @@
 package soy.gabimoreno.presentation.screen.playlist.list
 
 import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -24,17 +25,18 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
-import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
 import soy.gabimoreno.domain.usecase.InsertPlaylistUseCase
+import soy.gabimoreno.domain.usecase.UpsertPlaylistsUseCase
 import soy.gabimoreno.ext.left
 import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildPlaylist
 
 class PlaylistViewModelTest {
 
-    private val getAllPlaylistUseCase = relaxedMockk<GetAllPlaylistUseCase>()
-    private val insertPlaylistUseCase = relaxedMockk<InsertPlaylistUseCase>()
+    private val getAllPlaylistUseCase = mockk<GetAllPlaylistUseCase>()
+    private val insertPlaylistUseCase = mockk<InsertPlaylistUseCase>()
+    private val upsertPlaylistsUseCase = mockk<UpsertPlaylistsUseCase>()
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: PlaylistViewModel
 
@@ -45,6 +47,7 @@ class PlaylistViewModelTest {
         viewModel = PlaylistViewModel(
             getAllPlaylistUseCase = getAllPlaylistUseCase,
             insertPlaylistUseCase = insertPlaylistUseCase,
+            upsertPlaylistsUseCase = upsertPlaylistsUseCase,
             dispatcher = testDispatcher
         )
     }
@@ -241,4 +244,23 @@ class PlaylistViewModelTest {
             eventJob.cancel()
             stateJob.cancel()
         }
+
+    @Test
+    fun `GIVEN OnItemDragFinish WHEN onAction THEN playlists updated`() = runTest {
+        val reorderedPlaylists = listOf(buildPlaylist())
+        coEvery {
+            upsertPlaylistsUseCase(reorderedPlaylists)
+        } returns right(Unit)
+        val states = mutableListOf<PlaylistState>()
+        val stateJob = launch { viewModel.state.toList(states) }
+        advanceUntilIdle()
+
+        viewModel.onAction(PlaylistAction.OnItemDragFinish(reorderedPlaylists))
+        advanceUntilIdle()
+
+        coVerifyOnce {
+            upsertPlaylistsUseCase(reorderedPlaylists)
+        }
+        stateJob.cancel()
+    }
 }

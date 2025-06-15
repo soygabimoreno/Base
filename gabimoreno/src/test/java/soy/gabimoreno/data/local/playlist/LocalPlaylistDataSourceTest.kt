@@ -38,6 +38,7 @@ import soy.gabimoreno.data.local.playlist.model.PlaylistWithItems
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
 import soy.gabimoreno.fake.buildPlaylist
+import soy.gabimoreno.fake.buildPlaylistDbModel
 
 class LocalPlaylistDataSourceTest {
 
@@ -181,6 +182,18 @@ class LocalPlaylistDataSourceTest {
                 playlistTransactionDao.getPlaylistIdsByItemId(playlist1.items.first().id)
             }
         }
+
+    @Test
+    fun `GIVEN valid data WHEN upsertPlaylistDbModels THEN upserts playlists`() = runTest {
+        val playlists = listOf(buildPlaylistDbModel(), buildPlaylistDbModel(2))
+        coJustRun { playlistDbModelDao.upsertPlaylistDbModels(playlists) }
+
+        playlistDataSource.upsertPlaylistDbModels(playlists.map { it.toPlaylistMapper(emptyList()) })
+
+        coVerifyOnce {
+            playlistDbModelDao.upsertPlaylistDbModels(playlists)
+        }
+    }
 
     @Test
     fun `GIVEN playlistIds WHEN upsertPlaylistItemsDbModel THEN upserts items with correct positions`() =

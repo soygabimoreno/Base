@@ -1,6 +1,5 @@
 package soy.gabimoreno.presentation.screen.playlist.list
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -40,8 +38,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import soy.gabimoreno.R
 import soy.gabimoreno.framework.toast
+import soy.gabimoreno.presentation.screen.playlist.list.view.ReorderablePlaylistColumn
 import soy.gabimoreno.presentation.screen.playlist.view.PlaylistDialog
-import soy.gabimoreno.presentation.screen.playlist.view.PlaylistItem
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.Spacing
@@ -162,22 +160,15 @@ fun PlaylistScreen(
                 }
 
                 else -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(Spacing.s16)
-                    ) {
-                        items(
-                            count = state.playlists.size,
-                            key = { state.playlists[it].id }) { index ->
-                            PlaylistItem(
-                                playlist = state.playlists[index],
-                                onItemClick = {
-                                    onAction(PlaylistAction.OnItemClicked(state.playlists[index].id))
-                                }
-                            )
+                    ReorderablePlaylistColumn(
+                        playlists = state.playlists,
+                        onItemClick = { playlistId ->
+                            onAction(PlaylistAction.OnItemClicked(playlistId))
+                        },
+                        onDragFinish = { playlists ->
+                            onAction(PlaylistAction.OnItemDragFinish(playlists))
                         }
-                    }
+                    )
                 }
             }
         }

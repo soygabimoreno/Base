@@ -11,6 +11,7 @@ interface PlaylistRepository {
     suspend fun getAllPlaylists(): Either<Throwable, List<Playlist>>
     fun getPlaylistById(idPlaylist: Int): Either<Throwable, Flow<Playlist?>>
     suspend fun getPlaylistIdsByItemId(audioItemId: String): Either<Throwable, List<Int>>
+    suspend fun upsertPlaylists(playlists: List<Playlist>): Either<Throwable, Unit>
     suspend fun upsertPlaylistItems(
         audioId: String,
         playlistIds: List<Int>
