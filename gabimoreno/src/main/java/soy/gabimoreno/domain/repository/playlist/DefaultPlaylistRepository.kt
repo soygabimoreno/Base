@@ -39,6 +39,11 @@ class DefaultPlaylistRepository @Inject constructor(
             .let { Either.Right(it) }
     }
 
+    override suspend fun upsertPlaylists(playlists: List<Playlist>): Either<Throwable, Unit> {
+        return localPlaylistDataSource.upsertPlaylistDbModels(playlists)
+            .let { Either.Right(Unit) }
+    }
+
     override suspend fun upsertPlaylistItems(
         audioId: String,
         playlistIds: List<Int>

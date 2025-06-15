@@ -1,5 +1,6 @@
 package soy.gabimoreno.fake
 
+import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.content.Playlist
@@ -11,6 +12,13 @@ fun buildPlaylist(id: Int = 1) = Playlist(
     description = "This is a description",
     items = buildPlaylistItems(),
     position = 0
+)
+
+fun buildPlaylistDbModel(id: Int = 1) = PlaylistDbModel(
+    id = id,
+    title = "This is a title",
+    description = "This is a description",
+    position = id - 1
 )
 
 fun buildNewPlaylist(id: Int = 1) = Playlist(

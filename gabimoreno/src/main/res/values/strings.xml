@@ -92,4 +92,8 @@
     <string name="playlists_add_audio_to_playlist">Añadir a playlist</string>
     <string name="playlists_save">Guardar</string>
     <string name="playlists_success_message">Cambios guardados con éxito</string>
+    <string name="playlists_reorder">Reordenar item</string>
+    <string name="accessibility_action_up">Subir</string>
+    <string name="accessibility_action_down">Bajar</string>
+
 </resources>

@@ -13,6 +13,7 @@ import soy.gabimoreno.data.local.GabiMorenoDatabase
 import soy.gabimoreno.data.local.audiocourse.model.AudioCourseDbModel
 import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
 import soy.gabimoreno.data.local.mapper.toPlaylistAudioItem
+import soy.gabimoreno.data.local.mapper.toPlaylistDbModel
 import soy.gabimoreno.data.local.mapper.toPlaylistMapper
 import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
@@ -106,6 +107,14 @@ class LocalPlaylistDataSource @Inject constructor(
         withContext(dispatcher) {
             playlistTransactionDao.getPlaylistIdsByItemId(audioItemId)
         }
+
+    suspend fun upsertPlaylistDbModels(
+        playlists: List<Playlist>
+    ) = withContext(dispatcher) {
+        playlistDbModelDao.upsertPlaylistDbModels(
+            playlists.map { it.toPlaylistDbModel() }
+        )
+    }
 
     suspend fun upsertPlaylistItemsDbModel(
         audioId: String,

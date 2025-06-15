@@ -128,8 +128,7 @@ fun PlaylistAudioItem(
             Spacer(modifier = Modifier.padding(vertical = Spacing.s8))
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = Spacing.s64),
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 when {

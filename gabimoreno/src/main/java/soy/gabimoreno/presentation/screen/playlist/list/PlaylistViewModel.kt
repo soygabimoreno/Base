@@ -15,12 +15,14 @@ import kotlinx.coroutines.launch
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
 import soy.gabimoreno.domain.usecase.InsertPlaylistUseCase
+import soy.gabimoreno.domain.usecase.UpsertPlaylistsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class PlaylistViewModel @Inject constructor(
     private val getAllPlaylistUseCase: GetAllPlaylistUseCase,
     private val insertPlaylistUseCase: InsertPlaylistUseCase,
+    private val upsertPlaylistsUseCase: UpsertPlaylistsUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private var hasLoadedInitialData = false
@@ -106,6 +108,19 @@ class PlaylistViewModel @Inject constructor(
                         dialogTitle = action.title,
                         dialogTitleError = action.title.isEmpty()
                     )
+                }
+            }
+
+            is PlaylistAction.OnItemDragFinish -> {
+                _state.update { currentState ->
+                    currentState.copy(playlists = action.reorderedPlaylists)
+                }
+
+                viewModelScope.launch {
+                    upsertPlaylistsUseCase(action.reorderedPlaylists)
+                        .onLeft {
+                            eventChannel.emit(PlaylistEvent.Error(it))
+                        }
                 }
             }
 

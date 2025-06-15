@@ -184,6 +184,39 @@ class DefaultPlaylistRepositoryTest {
         }
 
     @Test
+    fun `GIVEN valid data WHEN upsertPlaylists THEN upserts playlists`() =
+        runTest {
+            val playlists = listOf(buildPlaylist(), buildPlaylist(2))
+            coJustRun { localPlaylistDataSource.upsertPlaylistDbModels(playlists) }
+
+            val result = repository.upsertPlaylists(playlists)
+
+            result shouldBeEqualTo right(Unit)
+            coVerifyOnce {
+                localPlaylistDataSource.upsertPlaylistDbModels(playlists)
+            }
+        }
+
+    @Test
+    fun `GIVEN data source throws exception WHEN upsertPlaylists THEN Left with throwable is returned`() =
+        runTest {
+            val playlists = listOf(buildPlaylist(), buildPlaylist(2))
+            val exception = RuntimeException("Something went wrong")
+            coEvery {
+                localPlaylistDataSource.upsertPlaylistDbModels(playlists)
+            } throws exception
+
+            val result = runCatching {
+                repository.upsertPlaylists(playlists)
+            }.getOrDefault(left(exception))
+
+            result shouldBeEqualTo left(exception)
+            coVerifyOnce {
+                localPlaylistDataSource.upsertPlaylistDbModels(playlists)
+            }
+        }
+
+    @Test
     fun `GIVEN playlistIds WHEN upsertPlaylistItemsDbModel THEN upserts items with correct positions`() =
         runTest {
             val playlistItemId = "audio-123"
