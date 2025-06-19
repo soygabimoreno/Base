@@ -1,6 +1,7 @@
 package soy.gabimoreno.fake
 
 import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
+import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.content.Playlist
@@ -31,11 +32,18 @@ fun buildNewPlaylist(id: Int = 1) = Playlist(
 
 fun buildPlaylistItems(): List<PlaylistAudioItem> {
     return (1..3).map { index ->
-        buildAudio(audioId = index.toString(), position = index - 1)
+        buildAudioItem(audioId = index.toString(), position = index - 1)
     }
 }
 
-fun buildAudio(audioId: String, position: Int = 0) = PlaylistAudioItem(
+fun buildPlaylistItemsDbModel(id: Int = 1) = PlaylistItemsDbModel(
+    id = id,
+    audioItemId = "audio-${id}",
+    playlistId = 1,
+    position = id - 1
+)
+
+fun buildAudioItem(audioId: String, position: Int = 0) = PlaylistAudioItem(
     id = audioId,
     url = "",
     audioUrl = "",

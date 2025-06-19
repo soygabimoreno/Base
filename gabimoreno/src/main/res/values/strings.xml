@@ -84,8 +84,9 @@
     <string name="playlists_name">Playlist</string>
     <string name="playlists_title">Mis playlist</string>
     <string name="playlists_empty">Aún no has creado ninguna</string>
-    <string name="playlists_create">Crear</string>
+    <string name="playlists_create">Guardar</string>
     <string name="playlists_create_title">Nueva playlist</string>
+    <string name="playlists_update_playlist">Editar playlist</string>
     <string name="playlists_create_title_hint">Nombre de la playlist</string>
     <string name="playlists_create_error_empty">El nombre no puede estar vacío</string>
     <string name="playlists_create_description_hint">Descrición</string>
@@ -93,7 +94,13 @@
     <string name="playlists_save">Guardar</string>
     <string name="playlists_success_message">Cambios guardados con éxito</string>
     <string name="playlists_reorder">Reordenar item</string>
+    <string name="playlists_remove">Borrar</string>
     <string name="accessibility_action_up">Subir</string>
     <string name="accessibility_action_down">Bajar</string>
-
+    <string name="playlist_detail_header">Imagen de cabecera de playlist</string>
+    <string name="playlist_delete_confirmation">Se borrará el item seleccionado</string>
+    <string name="playlist_delete_playlist_confirmation">Se borrara la playlist seleccionada</string>
+    <string name="playlist_edit">Editar playlist</string>
+    <string name="playlist_playlist_empty">La playlist esta vacía</string>
+    <string name="playlist_playlist_add_items">¿Añades algunos audios?</string>
 </resources>

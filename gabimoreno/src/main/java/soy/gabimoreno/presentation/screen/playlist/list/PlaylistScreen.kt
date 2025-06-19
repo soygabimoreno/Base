@@ -45,6 +45,8 @@ import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
 import soy.gabimoreno.presentation.ui.IconButton
+import soy.gabimoreno.presentation.ui.dialog.CustomDialog
+import soy.gabimoreno.presentation.ui.dialog.TypeDialog
 
 @Composable
 fun PlaylistScreenRoot(
@@ -129,8 +131,8 @@ fun PlaylistScreen(
                         description = state.dialogDescription,
                         onTitleChange = { onAction(PlaylistAction.OnDialogTitleChange(it)) },
                         onDescriptionChange = { onAction(PlaylistAction.OnDialogDescriptionChange(it)) },
-                        onConfirm = { onAction(PlaylistAction.OnAddPlaylistDialogConfirm) },
-                        onDismiss = { onAction(PlaylistAction.OnAddPlaylistDialogDismiss) }
+                        onConfirm = { onAction(PlaylistAction.OnAddPlaylistConfirmDialog) },
+                        onDismiss = { onAction(PlaylistAction.OnAddPlaylistDismissDialog) }
                     )
                 }
 
@@ -149,7 +151,7 @@ fun PlaylistScreen(
                                     textDecoration = TextDecoration.Underline
                                 )
                             ) {
-                                append("PLAYLIST")
+                                append(stringResource(R.string.playlists_name).uppercase())
                             }
                         }
                         Text(
@@ -157,6 +159,18 @@ fun PlaylistScreen(
                             style = MaterialTheme.typography.h6,
                         )
                     }
+                }
+
+                state.shouldIShowConfirmDialog -> {
+                    CustomDialog(
+                        title = stringResource(R.string.profile_reset_dialog_title),
+                        text = stringResource(R.string.playlist_delete_playlist_confirmation),
+                        confirmText = stringResource(R.string.playlists_remove),
+                        dismissText = stringResource(R.string.close),
+                        onConfirm = { onAction(PlaylistAction.OnConfirmDeleteDialog) },
+                        onDismiss = { onAction(PlaylistAction.OnDismissDeleteDialog) },
+                        typeDialog = TypeDialog.CONFIRMATION
+                    )
                 }
 
                 else -> {
@@ -167,6 +181,9 @@ fun PlaylistScreen(
                         },
                         onDragFinish = { playlists ->
                             onAction(PlaylistAction.OnItemDragFinish(playlists))
+                        },
+                        onRemovePlaylistClicked = { playlistId ->
+                            onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
                         }
                     )
                 }

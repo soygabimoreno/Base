@@ -20,11 +20,13 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldContainSame
 import org.amshove.kluent.shouldHaveSize
+import org.amshove.kluent.shouldNotContain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
+import soy.gabimoreno.domain.usecase.DeletePlaylistByIdUseCase
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
 import soy.gabimoreno.domain.usecase.InsertPlaylistUseCase
 import soy.gabimoreno.domain.usecase.UpsertPlaylistsUseCase
@@ -37,6 +39,7 @@ class PlaylistViewModelTest {
     private val getAllPlaylistUseCase = mockk<GetAllPlaylistUseCase>()
     private val insertPlaylistUseCase = mockk<InsertPlaylistUseCase>()
     private val upsertPlaylistsUseCase = mockk<UpsertPlaylistsUseCase>()
+    private val deletePlaylistByIdUseCase = mockk<DeletePlaylistByIdUseCase>()
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: PlaylistViewModel
 
@@ -48,6 +51,7 @@ class PlaylistViewModelTest {
             getAllPlaylistUseCase = getAllPlaylistUseCase,
             insertPlaylistUseCase = insertPlaylistUseCase,
             upsertPlaylistsUseCase = upsertPlaylistsUseCase,
+            deletePlaylistByIdUseCase = deletePlaylistByIdUseCase,
             dispatcher = testDispatcher
         )
     }
@@ -118,9 +122,9 @@ class PlaylistViewModelTest {
     }
 
     @Test
-    fun `GIVEN OnAddPlaylistDialogDismiss WHEN onAction THEN dialog reset`() = runTest {
+    fun `GIVEN OnAddPlaylistDismissDialog WHEN onAction THEN dialog reset`() = runTest {
         val emptyString = ""
-        viewModel.onAction(PlaylistAction.OnAddPlaylistDialogDismiss)
+        viewModel.onAction(PlaylistAction.OnAddPlaylistDismissDialog)
 
         val states = mutableListOf<PlaylistState>()
         val stateJob = launch { viewModel.state.toList(states) }
@@ -166,7 +170,7 @@ class PlaylistViewModelTest {
     }
 
     @Test
-    fun `GIVEN valid input WHEN OnAddPlaylistDialogConfirm THEN insert and update state`() =
+    fun `GIVEN valid input WHEN OnAddPlaylistConfirmDialog THEN insert and update state`() =
         runTest {
             val emptyString = ""
             val playlist = buildPlaylist()
@@ -179,7 +183,7 @@ class PlaylistViewModelTest {
             viewModel.onAction(PlaylistAction.OnDialogTitleChange(playlist.title))
             viewModel.onAction(PlaylistAction.OnDialogDescriptionChange(playlist.description))
             advanceUntilIdle()
-            viewModel.onAction(PlaylistAction.OnAddPlaylistDialogConfirm)
+            viewModel.onAction(PlaylistAction.OnAddPlaylistConfirmDialog)
             advanceUntilIdle()
 
             states.last().apply {
@@ -197,14 +201,14 @@ class PlaylistViewModelTest {
         }
 
     @Test
-    fun `GIVEN empty title WHEN OnAddPlaylistDialogConfirm THEN error shown and dialog remains open`() =
+    fun `GIVEN empty title WHEN OnAddPlaylistConfirmDialog THEN error shown and dialog remains open`() =
         runTest {
             val states = mutableListOf<PlaylistState>()
             val stateJob = launch { viewModel.state.toList(states) }
 
             viewModel.onAction(PlaylistAction.OnDialogTitleChange(""))
             advanceUntilIdle()
-            viewModel.onAction(PlaylistAction.OnAddPlaylistDialogConfirm)
+            viewModel.onAction(PlaylistAction.OnAddPlaylistConfirmDialog)
             advanceUntilIdle()
 
             states.last().apply {
@@ -216,7 +220,7 @@ class PlaylistViewModelTest {
         }
 
     @Test
-    fun `GIVEN insert failure WHEN OnAddPlaylistDialogConfirm THEN error emitted and loading false`() =
+    fun `GIVEN insert failure WHEN OnAddPlaylistConfirmDialog THEN error emitted and loading false`() =
         runTest {
             val error = Throwable("Database error")
             val title = "Valid Title"
@@ -234,7 +238,7 @@ class PlaylistViewModelTest {
             viewModel.onAction(PlaylistAction.OnDialogTitleChange(title))
             viewModel.onAction(PlaylistAction.OnDialogDescriptionChange(description))
             advanceUntilIdle()
-            viewModel.onAction(PlaylistAction.OnAddPlaylistDialogConfirm)
+            viewModel.onAction(PlaylistAction.OnAddPlaylistConfirmDialog)
             advanceUntilIdle()
 
             events shouldHaveSize 1
@@ -262,5 +266,68 @@ class PlaylistViewModelTest {
             upsertPlaylistsUseCase(reorderedPlaylists)
         }
         stateJob.cancel()
+    }
+
+    @Test
+    fun `GIVEN playlistId WHEN OnRemovePlaylistClicked THEN confirm dialog is shown`() = runTest {
+        val playlistId = 1
+        val states = mutableListOf<PlaylistState>()
+        val job = launch { viewModel.state.toList(states) }
+
+        viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
+        advanceUntilIdle()
+
+        states.last().apply {
+            selectedPlaylistId shouldBeEqualTo playlistId
+            shouldIShowConfirmDialog shouldBe true
+        }
+        job.cancel()
+    }
+
+    @Test
+    fun `GIVEN selectedPlaylistId WHEN OnConfirmDeleteDialog THEN delete and update state`() =
+        runTest {
+            val playlistToDelete = buildPlaylist(id = 10)
+            coEvery { deletePlaylistByIdUseCase(playlistToDelete.id) } returns right(Unit)
+            val states = mutableListOf<PlaylistState>()
+            val job = launch { viewModel.state.toList(states) }
+
+            viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistToDelete.id))
+            advanceUntilIdle()
+            viewModel.onAction(PlaylistAction.OnConfirmDeleteDialog)
+            advanceUntilIdle()
+
+            states.last().apply {
+                selectedPlaylistId shouldBe null
+                shouldIShowConfirmDialog shouldBe false
+                playlists shouldNotContain playlistToDelete
+            }
+            coVerifyOnce {
+                deletePlaylistByIdUseCase(playlistToDelete.id)
+            }
+            job.cancel()
+        }
+
+    @Test
+    fun `GIVEN delete error WHEN OnConfirmDeleteDialog THEN error emitted`() = runTest {
+        val playlistId = 42
+        val error = Throwable("Delete failed")
+        coEvery { deletePlaylistByIdUseCase(playlistId) } returns left(error)
+        val events = mutableListOf<PlaylistEvent>()
+        val states = mutableListOf<PlaylistState>()
+        val eventJob = launch { viewModel.events.toList(events) }
+        val stateJob = launch { viewModel.state.toList(states) }
+
+        viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
+        advanceUntilIdle()
+        viewModel.onAction(PlaylistAction.OnConfirmDeleteDialog)
+        advanceUntilIdle()
+
+        events.first() shouldBeEqualTo PlaylistEvent.Error(error)
+        coVerifyOnce {
+            deletePlaylistByIdUseCase(playlistId)
+        }
+        stateJob.cancel()
+        eventJob.cancel()
     }
 }

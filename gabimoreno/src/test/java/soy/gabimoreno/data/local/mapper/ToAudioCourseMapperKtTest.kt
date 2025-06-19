@@ -3,8 +3,6 @@ package soy.gabimoreno.data.local.mapper
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
-import soy.gabimoreno.data.local.audiocourse.model.AudioCourseDbModel
-import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
 import soy.gabimoreno.fake.buildAudioCourseDbModel
 import soy.gabimoreno.fake.buildAudioCourseItemDbModel
 import soy.gabimoreno.fake.buildAudioCourseWithItems
@@ -83,7 +81,7 @@ class ToAudioCourseMapperKtTest {
         result.title shouldBeEqualTo audioCourseItemDbModel.title
         result.url shouldBeEqualTo audioCourseItemDbModel.url
         result.audioUrl shouldBeEqualTo audioCourseItemDbModel.url
-        result.description shouldBeEqualTo audioCourseDbModel.description
+        result.description shouldBeEqualTo audioCourseDbModel.title
         result.saga shouldBeEqualTo audioCourseDbModel.saga
         result.imageUrl shouldBeEqualTo audioCourseDbModel.thumbnailUrl
         result.thumbnailUrl shouldBeEqualTo audioCourseDbModel.thumbnailUrl

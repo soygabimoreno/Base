@@ -56,7 +56,7 @@ fun AudioCourseItemDbModel.toPlaylistAudioItem(
     return PlaylistAudioItem(
         id = id,
         title = title,
-        description = audioCourseDbModel.description,
+        description = audioCourseDbModel.title,
         saga = audioCourseDbModel.saga,
         url = url,
         audioUrl = url,
