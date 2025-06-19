@@ -1,18 +1,24 @@
-package soy.gabimoreno.presentation.screen.playlist.list.view
+package soy.gabimoreno.presentation.screen.playlist.detail.view
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.DragHandle
@@ -27,33 +33,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import soy.gabimoreno.R
-import soy.gabimoreno.domain.model.content.Playlist
-import soy.gabimoreno.presentation.screen.playlist.view.PlaylistItem
+import soy.gabimoreno.domain.model.content.PlaylistAudioItem
 import soy.gabimoreno.presentation.screen.playlist.view.reorderable.ReorderHapticFeedbackType
 import soy.gabimoreno.presentation.screen.playlist.view.reorderable.buildAccessibilityActions
 import soy.gabimoreno.presentation.screen.playlist.view.reorderable.rememberReorderHapticFeedback
+import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.Pink
 import soy.gabimoreno.presentation.theme.PurpleDark
 import soy.gabimoreno.presentation.theme.Spacing
+import soy.gabimoreno.presentation.theme.White
 
 @Composable
-fun ReorderablePlaylistColumn(
-    playlists: List<Playlist>,
-    onItemClick: (Int) -> Unit,
-    onDragFinish: (reorderedPlaylists: List<Playlist>) -> Unit,
-    onRemovePlaylistClicked: (playlistId: Int) -> Unit,
+fun ReorderablePlaylistItemColumn(
+    playlistAudioItems: List<PlaylistAudioItem>,
+    onItemClicked: (playlistAudioItem: PlaylistAudioItem) -> Unit,
+    onDragFinish: (reorderedAudioItems: List<PlaylistAudioItem>) -> Unit,
+    onRemoveClicked: (playlistAudioItem: PlaylistAudioItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val haptic = rememberReorderHapticFeedback()
-    var reorderedPlaylists by remember { mutableStateOf(playlists) }
-
+    var reorderedAudioItems by remember(playlistAudioItems) {
+        mutableStateOf(playlistAudioItems)
+    }
     val lazyListState = rememberLazyListState()
     val reorderableLazyColumnState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        reorderedPlaylists = reorderedPlaylists.toMutableList().apply {
+        reorderedAudioItems = reorderedAudioItems.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
 
@@ -63,10 +72,9 @@ fun ReorderablePlaylistColumn(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = lazyListState,
-        contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        itemsIndexed(reorderedPlaylists, key = { _, item -> item.id }) { index, item ->
+        itemsIndexed(reorderedAudioItems, key = { _, item -> item.id }) { index, item ->
             ReorderableItem(reorderableLazyColumnState, item.id) {
                 val interactionSource = remember { MutableInteractionSource() }
                 val labelUp = stringResource(R.string.accessibility_action_up)
@@ -74,25 +82,48 @@ fun ReorderablePlaylistColumn(
 
                 Box(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .height(IntrinsicSize.Min)
                         .semantics {
                             customActions = buildAccessibilityActions(
                                 index = index,
-                                listSize = reorderedPlaylists.size,
-                                onReorder = { newList -> reorderedPlaylists = newList },
-                                reorderedItems = reorderedPlaylists,
+                                listSize = reorderedAudioItems.size,
+                                onReorder = { newList -> reorderedAudioItems = newList },
+                                reorderedItems = reorderedAudioItems,
                                 labelUp = labelUp,
                                 labelDown = labelDown,
                             )
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    PlaylistItem(
-                        playlist = reorderedPlaylists[index],
-                        onItemClick = {
-                            onItemClick(reorderedPlaylists[index].id)
-                        }
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onItemClicked(reorderedAudioItems[index]) }
+                            .background(White.copy(alpha = 0.95f))
+                            .padding(
+                                start = Spacing.s8,
+                                top = Spacing.s16,
+                                bottom = Spacing.s16,
+                                end = Spacing.s48
+                            ),
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Text(
+                            reorderedAudioItems[index].title,
+                            color = Black,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(modifier = Modifier.height(Spacing.s8))
+                        Text(
+                            if (reorderedAudioItems[index].id.contains("-"))
+                                reorderedAudioItems[index].description
+                            else
+                                reorderedAudioItems[index].category.title,
+                            color = Black.copy(alpha = 0.8f),
+                            fontWeight = FontWeight.Light
+                        )
+                    }
                     IconButton(
                         modifier = Modifier
                             .draggableHandle(
@@ -101,7 +132,7 @@ fun ReorderablePlaylistColumn(
                                 },
                                 onDragStopped = {
                                     haptic.performHapticFeedback(ReorderHapticFeedbackType.END)
-                                    onDragFinish(reorderedPlaylists.updatePositions())
+                                    onDragFinish(reorderedAudioItems.updatePositions())
                                 },
                                 interactionSource = interactionSource,
                             )
@@ -120,7 +151,7 @@ fun ReorderablePlaylistColumn(
                         modifier = Modifier
                             .align(Alignment.BottomEnd),
                         onClick = {
-                            onRemovePlaylistClicked(reorderedPlaylists[index].id)
+                            onRemoveClicked(reorderedAudioItems[index])
                         },
                     ) {
                         Icon(
@@ -136,7 +167,7 @@ fun ReorderablePlaylistColumn(
     }
 }
 
-private fun List<Playlist>.updatePositions(): List<Playlist> =
-    mapIndexed { index, playlist ->
-        playlist.copy(position = index)
+private fun List<PlaylistAudioItem>.updatePositions(): List<PlaylistAudioItem> =
+    mapIndexed { index, playlistAudioItem ->
+        playlistAudioItem.copy(position = index)
     }

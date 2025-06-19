@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import soy.gabimoreno.di.IO
+import soy.gabimoreno.domain.usecase.DeletePlaylistByIdUseCase
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
 import soy.gabimoreno.domain.usecase.InsertPlaylistUseCase
 import soy.gabimoreno.domain.usecase.UpsertPlaylistsUseCase
@@ -23,6 +24,7 @@ class PlaylistViewModel @Inject constructor(
     private val getAllPlaylistUseCase: GetAllPlaylistUseCase,
     private val insertPlaylistUseCase: InsertPlaylistUseCase,
     private val upsertPlaylistsUseCase: UpsertPlaylistsUseCase,
+    private val deletePlaylistByIdUseCase: DeletePlaylistByIdUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private var hasLoadedInitialData = false
@@ -75,7 +77,7 @@ class PlaylistViewModel @Inject constructor(
                 }
             }
 
-            PlaylistAction.OnAddPlaylistDialogConfirm -> {
+            PlaylistAction.OnAddPlaylistConfirmDialog -> {
                 if (state.value.dialogTitle.isBlank()) {
                     _state.update { currentState ->
                         currentState.copy(dialogTitleError = true)
@@ -85,7 +87,7 @@ class PlaylistViewModel @Inject constructor(
                 }
             }
 
-            PlaylistAction.OnAddPlaylistDialogDismiss -> {
+            PlaylistAction.OnAddPlaylistDismissDialog -> {
                 _state.update { currentState ->
                     currentState.copy(
                         shouldIShowAddPlaylistDialog = false,
@@ -121,6 +123,44 @@ class PlaylistViewModel @Inject constructor(
                         .onLeft {
                             eventChannel.emit(PlaylistEvent.Error(it))
                         }
+                }
+            }
+
+            is PlaylistAction.OnRemovePlaylistClicked -> {
+                _state.update { currentState ->
+                    currentState.copy(
+                        selectedPlaylistId = action.playlistId,
+                        shouldIShowConfirmDialog = true
+                    )
+                }
+            }
+
+            PlaylistAction.OnConfirmDeleteDialog -> {
+                viewModelScope.launch {
+                    deletePlaylistByIdUseCase(state.value.selectedPlaylistId!!)
+                        .onRight {
+                            _state.update { currentState ->
+                                currentState.copy(
+                                    selectedPlaylistId = null,
+                                    shouldIShowConfirmDialog = false,
+                                    playlists = currentState.playlists.filter {
+                                        it.id != state.value.selectedPlaylistId
+                                    }
+                                )
+                            }
+                        }
+                        .onLeft {
+                            eventChannel.emit(PlaylistEvent.Error(it))
+                        }
+                }
+            }
+
+            PlaylistAction.OnDismissDeleteDialog -> {
+                _state.update { currentState ->
+                    currentState.copy(
+                        selectedPlaylistId = null,
+                        shouldIShowConfirmDialog = false
+                    )
                 }
             }
 

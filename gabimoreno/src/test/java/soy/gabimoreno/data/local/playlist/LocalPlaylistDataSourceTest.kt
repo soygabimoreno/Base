@@ -39,6 +39,7 @@ import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
 import soy.gabimoreno.fake.buildPlaylist
 import soy.gabimoreno.fake.buildPlaylistDbModel
+import soy.gabimoreno.fake.buildPlaylistItemsDbModel
 
 class LocalPlaylistDataSourceTest {
 
@@ -93,7 +94,6 @@ class LocalPlaylistDataSourceTest {
         }
         val playlistWithItems = PlaylistWithItems(playlistDbModel, itemsDbModel)
         val premiumAudiosDbModel = playlist.items.map { it.toPremiumAudioDbModel() }
-
         coEvery {
             playlistTransactionDao.getPlaylistsWithItems()
         } returns listOf(playlistWithItems)
@@ -238,6 +238,36 @@ class LocalPlaylistDataSourceTest {
                 playlistItemDbModelDao.deletePlaylistItemDbModelById(audioItemId, playlistId)
             }
         }
+
+    @Test
+    fun `GIVEN valid playlist items WHEN updatePlaylistItems THEN DAO is called`() = runTest {
+        val items = listOf(
+            buildPlaylistItemsDbModel(),
+            buildPlaylistItemsDbModel(2)
+        )
+
+        playlistDataSource.updatePlaylistItems(items)
+
+        coVerifyOnce {
+            playlistItemDbModelDao.upsertPlaylistItemsDbModel(items)
+        }
+    }
+
+    @Test
+    fun `GIVEN valid playlistId WHEN deletePlaylistDbModelById THEN delete playlist`() = runTest {
+        val playlistId = 1
+        coJustRun {
+            playlistDbModelDao.deletePlaylistDbModelById(playlistId)
+            playlistItemDbModelDao.deletePlaylistItemsDbModelByPlaylistId(playlistId)
+        }
+
+        playlistDataSource.deletePlaylistDbModelById(playlistId)
+
+        coVerifyOnce {
+            playlistDbModelDao.deletePlaylistDbModelById(playlistId)
+            playlistItemDbModelDao.deletePlaylistItemsDbModelByPlaylistId(playlistId)
+        }
+    }
 
     private fun createMockedDatabase(): GabiMorenoDatabase = mockk {
         every { premiumAudioDbModelDao() } returns premiumAudioDbModelDao

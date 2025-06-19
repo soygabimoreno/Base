@@ -1,9 +1,11 @@
 package soy.gabimoreno.domain.repository.playlist
 
 import arrow.core.Either
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import soy.gabimoreno.data.local.mapper.toPlaylistItemDbModel
 import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.domain.model.content.Playlist
+import soy.gabimoreno.domain.model.content.PlaylistAudioItem
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,8 +32,8 @@ class DefaultPlaylistRepository @Inject constructor(
         return localPlaylistDataSource.getAllPlaylists().let { Either.Right(it) }
     }
 
-    override fun getPlaylistById(idPlaylist: Int): Either<Throwable, Flow<Playlist?>> {
-        return localPlaylistDataSource.getPlaylistById(idPlaylist).let { Either.Right(it) }
+    override suspend fun getPlaylistById(idPlaylist: Int): Either<Throwable, Playlist?> {
+        return localPlaylistDataSource.getPlaylistById(idPlaylist).let { Either.Right(it.first()) }
     }
 
     override suspend fun getPlaylistIdsByItemId(audioItemId: String): Either<Throwable, List<Int>> {
@@ -52,6 +54,15 @@ class DefaultPlaylistRepository @Inject constructor(
             .let { Either.Right(it) }
     }
 
+    override suspend fun updatePlaylistItems(
+        playlistId: Int,
+        playlistItems: List<PlaylistAudioItem>
+    ): Either<Throwable, Unit> {
+        val playlistItemsDbModel = playlistItems.map { it.toPlaylistItemDbModel(playlistId) }
+        return localPlaylistDataSource.updatePlaylistItems(playlistItemsDbModel)
+            .let { Either.Right(Unit) }
+    }
+
     override suspend fun resetPlaylistById(idPlaylist: Int): Either<Throwable, Unit> {
         return localPlaylistDataSource.resetPlaylistById(idPlaylist).let { Either.Right(Unit) }
     }
@@ -61,6 +72,11 @@ class DefaultPlaylistRepository @Inject constructor(
         playlistId: Int
     ): Either<Throwable, Unit> {
         return localPlaylistDataSource.deletePlaylistItemDbModelById(audioItemId, playlistId)
+            .let { Either.Right(Unit) }
+    }
+
+    override suspend fun deletePlaylistById(playlistId: Int): Either<Throwable, Unit> {
+        return localPlaylistDataSource.deletePlaylistDbModelById(playlistId)
             .let { Either.Right(Unit) }
     }
 

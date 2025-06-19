@@ -12,12 +12,14 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.data.local.mapper.toPlaylistItemDbModel
 import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.domain.model.content.Playlist
 import soy.gabimoreno.domain.repository.playlist.DefaultPlaylistRepository
 import soy.gabimoreno.ext.left
 import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildPlaylist
+import soy.gabimoreno.fake.buildPlaylistItems
 
 class DefaultPlaylistRepositoryTest {
 
@@ -112,26 +114,24 @@ class DefaultPlaylistRepositoryTest {
     fun `GIVEN valid playlist id WHEN getPlaylistById THEN returns Right with flow`() = runTest {
         val playlistId = 1
         val playlist = buildPlaylist()
-        val flow = flowOf(playlist)
-        every { localPlaylistDataSource.getPlaylistById(playlistId) } returns flow
+        every { localPlaylistDataSource.getPlaylistById(playlistId) } returns flowOf(playlist)
 
         val result = repository.getPlaylistById(playlistId)
 
         result shouldBeInstanceOf Either.Right::class
-        result.getOrNull() shouldBeEqualTo flow
+        result.getOrNull() shouldBeEqualTo playlist
     }
 
     @Test
-    fun `GIVEN non-existent playlist id WHEN getPlaylistById THEN returns Right with null flow`() =
+    fun `GIVEN non-existent playlist id WHEN getPlaylistById THEN returns Right with null`() =
         runTest {
             val playlistId = -1
-            val flow = flowOf(null)
-            every { localPlaylistDataSource.getPlaylistById(playlistId) } returns flow
+            every { localPlaylistDataSource.getPlaylistById(playlistId) } returns flowOf(null)
 
             val result = repository.getPlaylistById(playlistId)
 
             result shouldBeInstanceOf Either.Right::class
-            result.getOrNull() shouldBeEqualTo flow
+            result.getOrNull() shouldBeEqualTo null
         }
 
     @Test
@@ -274,4 +274,36 @@ class DefaultPlaylistRepositoryTest {
                 localPlaylistDataSource.deletePlaylistItemDbModelById(audioItemId, playlistId)
             }
         }
+
+    @Test
+    fun `GIVEN playlist items WHEN updatePlaylistItems THEN data source is called and Right is returned`() =
+        runTest {
+            val playlistId = 42
+            val playlistAudioItems = buildPlaylistItems()
+            val playlistItemsDbModel = playlistAudioItems.map { playlistAudioItem ->
+                playlistAudioItem.toPlaylistItemDbModel(playlistId)
+            }
+
+            val result = repository.updatePlaylistItems(playlistId, playlistAudioItems)
+
+            result shouldBeEqualTo Either.Right(Unit)
+            coVerifyOnce {
+                localPlaylistDataSource.updatePlaylistItems(playlistItemsDbModel)
+            }
+        }
+
+    @Test
+    fun `GIVEN playlistId WHEN deletePlaylistById THEN deletes playlist`() = runTest {
+        val playlistId = 1
+        coJustRun {
+            localPlaylistDataSource.deletePlaylistDbModelById(playlistId)
+        }
+
+        val result = repository.deletePlaylistById(playlistId)
+
+        result shouldBeEqualTo right(Unit)
+        coVerifyOnce {
+            localPlaylistDataSource.deletePlaylistDbModelById(playlistId)
+        }
+    }
 }

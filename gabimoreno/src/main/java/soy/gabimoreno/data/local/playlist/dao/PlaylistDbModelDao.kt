@@ -5,9 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
-import kotlinx.coroutines.flow.Flow
 import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
-import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 
 @Dao
 interface PlaylistDbModelDao {
@@ -27,7 +25,7 @@ interface PlaylistDbModelDao {
     fun upsertPlaylistDbModels(playlistDbModels: List<PlaylistDbModel>)
 
     @Query("DELETE FROM PlaylistDbModel WHERE id = :id")
-    fun deletePlaylistDbModelById(id: String)
+    fun deletePlaylistDbModelById(id: Int)
 
     @Query("DELETE FROM PlaylistDbModel")
     fun deleteAllPlaylistDbModels()

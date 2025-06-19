@@ -132,6 +132,16 @@ class LocalPlaylistDataSource @Inject constructor(
             playlistItemDbModelDao.upsertPlaylistItemsDbModel(playlistItems)
         }
 
+    suspend fun updatePlaylistItems(playlistItems: List<PlaylistItemsDbModel>) =
+        withContext(dispatcher) {
+            playlistItemDbModelDao.upsertPlaylistItemsDbModel(playlistItems)
+        }
+
+    suspend fun deletePlaylistDbModelById(playlistId: Int) = withContext(dispatcher) {
+        playlistDbModelDao.deletePlaylistDbModelById(playlistId)
+        playlistItemDbModelDao.deletePlaylistItemsDbModelByPlaylistId(playlistId)
+    }
+
     suspend fun deletePlaylistItemDbModelById(
         audioItemId: String,
         playlistId: Int
@@ -145,8 +155,12 @@ class LocalPlaylistDataSource @Inject constructor(
             .getPremiumAudiosByIds(ids)
             .associateBy { it.id }
 
+        val audioCoursesIds =
+            ids.filter { it.contains("-") }
+                .map { id -> id.substringBefore("-") }
+                .toSet()
         val audioCoursesMap = audioCourseDbModelDao
-            .getAudioCoursesByIds(ids)
+            .getAudioCoursesByIds(audioCoursesIds)
             .associateBy { it.id }
 
         val audioCourseItemsMap = audioCourseItemDbModelDao
@@ -163,7 +177,7 @@ class LocalPlaylistDataSource @Inject constructor(
                 val position = item.position
                 val playlistItemId = item.id
                 val audioItem = if (item.audioItemId.contains("-")) {
-                    val course = resources.audioCourses[item.audioItemId]
+                    val course = resources.audioCourses[item.audioItemId.substringBefore("-")]
                     val courseItem = resources.audioCourseItems[item.audioItemId]
                     if (course == null || courseItem == null) return@mapNotNull null
                     courseItem.toPlaylistAudioItem(course, position)
