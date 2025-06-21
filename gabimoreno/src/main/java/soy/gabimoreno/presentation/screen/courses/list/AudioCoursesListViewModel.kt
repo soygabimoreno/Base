@@ -128,5 +128,5 @@ class AudioCoursesListViewModel @Inject constructor(
     }
 }
 
-private const val REFRESH_DELAY = 1500L
+private const val REFRESH_DELAY = 1_500L
 private const val TOKEN_EXPIRED_CODE = 403
