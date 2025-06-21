@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
@@ -28,6 +30,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -52,6 +57,7 @@ import soy.gabimoreno.presentation.screen.home.view.LoadingPlaceholder
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     onItemClicked: (episodeId: String) -> Unit,
@@ -62,6 +68,8 @@ fun HomeScreen(
     val homeViewModel = ViewModelProvider.homeViewModel
     val viewState = homeViewModel.viewState
     var searchTextState by remember { mutableStateOf(TextFieldValue("")) }
+    val pullRefreshState =
+        rememberPullRefreshState(homeViewModel.isRefreshing, { homeViewModel.pullToRefresh() })
     LaunchedEffect(Unit) {
         homeViewModel.onViewScreen()
     }
@@ -124,82 +132,93 @@ fun HomeScreen(
                     }
                 }
             }
-            LazyColumn(state = scrollState) {
-                when (viewState) {
-                    is HomeViewModel.ViewState.Error -> {
-                        item {
-                            ErrorView(text = stringResource(R.string.unexpected_error)) {
-                                homeViewModel.searchPodcasts()
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .pullRefresh(pullRefreshState)
+            ) {
+                LazyColumn(state = scrollState) {
+                    when (viewState) {
+                        is HomeViewModel.ViewState.Error -> {
+                            item {
+                                ErrorView(text = stringResource(R.string.unexpected_error)) {
+                                    homeViewModel.searchPodcasts()
+                                }
                             }
                         }
-                    }
 
-                    HomeViewModel.ViewState.Loading -> {
-                        item {
-                            LoadingPlaceholder()
+                        HomeViewModel.ViewState.Loading -> {
+                            item {
+                                LoadingPlaceholder()
+                            }
                         }
-                    }
 
-                    is HomeViewModel.ViewState.Success -> {
-                        item {
-                            StaggeredVerticalGrid(
-                                crossAxisCount = 2,
-                                spacing = Spacing.s16,
-                                modifier = Modifier.padding(horizontal = Spacing.s16)
-                            ) {
-                                val searchText = searchTextState.text
+                        is HomeViewModel.ViewState.Success -> {
+                            item {
+                                StaggeredVerticalGrid(
+                                    crossAxisCount = 2,
+                                    spacing = Spacing.s16,
+                                    modifier = Modifier.padding(horizontal = Spacing.s16)
+                                ) {
+                                    val searchText = searchTextState.text
 
-                                val episodes = viewState.episodes
-                                val filteredEpisodes = if (searchText.isBlank()) {
-                                    episodes
-                                } else {
-                                    episodes.filter { episode ->
-                                        val lowerCaseTitle = episode.title.normalizeText()
-                                        val lowerSearchText = searchText.normalizeText()
-                                        lowerCaseTitle.contains(lowerSearchText)
+                                    val episodes = viewState.episodes
+                                    val filteredEpisodes = if (searchText.isBlank()) {
+                                        episodes
+                                    } else {
+                                        episodes.filter { episode ->
+                                            val lowerCaseTitle = episode.title.normalizeText()
+                                            val lowerSearchText = searchText.normalizeText()
+                                            lowerCaseTitle.contains(lowerSearchText)
+                                        }
                                     }
-                                }
-                                filteredEpisodes.forEach { episode ->
-                                    EpisodeView(
-                                        episode = episode,
-                                        modifier = Modifier.padding(bottom = Spacing.s16)
-                                    ) {
+                                    filteredEpisodes.forEach { episode ->
+                                        EpisodeView(
+                                            episode = episode,
+                                            modifier = Modifier.padding(bottom = Spacing.s16)
+                                        ) {
+                                            val episodeId = episode.id
+                                            homeViewModel.onEpisodeClicked(episodeId, episode.title)
+                                            onItemClicked(episodeId)
+                                        }
+                                    }
+                                    // TODO: Manage deep links in a proper way
+                                    val episodeNumber = DeepLinkEpisodeNumber.value
+                                    if (episodeNumber != null) {
+                                        DeepLinkEpisodeNumber.value = null
+                                        val index = filteredEpisodes.size - episodeNumber
+                                        val episode = filteredEpisodes[index]
                                         val episodeId = episode.id
-                                        homeViewModel.onEpisodeClicked(episodeId, episode.title)
-                                        onItemClicked(episodeId)
-                                    }
-                                }
-                                // TODO: Manage deep links in a proper way
-                                val episodeNumber = DeepLinkEpisodeNumber.value
-                                if (episodeNumber != null) {
-                                    DeepLinkEpisodeNumber.value = null
-                                    val index = filteredEpisodes.size - episodeNumber
-                                    val episode = filteredEpisodes[index]
-                                    val episodeId = episode.id
-                                    homeViewModel.onDeepLinkReceived(episodeId, episode.title)
-                                    onDeepLinkReceived(episodeId)
-                                } else {
-                                    DeepLinkUrl.value?.let { url ->
-                                        DeepLinkUrl.value = null
-                                        homeViewModel.onShowWebViewClicked(url)
+                                        homeViewModel.onDeepLinkReceived(episodeId, episode.title)
+                                        onDeepLinkReceived(episodeId)
+                                    } else {
+                                        DeepLinkUrl.value?.let { url ->
+                                            DeepLinkUrl.value = null
+                                            homeViewModel.onShowWebViewClicked(url)
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
 
-                item {
-                    Box(
-                        modifier = Modifier
-                            .navigationBarsPadding()
-                            .padding(bottom = Spacing.s32)
-                            .padding(
-                                bottom = if (ViewModelProvider.playerViewModel.currentPlayingAudio.value != null) Spacing.s64
-                                else Spacing.s0
-                            )
-                    )
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .navigationBarsPadding()
+                                .padding(bottom = Spacing.s32)
+                                .padding(
+                                    bottom = if (ViewModelProvider.playerViewModel.currentPlayingAudio.value != null) Spacing.s64
+                                    else Spacing.s0
+                                )
+                        )
+                    }
                 }
+                PullRefreshIndicator(
+                    refreshing = homeViewModel.isRefreshing,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
             }
         }
     }

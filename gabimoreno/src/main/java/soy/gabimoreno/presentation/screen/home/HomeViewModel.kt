@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -42,6 +43,9 @@ class HomeViewModel @Inject constructor(
         private set
 
     var appVersionName by mutableStateOf("")
+
+    var isRefreshing by mutableStateOf(false)
+        private set
 
     private val _viewEventFlow = MutableSharedFlow<ViewEvent>()
     val viewEventFlow = _viewEventFlow.asSharedFlow()
@@ -117,6 +121,15 @@ class HomeViewModel @Inject constructor(
         )
     }
 
+    fun pullToRefresh() {
+        viewModelScope.launch(dispatcher) {
+            isRefreshing = true
+            searchPodcasts()
+            delay(REFRESH_DELAY)
+            isRefreshing = false
+        }
+    }
+
     fun findEpisodeFromId(id: String): Episode? {
         return when (viewState) {
             is ViewState.Success -> (viewState as ViewState.Success).episodes.find { it.id == id }
@@ -145,3 +158,5 @@ class HomeViewModel @Inject constructor(
 //        data class Content(val episodesWrapper: EpisodesWrapper) : ViewState()
     }
 }
+
+private const val REFRESH_DELAY = 1_500L

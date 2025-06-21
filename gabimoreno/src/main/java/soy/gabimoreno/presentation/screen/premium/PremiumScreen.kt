@@ -398,6 +398,6 @@ private fun Spacer() {
     Spacer(modifier = Modifier.height(Spacing.s16))
 }
 
-private const val REFRESH_DELAY = 1500L
+private const val REFRESH_DELAY = 1_500L
 private const val CHANGE_COLOR_ANIMATION_DURATION = 300
 private const val URL_ANDROIDES_PREMIUM = "https://gabimoreno.soy/los-androides-premium"
