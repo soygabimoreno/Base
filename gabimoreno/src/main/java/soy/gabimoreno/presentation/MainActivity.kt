@@ -2,7 +2,6 @@ package soy.gabimoreno.presentation
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,12 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import soy.gabimoreno.R
-import soy.gabimoreno.domain.usecase.GetDeepLinkContentUseCase
 import soy.gabimoreno.framework.datastore.dataStore
 import soy.gabimoreno.framework.toast
-import soy.gabimoreno.presentation.navigation.Feature
-import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkEpisodeNumber
-import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkUrl
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -43,20 +38,6 @@ class MainActivity : ComponentActivity() {
         preloadDataFromDataStore()
         askNotificationPermission()
         setContent {
-            // TODO: Manage deep links in a proper way
-            val action: String? = intent?.action
-            val data: Uri? = intent?.data
-            if (action != null && data != null) {
-                val parameters: List<String> = data.pathSegments
-                val getDeepLinkContentUseCase = GetDeepLinkContentUseCase()
-                val deepLinkContent = getDeepLinkContentUseCase(parameters)
-                DeepLinkEpisodeNumber.value = deepLinkContent.episodeNumber
-                DeepLinkUrl.value = deepLinkContent.url
-
-                val appState = rememberAppState()
-                appState.setStartDestination(Feature.PODCAST)
-            }
-
             AppUi(
                 backDispatcher = onBackPressedDispatcher
             )

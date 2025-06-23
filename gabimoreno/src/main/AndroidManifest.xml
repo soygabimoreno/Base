@@ -37,6 +37,7 @@
 
                 <data
                     android:host="gabimoreno.soy"
+                    android:pathPrefix="/"
                     android:scheme="https" />
             </intent-filter>
         </activity>

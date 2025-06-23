@@ -50,18 +50,7 @@ class PremiumViewModel @Inject constructor(
     fun onAction(action: PremiumAction) {
         when (action) {
             is PremiumAction.OnPremiumItemClicked -> {
-                viewModelScope.launch(dispatcher) {
-                    val selectedAudio =
-                        getPremiumAudioByIdUseCase(action.premiumAudioId).getOrNull()
-                    state =
-                        state.copy(
-                            selectedPremiumAudio = selectedAudio,
-                            premiumAudios = if (selectedAudio == null) EMPTY_PREMIUM_AUDIOS else
-                                listOf(selectedAudio)
-                        )
-
-                    eventChannel.emit(PremiumEvent.ShowDetail(action.premiumAudioId))
-                }
+                loadSelectedPremiumAudio(action.premiumAudioId)
             }
 
             PremiumAction.OnRefreshContent -> refreshContent()
@@ -83,6 +72,21 @@ class PremiumViewModel @Inject constructor(
             }
 
             else -> Unit
+        }
+    }
+
+    fun loadSelectedPremiumAudio(premiumAudioId: String) {
+        viewModelScope.launch(dispatcher) {
+            val selectedAudio =
+                getPremiumAudioByIdUseCase(premiumAudioId).getOrNull()
+            state =
+                state.copy(
+                    selectedPremiumAudio = selectedAudio,
+                    premiumAudios = if (selectedAudio == null) EMPTY_PREMIUM_AUDIOS else
+                        listOf(selectedAudio)
+                )
+
+            eventChannel.emit(PremiumEvent.ShowDetail(premiumAudioId))
         }
     }
 

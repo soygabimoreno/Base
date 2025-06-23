@@ -61,16 +61,14 @@ private fun NavGraphBuilder.podcastNav(
             )
         }
 
-        // TODO: Manage deep links in a proper way
-        // deepLinks = listOf(navDeepLink { uriPattern = "https://gabimoreno.soy/{id}" })
+        val command = NavCommand.ContentDetail(Feature.PODCAST, listOf(NavArg.EpisodeId))
         composable(
-            navCommand = NavCommand.ContentDetail(
-                Feature.PODCAST,
-                listOf(NavArg.EpisodeId)
-            )
+            route = command.route,
+            arguments = command.arguments,
+            deepLinks = command.deepLinks
         ) {
             DetailScreen(
-                audioId = it.findArg(NavArg.EpisodeId),
+                audioId = it.findArg<String>(NavArg.EpisodeId),
                 Feature.PODCAST,
                 onBackClicked = {
                     navController.goBack()
@@ -115,14 +113,15 @@ private fun NavGraphBuilder.premiumNav(
                 }
             )
         }
+
+        val command = NavCommand.ContentDetail(Feature.PREMIUM, listOf(NavArg.PremiumAudioId))
         composable(
-            navCommand = NavCommand.ContentDetail(
-                Feature.PREMIUM,
-                listOf(NavArg.PremiumAudioId)
-            )
+            route = command.route,
+            arguments = command.arguments,
+            deepLinks = command.deepLinks
         ) {
             DetailScreen(
-                audioId = it.findArg(NavArg.PremiumAudioId),
+                audioId = it.findArg<String>(NavArg.PremiumAudioId),
                 Feature.PREMIUM,
                 onBackClicked = {
                     navController.goBack()
@@ -153,14 +152,15 @@ private fun NavGraphBuilder.audioCoursesNav(
                 },
             )
         }
+        val command =
+            NavCommand.ContentCoursesDetail(Feature.AUDIOCOURSES, listOf(NavArg.AudioCourseId))
         composable(
-            navCommand = NavCommand.ContentCoursesDetail(
-                Feature.AUDIOCOURSES,
-                listOf(NavArg.AudioCourseId)
-            )
+            route = command.route,
+            arguments = command.arguments,
+            deepLinks = command.deepLinks
         ) {
             AudioCoursesDetailScreenRoot(
-                audioCourseId = it.findArg(NavArg.AudioCourseId),
+                audioCourseId = it.findArg<String>(NavArg.AudioCourseId),
                 onBackClicked = {
                     navController.goBack()
                 },
