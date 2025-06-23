@@ -48,8 +48,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.google.accompanist.insets.navigationBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.core.normalizeText
-import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkEpisodeNumber
-import soy.gabimoreno.presentation.navigation.deeplink.DeepLinkUrl
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.view.EpisodeView
 import soy.gabimoreno.presentation.screen.home.view.ErrorView
@@ -183,20 +181,20 @@ fun HomeScreen(
                                         }
                                     }
                                     // TODO: Manage deep links in a proper way
-                                    val episodeNumber = DeepLinkEpisodeNumber.value
-                                    if (episodeNumber != null) {
-                                        DeepLinkEpisodeNumber.value = null
-                                        val index = filteredEpisodes.size - episodeNumber
-                                        val episode = filteredEpisodes[index]
-                                        val episodeId = episode.id
-                                        homeViewModel.onDeepLinkReceived(episodeId, episode.title)
-                                        onDeepLinkReceived(episodeId)
-                                    } else {
-                                        DeepLinkUrl.value?.let { url ->
-                                            DeepLinkUrl.value = null
-                                            homeViewModel.onShowWebViewClicked(url)
-                                        }
-                                    }
+//                                    val episodeNumber = DeepLinkEpisodeNumber.value
+//                                    if (episodeNumber != null) {
+//                                        DeepLinkEpisodeNumber.value = null
+//                                        val index = filteredEpisodes.size - episodeNumber
+//                                        val episode = filteredEpisodes[index]
+//                                        val episodeId = episode.id
+//                                        homeViewModel.onDeepLinkReceived(episodeId, episode.title)
+//                                        onDeepLinkReceived(episodeId)
+//                                    } else {
+//                                        DeepLinkUrl.value?.let { url ->
+//                                            DeepLinkUrl.value = null
+//                                            homeViewModel.onShowWebViewClicked(url)
+//                                        }
+//                                    }
                                 }
                             }
                         }

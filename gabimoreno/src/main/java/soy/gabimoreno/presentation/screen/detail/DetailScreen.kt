@@ -1,10 +1,12 @@
 package soy.gabimoreno.presentation.screen.detail
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -24,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.remote.mapper.EMPTY_AUDIO_LENGTH_IN_SECONDS
 import soy.gabimoreno.data.remote.model.Category
@@ -73,6 +75,9 @@ fun DetailScreen(
         Feature.PREMIUM -> {
             val viewState = premiumViewModel.state
             audios = viewState.premiumAudios
+            if (premiumViewModel.state.selectedPremiumAudio == null) {
+                premiumViewModel.loadSelectedPremiumAudio(audioId)
+            }
             audio = premiumViewModel.state.selectedPremiumAudio
         }
 
@@ -182,6 +187,13 @@ fun DetailScreen(
                             text = audio.description.parseFromHtmlFormat()
                         )
                     }
+                }
+            } else {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
         }

@@ -7,9 +7,13 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Podcasts
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import soy.gabimoreno.R
+import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 
 enum class NavItem(
     val navCommand: NavCommand,
@@ -43,6 +47,25 @@ sealed class NavCommand(
     internal val subRoute: String = "home",
     private val navArgs: List<NavArg> = emptyList(),
 ) {
+
+    val route: String
+        get() = buildString {
+            append("${feature.route}/$subRoute")
+            navArgs.forEach { append("/{${it.key}}") }
+        }
+
+    val arguments: List<NamedNavArgument>
+        get() = navArgs.map {
+            navArgument(it.key) { type = it.navType }
+        }
+
+    val deepLinks: List<NavDeepLink>
+        get() = listOf(
+            navDeepLink {
+                uriPattern = "$GABI_MORENO_WEB_BASE_URL/$route"
+            }
+        )
+
     class ContentType(feature: Feature) : NavCommand(feature)
 
     class ContentDetail(
@@ -95,13 +118,6 @@ sealed class NavCommand(
         listOf(NavArg.EncodedUrl)
     ) {
         fun createRoute(encodedUrl: String) = "${feature.route}/$subRoute/$encodedUrl"
-    }
-
-    val route = run {
-        val argValues = navArgs.map { "{${it.key}}" }
-        listOf(feature.route, subRoute)
-            .plus(argValues)
-            .joinToString("/")
     }
 
     val args = navArgs.map {
