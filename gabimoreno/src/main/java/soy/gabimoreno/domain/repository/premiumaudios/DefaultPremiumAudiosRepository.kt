@@ -77,6 +77,6 @@ class DefaultPremiumAudiosRepository @Inject constructor(
     }
 }
 
-private const val MAX_ITEMS = 20
+private const val MAX_ITEMS = 10
 private const val PREFETCH_ITEMS = 20
 internal const val TWELVE_HOURS_IN_MILLIS = 12 * 60 * 60 * 1000L
