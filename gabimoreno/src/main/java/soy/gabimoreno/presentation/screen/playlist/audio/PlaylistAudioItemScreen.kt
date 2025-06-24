@@ -185,7 +185,7 @@ fun PlaylistAudioItem(
                     text = stringResource(R.string.playlists_save),
                     height = Spacing.s48,
                     modifier = Modifier
-                        .padding(bottom = Spacing.s8)
+                        .padding(bottom = Spacing.s64)
                         .align(Alignment.BottomCenter),
                     onClick = { onAction(PlaylistAudioItemAction.OnSaveClicked) },
                 )

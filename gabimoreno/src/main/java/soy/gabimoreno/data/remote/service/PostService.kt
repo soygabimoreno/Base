@@ -18,6 +18,7 @@ interface PostService {
     @GET("wp-json/wp/v2/posts/")
     suspend fun getAudioCourses(
         @Query("categories") categoriesQuery: String,
+        @Query("_fields") fieldsQuery: String = "$FIELDS,$IMAGE_FIELD",
         @Query("per_page") postsPerPage: Int = POSTS_PER_PAGE,
         @Query("page") page: Int = POSTS_PAGE,
     ): List<CourseApiModel>
@@ -26,3 +27,4 @@ interface PostService {
 internal const val POSTS_PER_PAGE = 20
 internal const val POSTS_PAGE = 1
 private const val FIELDS = "id,title,content,excerpt,author,categories,link,date"
+private const val IMAGE_FIELD = "yoast_head_json.og_image"
