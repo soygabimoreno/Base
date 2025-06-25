@@ -1,10 +1,13 @@
 package soy.gabimoreno.framework.notification
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import soy.gabimoreno.R
 import soy.gabimoreno.presentation.MainActivity
 
@@ -28,8 +31,14 @@ fun buildNotification(context: Context) {
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
 
-    with(NotificationManagerCompat.from(context)) {
-        notify(NOTIFICATION_ID, builder.build())
+    if (ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        with(NotificationManagerCompat.from(context)) {
+            notify(NOTIFICATION_ID, builder.build())
+        }
     }
 }
 
