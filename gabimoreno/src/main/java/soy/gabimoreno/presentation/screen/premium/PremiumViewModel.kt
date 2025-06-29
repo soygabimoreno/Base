@@ -18,6 +18,7 @@ import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPremiumAudiosManagedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
 import soy.gabimoreno.domain.usecase.RefreshBearerTokenUseCase
+import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,6 +27,7 @@ class PremiumViewModel @Inject constructor(
     private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase,
     private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
     private val refreshBearerTokenUseCase: RefreshBearerTokenUseCase,
+    private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
@@ -68,6 +70,24 @@ class PremiumViewModel @Inject constructor(
                         }
                     }
                     state = state.copy(premiumAudios = premiumAudioList)
+                }
+            }
+
+            is PremiumAction.OnFavoriteStatusChanged -> {
+                state = state.copy(
+                    premiumAudios = state.premiumAudios.map { premiumAudio ->
+                        if (premiumAudio.id == action.premiumAudio.id) {
+                            premiumAudio.copy(markedAsFavorite = !premiumAudio.markedAsFavorite)
+                        } else {
+                            premiumAudio
+                        }
+                    }
+                )
+                viewModelScope.launch {
+                    updateAudioItemFavoriteStateUseCase(
+                        action.premiumAudio.id,
+                        !action.premiumAudio.markedAsFavorite
+                    )
                 }
             }
 

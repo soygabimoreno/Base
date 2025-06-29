@@ -11,7 +11,9 @@ interface PremiumAudiosRepository {
         categories: List<Category>,
     ): Either<Throwable, Flow<PagingData<PremiumAudio>>>
 
-    suspend fun markPremiumAudioAsListened(id: String, hasBeenListened: Boolean)
     suspend fun getPremiumAudioById(idPremiumAudio: String): Either<Throwable, PremiumAudio>
+    suspend fun getAllFavoritePremiumAudios(): Either<Throwable, List<PremiumAudio>>
     suspend fun markAllPremiumAudiosAsUnlistened()
+    suspend fun markPremiumAudioAsListened(id: String, hasBeenListened: Boolean)
+    suspend fun markPremiumAudioAsFavorite(id: String, isFavorite: Boolean)
 }

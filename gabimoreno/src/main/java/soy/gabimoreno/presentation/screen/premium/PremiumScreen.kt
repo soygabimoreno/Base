@@ -35,6 +35,8 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -63,6 +65,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -71,12 +74,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import soy.gabimoreno.R
+import soy.gabimoreno.data.remote.model.Category
+import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.framework.datastore.isMemberActive
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Black
+import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.theme.Orange
+import soy.gabimoreno.presentation.theme.PinkBright
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
@@ -189,7 +196,8 @@ fun PremiumScreen(
                     onItemClicked = { onAction(PremiumAction.OnPremiumItemClicked(it)) },
                     onListenedToggled = { onAction(PremiumAction.OnListenedToggled(it)) },
                     onPullRefreshTriggered = { onAction(PremiumAction.OnRefreshContent) },
-                    onAddToPlaylistClicked = { onAction(PremiumAction.OnAddToPlaylistClicked(it)) }
+                    onAddToPlaylistClicked = { onAction(PremiumAction.OnAddToPlaylistClicked(it)) },
+                    onFavoriteStatusChanged = { onAction(PremiumAction.OnFavoriteStatusChanged(it)) }
                 )
             } else {
                 NonPremiumContent()
@@ -257,6 +265,7 @@ fun PremiumContent(
     onListenedToggled: (premiumAudio: PremiumAudio) -> Unit,
     onPullRefreshTriggered: () -> Unit,
     onAddToPlaylistClicked: (premiumAudioId: String) -> Unit,
+    onFavoriteStatusChanged: (premiumAudio: PremiumAudio) -> Unit,
 ) {
     val refreshScope = rememberCoroutineScope()
     var refreshing by remember { mutableStateOf(false) }
@@ -291,7 +300,8 @@ fun PremiumContent(
                                 premiumAudio = premiumAudio,
                                 onItemClicked = onItemClicked,
                                 onListenedToggled = onListenedToggled,
-                                onAddToPlaylistClicked = onAddToPlaylistClicked
+                                onAddToPlaylistClicked = onAddToPlaylistClicked,
+                                onFavoriteStatusChanged = onFavoriteStatusChanged
                             )
                         }
                     }
@@ -311,11 +321,17 @@ fun PremiumItem(
     onItemClicked: (premiumAudioId: String) -> Unit,
     onListenedToggled: (premiumAudio: PremiumAudio) -> Unit,
     onAddToPlaylistClicked: (premiumAudioId: String) -> Unit,
+    onFavoriteStatusChanged: (premiumAudio: PremiumAudio) -> Unit,
 ) {
     val iconColor by animateColorAsState(
         targetValue = if (premiumAudio.hasBeenListened) Orange else Black.copy(alpha = 0.2f),
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
         label = "checkIconColorAnimation"
+    )
+    val iconFavoriteColor by animateColorAsState(
+        targetValue = if (premiumAudio.markedAsFavorite) PinkBright else White.copy(alpha = 0.2f),
+        animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
+        label = "favoriteIconColorAnimation"
     )
     Row(
         modifier = Modifier
@@ -339,16 +355,16 @@ fun PremiumItem(
         Icon(
             imageVector = premiumAudio.category.icon,
             contentDescription = premiumAudio.category.title,
-            modifier = Modifier.weight(0.10f),
+            modifier = Modifier.weight(0.08f),
         )
         Spacer(modifier = Modifier.width(Spacing.s16))
         Text(
             text = premiumAudio.title,
-            maxLines = 2,
+            maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .padding(end = Spacing.s16)
-                .weight(0.70f),
+                .weight(0.65f),
         )
         IconButton(
             modifier = Modifier.weight(0.10f),
@@ -364,7 +380,20 @@ fun PremiumItem(
         }
         Spacer(modifier = Modifier.width(Spacing.s16))
         IconButton(
-            modifier = Modifier.weight(0.10f),
+            modifier = Modifier.weight(0.08f),
+            onClick = { onFavoriteStatusChanged(premiumAudio) },
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(Spacing.s32),
+                imageVector = if (premiumAudio.markedAsFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                contentDescription = stringResource(R.string.audio_favorite),
+                tint = iconFavoriteColor,
+            )
+        }
+        Spacer(modifier = Modifier.width(Spacing.s16))
+        IconButton(
+            modifier = Modifier.weight(0.08f),
             onClick = { onAddToPlaylistClicked(premiumAudio.id) },
         ) {
             Icon(
@@ -396,6 +425,35 @@ private fun ShowLoading(showLoading: Boolean) {
 @Composable
 private fun Spacer() {
     Spacer(modifier = Modifier.height(Spacing.s16))
+}
+
+@Preview
+@Composable
+private fun PremiumItemPreview() {
+    GabiMorenoTheme {
+        PremiumItem(
+            premiumAudio = PremiumAudio(
+                id = "1",
+                url = "",
+                audioUrl = "",
+                imageUrl = "",
+                saga = Saga(author = "This is publisher", title = "This is saga title"),
+                thumbnailUrl = "",
+                pubDateMillis = 0,
+                title = "This is a title",
+                audioLengthInSeconds = 2700,
+                description = "This is a description",
+                category = Category.PREMIUM,
+                excerpt = "excerpt",
+                hasBeenListened = false,
+                markedAsFavorite = false
+            ),
+            onItemClicked = {},
+            onListenedToggled = {},
+            onAddToPlaylistClicked = {},
+            onFavoriteStatusChanged = {}
+        )
+    }
 }
 
 private const val REFRESH_DELAY = 1_500L

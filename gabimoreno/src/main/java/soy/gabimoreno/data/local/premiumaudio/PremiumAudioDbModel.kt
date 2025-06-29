@@ -21,4 +21,5 @@ data class PremiumAudioDbModel(
     val category: Category,
     val excerpt: String,
     val hasBeenListened: Boolean,
+    val markedAsFavorite: Boolean
 )

@@ -20,6 +20,7 @@ import soy.gabimoreno.domain.repository.premiumaudios.DefaultPremiumAudiosReposi
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import soy.gabimoreno.domain.usecase.SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
 import soy.gabimoreno.fake.buildPremiumAudio
+import soy.gabimoreno.fake.buildPremiumAudioDbModel
 
 @ExperimentalCoroutinesApi
 class DefaultPremiumAudiosRepositoryTest {
@@ -103,6 +104,35 @@ class DefaultPremiumAudiosRepositoryTest {
 
             coVerifyOnce {
                 localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
+            }
+        }
+
+    @Test
+    fun `GIVEN repository WHEN getAllFavoritePremiumAudios THEN local dataSource is called`() =
+        runTest {
+            val premiumAudios = listOf(
+                buildPremiumAudioDbModel("1", markedAsFavorite = true),
+            )
+            coEvery {
+                localPremiumAudiosDataSource.getAllFavoritePremiumAudios()
+            } returns premiumAudios
+
+            val result = repository.getAllFavoritePremiumAudios()
+
+            result shouldBeInstanceOf Either.Right::class.java
+            coVerifyOnce {
+                localPremiumAudiosDataSource.getAllFavoritePremiumAudios()
+            }
+        }
+
+    @Test
+    fun `GIVEN audio is marked as listened WHEN updateMarkedAsFavorite THEN field is updated`() =
+        runTest {
+            val premiumAudio = buildPremiumAudio()
+            repository.markPremiumAudioAsFavorite(premiumAudio.id, true)
+
+            coVerifyOnce {
+                localPremiumAudiosDataSource.updateMarkedAsFavorite(premiumAudio.id, true)
             }
         }
 }

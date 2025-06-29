@@ -12,4 +12,5 @@ interface Audio {
     val pubDateMillis: Long
     val audioLengthInSeconds: Int
     val hasBeenListened: Boolean
+    val markedAsFavorite: Boolean
 }

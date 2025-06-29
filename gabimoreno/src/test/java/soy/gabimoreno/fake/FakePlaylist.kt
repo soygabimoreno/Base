@@ -58,5 +58,6 @@ fun buildAudioItem(audioId: String, position: Int = 0) = PlaylistAudioItem(
     excerpt = "excerpt",
     hasBeenListened = false,
     position = position,
-    playlistItemId = position
+    playlistItemId = position,
+    markedAsFavorite = false
 )

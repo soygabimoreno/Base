@@ -214,7 +214,8 @@ fun AudioBottomBarPreview() {
                 title = "This is a title",
                 audioLengthInSeconds = 2700,
                 description = "This is a description",
-                hasBeenListened = false
+                hasBeenListened = false,
+                markedAsFavorite = false
             ),
             xOffset = 0,
             icon = R.drawable.ic_baseline_play_arrow_24,

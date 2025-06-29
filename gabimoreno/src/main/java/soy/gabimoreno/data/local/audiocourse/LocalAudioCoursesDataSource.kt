@@ -63,6 +63,20 @@ class LocalAudioCoursesDataSource @Inject constructor(
             audioCourseItemDbModelDao.getAudioCourseItemById(audioCourseItemId)
         }
 
+    suspend fun getAllFavoriteAudioCoursesItems(): List<AudioCourseItemDbModel> =
+        withContext(dispatcher) {
+            audioCourseItemDbModelDao.getAllFavoriteAudioCoursesItems()
+        }
+
+    suspend fun updateMarkedAsFavorite(
+        audioItemId: String, markedAsFavorite: Boolean
+    ) = withContext(dispatcher) {
+        audioCourseItemDbModelDao.updateMarkedAsFavorite(
+            audioItemId,
+            markedAsFavorite = markedAsFavorite,
+        )
+    }
+
     suspend fun markAllAudioCourseItemsAsUnlistened() = withContext(dispatcher) {
         audioCourseItemDbModelDao.markAllAudioCourseItemsAsUnlistened()
     }

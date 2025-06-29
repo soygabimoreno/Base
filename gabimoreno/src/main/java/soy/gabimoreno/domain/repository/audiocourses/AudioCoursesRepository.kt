@@ -14,7 +14,9 @@ interface AudioCoursesRepository {
 
     suspend fun getCourseById(idCourse: String): Either<Throwable, Flow<AudioCourse>>
     suspend fun getAudioCourseItem(audioCourseItemId: String): Either<Throwable, AudioCourseItem>
+    suspend fun getAllFavoriteAudioCoursesItems(): Either<Throwable, List<AudioCourseItem>>
     suspend fun markAudioCourseItemAsListened(id: String, hasBeenListened: Boolean)
     suspend fun markAllAudioCourseItemsAsUnlistened()
     suspend fun reset()
+    suspend fun updateMarkedAsFavorite(id: String, isFavorite: Boolean)
 }

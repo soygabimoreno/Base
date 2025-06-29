@@ -10,8 +10,12 @@ fun buildPremiumAudioDbModels() = listOf(
     buildPremiumAudioDbModel().copy(id = "3")
 )
 
-fun buildPremiumAudioDbModel(): PremiumAudioDbModel = PremiumAudioDbModel(
-    id = "1",
+fun buildPremiumAudioDbModel(
+    id: String = "1",
+    hasBeenListened: Boolean = false,
+    markedAsFavorite: Boolean = false
+): PremiumAudioDbModel = PremiumAudioDbModel(
+    id = id,
     url = "",
     audioUrl = "",
     imageUrl = "",
@@ -23,5 +27,6 @@ fun buildPremiumAudioDbModel(): PremiumAudioDbModel = PremiumAudioDbModel(
     description = "This is a description",
     category = Category.PREMIUM,
     excerpt = "excerpt",
-    hasBeenListened = false
+    hasBeenListened = hasBeenListened,
+    markedAsFavorite = markedAsFavorite
 )

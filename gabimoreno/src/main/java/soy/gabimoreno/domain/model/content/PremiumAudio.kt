@@ -16,6 +16,7 @@ data class PremiumAudio(
     override val pubDateMillis: Long,
     override val audioLengthInSeconds: Int,
     override val hasBeenListened: Boolean,
+    override val markedAsFavorite: Boolean,
     val category: Category,
     val excerpt: String,
 ) : Audio

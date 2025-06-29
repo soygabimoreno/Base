@@ -7,4 +7,5 @@ sealed interface AudioCourseDetailAction {
     data class OnAudioItemListenedToggled(val audioCourseItem: AudioCourseItem) : AudioCourseDetailAction
     data object OnBackClicked : AudioCourseDetailAction
     data class OnAddToPlaylistClicked(val audioCourseId: String) : AudioCourseDetailAction
+    data class OnFavoriteStatusChanged(val audioCourseItem: AudioCourseItem) : AudioCourseDetailAction
 }

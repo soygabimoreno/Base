@@ -54,6 +54,7 @@ fun Article.toDomain(
             audioLengthInSeconds = itunesArticleData.getAudioLengthInSeconds(),
             description = description,
             hasBeenListened = false,
+            markedAsFavorite = false
         )
     }
 }

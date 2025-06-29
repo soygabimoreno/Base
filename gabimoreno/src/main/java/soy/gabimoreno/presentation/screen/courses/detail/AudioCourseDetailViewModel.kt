@@ -12,12 +12,14 @@ import kotlinx.coroutines.launch
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.domain.usecase.GetAudioCourseByIdUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
+import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class AudioCourseDetailViewModel @Inject constructor(
     private val getAudioCourseByIdUseCase: GetAudioCourseByIdUseCase,
-    private val markAudioAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase
+    private val markAudioAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
+    private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
 ) : ViewModel() {
     var state by mutableStateOf(AudioCourseDetailState())
         private set
@@ -71,6 +73,27 @@ class AudioCourseDetailViewModel @Inject constructor(
                 }
             }
 
+            is AudioCourseDetailAction.OnFavoriteStatusChanged -> {
+                viewModelScope.launch {
+                    updateAudioItemFavoriteStateUseCase(
+                        idAudioItem = action.audioCourseItem.id,
+                        markedAsFavorite = !action.audioCourseItem.markedAsFavorite
+                    )
+                    val audioCourseItems = state.audioCourse?.audios?.map { audioCourseItem ->
+                        if (audioCourseItem.id == action.audioCourseItem.id) {
+                            audioCourseItem.copy(markedAsFavorite = !action.audioCourseItem.markedAsFavorite)
+                        } else {
+                            audioCourseItem
+                        }
+                    }
+                    state = state.copy(
+                        audioCourse = state.audioCourse?.copy(
+                            audios = audioCourseItems ?: emptyList()
+                        )
+                    )
+                }
+            }
+
             else -> Unit
         }
     }
@@ -90,7 +113,8 @@ class AudioCourseDetailViewModel @Inject constructor(
                     thumbnailUrl = audioCourse.thumbnailUrl,
                     pubDateMillis = audioCourse.pubDateMillis,
                     audioLengthInSeconds = audioCourse.audioLengthInSeconds,
-                    hasBeenListened = audioCourseItem.hasBeenListened
+                    hasBeenListened = audioCourseItem.hasBeenListened,
+                    markedAsFavorite = audioCourseItem.markedAsFavorite,
                 )
                 if (episode.id == audioCourseId) audio = episode
                 episode

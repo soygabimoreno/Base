@@ -72,6 +72,16 @@ class DefaultPremiumAudiosRepository @Inject constructor(
         return localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
     }
 
+    override suspend fun getAllFavoritePremiumAudios(): Either<Throwable, List<PremiumAudio>> {
+        return localPremiumAudiosDataSource.getAllFavoritePremiumAudios()?.let { premiumAudios ->
+            premiumAudios.map { it.toPremiumAudio() }.right()
+        } ?: Throwable("PremiumAudios not found").left()
+    }
+
+    override suspend fun markPremiumAudioAsFavorite(id: String, isFavorite: Boolean) {
+        return localPremiumAudiosDataSource.updateMarkedAsFavorite(id, isFavorite)
+    }
+
     suspend fun reset() {
         localPremiumAudiosDataSource.reset()
     }
