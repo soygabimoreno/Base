@@ -23,6 +23,7 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.domain.usecase.GetAudioCourseByIdUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
+import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 import soy.gabimoreno.fake.buildAudioCourse
 
 class AudioCourseDetailViewModelTest {
@@ -30,6 +31,8 @@ class AudioCourseDetailViewModelTest {
     private val getAudioCourseByIdUseCase = relaxedMockk<GetAudioCourseByIdUseCase>()
     private val markAudioCourseItemAsListenedUseCase =
         relaxedMockk<MarkAudioCourseItemAsListenedUseCase>()
+    private val updateAudioItemFavoriteStateUseCase =
+        relaxedMockk<UpdateAudioItemFavoriteStateUseCase>()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: AudioCourseDetailViewModel
 
@@ -38,7 +41,8 @@ class AudioCourseDetailViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel = AudioCourseDetailViewModel(
             getAudioCourseByIdUseCase,
-            markAudioCourseItemAsListenedUseCase
+            markAudioCourseItemAsListenedUseCase,
+            updateAudioItemFavoriteStateUseCase
         )
     }
 

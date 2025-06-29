@@ -16,11 +16,17 @@ interface AudioCourseItemDbModelDao {
     @Query("SELECT * FROM AudioCourseItems WHERE id IN (:ids)")
     suspend fun getAudioCourseItemsByIds(ids: Set<String>): List<AudioCourseItemDbModel>
 
+    @Query("SELECT * FROM AudioCourseItems WHERE markedAsFavorite = 1")
+    fun getAllFavoriteAudioCoursesItems(): List<AudioCourseItemDbModel>
+
     @Upsert()
     fun upsertAudioCourseItems(audioCourseItems: List<AudioCourseItemDbModel>)
 
-    @Query("UPDATE audioCourseItems SET hasBeenListened = :hasBeenListened WHERE id = :id")
-    fun updateHasBeenListened(id: String, hasBeenListened: Boolean)
+    @Query("UPDATE AudioCourseItems SET markedAsFavorite = :markedAsFavorite WHERE id = :audioCourseId")
+    fun updateMarkedAsFavorite(audioCourseId: String, markedAsFavorite: Boolean)
+
+    @Query("UPDATE AudioCourseItems SET hasBeenListened = :hasBeenListened WHERE id = :audioCourseId")
+    fun updateHasBeenListened(audioCourseId: String, hasBeenListened: Boolean)
 
     @Query("UPDATE AudioCourseItems SET hasBeenListened = 0")
     fun markAllAudioCourseItemsAsUnlistened()

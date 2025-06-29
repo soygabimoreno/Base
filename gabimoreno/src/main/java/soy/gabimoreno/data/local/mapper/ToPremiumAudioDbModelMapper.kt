@@ -17,4 +17,5 @@ fun PremiumAudio.toPremiumAudioDbModel() = PremiumAudioDbModel(
     category = category,
     excerpt = excerpt,
     hasBeenListened = hasBeenListened,
+    markedAsFavorite = markedAsFavorite
 )

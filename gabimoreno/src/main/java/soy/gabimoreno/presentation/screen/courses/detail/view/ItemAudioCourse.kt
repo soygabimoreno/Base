@@ -21,6 +21,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +37,7 @@ import soy.gabimoreno.R
 import soy.gabimoreno.domain.model.content.AudioCourseItem
 import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
+import soy.gabimoreno.presentation.theme.PinkBright
 import soy.gabimoreno.presentation.theme.PurpleDark
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
@@ -46,12 +49,18 @@ fun ItemAudioCourse(
     audioCourseTitle: String,
     onItemClicked: (audioCourseItem: AudioCourseItem) -> Unit,
     onItemListenedToggled: (audioCourseItem: AudioCourseItem) -> Unit,
-    onAddToPlaylistClicked: (audioCourseItemId: String) -> Unit
+    onAddToPlaylistClicked: (audioCourseItemId: String) -> Unit,
+    onFavoriteStatusChanged: (audioCourseItem: AudioCourseItem) -> Unit,
 ) {
     val iconColor by animateColorAsState(
         targetValue = if (audioCourseItem.hasBeenListened) PurpleDark else Black.copy(alpha = 0.1f),
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
         label = "checkIconColorAnimation"
+    )
+    val iconFavoriteColor by animateColorAsState(
+        targetValue = if (audioCourseItem.markedAsFavorite) PinkBright else Black.copy(alpha = 0.2f),
+        animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
+        label = "favoriteIconColorAnimation"
     )
     Row(
         modifier = Modifier
@@ -64,14 +73,14 @@ fun ItemAudioCourse(
         Column(
             modifier = Modifier
                 .clickable { onItemClicked(audioCourseItem) }
-                .weight(0.85f),
+                .weight(0.80f),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(audioCourseItem.title, color = Black, fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.height(Spacing.s4))
             Text(
                 audioCourseTitle,
-                color = Black.copy(alpha = 0.8f),
+                color = Black.copy(alpha = 0.70f),
                 fontWeight = FontWeight.Light
             )
         }
@@ -86,6 +95,19 @@ fun ItemAudioCourse(
                 imageVector = Icons.Default.Check,
                 contentDescription = stringResource(R.string.course_listened),
                 tint = iconColor,
+            )
+        }
+        Spacer(modifier = Modifier.width(Spacing.s8))
+        IconButton(
+            modifier = Modifier.weight(0.10f),
+            onClick = { onFavoriteStatusChanged(audioCourseItem) },
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(Spacing.s32),
+                imageVector = if (audioCourseItem.markedAsFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                contentDescription = stringResource(R.string.audio_favorite),
+                tint = iconFavoriteColor,
             )
         }
         Spacer(modifier = Modifier.width(Spacing.s8))
@@ -128,7 +150,8 @@ fun ItemAudioCoursePreview() {
                 ),
                 onItemClicked = {},
                 onItemListenedToggled = {},
-                onAddToPlaylistClicked = {}
+                onAddToPlaylistClicked = {},
+                onFavoriteStatusChanged = {}
             )
             Spacer(
                 modifier = Modifier
@@ -142,11 +165,13 @@ fun ItemAudioCoursePreview() {
                     id = "1",
                     title = "item title",
                     url = "item url",
-                    hasBeenListened = false
+                    hasBeenListened = false,
+                    markedAsFavorite = true
                 ),
                 onItemClicked = {},
                 onItemListenedToggled = {},
-                onAddToPlaylistClicked = {}
+                onAddToPlaylistClicked = {},
+                onFavoriteStatusChanged = {}
             )
         }
     }

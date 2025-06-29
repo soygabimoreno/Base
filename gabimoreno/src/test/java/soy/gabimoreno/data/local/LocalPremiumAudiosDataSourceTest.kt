@@ -1,6 +1,8 @@
 package soy.gabimoreno.data.local
 
 import androidx.paging.PagingSource
+import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,11 +13,13 @@ import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Test
+import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.local.mapper.toPremiumAudioDbModel
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
+import soy.gabimoreno.fake.buildPremiumAudioDbModel
 import soy.gabimoreno.fake.buildPremiumAudios
 
 @ExperimentalCoroutinesApi
@@ -114,6 +118,39 @@ class LocalPremiumAudiosDataSourceTest {
             premiumAudioDbModelDao.markAllPremiumAudiosAsUnlistened()
         }
     }
+
+    @Test
+    fun `GIVEN datasource WHEN getAllFavoritePremiumAudios THEN get all favorite premium audios`() =
+        runTest {
+            val premiumAudios = listOf(
+                buildPremiumAudioDbModel(markedAsFavorite = true),
+                buildPremiumAudioDbModel(id = "2", markedAsFavorite = true)
+            )
+
+            coEvery { datasource.getAllFavoritePremiumAudios() } returns premiumAudios
+
+            val result = datasource.getAllFavoritePremiumAudios()
+
+            result shouldBeEqualTo premiumAudios
+            coVerifyOnce {
+                premiumAudioDbModelDao.getAllFavoriteAudioPremiumAudioDbModels()
+            }
+        }
+
+    @Test
+    fun `GIVEN premiumAudioId WHEN updateMarkedAsFavorite THEN mark premium audio as favorite`() =
+        runTest {
+            val premiumAudioId = "1"
+            val markedAsFavorite = true
+            coJustRun {
+                premiumAudioDbModelDao.updateMarkedAsFavorite(premiumAudioId, markedAsFavorite)
+            }
+
+            datasource.updateMarkedAsFavorite(premiumAudioId, markedAsFavorite)
+            coVerifyOnce {
+                premiumAudioDbModelDao.updateMarkedAsFavorite(premiumAudioId, markedAsFavorite)
+            }
+        }
 
     @Test
     fun `WHEN reset THEN the database is empty`() = runTest {

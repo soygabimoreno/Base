@@ -1,5 +1,7 @@
 package soy.gabimoreno.presentation.screen.detail
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,17 +13,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,6 +46,7 @@ import soy.gabimoreno.framework.parseFromHtmlFormat
 import soy.gabimoreno.presentation.navigation.Feature
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
+import soy.gabimoreno.presentation.theme.PinkBright
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
 import soy.gabimoreno.presentation.ui.AudioImage
@@ -78,7 +88,7 @@ fun DetailScreen(
             if (premiumViewModel.state.selectedPremiumAudio == null) {
                 premiumViewModel.loadSelectedPremiumAudio(audioId)
             }
-            audio = premiumViewModel.state.selectedPremiumAudio
+            audio = premiumViewModel.state.selectedPremiumAudio as PremiumAudio
         }
 
         else -> Unit
@@ -109,6 +119,14 @@ fun DetailScreen(
                     playerViewModel.currentPlayingAudio.value?.id == audio.id
                 val playButtonText =
                     if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play)
+                val iconFavoriteColor by animateColorAsState(
+                    targetValue = if (detailViewModel.audioState is PremiumAudio &&
+                        (detailViewModel.audioState as PremiumAudio).markedAsFavorite
+                    )
+                        PinkBright else White.copy(alpha = 0.2f),
+                    animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
+                    label = "favoriteIconColorAnimation"
+                )
 
                 Column(
                     modifier = Modifier
@@ -163,6 +181,23 @@ fun DetailScreen(
 
                         Spacer(modifier = Modifier.weight(1f))
 
+                        if (detailViewModel.audioState is PremiumAudio) {
+                            IconButton(
+                                modifier = Modifier.size(Spacing.s32),
+                                onClick = { detailViewModel.onFavoriteStatusChanged() },
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .size(Spacing.s32),
+                                    imageVector = if ((detailViewModel.audioState as PremiumAudio).markedAsFavorite)
+                                        Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                    contentDescription = stringResource(R.string.audio_favorite),
+                                    tint = iconFavoriteColor,
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(Spacing.s16))
+                        }
+
                         AnimatedIconButton(
                             showAnimation = (
                                 playerViewModel.currentPlayingAudio.value?.id == audio.id &&
@@ -199,3 +234,5 @@ fun DetailScreen(
         }
     }
 }
+
+private const val CHANGE_COLOR_ANIMATION_DURATION = 300

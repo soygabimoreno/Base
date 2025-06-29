@@ -24,4 +24,5 @@ data class AudioCourseItemDbModel(
     val title: String,
     val url: String,
     val hasBeenListened: Boolean,
+    val markedAsFavorite: Boolean,
 )

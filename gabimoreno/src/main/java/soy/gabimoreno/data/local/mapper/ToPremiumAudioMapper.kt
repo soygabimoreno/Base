@@ -18,6 +18,7 @@ fun PremiumAudioDbModel.toPremiumAudio() = PremiumAudio(
     hasBeenListened = hasBeenListened,
     category = category,
     excerpt = excerpt,
+    markedAsFavorite = markedAsFavorite
 )
 
 fun PremiumAudioDbModel.toPlaylistAudioItem(
@@ -37,5 +38,6 @@ fun PremiumAudioDbModel.toPlaylistAudioItem(
     category = category,
     excerpt = excerpt,
     position = position,
-    playlistItemId = null
+    playlistItemId = null,
+    markedAsFavorite = markedAsFavorite
 )

@@ -42,10 +42,15 @@ fun buildAudioCourse(
     audios = audios
 )
 
-fun buildAudioCourseItem() = AudioCourseItem(
-    id = "1",
+fun buildAudioCourseItem(
+    hasBeenListened: Boolean = false,
+    markedAsFavorite: Boolean = false,
+) = AudioCourseItem(
+    id = "1-1",
     title = "item title",
-    url = "item url"
+    url = "item url",
+    hasBeenListened = hasBeenListened,
+    markedAsFavorite = markedAsFavorite
 )
 
 fun buildAudioCoursesDbModel() = listOf(
@@ -75,12 +80,17 @@ fun buildAudioCourseDbItems(idAudioCourse: String = "1") = listOf(
     buildAudioCourseItemDbModel(idAudioCourse).copy(id = "1-3")
 )
 
-fun buildAudioCourseItemDbModel(idAudioCourse: String = "1") = AudioCourseItemDbModel(
+fun buildAudioCourseItemDbModel(
+    idAudioCourse: String = "1",
+    hasBeenListened: Boolean = false,
+    markedAsFavorite: Boolean = false,
+) = AudioCourseItemDbModel(
     id = "${idAudioCourse}-1",
     idAudioCourse = idAudioCourse,
     title = "item title",
     url = "item url",
-    hasBeenListened = false
+    hasBeenListened = hasBeenListened,
+    markedAsFavorite = markedAsFavorite
 )
 
 fun buildAudioCourseWithItems() = AudioCourseWithItems(

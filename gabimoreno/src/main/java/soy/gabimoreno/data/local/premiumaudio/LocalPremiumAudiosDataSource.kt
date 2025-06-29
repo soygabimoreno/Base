@@ -35,9 +35,10 @@ class LocalPremiumAudiosDataSource @Inject constructor(
         )
     }
 
-    suspend fun updateHasBeenListened(id: String, hasBeenListened: Boolean) = withContext(dispatcher) {
-        premiumAudioDbModelDao.updateHasBeenListened(id, hasBeenListened)
-    }
+    suspend fun updateHasBeenListened(id: String, hasBeenListened: Boolean) =
+        withContext(dispatcher) {
+            premiumAudioDbModelDao.updateHasBeenListened(id, hasBeenListened)
+        }
 
     suspend fun markAllPremiumAudiosAsUnlistened() = withContext(dispatcher) {
         premiumAudioDbModelDao.markAllPremiumAudiosAsUnlistened()
@@ -47,6 +48,17 @@ class LocalPremiumAudiosDataSource @Inject constructor(
         premiumAudioDbModelDao.getPremiumAudioDbModels().map {
             it.toPremiumAudio()
         }
+    }
+
+    suspend fun getAllFavoritePremiumAudios(): List<PremiumAudioDbModel> =
+        withContext(dispatcher) {
+            premiumAudioDbModelDao.getAllFavoriteAudioPremiumAudioDbModels()
+        }
+
+    suspend fun updateMarkedAsFavorite(
+        id: String, markedAsFavorite: Boolean
+    ) = withContext(dispatcher) {
+        premiumAudioDbModelDao.updateMarkedAsFavorite(id = id, markedAsFavorite = markedAsFavorite)
     }
 
     fun getPremiumAudiosPagingSource(): PagingSource<Int, PremiumAudioDbModel> {

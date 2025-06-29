@@ -27,6 +27,7 @@ fun List<Post>.toPremiumAudios(): List<PremiumAudio> {
                     category = post.category,
                     excerpt = post.excerpt,
                     hasBeenListened = false,
+                    markedAsFavorite = false
                 )
             )
         }

@@ -84,4 +84,17 @@ class DefaultAudioCoursesRepository @Inject constructor(
     override suspend fun reset() {
         localAudioCoursesDataSource.reset()
     }
+
+    override suspend fun getAllFavoriteAudioCoursesItems(): Either<Throwable, List<AudioCourseItem>> {
+        return localAudioCoursesDataSource.getAllFavoriteAudioCoursesItems()
+            ?.let { audioCourseItems ->
+                audioCourseItems.map { it.toAudioCourseItem() }.right()
+            } ?: run {
+            Throwable("No favorite audio courses items found").left()
+        }
+    }
+
+    override suspend fun updateMarkedAsFavorite(id: String, isFavorite: Boolean) {
+        return localAudioCoursesDataSource.updateMarkedAsFavorite(id, isFavorite)
+    }
 }

@@ -14,6 +14,7 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_ID
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_TITLE
 import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
+import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 import soy.gabimoreno.fake.buildAudio
 import soy.gabimoreno.framework.intent.StartChooser
 
@@ -21,13 +22,16 @@ class DetailViewModelTest {
 
     private val tracker: Tracker = relaxedMockk()
     private val startChooser: StartChooser = relaxedMockk()
+    private val updateAudioItemFavoriteStateUseCase =
+        relaxedMockk<UpdateAudioItemFavoriteStateUseCase>()
     private lateinit var viewModel: DetailViewModel
 
     @Before
     fun setUp() {
         viewModel = DetailViewModel(
             tracker,
-            startChooser
+            startChooser,
+            updateAudioItemFavoriteStateUseCase
         )
     }
 

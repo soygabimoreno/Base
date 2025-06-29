@@ -4,6 +4,7 @@ import arrow.core.left
 import arrow.core.right
 import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
@@ -261,4 +262,39 @@ class DefaultAudioCoursesRepositoryTest {
             localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
         }
     }
+
+    @Test
+    fun `GIVEN repository WHEN getAllFavoriteAudioCoursesItems THEN return AudioCourseItem list with favorites`() =
+        runTest {
+            val audioCourseItems = listOf(
+                buildAudioCourseItemDbModel(markedAsFavorite = true),
+                buildAudioCourseItemDbModel(markedAsFavorite = true),
+            )
+            coEvery {
+                localAudioCoursesDataSource.getAllFavoriteAudioCoursesItems()
+            } returns audioCourseItems
+
+            val result = repository.getAllFavoriteAudioCoursesItems()
+
+            result.isRight() shouldBe true
+            result.getOrNull() shouldBeEqualTo audioCourseItems.map { it.toAudioCourseItem() }
+            coVerifyOnce {
+                localAudioCoursesDataSource.getAllFavoriteAudioCoursesItems()
+            }
+        }
+
+    @Test
+    fun `GIVEN repository WHEN updateMarkedAsFavorite THEN local dataSource is called`() =
+        runTest {
+            val audioCourseItem = buildAudioCourseItemDbModel()
+            coJustRun {
+                localAudioCoursesDataSource.updateMarkedAsFavorite(audioCourseItem.id, true)
+            }
+
+            repository.updateMarkedAsFavorite(audioCourseItem.id, true)
+
+            coVerifyOnce {
+                localAudioCoursesDataSource.updateMarkedAsFavorite(audioCourseItem.id, true)
+            }
+        }
 }

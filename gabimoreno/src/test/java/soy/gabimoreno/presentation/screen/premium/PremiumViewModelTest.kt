@@ -16,6 +16,7 @@ import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPremiumAudiosManagedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
 import soy.gabimoreno.domain.usecase.RefreshBearerTokenUseCase
+import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 
 @ExperimentalCoroutinesApi
 class PremiumViewModelTest {
@@ -25,6 +26,8 @@ class PremiumViewModelTest {
     private val markPremiumAudioAsListenedUseCase =
         relaxedMockk<MarkPremiumAudioAsListenedUseCase>()
     private val refreshBearerTokenUseCase = relaxedMockk<RefreshBearerTokenUseCase>()
+    private val updateAudioItemFavoriteStateUseCase =
+        relaxedMockk<UpdateAudioItemFavoriteStateUseCase>()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
@@ -45,6 +48,7 @@ class PremiumViewModelTest {
                 getPremiumAudioByIdUseCase,
                 markPremiumAudioAsListenedUseCase,
                 refreshBearerTokenUseCase,
+                updateAudioItemFavoriteStateUseCase,
                 testDispatcher
             )
 
@@ -62,6 +66,7 @@ class PremiumViewModelTest {
                 getPremiumAudioByIdUseCase,
                 markPremiumAudioAsListenedUseCase,
                 refreshBearerTokenUseCase,
+                updateAudioItemFavoriteStateUseCase,
                 testDispatcher
             )
 

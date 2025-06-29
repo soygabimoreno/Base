@@ -259,7 +259,7 @@ private fun PlaylistEmptyState() {
             style = MaterialTheme.typography.h6
         )
         Text(
-            text = stringResource(R.string.playlist_playlist_add_items),
+            text = stringResource(R.string.playlist_add_items),
             style = MaterialTheme.typography.h6,
             color = Orange,
             textDecoration = TextDecoration.Underline

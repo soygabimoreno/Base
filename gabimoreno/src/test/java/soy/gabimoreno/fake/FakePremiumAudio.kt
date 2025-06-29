@@ -5,13 +5,17 @@ import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.content.PremiumAudio
 
 fun buildPremiumAudios() = listOf(
-    buildPremiumAudio().copy(id = "1"),
-    buildPremiumAudio().copy(id = "2"),
-    buildPremiumAudio().copy(id = "3")
+    buildPremiumAudio("1"),
+    buildPremiumAudio("2"),
+    buildPremiumAudio("3")
 )
 
-fun buildPremiumAudio(): PremiumAudio = PremiumAudio(
-    id = "1",
+fun buildPremiumAudio(
+    id: String = "1",
+    hasBeenListened: Boolean = false,
+    markedAsFavorite: Boolean = false
+): PremiumAudio = PremiumAudio(
+    id = id,
     url = "",
     audioUrl = "",
     imageUrl = "",
@@ -23,5 +27,6 @@ fun buildPremiumAudio(): PremiumAudio = PremiumAudio(
     description = "This is a description",
     category = Category.PREMIUM,
     excerpt = "excerpt",
-    hasBeenListened = false
+    hasBeenListened = hasBeenListened,
+    markedAsFavorite = markedAsFavorite
 )

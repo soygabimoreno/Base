@@ -3,6 +3,7 @@
 package soy.gabimoreno.data.local.audiocourse
 
 import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -179,5 +180,40 @@ class LocalAudioCoursesDataSourceTest {
         val result = dataSource.getAudioCourseItem(audioCourseItemId)
 
         result shouldBe null
+    }
+
+    @Test
+    fun `GIVEN datasource WHEN getAllFavoriteAudioCoursesItems THEN return AudioCourseItem list with favorites`() =
+        runTest {
+            val audioCourseItems = listOf(
+                buildAudioCourseItemDbModel(markedAsFavorite = true),
+                buildAudioCourseItemDbModel(),
+            )
+            coEvery {
+                audioCourseItemDbModelDao.getAllFavoriteAudioCoursesItems()
+            } returns listOf(audioCourseItems.first())
+
+            val result = dataSource.getAllFavoriteAudioCoursesItems()
+
+            result shouldHaveSize 1
+            result.first().markedAsFavorite shouldBe true
+            coVerifyOnce {
+                audioCourseItemDbModelDao.getAllFavoriteAudioCoursesItems()
+            }
+        }
+
+    @Test
+    fun `GIVEN audioItemId WHEN updateMarkedAsFavorite THEN set markedAsFavorite`() = runTest {
+        val audioCourseItemId = "1-1"
+        val markedAsFavorite = true
+        coJustRun {
+            audioCourseItemDbModelDao.updateMarkedAsFavorite(audioCourseItemId, markedAsFavorite)
+        }
+
+        dataSource.updateMarkedAsFavorite(audioCourseItemId, markedAsFavorite)
+
+        coVerifyOnce {
+            audioCourseItemDbModelDao.updateMarkedAsFavorite(audioCourseItemId, markedAsFavorite)
+        }
     }
 }

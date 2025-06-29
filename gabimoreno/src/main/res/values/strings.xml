@@ -102,5 +102,6 @@
     <string name="playlist_delete_playlist_confirmation">Se borrara la playlist seleccionada</string>
     <string name="playlist_edit">Editar playlist</string>
     <string name="playlist_playlist_empty">La playlist esta vacía</string>
-    <string name="playlist_playlist_add_items">¿Añades algunos audios?</string>
+    <string name="playlist_add_items">¿Añades algunos audios?</string>
+    <string name="audio_favorite">Audio favorito</string>
 </resources>

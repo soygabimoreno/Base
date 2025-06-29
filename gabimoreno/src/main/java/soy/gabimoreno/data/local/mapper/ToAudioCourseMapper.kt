@@ -27,7 +27,8 @@ fun AudioCourseItemDbModel.toAudioCourseItem(): AudioCourseItem {
         id = id,
         title = title,
         url = url,
-        hasBeenListened = hasBeenListened
+        hasBeenListened = hasBeenListened,
+        markedAsFavorite = markedAsFavorite
     )
 }
 
@@ -68,6 +69,7 @@ fun AudioCourseItemDbModel.toPlaylistAudioItem(
         category = audioCourseDbModel.category,
         excerpt = audioCourseDbModel.excerpt,
         position = position,
-        playlistItemId = null
+        playlistItemId = null,
+        markedAsFavorite = markedAsFavorite
     )
 }

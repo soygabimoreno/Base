@@ -21,5 +21,6 @@ fun buildAudio(): Audio = Episode(
     title = "This is a title",
     audioLengthInSeconds = 2700,
     description = "This is a description",
-    hasBeenListened = false
+    hasBeenListened = false,
+    markedAsFavorite = false
 )

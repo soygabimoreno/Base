@@ -196,6 +196,13 @@ fun AudioCourseDetailScreen(
                                     state.audioCourse.audios[index].id
                                 )
                             )
+                        },
+                        onFavoriteStatusChanged ={
+                            onAction(
+                                AudioCourseDetailAction.OnFavoriteStatusChanged(
+                                    state.audioCourse.audios[index]
+                                )
+                            )
                         }
                     )
                     Box(

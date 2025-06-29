@@ -24,7 +24,7 @@ import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
         PlaylistDbModel::class,
         PlaylistItemsDbModel::class,
     ],
-    version = 5,
+    version = 6,
 )
 @TypeConverters(Converters::class)
 abstract class GabiMorenoDatabase : RoomDatabase() {
