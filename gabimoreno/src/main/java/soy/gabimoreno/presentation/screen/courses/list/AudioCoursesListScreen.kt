@@ -29,16 +29,17 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import soy.gabimoreno.R
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.courses.list.view.ItemListCourse
 import soy.gabimoreno.presentation.theme.Spacing
-
 
 @Composable
 fun AudioCoursesListScreenRoot(
@@ -47,6 +48,7 @@ fun AudioCoursesListScreenRoot(
 ) {
     val context = LocalContext.current
     val coursesListViewModel = ViewModelProvider.audioCoursesListViewModel
+    val state by coursesListViewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         coursesListViewModel.events.collect { event ->
             when (event) {
@@ -66,7 +68,7 @@ fun AudioCoursesListScreenRoot(
     }
 
     CoursesListScreenScreen(
-        state = coursesListViewModel.state,
+        state = state,
         onAction = { action ->
             when (action) {
                 is AudioCoursesListAction.OnItemClicked -> onItemClicked(action.courseId)

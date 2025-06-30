@@ -198,4 +198,4 @@ class PlaylistViewModel @Inject constructor(
     }
 }
 
-private const val STOP_TIMEOUT_MILLIS = 5000L
+private const val STOP_TIMEOUT_MILLIS = 5_000L
