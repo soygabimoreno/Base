@@ -5,11 +5,10 @@ package soy.gabimoreno.presentation.screen.courses.list
 import arrow.core.left
 import arrow.core.right
 import io.mockk.coEvery
-import io.mockk.coVerify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
@@ -67,98 +66,71 @@ class AudioCoursesListViewModelTest {
             val expectedCourses = buildAudioCourses()
             coEvery { getCoursesUseCase(any()) } returns expectedCourses.right()
 
-            viewModel = AudioCoursesListViewModel(
-                getCoursesUseCase = getCoursesUseCase,
-                getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
-                setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
-                refreshBearerTokenUseCase = refreshBearerTokenUseCase,
-                dispatcher = testDispatcher
-            )
+            val states = mutableListOf<AudioCoursesListState>()
+            val stateJob = launch { viewModel.state.toList(states) }
             advanceUntilIdle()
 
-            viewModel.state.audiocourses shouldBe expectedCourses
-            viewModel.state.isLoading shouldBe false
+            states.last().audiocourses shouldBe expectedCourses
+            states.last().isLoading shouldBe false
+            stateJob.cancel()
         }
 
-    @Test()
-    fun `GIVEN token expired WHEN onViewScreen THEN callback is called`() = runTest {
+    @Test
+    fun `GIVEN token expired WHEN onScreenView THEN callback is called`() = runTest {
         coEvery { getCoursesUseCase(any()) } returns TokenExpiredException().left()
         coEvery { refreshBearerTokenUseCase() } returns TokenExpiredException().left()
 
-        val eventChannel = Channel<AudioCoursesListEvent>(Channel.UNLIMITED)
-        val job = launch {
-            viewModel.events.collect {
-                eventChannel.trySend(it)
-            }
-        }
-
-        viewModel = AudioCoursesListViewModel(
-            getCoursesUseCase = getCoursesUseCase,
-            getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
-            setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
-            refreshBearerTokenUseCase = refreshBearerTokenUseCase,
-            dispatcher = testDispatcher
-        )
-
+        val events = mutableListOf<AudioCoursesListEvent>()
+        val eventJob = launch { viewModel.events.toList(events) }
+        val stateJob = launch { viewModel.state.collect {} }
         advanceUntilIdle()
 
-        eventChannel.receive() shouldBeEqualTo AudioCoursesListEvent.ShowTokenExpiredError
-        job.cancel()
+        events.first() shouldBeEqualTo AudioCoursesListEvent.ShowTokenExpiredError
+        eventJob.cancel()
+        stateJob.cancel()
     }
 
     @Test
     fun `GIVEN token expired THEN token refreshed and courses loaded`() = runTest {
         val dummyCourses = buildAudioCourses()
         val categories = listOf(Category.AUDIOCOURSES)
-        val forceRefresh = false
-
-        coEvery { getCoursesUseCase(any()) } returnsMany listOf(
-            TokenExpiredException().left(),
-            dummyCourses.right()
-        )
+        coEvery {
+            getCoursesUseCase(categories, forceRefresh = false)
+        } returns TokenExpiredException().left()
+        coEvery {
+            getCoursesUseCase(categories, forceRefresh = true)
+        } returns dummyCourses.right()
         coEvery { refreshBearerTokenUseCase() } returns Unit.right()
 
-        viewModel = AudioCoursesListViewModel(
-            getCoursesUseCase = getCoursesUseCase,
-            getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
-            setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
-            refreshBearerTokenUseCase = refreshBearerTokenUseCase,
-            dispatcher = testDispatcher
-        )
-
+        val stateJob = launch { viewModel.state.collect {} }
         advanceUntilIdle()
 
-        viewModel.state.audiocourses shouldBeEqualTo dummyCourses
+        viewModel.state.value.audiocourses shouldBe dummyCourses
         coVerifyOnce {
             refreshBearerTokenUseCase()
         }
-        coVerify(exactly = 2) {
-            getCoursesUseCase(categories, forceRefresh)
+        coVerifyOnce {
+            getCoursesUseCase(categories, forceRefresh = false)
         }
+        coVerifyOnce {
+            getCoursesUseCase(categories, forceRefresh = true)
+        }
+        stateJob.cancel()
     }
 
     @Test
-    fun `GIVEN unknown exception WHEN onViewScreen THEN callback is called`() = runTest {
+    fun `GIVEN unknown exception WHEN onScreenView THEN callback is called`() = runTest {
         val error = RuntimeException("Unknown")
         coEvery { getCoursesUseCase(any()) } returns error.left()
-        val eventChannel = Channel<AudioCoursesListEvent>(Channel.UNLIMITED)
-        val job = launch {
-            viewModel.events.collect {
-                eventChannel.trySend(it)
-            }
-        }
 
-        viewModel = AudioCoursesListViewModel(
-            getCoursesUseCase = getCoursesUseCase,
-            getShouldIReloadAudioCoursesUseCase = getShouldIReloadAudioCoursesUseCase,
-            setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
-            refreshBearerTokenUseCase = refreshBearerTokenUseCase,
-            dispatcher = testDispatcher
-        )
+        val events = mutableListOf<AudioCoursesListEvent>()
+        val eventJob = launch { viewModel.events.toList(events) }
+        val stateJob = launch { viewModel.state.collect {} }
         advanceUntilIdle()
 
-        eventChannel.receive() shouldBeEqualTo AudioCoursesListEvent.Error(error)
-        job.cancel()
+        events.first() shouldBeEqualTo AudioCoursesListEvent.Error(error)
+        eventJob.cancel()
+        stateJob.cancel()
     }
 
     @Test
@@ -168,12 +140,15 @@ class AudioCoursesListViewModelTest {
             val expectedCourses = buildAudioCourses()
             coEvery { getCoursesUseCase(categories) } returns expectedCourses.right()
 
+            val states = mutableListOf<AudioCoursesListState>()
+            val stateJob = launch { viewModel.state.toList(states) }
             viewModel.onAction(AudioCoursesListAction.OnRefreshContent)
             advanceUntilIdle()
 
             coVerifyOnce {
                 getCoursesUseCase(categories, forceRefresh = true)
             }
-            viewModel.state.isRefreshing shouldBe false
+            states.last().isRefreshing shouldBe false
+            stateJob.cancel()
         }
 }

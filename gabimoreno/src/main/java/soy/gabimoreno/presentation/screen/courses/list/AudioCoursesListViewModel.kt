@@ -1,16 +1,18 @@
 package soy.gabimoreno.presentation.screen.courses.list
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import soy.gabimoreno.data.remote.model.Category
@@ -30,14 +32,26 @@ class AudioCoursesListViewModel @Inject constructor(
     private val refreshBearerTokenUseCase: RefreshBearerTokenUseCase,
     @IO private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
+    private var hasLoadedInitialData = false
 
-    var state by mutableStateOf(AudioCoursesListState())
-        private set
+    private val _state = MutableStateFlow(AudioCoursesListState())
+    val state = _state
+        .onStart {
+            if (!hasLoadedInitialData) {
+                hasLoadedInitialData = true
+                onScreenView()
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+            initialValue = AudioCoursesListState()
+        )
 
     private val eventChannel = MutableSharedFlow<AudioCoursesListEvent>()
     val events = eventChannel.asSharedFlow()
 
-    init {
+    private fun onScreenView() {
         viewModelScope.launch(dispatcher) {
             getShouldIReloadAudioCoursesUseCase()
                 .distinctUntilChanged()
@@ -53,7 +67,9 @@ class AudioCoursesListViewModel @Inject constructor(
     }
 
     private fun onViewScreen(forceRefresh: Boolean = false) {
-        state = state.copy(isLoading = true)
+        _state.update { currentState ->
+            currentState.copy(isLoading = true)
+        }
         viewModelScope.launch(dispatcher) {
             try {
                 getCoursesUseCase(
@@ -61,18 +77,24 @@ class AudioCoursesListViewModel @Inject constructor(
                     forceRefresh = forceRefresh
                 )
                     .onRight { audioCourses ->
-                        state = state.copy(
-                            isLoading = false,
-                            audiocourses = audioCourses,
-                        )
+                        _state.update { currentState ->
+                            currentState.copy(
+                                isLoading = false,
+                                audiocourses = audioCourses,
+                            )
+                        }
                     }
                     .onLeft { throwable: Throwable ->
                         handleThrowable(throwable)
-                        state = state.copy(isLoading = false)
+                        _state.update { currentState ->
+                            currentState.copy(isLoading = false)
+                        }
                     }
             } catch (e: Exception) {
                 handleThrowable(e)
-                state = state.copy(isLoading = false)
+                _state.update { currentState ->
+                    currentState.copy(isLoading = false)
+                }
             }
         }
     }
@@ -86,10 +108,12 @@ class AudioCoursesListViewModel @Inject constructor(
     }
 
     private fun refreshToken() {
-        if (state.hasRefreshTokenBeenCalled) {
+        if (state.value.hasRefreshTokenBeenCalled) {
             showTokenExpiredError()
         } else {
-            state = state.copy(hasRefreshTokenBeenCalled = true)
+            _state.update { currentState ->
+                currentState.copy(hasRefreshTokenBeenCalled = true)
+            }
             viewModelScope.launch(dispatcher) {
                 refreshBearerTokenUseCase()
                     .onRight {
@@ -120,13 +144,18 @@ class AudioCoursesListViewModel @Inject constructor(
 
     private fun refreshContent() {
         viewModelScope.launch(dispatcher) {
-            state = state.copy(isRefreshing = true)
+            _state.update { currentState ->
+                currentState.copy(isRefreshing = true)
+            }
             delay(REFRESH_DELAY)
             onViewScreen(forceRefresh = true)
-            state = state.copy(isRefreshing = false)
+            _state.update { currentState ->
+                currentState.copy(isRefreshing = false)
+            }
         }
     }
 }
 
 private const val REFRESH_DELAY = 1_500L
+private const val STOP_TIMEOUT_MILLIS = 5_000L
 private const val TOKEN_EXPIRED_CODE = 403
