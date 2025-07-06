@@ -85,10 +85,12 @@ fun DetailScreen(
         Feature.PREMIUM -> {
             val viewState = premiumViewModel.state
             audios = viewState.premiumAudios
-            if (premiumViewModel.state.selectedPremiumAudio == null) {
+            premiumViewModel.state.selectedPremiumAudio?.let { premiumAudio ->
+                audio = premiumAudio
+            } ?: run {
                 premiumViewModel.loadSelectedPremiumAudio(audioId)
+                return
             }
-            audio = premiumViewModel.state.selectedPremiumAudio as PremiumAudio
         }
 
         else -> Unit

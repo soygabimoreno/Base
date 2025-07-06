@@ -134,7 +134,6 @@ class ReviewDialogViewModel @Inject constructor(
             shouldIShowReviewDialog = true,
             reviewDialogStep = ReviewDialogStep.AskIfUserLikesTheApp,
         )
-
     }
 
     private fun setDontShowAgain() {
@@ -142,8 +141,7 @@ class ReviewDialogViewModel @Inject constructor(
             setShouldIShowInAppReviewUseCase(InAppReviewPrefs.USER_DO_NOT_SHOW_AGAIN)
         }
     }
-
 }
 
 private const val SHOULD_I_SHOW_REVIEW_DIALOG = 3
-private const val DELAY_AUTOCLOSE_DONE_DIALOG = 2000L
+private const val DELAY_AUTOCLOSE_DONE_DIALOG = 2_000L
