@@ -4,9 +4,11 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
+import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.data.remote.model.Category
+import soy.gabimoreno.domain.model.content.PremiumAudio
 import soy.gabimoreno.domain.repository.premiumaudios.TWELVE_HOURS_IN_MILLIS
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import soy.gabimoreno.domain.usecase.SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
@@ -15,6 +17,8 @@ import kotlin.math.ceil
 
 @OptIn(ExperimentalPagingApi::class)
 class PremiumAudiosRemoteMediator(
+    private val cloudDataSource: PremiumAudiosCloudDataSource,
+    private val email: String,
     private val localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
     private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
@@ -61,32 +65,42 @@ class PremiumAudiosRemoteMediator(
             return response.fold({
                 MediatorResult.Error(it)
             }, { premiumAudios ->
-                if (loadType == LoadType.REFRESH) {
-                    val localPremiumAudiosById = localPremiumAudiosDataSource
-                        .getPremiumAudios()
-                        .associateBy { it.id }
-
-                    val mergedPremiumAudios = premiumAudios.map { remotePremiumAudio ->
-                        val localPremiumAudio = localPremiumAudiosById[remotePremiumAudio.id]
-                        remotePremiumAudio.copy(
-                            hasBeenListened = localPremiumAudio?.hasBeenListened ?: false
-                        )
-                    }
-
+                val finalPremiumAudios = if (loadType == LoadType.REFRESH) {
+                    val mergedPremiumAudios = mergeWithCloudData(premiumAudios, email)
                     localPremiumAudiosDataSource.reset()
                     saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
                         System.currentTimeMillis()
                     )
-                    localPremiumAudiosDataSource.savePremiumAudios(mergedPremiumAudios)
+                    mergedPremiumAudios
                 } else {
-                    localPremiumAudiosDataSource.savePremiumAudios(premiumAudios)
+                    mergeWithCloudData(premiumAudios, email)
                 }
+
+                localPremiumAudiosDataSource.savePremiumAudios(finalPremiumAudios)
                 MediatorResult.Success(
                     endOfPaginationReached = premiumAudios.isEmpty()
                 )
             })
         } catch (e: IOException) {
             MediatorResult.Error(e)
+        }
+    }
+
+    private suspend fun mergeWithCloudData(
+        premiumAudios: List<PremiumAudio>,
+        email: String
+    ): List<PremiumAudio> {
+        if (email.isEmpty()) return premiumAudios
+        val cloudPremiumAudiosSnapshot = cloudDataSource
+            .getPremiumAudioItems(email)
+            .associateBy { it.id }
+
+        return premiumAudios.map { remotePremiumAudio ->
+            val localPremiumAudio = cloudPremiumAudiosSnapshot[remotePremiumAudio.id]
+            remotePremiumAudio.copy(
+                hasBeenListened = localPremiumAudio?.hasBeenListened ?: false,
+                markedAsFavorite = localPremiumAudio?.markedAsFavorite ?: false
+            )
         }
     }
 }

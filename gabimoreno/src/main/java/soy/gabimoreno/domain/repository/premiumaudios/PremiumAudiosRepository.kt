@@ -9,11 +9,21 @@ import soy.gabimoreno.domain.model.content.PremiumAudio
 interface PremiumAudiosRepository {
     suspend fun getPremiumAudioMediator(
         categories: List<Category>,
+        email: String,
     ): Either<Throwable, Flow<PagingData<PremiumAudio>>>
 
-    suspend fun getPremiumAudioById(idPremiumAudio: String): Either<Throwable, PremiumAudio>
+    suspend fun getPremiumAudioById(premiumAudioId: String): Either<Throwable, PremiumAudio>
     suspend fun getAllFavoritePremiumAudios(): Either<Throwable, List<PremiumAudio>>
-    suspend fun markAllPremiumAudiosAsUnlistened()
-    suspend fun markPremiumAudioAsListened(id: String, hasBeenListened: Boolean)
-    suspend fun markPremiumAudioAsFavorite(id: String, isFavorite: Boolean)
+    suspend fun markAllPremiumAudiosAsUnlistened(email: String)
+    suspend fun markPremiumAudioAsListened(
+        email: String,
+        premiumAudioId: String,
+        hasBeenListened: Boolean,
+    )
+
+    suspend fun markPremiumAudioAsFavorite(
+        email: String,
+        premiumAudioId: String,
+        isFavorite: Boolean,
+    )
 }

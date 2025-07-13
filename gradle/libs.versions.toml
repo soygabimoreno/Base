@@ -118,6 +118,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-config = { module = "com.google.firebase:firebase-config-ktx" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 
 playinapp-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "play-review" }

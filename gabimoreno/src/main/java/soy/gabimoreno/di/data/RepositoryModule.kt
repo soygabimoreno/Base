@@ -4,6 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import soy.gabimoreno.data.cloud.audiosync.datasource.AudioCoursesCloudDataSource
+import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
 import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
@@ -38,11 +40,13 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideContentRepository(
+        cloudDataSource: PremiumAudiosCloudDataSource,
         localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
         remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
         refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
         saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase: SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
     ): PremiumAudiosRepository = DefaultPremiumAudiosRepository(
+        cloudDataSource,
         localPremiumAudiosDataSource,
         remotePremiumAudiosDataSource,
         refreshPremiumAudiosFromRemoteUseCase,
@@ -62,10 +66,12 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideAudioCoursesRepository(
+        cloudDataSource: AudioCoursesCloudDataSource,
         localAudioCoursesDataSource: LocalAudioCoursesDataSource,
         remoteAudioCoursesDataSource: RemoteAudioCoursesDataSource,
         refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
     ): AudioCoursesRepository = DefaultAudioCoursesRepository(
+        cloudDataSource,
         localAudioCoursesDataSource,
         remoteAudioCoursesDataSource,
         refreshPremiumAudiosFromRemoteUseCase

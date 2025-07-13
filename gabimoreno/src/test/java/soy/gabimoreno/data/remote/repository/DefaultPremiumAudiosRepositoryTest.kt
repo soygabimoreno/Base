@@ -3,6 +3,7 @@ package soy.gabimoreno.data.remote.repository
 import androidx.paging.PagingSource
 import arrow.core.Either
 import io.mockk.coEvery
+import io.mockk.coJustRun
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -12,6 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.data.remote.datasource.premiumaudios.RemotePremiumAudiosDataSource
@@ -25,6 +27,7 @@ import soy.gabimoreno.fake.buildPremiumAudioDbModel
 @ExperimentalCoroutinesApi
 class DefaultPremiumAudiosRepositoryTest {
 
+    private val cloudDataSource: PremiumAudiosCloudDataSource = mockk()
     private val localPremiumAudiosDataSource = relaxedMockk<LocalPremiumAudiosDataSource>()
     private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource = mockk()
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase =
@@ -36,6 +39,7 @@ class DefaultPremiumAudiosRepositoryTest {
     @Before
     fun setUp() {
         repository = DefaultPremiumAudiosRepository(
+            cloudDataSource,
             localPremiumAudiosDataSource,
             remotePremiumAudiosDataSource,
             refreshPremiumAudiosFromRemoteUseCase,
@@ -49,7 +53,7 @@ class DefaultPremiumAudiosRepositoryTest {
         val pagingSource: PagingSource<Int, PremiumAudioDbModel> = relaxedMockk()
         coEvery { localPremiumAudiosDataSource.getPremiumAudiosPagingSource() } returns pagingSource
 
-        val result = repository.getPremiumAudioMediator(categories)
+        val result = repository.getPremiumAudioMediator(categories, EMAIL)
 
         result shouldBeInstanceOf Either.Right::class.java
     }
@@ -62,7 +66,7 @@ class DefaultPremiumAudiosRepositoryTest {
                 "Unexpected error"
             )
 
-            val result = repository.getPremiumAudioMediator(categories)
+            val result = repository.getPremiumAudioMediator(categories, EMAIL)
 
             assert(result is Either.Right)
             val flow = (result as Either.Right).value
@@ -75,10 +79,25 @@ class DefaultPremiumAudiosRepositoryTest {
     fun `GIVEN audio is listened WHEN markPremiumAudioAsListened THEN field is updated`() =
         runTest {
             val premiumAudio = buildPremiumAudio()
-            repository.markPremiumAudioAsListened(premiumAudio.id, true)
+            coJustRun {
+                cloudDataSource.upsertPremiumAudioItemFields(
+                    EMAIL, premiumAudio.id, mapOf(
+                        "id" to premiumAudio.id,
+                        "hasBeenListened" to true
+                    )
+                )
+            }
+
+            repository.markPremiumAudioAsListened(EMAIL, premiumAudio.id, true)
 
             coVerifyOnce {
                 localPremiumAudiosDataSource.updateHasBeenListened(premiumAudio.id, true)
+                cloudDataSource.upsertPremiumAudioItemFields(
+                    EMAIL, premiumAudio.id, mapOf(
+                        "id" to premiumAudio.id,
+                        "hasBeenListened" to true
+                    )
+                )
             }
         }
 
@@ -86,10 +105,25 @@ class DefaultPremiumAudiosRepositoryTest {
     fun `GIVEN audio is unlistened WHEN markPremiumAudioAsListened THEN field is updated`() =
         runTest {
             val premiumAudio = buildPremiumAudio()
-            repository.markPremiumAudioAsListened(premiumAudio.id, false)
+            coJustRun {
+                cloudDataSource.upsertPremiumAudioItemFields(
+                    EMAIL, premiumAudio.id, mapOf(
+                        "id" to premiumAudio.id,
+                        "hasBeenListened" to false
+                    )
+                )
+            }
+
+            repository.markPremiumAudioAsListened(EMAIL, premiumAudio.id, false)
 
             coVerifyOnce {
                 localPremiumAudiosDataSource.updateHasBeenListened(premiumAudio.id, false)
+                cloudDataSource.upsertPremiumAudioItemFields(
+                    EMAIL, premiumAudio.id, mapOf(
+                        "id" to premiumAudio.id,
+                        "hasBeenListened" to false
+                    )
+                )
             }
         }
 
@@ -99,11 +133,21 @@ class DefaultPremiumAudiosRepositoryTest {
             coEvery {
                 localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
             } returns Unit
+            coJustRun {
+                cloudDataSource.batchUpdateFieldsForAllPremiumAudioItems(
+                    EMAIL,
+                    mapOf("hasBeenListened" to false)
+                )
+            }
 
-            repository.markAllPremiumAudiosAsUnlistened()
+            repository.markAllPremiumAudiosAsUnlistened(EMAIL)
 
             coVerifyOnce {
                 localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
+                cloudDataSource.batchUpdateFieldsForAllPremiumAudioItems(
+                    EMAIL,
+                    mapOf("hasBeenListened" to false)
+                )
             }
         }
 
@@ -129,10 +173,27 @@ class DefaultPremiumAudiosRepositoryTest {
     fun `GIVEN audio is marked as listened WHEN updateMarkedAsFavorite THEN field is updated`() =
         runTest {
             val premiumAudio = buildPremiumAudio()
-            repository.markPremiumAudioAsFavorite(premiumAudio.id, true)
+            coJustRun {
+                cloudDataSource.upsertPremiumAudioItemFields(
+                    EMAIL, premiumAudio.id, mapOf(
+                        "id" to premiumAudio.id,
+                        "markedAsFavorite" to true
+                    )
+                )
+            }
+
+            repository.markPremiumAudioAsFavorite(EMAIL, premiumAudio.id, true)
 
             coVerifyOnce {
                 localPremiumAudiosDataSource.updateMarkedAsFavorite(premiumAudio.id, true)
+                cloudDataSource.upsertPremiumAudioItemFields(
+                    EMAIL, premiumAudio.id, mapOf(
+                        "id" to premiumAudio.id,
+                        "markedAsFavorite" to true
+                    )
+                )
             }
         }
 }
+
+private const val EMAIL = "test@test.com"
