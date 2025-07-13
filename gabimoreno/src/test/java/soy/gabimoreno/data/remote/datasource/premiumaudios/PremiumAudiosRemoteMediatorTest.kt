@@ -21,18 +21,21 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.repository.premiumaudios.TWELVE_HOURS_IN_MILLIS
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import soy.gabimoreno.domain.usecase.SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
+import soy.gabimoreno.fake.buildCloudPremiumAudiosResponseList
 import soy.gabimoreno.fake.buildPremiumAudios
 import java.io.IOException
 
 @ExperimentalCoroutinesApi
 class PremiumAudiosRemoteMediatorTest {
 
+    private val cloudDataSource: PremiumAudiosCloudDataSource = mockk()
     private val localPremiumAudiosDataSource: LocalPremiumAudiosDataSource = relaxedMockk()
     private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource = relaxedMockk()
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase =
@@ -45,6 +48,8 @@ class PremiumAudiosRemoteMediatorTest {
     @Before
     fun setUp() {
         mediator = PremiumAudiosRemoteMediator(
+            cloudDataSource,
+            EMAIL,
             localPremiumAudiosDataSource,
             remotePremiumAudiosDataSource,
             refreshPremiumAudiosFromRemoteUseCase,
@@ -95,16 +100,20 @@ class PremiumAudiosRemoteMediatorTest {
         assertMediatorSuccess(result, true)
     }
 
-    @Test
+    @Test()
     fun `GIVEN success on REFRESH WHEN load THEN reset and return success`() = runTest {
         val premiumAudios = buildPremiumAudios()
+        val cloudPremiumAudios = buildCloudPremiumAudiosResponseList()
 
         coEvery {
-            remotePremiumAudiosDataSource.getPremiumAudios(categories, PAGE_SIZE, 1)
+            cloudDataSource.getPremiumAudioItems(EMAIL)
+        } returns cloudPremiumAudios
+        coEvery {
+            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 1)
         } returns premiumAudios.right()
         coEvery { localPremiumAudiosDataSource.reset() } returns Unit
         coEvery { saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(any()) } returns Unit
-        coEvery { localPremiumAudiosDataSource.savePremiumAudios(premiumAudios) } returns Unit
+        coEvery { localPremiumAudiosDataSource.savePremiumAudios(any()) } returns Unit
 
         val result = mediator.load(LoadType.REFRESH, emptyPagingState)
 
@@ -121,7 +130,7 @@ class PremiumAudiosRemoteMediatorTest {
         val error = IOException("Network error")
 
         coEvery {
-            remotePremiumAudiosDataSource.getPremiumAudios(categories, PAGE_SIZE, 1)
+            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 1)
         } returns error.left()
 
         val result = mediator.load(LoadType.REFRESH, emptyPagingState)
@@ -135,7 +144,7 @@ class PremiumAudiosRemoteMediatorTest {
         val error = IOException("Thrown")
 
         coEvery {
-            remotePremiumAudiosDataSource.getPremiumAudios(categories, PAGE_SIZE, 1)
+            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 1)
         } throws error
 
         val result = mediator.load(LoadType.REFRESH, emptyPagingState)
@@ -148,10 +157,14 @@ class PremiumAudiosRemoteMediatorTest {
     fun `GIVEN items in database WHEN load APPEND THEN fetch next page`() = runTest {
         val premiumAudios = buildPremiumAudios()
         val totalAudios = 25
+        val cloudPremiumAudios = buildCloudPremiumAudiosResponseList()
 
+        coEvery {
+            cloudDataSource.getPremiumAudioItems(EMAIL)
+        } returns cloudPremiumAudios
         coEvery { localPremiumAudiosDataSource.getTotalPremiumAudios() } returns totalAudios
         coEvery {
-            remotePremiumAudiosDataSource.getPremiumAudios(categories, PAGE_SIZE, 2)
+            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 2)
         } returns premiumAudios.right()
         coEvery { localPremiumAudiosDataSource.savePremiumAudios(premiumAudios) } returns Unit
 
@@ -160,7 +173,7 @@ class PremiumAudiosRemoteMediatorTest {
         assertMediatorSuccess(result, premiumAudios.isEmpty())
 
         coVerifyOnce {
-            remotePremiumAudiosDataSource.getPremiumAudios(categories, PAGE_SIZE, 3)
+            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 3)
         }
     }
 }
@@ -194,4 +207,5 @@ private val emptyPagingState = PagingState<Int, PremiumAudioDbModel>(
 )
 
 private const val PAGE_SIZE = 20
-private val categories = listOf(Category.PREMIUM)
+private val CATEGORIES = listOf(Category.PREMIUM)
+private const val EMAIL = "test@test.com"

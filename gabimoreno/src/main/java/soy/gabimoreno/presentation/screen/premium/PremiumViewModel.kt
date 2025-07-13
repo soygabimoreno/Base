@@ -59,7 +59,7 @@ class PremiumViewModel @Inject constructor(
             is PremiumAction.OnListenedToggled -> {
                 viewModelScope.launch(dispatcher) {
                     markPremiumAudioAsListenedUseCase(
-                        idPremiumAudio = action.premiumAudio.id,
+                        premiumAudioId = action.premiumAudio.id,
                         hasBeenListened = !action.premiumAudio.hasBeenListened
                     )
                     val premiumAudioList = state.premiumAudios.map { premiumAudio ->

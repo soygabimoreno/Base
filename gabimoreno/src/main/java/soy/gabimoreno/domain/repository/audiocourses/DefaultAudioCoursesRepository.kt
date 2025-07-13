@@ -6,6 +6,7 @@ import arrow.core.right
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import soy.gabimoreno.data.cloud.audiosync.datasource.AudioCoursesCloudDataSource
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
 import soy.gabimoreno.data.local.mapper.toAudioCourseItem
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
@@ -19,12 +20,14 @@ import javax.inject.Singleton
 
 @Singleton
 class DefaultAudioCoursesRepository @Inject constructor(
+    private val cloudDataSource: AudioCoursesCloudDataSource,
     private val localAudioCoursesDataSource: LocalAudioCoursesDataSource,
     private val remoteAudioCoursesDataSource: RemoteAudioCoursesDataSource,
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
 ) : AudioCoursesRepository {
     override suspend fun getCourses(
         categories: List<Category>,
+        email: String,
         forceRefresh: Boolean
     ): Either<Throwable, List<AudioCourse>> {
         val shouldRefresh = forceRefresh ||
@@ -37,19 +40,12 @@ class DefaultAudioCoursesRepository @Inject constructor(
         if (!shouldRefresh) {
             return localAudioCoursesDataSource.getAudioCourses().right()
         }
-
-        val localAudioCoursesSnapshot = localAudioCoursesDataSource.getAudioCoursesWithItems()
-            .flatMap { it.audios }
-            .associateBy { it.id }
-
         return remoteAudioCoursesDataSource.getAudioCourses(categories)
             .onRight { remoteAudioCourses ->
-                val mergedCourses = remoteAudioCourses.map { remoteCourse ->
-                    val mergedItems = remoteCourse.audios.map { remoteItem ->
-                        val localItem = localAudioCoursesSnapshot[remoteItem.id]
-                        remoteItem.copy(hasBeenListened = localItem?.hasBeenListened ?: false)
-                    }
-                    remoteCourse.copy(audios = mergedItems)
+                val mergedCourses = if (email.isNotEmpty()) {
+                    mergeWithCloudData(remoteAudioCourses, email)
+                } else {
+                    mergeWithLocalData(remoteAudioCourses)
                 }
 
                 localAudioCoursesDataSource.saveAudioCourses(mergedCourses)
@@ -67,17 +63,37 @@ class DefaultAudioCoursesRepository @Inject constructor(
     }
 
     override suspend fun getAudioCourseItem(audioCourseItemId: String): Either<Throwable, AudioCourseItem> {
-        localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
-            ?.let { audioCourseItemDbModel ->
-                return audioCourseItemDbModel.toAudioCourseItem().right()
-            } ?: return Throwable("AudioCourseItem not found").left()
+        return localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
+            ?.toAudioCourseItem()
+            ?.right()
+            ?: Throwable("AudioCourseItem not found").left()
     }
 
-    override suspend fun markAudioCourseItemAsListened(id: String, hasBeenListened: Boolean) {
-        localAudioCoursesDataSource.updateHasBeenListened(id, hasBeenListened)
+    override suspend fun markAudioCourseItemAsListened(
+        audioCourseId: String,
+        email: String,
+        hasBeenListened: Boolean,
+    ) {
+        if (email.isNotEmpty()) {
+            cloudDataSource.upsertAudioCourseItemFields(
+                email,
+                audioCourseId,
+                mapOf(
+                    "id" to audioCourseId,
+                    "hasBeenListened" to hasBeenListened
+                )
+            )
+        }
+        localAudioCoursesDataSource.updateHasBeenListened(audioCourseId, hasBeenListened)
     }
 
-    override suspend fun markAllAudioCourseItemsAsUnlistened() {
+    override suspend fun markAllAudioCourseItemsAsUnlistened(email: String) {
+        if (email.isNotEmpty()) {
+            cloudDataSource.batchUpdateFieldsForAllAudioCoursesItems(
+                email,
+                mapOf("hasBeenListened" to false)
+            )
+        }
         localAudioCoursesDataSource.markAllAudioCourseItemsAsUnlistened()
     }
 
@@ -94,7 +110,61 @@ class DefaultAudioCoursesRepository @Inject constructor(
         }
     }
 
-    override suspend fun updateMarkedAsFavorite(id: String, isFavorite: Boolean) {
-        return localAudioCoursesDataSource.updateMarkedAsFavorite(id, isFavorite)
+    override suspend fun updateMarkedAsFavorite(
+        audioCourseId: String,
+        email: String,
+        isFavorite: Boolean
+    ) {
+        if (email.isNotEmpty()) {
+            cloudDataSource.upsertAudioCourseItemFields(
+                email,
+                audioCourseId,
+                mapOf(
+                    "id" to audioCourseId,
+                    "markedAsFavorite" to isFavorite
+                )
+            )
+        }
+        return localAudioCoursesDataSource.updateMarkedAsFavorite(audioCourseId, isFavorite)
+    }
+
+    private suspend fun mergeWithCloudData(
+        remoteAudioCourses: List<AudioCourse>,
+        email: String
+    ): List<AudioCourse> {
+        val cloudAudioCoursesSnapshot = cloudDataSource
+            .getAudioCoursesItems(email)
+            .associateBy { it.id }
+
+        return remoteAudioCourses.map { remoteCourse ->
+            val mergedItems = remoteCourse.audios.map { remoteItem ->
+                val cloudItem = cloudAudioCoursesSnapshot[remoteItem.id]
+                remoteItem.copy(
+                    hasBeenListened = cloudItem?.hasBeenListened ?: false,
+                    markedAsFavorite = cloudItem?.markedAsFavorite ?: false
+                )
+            }
+            remoteCourse.copy(audios = mergedItems)
+        }
+    }
+
+    private suspend fun mergeWithLocalData(
+        remoteAudioCourses: List<AudioCourse>
+    ): List<AudioCourse> {
+        val localAudioCoursesSnapshot = localAudioCoursesDataSource
+            .getAudioCoursesWithItems()
+            .flatMap { it.audios }
+            .associateBy { it.id }
+
+        return remoteAudioCourses.map { remoteCourse ->
+            val mergedItems = remoteCourse.audios.map { remoteItem ->
+                val localItem = localAudioCoursesSnapshot[remoteItem.id]
+                remoteItem.copy(
+                    hasBeenListened = localItem?.hasBeenListened ?: false,
+                    markedAsFavorite = localItem?.markedAsFavorite ?: false
+                )
+            }
+            remoteCourse.copy(audios = mergedItems)
+        }
     }
 }
