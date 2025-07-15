@@ -20,13 +20,12 @@ class CloudPlaylistDataSource @Inject constructor(
             .toObjects<CloudPlaylistResponse>()
     }
 
-    suspend fun savePlaylist(email: String, playlist: CloudPlaylistResponse) {
+    fun updatePlaylist(email: String, playlist: CloudPlaylistResponse) {
         firestore.collection(USERS_PATH)
             .document(email)
             .collection(PLAYLISTS_PATH)
             .document(playlist.playlistId)
             .set(playlist)
-            .await()
     }
 
     suspend fun deletePlaylist(email: String, playlistId: String) {
@@ -38,6 +37,13 @@ class CloudPlaylistDataSource @Inject constructor(
             .document(playlistId)
             .delete()
             .await()
+    }
+
+    suspend fun deleteAllPlaylists(email: String) {
+        val playlists = getPlaylists(email)
+        playlists.forEach { playlist ->
+            deletePlaylist(email, playlist.playlistId)
+        }
     }
 
     suspend fun getPlaylistItems(
@@ -61,18 +67,18 @@ class CloudPlaylistDataSource @Inject constructor(
             .collection(PLAYLISTS_PATH)
             .document(playlistItem.playlistId)
             .collection(PLAYLIST_ITEMS_PATH)
-            .document(playlistItem.id.toString())
+            .document(playlistItem.id)
             .set(playlistItem)
             .await()
     }
 
-    suspend fun deletePlaylistItem(email: String, playlistId: String, itemId: Int) {
+    suspend fun deletePlaylistItem(email: String, playlistId: String, itemId: String) {
         firestore.collection(USERS_PATH)
             .document(email)
             .collection(PLAYLISTS_PATH)
             .document(playlistId)
             .collection(PLAYLIST_ITEMS_PATH)
-            .document(itemId.toString())
+            .document(itemId)
             .delete()
             .await()
     }

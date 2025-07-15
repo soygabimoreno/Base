@@ -50,6 +50,18 @@ class LocalPlaylistDataSource @Inject constructor(
         playlistDbModelDao.getTotalPlaylists() <= 0
     }
 
+    suspend fun getTotalPlaylistItems(): Int = withContext(dispatcher) {
+        playlistItemDbModelDao.getTotalPlaylistItems()
+    }
+
+    suspend fun getPlaylistItemsCountByPlaylistId(audioItemId: String, playlistId: Int): Int =
+        withContext(dispatcher) {
+            playlistItemDbModelDao.getPlaylistItemIdByAudioItemIdAndPlaylistId(
+                audioItemId,
+                playlistId
+            )
+        }
+
     suspend fun insertPlaylist(name: String, description: String): Playlist =
         withContext(dispatcher) {
             val lastPosition = playlistDbModelDao.getTotalPlaylists()
@@ -116,17 +128,24 @@ class LocalPlaylistDataSource @Inject constructor(
         )
     }
 
+    suspend fun upsertPlaylistItemsDbModel(playlistItems: List<PlaylistItemsDbModel>): List<Long> =
+        withContext(dispatcher) {
+            playlistItemDbModelDao.upsertPlaylistItemsDbModel(playlistItems)
+        }
+
     suspend fun upsertPlaylistItemsDbModel(
         audioId: String,
         playlistIds: List<Int>
     ): List<Long> =
         withContext(dispatcher) {
-            val lastPosition = playlistItemDbModelDao.getTotalPlaylistItems()
+            val startPosition = playlistItemDbModelDao.getTotalPlaylistItems() + 1
             val playlistItems = playlistIds.mapIndexed { index, playlistId ->
+                val position = startPosition + index
                 PlaylistItemsDbModel(
+                    id = position,
                     audioItemId = audioId,
                     playlistId = playlistId,
-                    position = index + lastPosition
+                    position = position
                 )
             }
             playlistItemDbModelDao.upsertPlaylistItemsDbModel(playlistItems)

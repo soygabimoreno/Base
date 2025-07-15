@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.data.cloud.audiosync.datasource.AudioCoursesCloudDataSource
 import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
+import soy.gabimoreno.data.cloud.playlist.datasource.CloudPlaylistDataSource
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
 import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
@@ -80,8 +81,10 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun providePlaylistRepository(
+        cloudDataSource: CloudPlaylistDataSource,
         localPlaylistDataSource: LocalPlaylistDataSource,
     ): PlaylistRepository = DefaultPlaylistRepository(
+        cloudDataSource,
         localPlaylistDataSource
     )
 }

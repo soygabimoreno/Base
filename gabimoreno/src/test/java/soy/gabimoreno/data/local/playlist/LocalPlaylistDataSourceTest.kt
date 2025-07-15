@@ -198,20 +198,19 @@ class LocalPlaylistDataSourceTest {
     @Test
     fun `GIVEN playlistIds WHEN upsertPlaylistItemsDbModel THEN upserts items with correct positions`() =
         runTest {
-            val playlistItemId = "audio-123"
+            val audioId = "audio-123"
             val playlistIds = listOf(1, 2, 3)
-            val lastPosition = 5
+            val lastPosition = 4
             val expectedItems = listOf(
-                PlaylistItemsDbModel(audioItemId = playlistItemId, playlistId = 1, position = 5),
-                PlaylistItemsDbModel(audioItemId = playlistItemId, playlistId = 2, position = 6),
-                PlaylistItemsDbModel(audioItemId = playlistItemId, playlistId = 3, position = 7)
+                PlaylistItemsDbModel(id = 5, audioItemId = audioId, playlistId = 1, position = 5),
+                PlaylistItemsDbModel(id = 6, audioItemId = audioId, playlistId = 2, position = 6),
+                PlaylistItemsDbModel(id = 7, audioItemId = audioId, playlistId = 3, position = 7)
             )
-            val expectedResult: List<Long> = listOf(1001, 1002, 1003)
-
+            val expectedResult = listOf(1001L, 1002L, 1003L)
             coEvery { playlistItemDbModelDao.getTotalPlaylistItems() } returns lastPosition
             coEvery { playlistItemDbModelDao.upsertPlaylistItemsDbModel(expectedItems) } returns expectedResult
 
-            val result = playlistDataSource.upsertPlaylistItemsDbModel(playlistItemId, playlistIds)
+            val result = playlistDataSource.upsertPlaylistItemsDbModel(audioId, playlistIds)
 
             result shouldBeEqualTo expectedResult
             coVerifyOnce {
