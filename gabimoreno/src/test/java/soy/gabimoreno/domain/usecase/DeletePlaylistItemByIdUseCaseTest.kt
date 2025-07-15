@@ -1,7 +1,11 @@
 package soy.gabimoreno.domain.usecase
 
+import android.content.Context
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
@@ -10,15 +14,20 @@ import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.domain.repository.playlist.PlaylistRepository
 import soy.gabimoreno.ext.left
 import soy.gabimoreno.ext.right
+import soy.gabimoreno.framework.datastore.getEmail
 
 class DeletePlaylistItemByIdUseCaseTest {
 
+    private val context: Context = mockk()
     private val playlistRepository: PlaylistRepository = mockk()
+
     private lateinit var useCase: DeletePlaylistItemByIdUseCase
 
     @Before
     fun setUp() {
-        useCase = DeletePlaylistItemByIdUseCase(playlistRepository)
+        mockkStatic("soy.gabimoreno.framework.datastore.DataStoreEmailKt")
+        every { context.getEmail() } returns flowOf(EMAIL)
+        useCase = DeletePlaylistItemByIdUseCase(context, playlistRepository)
     }
 
     @Test
@@ -28,7 +37,8 @@ class DeletePlaylistItemByIdUseCaseTest {
         coEvery {
             playlistRepository.deletePlaylistItemById(
                 audioItemId,
-                playlistId
+                playlistId,
+                EMAIL
             )
         } returns right(Unit)
 
@@ -36,7 +46,7 @@ class DeletePlaylistItemByIdUseCaseTest {
 
         result shouldBeEqualTo right(Unit)
         coVerifyOnce {
-            playlistRepository.deletePlaylistItemById(audioItemId, playlistId)
+            playlistRepository.deletePlaylistItemById(audioItemId, playlistId, EMAIL)
         }
     }
 
@@ -46,7 +56,7 @@ class DeletePlaylistItemByIdUseCaseTest {
         val playlistId = 1
         val exception = RuntimeException("Database error")
         coEvery {
-            playlistRepository.deletePlaylistItemById(audioItemId, playlistId)
+            playlistRepository.deletePlaylistItemById(audioItemId, playlistId, EMAIL)
         } returns left(exception)
 
         val result = useCase(audioItemId, playlistId)
@@ -54,3 +64,5 @@ class DeletePlaylistItemByIdUseCaseTest {
         result shouldBeEqualTo left(exception)
     }
 }
+
+private const val EMAIL = "test@test.com"

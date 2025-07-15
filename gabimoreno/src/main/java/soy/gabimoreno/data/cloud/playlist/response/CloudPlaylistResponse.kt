@@ -1,9 +1,12 @@
 package soy.gabimoreno.data.cloud.playlist.response
 
 data class CloudPlaylistResponse(
-    val playlistId: String = "",
-    val categoryId: Int = -1,
-    val description: String = "",
-    val position: Int = -1,
-    val title: String = ""
+    val playlistId: String = EMPTY_STRING,
+    val categoryId: Int = DEFAULT_INT,
+    val description: String = EMPTY_STRING,
+    val position: Int = DEFAULT_INT,
+    val title: String = EMPTY_STRING
 )
+
+private const val EMPTY_STRING = ""
+private const val DEFAULT_INT = -1
