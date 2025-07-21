@@ -6,12 +6,11 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-fun Context.dataStoreShouldIReloadAudiosCourses(): Flow<Boolean> {
-    return dataStore.data
+fun Context.dataStoreShouldIReloadAudiosCourses(): Flow<Boolean> =
+    dataStore.data
         .map { preferences ->
             preferences[key] ?: DEFAULT_FLAG_RELOAD_AUDIOCOURSES
         }
-}
 
 suspend fun Context.setDataStoreShouldIReloadAudiosCourses(shouldReload: Boolean) {
     dataStore.edit { settings ->

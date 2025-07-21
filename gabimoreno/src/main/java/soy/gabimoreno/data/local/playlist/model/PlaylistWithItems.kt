@@ -7,7 +7,7 @@ data class PlaylistWithItems(
     @Embedded val playlist: PlaylistDbModel,
     @Relation(
         parentColumn = "id",
-        entityColumn = "playlistId"
+        entityColumn = "playlistId",
     )
-    val items: List<PlaylistItemsDbModel>
+    val items: List<PlaylistItemsDbModel>,
 )

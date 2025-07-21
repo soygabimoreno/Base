@@ -6,12 +6,11 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-fun Context.dataStoreShouldIReversePodcastOrder(): Flow<Boolean> {
-    return dataStore.data
+fun Context.dataStoreShouldIReversePodcastOrder(): Flow<Boolean> =
+    dataStore.data
         .map { preferences ->
             preferences[key] ?: DEFAULT_FLAG_REVERSE_PODCAST_ORDER
         }
-}
 
 suspend fun Context.setDataStoreShouldIReversePodcastOrder(shouldReverse: Boolean) {
     dataStore.edit { settings ->

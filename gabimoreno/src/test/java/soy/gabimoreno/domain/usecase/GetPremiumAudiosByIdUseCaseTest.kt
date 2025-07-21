@@ -15,15 +15,15 @@ import soy.gabimoreno.fake.buildPremiumAudios
 
 @ExperimentalCoroutinesApi
 class GetPremiumAudiosByIdUseCaseTest {
-
     private val premiumAudiosRepository: PremiumAudiosRepository = mockk()
     private lateinit var useCase: GetPremiumAudioByIdUseCase
 
     @Before
     fun setUp() {
-        useCase = GetPremiumAudioByIdUseCase(
-            premiumAudiosRepository = premiumAudiosRepository
-        )
+        useCase =
+            GetPremiumAudioByIdUseCase(
+                premiumAudiosRepository = premiumAudiosRepository,
+            )
     }
 
     @Test

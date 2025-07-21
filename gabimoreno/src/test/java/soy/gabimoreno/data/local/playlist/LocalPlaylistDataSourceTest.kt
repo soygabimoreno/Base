@@ -22,7 +22,7 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
-import soy.gabimoreno.data.local.GabiMorenoDatabase
+import soy.gabimoreno.data.local.ApplicationDatabase
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseDbModelDao
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseItemDbModelDao
@@ -42,7 +42,6 @@ import soy.gabimoreno.fake.buildPlaylistDbModel
 import soy.gabimoreno.fake.buildPlaylistItemsDbModel
 
 class LocalPlaylistDataSourceTest {
-
     private val premiumAudioDbModelDao: PremiumAudioDbModelDao =
         relaxedMockk<PremiumAudioDbModelDao>()
     private val audioCourseDbModelDao: AudioCourseDbModelDao = relaxedMockk<AudioCourseDbModelDao>()
@@ -55,7 +54,7 @@ class LocalPlaylistDataSourceTest {
         relaxedMockk<PlaylistItemDbModelDao>()
     private val playlistTransactionDao: PlaylistTransactionDao =
         relaxedMockk<PlaylistTransactionDao>()
-    private val gabiMorenoDatabase: GabiMorenoDatabase = createMockedDatabase()
+    private val gabiMorenoDatabase: ApplicationDatabase = createMockedDatabase()
 
     private lateinit var premiumAudiosDataSource: LocalPremiumAudiosDataSource
     private lateinit var audioCoursesDataSource: LocalAudioCoursesDataSource
@@ -76,94 +75,103 @@ class LocalPlaylistDataSourceTest {
     }
 
     @Test
-    fun `GIVEN valid data WHEN getAllPlaylists THEN mapped playlists are returned`() = runTest {
-        val playlist = buildPlaylist()
-        val playlistDbModel = PlaylistDbModel(
-            id = playlist.id,
-            title = playlist.title,
-            description = playlist.description,
-            position = playlist.position
-        )
-        val itemsDbModel = playlist.items.mapIndexed { index, playlistAudioItem ->
-            PlaylistItemsDbModel(
-                id = index,
-                audioItemId = playlistAudioItem.id,
-                playlistId = playlist.id,
-                position = playlistAudioItem.position
-            )
+    fun `GIVEN valid data WHEN getAllPlaylists THEN mapped playlists are returned`() =
+        runTest {
+            val playlist = buildPlaylist()
+            val playlistDbModel =
+                PlaylistDbModel(
+                    id = playlist.id,
+                    title = playlist.title,
+                    description = playlist.description,
+                    position = playlist.position,
+                )
+            val itemsDbModel =
+                playlist.items.mapIndexed { index, playlistAudioItem ->
+                    PlaylistItemsDbModel(
+                        id = index,
+                        audioItemId = playlistAudioItem.id,
+                        playlistId = playlist.id,
+                        position = playlistAudioItem.position,
+                    )
+                }
+            val playlistWithItems = PlaylistWithItems(playlistDbModel, itemsDbModel)
+            val premiumAudiosDbModel = playlist.items.map { it.toPremiumAudioDbModel() }
+            coEvery {
+                playlistTransactionDao.getPlaylistsWithItems()
+            } returns listOf(playlistWithItems)
+            coEvery {
+                premiumAudioDbModelDao.getPremiumAudiosByIds(any())
+            } returns premiumAudiosDbModel
+
+            val result = playlistDataSource.getAllPlaylists()
+
+            val expected = playlistDbModel.toPlaylistMapper(playlist.items)
+            result shouldBeEqualTo listOf(expected)
         }
-        val playlistWithItems = PlaylistWithItems(playlistDbModel, itemsDbModel)
-        val premiumAudiosDbModel = playlist.items.map { it.toPremiumAudioDbModel() }
-        coEvery {
-            playlistTransactionDao.getPlaylistsWithItems()
-        } returns listOf(playlistWithItems)
-        coEvery {
-            premiumAudioDbModelDao.getPremiumAudiosByIds(any())
-        } returns premiumAudiosDbModel
-
-        val result = playlistDataSource.getAllPlaylists()
-
-        val expected = playlistDbModel.toPlaylistMapper(playlist.items)
-        result shouldBeEqualTo listOf(expected)
-    }
 
     @Test
-    fun `GIVEN valid playlist WHEN getPlaylistById THEN mapped playlist is emitted`() = runTest {
-        val playlist = buildPlaylist()
-        val playlistDbModel = PlaylistDbModel(
-            id = playlist.id,
-            categoryId = playlist.category.id,
-            description = playlist.description,
-            position = playlist.position,
-            title = playlist.title,
-        )
-        val itemsDbModel = playlist.items.map {
-            PlaylistItemsDbModel(
-                it.playlistItemId,
-                it.id,
-                playlist.id,
-                it.position,
-            )
-        }
-        val playlistWithItems = PlaylistWithItems(playlistDbModel, itemsDbModel)
-        val premiumAudiosDbModel = playlist.items.map { premiumAudio ->
-            premiumAudio.toPremiumAudioDbModel()
-        }
-        every {
-            playlistTransactionDao.getPlaylistWithItemsById(playlist.id)
-        } returns flowOf(playlistWithItems)
-        coEvery {
-            premiumAudioDbModelDao.getPremiumAudiosByIds(any())
-        } returns premiumAudiosDbModel
-        coEvery {
-            audioCourseDbModelDao.getAudioCoursesByIds(any())
-        } returns emptyList()
-        coEvery {
-            audioCourseItemDbModelDao.getAudioCourseItemsByIds(any())
-        } returns emptyList()
+    fun `GIVEN valid playlist WHEN getPlaylistById THEN mapped playlist is emitted`() =
+        runTest {
+            val playlist = buildPlaylist()
+            val playlistDbModel =
+                PlaylistDbModel(
+                    id = playlist.id,
+                    categoryId = playlist.category.id,
+                    description = playlist.description,
+                    position = playlist.position,
+                    title = playlist.title,
+                )
+            val itemsDbModel =
+                playlist.items.map {
+                    PlaylistItemsDbModel(
+                        it.playlistItemId,
+                        it.id,
+                        playlist.id,
+                        it.position,
+                    )
+                }
+            val playlistWithItems = PlaylistWithItems(playlistDbModel, itemsDbModel)
+            val premiumAudiosDbModel =
+                playlist.items.map { premiumAudio ->
+                    premiumAudio.toPremiumAudioDbModel()
+                }
+            every {
+                playlistTransactionDao.getPlaylistWithItemsById(playlist.id)
+            } returns flowOf(playlistWithItems)
+            coEvery {
+                premiumAudioDbModelDao.getPremiumAudiosByIds(any())
+            } returns premiumAudiosDbModel
+            coEvery {
+                audioCourseDbModelDao.getAudioCoursesByIds(any())
+            } returns emptyList()
+            coEvery {
+                audioCourseItemDbModelDao.getAudioCourseItemsByIds(any())
+            } returns emptyList()
 
-        val result = playlistDataSource.getPlaylistById(playlist.id).first()
+            val result = playlistDataSource.getPlaylistById(playlist.id).first()
 
-        val expected = playlistDbModel.toPlaylistMapper(
-            playlist.items.map { item ->
-                val dbModel = itemsDbModel.first { it.audioItemId == item.id }
-                item.copy(playlistItemId = dbModel.id)
-            }
-        )
-        result shouldBeEqualTo expected
-    }
+            val expected =
+                playlistDbModel.toPlaylistMapper(
+                    playlist.items.map { item ->
+                        val dbModel = itemsDbModel.first { it.audioItemId == item.id }
+                        item.copy(playlistItemId = dbModel.id)
+                    },
+                )
+            result shouldBeEqualTo expected
+        }
 
     @Test
-    fun `GIVEN null result WHEN getPlaylistById THEN null is emitted`() = runTest {
-        val playlistId = 1
-        every {
-            playlistTransactionDao.getPlaylistWithItemsById(playlistId)
-        } returns flowOf(null)
+    fun `GIVEN null result WHEN getPlaylistById THEN null is emitted`() =
+        runTest {
+            val playlistId = 1
+            every {
+                playlistTransactionDao.getPlaylistWithItemsById(playlistId)
+            } returns flowOf(null)
 
-        val result = playlistDataSource.getPlaylistById(playlistId).first()
+            val result = playlistDataSource.getPlaylistById(playlistId).first()
 
-        result shouldBe null
-    }
+            result shouldBe null
+        }
 
     @Test
     fun `GIVEN a valid playlistId WHEN getPlaylistIdsByItemId THEN playlistIds are returned`() =
@@ -184,16 +192,17 @@ class LocalPlaylistDataSourceTest {
         }
 
     @Test
-    fun `GIVEN valid data WHEN upsertPlaylistDbModels THEN upserts playlists`() = runTest {
-        val playlists = listOf(buildPlaylistDbModel(), buildPlaylistDbModel(2))
-        coJustRun { playlistDbModelDao.upsertPlaylistDbModels(playlists) }
+    fun `GIVEN valid data WHEN upsertPlaylistDbModels THEN upserts playlists`() =
+        runTest {
+            val playlists = listOf(buildPlaylistDbModel(), buildPlaylistDbModel(2))
+            coJustRun { playlistDbModelDao.upsertPlaylistDbModels(playlists) }
 
-        playlistDataSource.upsertPlaylistDbModels(playlists.map { it.toPlaylistMapper(emptyList()) })
+            playlistDataSource.upsertPlaylistDbModels(playlists.map { it.toPlaylistMapper(emptyList()) })
 
-        coVerifyOnce {
-            playlistDbModelDao.upsertPlaylistDbModels(playlists)
+            coVerifyOnce {
+                playlistDbModelDao.upsertPlaylistDbModels(playlists)
+            }
         }
-    }
 
     @Test
     fun `GIVEN playlistIds WHEN upsertPlaylistItemsDbModel THEN upserts items with correct positions`() =
@@ -201,11 +210,12 @@ class LocalPlaylistDataSourceTest {
             val audioId = "audio-123"
             val playlistIds = listOf(1, 2, 3)
             val lastPosition = 4
-            val expectedItems = listOf(
-                PlaylistItemsDbModel(id = 5, audioItemId = audioId, playlistId = 1, position = 5),
-                PlaylistItemsDbModel(id = 6, audioItemId = audioId, playlistId = 2, position = 6),
-                PlaylistItemsDbModel(id = 7, audioItemId = audioId, playlistId = 3, position = 7)
-            )
+            val expectedItems =
+                listOf(
+                    PlaylistItemsDbModel(id = 5, audioItemId = audioId, playlistId = 1, position = 5),
+                    PlaylistItemsDbModel(id = 6, audioItemId = audioId, playlistId = 2, position = 6),
+                    PlaylistItemsDbModel(id = 7, audioItemId = audioId, playlistId = 3, position = 7),
+                )
             val expectedResult = listOf(1001L, 1002L, 1003L)
             coEvery { playlistItemDbModelDao.getTotalPlaylistItems() } returns lastPosition
             coEvery { playlistItemDbModelDao.upsertPlaylistItemsDbModel(expectedItems) } returns expectedResult
@@ -227,7 +237,7 @@ class LocalPlaylistDataSourceTest {
             coJustRun {
                 playlistItemDbModelDao.deletePlaylistItemDbModelById(
                     audioItemId,
-                    playlistId
+                    playlistId,
                 )
             }
 
@@ -239,42 +249,46 @@ class LocalPlaylistDataSourceTest {
         }
 
     @Test
-    fun `GIVEN valid playlist items WHEN updatePlaylistItems THEN DAO is called`() = runTest {
-        val items = listOf(
-            buildPlaylistItemsDbModel(),
-            buildPlaylistItemsDbModel(2)
-        )
+    fun `GIVEN valid playlist items WHEN updatePlaylistItems THEN DAO is called`() =
+        runTest {
+            val items =
+                listOf(
+                    buildPlaylistItemsDbModel(),
+                    buildPlaylistItemsDbModel(2),
+                )
 
-        playlistDataSource.updatePlaylistItems(items)
+            playlistDataSource.updatePlaylistItems(items)
 
-        coVerifyOnce {
-            playlistItemDbModelDao.upsertPlaylistItemsDbModel(items)
+            coVerifyOnce {
+                playlistItemDbModelDao.upsertPlaylistItemsDbModel(items)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN valid playlistId WHEN deletePlaylistDbModelById THEN delete playlist`() = runTest {
-        val playlistId = 1
-        coJustRun {
-            playlistDbModelDao.deletePlaylistDbModelById(playlistId)
-            playlistItemDbModelDao.deletePlaylistItemsDbModelByPlaylistId(playlistId)
+    fun `GIVEN valid playlistId WHEN deletePlaylistDbModelById THEN delete playlist`() =
+        runTest {
+            val playlistId = 1
+            coJustRun {
+                playlistDbModelDao.deletePlaylistDbModelById(playlistId)
+                playlistItemDbModelDao.deletePlaylistItemsDbModelByPlaylistId(playlistId)
+            }
+
+            playlistDataSource.deletePlaylistDbModelById(playlistId)
+
+            coVerifyOnce {
+                playlistDbModelDao.deletePlaylistDbModelById(playlistId)
+                playlistItemDbModelDao.deletePlaylistItemsDbModelByPlaylistId(playlistId)
+            }
         }
 
-        playlistDataSource.deletePlaylistDbModelById(playlistId)
-
-        coVerifyOnce {
-            playlistDbModelDao.deletePlaylistDbModelById(playlistId)
-            playlistItemDbModelDao.deletePlaylistItemsDbModelByPlaylistId(playlistId)
+    private fun createMockedDatabase(): ApplicationDatabase =
+        mockk {
+            every { premiumAudioDbModelDao() } returns premiumAudioDbModelDao
+            every { audioCourseDbModelDao() } returns audioCourseDbModelDao
+            every { audioCourseItemDbModelDao() } returns audioCourseItemDbModelDao
+            every { audioCourseTransactionDao() } returns audioCourseTransactionDao
+            every { playlistDbModelDao() } returns playlistDbModelDao
+            every { playlistItemDbModelDao() } returns playlistItemDbModelDao
+            every { playlistTransactionDao() } returns playlistTransactionDao
         }
-    }
-
-    private fun createMockedDatabase(): GabiMorenoDatabase = mockk {
-        every { premiumAudioDbModelDao() } returns premiumAudioDbModelDao
-        every { audioCourseDbModelDao() } returns audioCourseDbModelDao
-        every { audioCourseItemDbModelDao() } returns audioCourseItemDbModelDao
-        every { audioCourseTransactionDao() } returns audioCourseTransactionDao
-        every { playlistDbModelDao() } returns playlistDbModelDao
-        every { playlistItemDbModelDao() } returns playlistItemDbModelDao
-        every { playlistTransactionDao() } returns playlistTransactionDao
-    }
 }

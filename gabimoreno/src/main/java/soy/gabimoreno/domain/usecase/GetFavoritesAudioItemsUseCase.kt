@@ -5,10 +5,11 @@ import soy.gabimoreno.domain.model.content.AudioCourseItem
 import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 import javax.inject.Inject
 
-class GetFavoritesAudioItemsUseCase @Inject constructor(
-    private val audioCoursesRepository: AudioCoursesRepository,
-) {
-    suspend operator fun invoke(): Either<Throwable, List<AudioCourseItem>> {
-        return audioCoursesRepository.getAllFavoriteAudioCoursesItems()
+class GetFavoritesAudioItemsUseCase
+    @Inject
+    constructor(
+        private val audioCoursesRepository: AudioCoursesRepository,
+    ) {
+        suspend operator fun invoke(): Either<Throwable, List<AudioCourseItem>> =
+            audioCoursesRepository.getAllFavoriteAudioCoursesItems()
     }
-}

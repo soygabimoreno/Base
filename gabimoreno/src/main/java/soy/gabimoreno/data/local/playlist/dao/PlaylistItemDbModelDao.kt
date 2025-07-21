@@ -10,7 +10,9 @@ interface PlaylistItemDbModelDao {
     @Query("SELECT * FROM PlaylistItemsDbModel WHERE playlistId = :playlistId")
     fun getPlaylistItemsDbModelByPlaylistId(playlistId: Int): List<PlaylistItemsDbModel>
 
-    @Query("SELECT * FROM PlaylistItemsDbModel WHERE playlistId = :playlistId ORDER BY position ASC")
+    @Query(
+        "SELECT * FROM PlaylistItemsDbModel WHERE playlistId = :playlistId ORDER BY position ASC",
+    )
     fun getPlaylistItemsDbModelOrdered(playlistId: Int): List<PlaylistItemsDbModel>
 
     @Upsert()
@@ -22,11 +24,21 @@ interface PlaylistItemDbModelDao {
     @Query("SELECT COUNT(*) FROM PlaylistItemsDbModel")
     fun getTotalPlaylistItems(): Int
 
-    @Query("SELECT id FROM PlaylistItemsDbModel WHERE audioItemId = :audioItemId AND playlistId = :playlistId")
-    fun getPlaylistItemIdByAudioItemIdAndPlaylistId(audioItemId: String, playlistId: Int): Int
+    @Query(
+        "SELECT id FROM PlaylistItemsDbModel WHERE audioItemId = :audioItemId AND playlistId = :playlistId",
+    )
+    fun getPlaylistItemIdByAudioItemIdAndPlaylistId(
+        audioItemId: String,
+        playlistId: Int,
+    ): Int
 
-    @Query("DELETE FROM PlaylistItemsDbModel WHERE audioItemId = :audioItemId AND playlistId = :playlistId")
-    fun deletePlaylistItemDbModelById(audioItemId: String, playlistId: Int)
+    @Query(
+        "DELETE FROM PlaylistItemsDbModel WHERE audioItemId = :audioItemId AND playlistId = :playlistId",
+    )
+    fun deletePlaylistItemDbModelById(
+        audioItemId: String,
+        playlistId: Int,
+    )
 
     @Query("DELETE FROM PlaylistItemsDbModel WHERE playlistId = :playlistId")
     fun deletePlaylistItemsDbModelByPlaylistId(playlistId: Int)

@@ -14,7 +14,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RemoteConfigModule {
-
     @Provides
     @Singleton
     fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
@@ -27,7 +26,6 @@ object RemoteConfigModule {
     @Singleton
     fun provideFirebaseRemoteConfigProvider(
         firebaseRemoteConfig: FirebaseRemoteConfig,
-        secureEncryptor: SecureEncryptor
-    ): RemoteConfigProvider =
-        FirebaseRemoteConfigProvider(firebaseRemoteConfig,secureEncryptor)
+        secureEncryptor: SecureEncryptor,
+    ): RemoteConfigProvider = FirebaseRemoteConfigProvider(firebaseRemoteConfig, secureEncryptor)
 }

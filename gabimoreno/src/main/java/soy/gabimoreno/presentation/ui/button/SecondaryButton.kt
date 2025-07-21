@@ -17,6 +17,6 @@ fun SecondaryButton(
         height = height,
         modifier = modifier,
         background = MaterialTheme.colors.secondary,
-        onClick = onClick
+        onClick = onClick,
     )
 }

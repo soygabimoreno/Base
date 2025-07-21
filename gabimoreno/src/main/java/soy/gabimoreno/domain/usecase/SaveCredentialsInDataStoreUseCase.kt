@@ -5,14 +5,16 @@ import soy.gabimoreno.framework.datastore.setEmail
 import soy.gabimoreno.framework.datastore.setPassword
 import javax.inject.Inject
 
-class SaveCredentialsInDataStoreUseCase @Inject constructor(
-    private val context: Context,
-) {
-    suspend operator fun invoke(
-        email: String,
-        password: String,
+class SaveCredentialsInDataStoreUseCase
+    @Inject
+    constructor(
+        private val context: Context,
     ) {
-        context.setEmail(email)
-        context.setPassword(password)
+        suspend operator fun invoke(
+            email: String,
+            password: String,
+        ) {
+            context.setEmail(email)
+            context.setPassword(password)
+        }
     }
-}

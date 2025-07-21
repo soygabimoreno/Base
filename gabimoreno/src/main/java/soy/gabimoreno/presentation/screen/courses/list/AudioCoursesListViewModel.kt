@@ -25,136 +25,137 @@ import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class AudioCoursesListViewModel @Inject constructor(
-    private val getCoursesUseCase: GetAudioCoursesUseCase,
-    private val getShouldIReloadAudioCoursesUseCase: GetShouldIReloadAudioCoursesUseCase,
-    private val setShouldIReloadAudioCoursesUseCase: SetShouldIReloadAudioCoursesUseCase,
-    private val refreshBearerTokenUseCase: RefreshBearerTokenUseCase,
-    @IO private val dispatcher: CoroutineDispatcher,
-) : ViewModel() {
-    private var hasLoadedInitialData = false
+class AudioCoursesListViewModel
+    @Inject
+    constructor(
+        private val getCoursesUseCase: GetAudioCoursesUseCase,
+        private val getShouldIReloadAudioCoursesUseCase: GetShouldIReloadAudioCoursesUseCase,
+        private val setShouldIReloadAudioCoursesUseCase: SetShouldIReloadAudioCoursesUseCase,
+        private val refreshBearerTokenUseCase: RefreshBearerTokenUseCase,
+        @IO private val dispatcher: CoroutineDispatcher,
+    ) : ViewModel() {
+        private var hasLoadedInitialData = false
 
-    private val _state = MutableStateFlow(AudioCoursesListState())
-    val state = _state
-        .onStart {
-            if (!hasLoadedInitialData) {
-                hasLoadedInitialData = true
-                onScreenView()
+        private val _state = MutableStateFlow(AudioCoursesListState())
+        val state =
+            _state
+                .onStart {
+                    if (!hasLoadedInitialData) {
+                        hasLoadedInitialData = true
+                        onScreenView()
+                    }
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+                    initialValue = AudioCoursesListState(),
+                )
+
+        private val eventChannel = MutableSharedFlow<AudioCoursesListEvent>()
+        val events = eventChannel.asSharedFlow()
+
+        private fun onScreenView() {
+            viewModelScope.launch(dispatcher) {
+                getShouldIReloadAudioCoursesUseCase()
+                    .distinctUntilChanged()
+                    .collect { shouldIReload ->
+                        if (shouldIReload) {
+                            setShouldIReloadAudioCoursesUseCase(false)
+                            onViewScreen(forceRefresh = true)
+                        } else {
+                            onViewScreen()
+                        }
+                    }
             }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
-            initialValue = AudioCoursesListState()
-        )
 
-    private val eventChannel = MutableSharedFlow<AudioCoursesListEvent>()
-    val events = eventChannel.asSharedFlow()
-
-    private fun onScreenView() {
-        viewModelScope.launch(dispatcher) {
-            getShouldIReloadAudioCoursesUseCase()
-                .distinctUntilChanged()
-                .collect { shouldIReload ->
-                    if (shouldIReload) {
-                        setShouldIReloadAudioCoursesUseCase(false)
-                        onViewScreen(forceRefresh = true)
-                    } else {
-                        onViewScreen()
-                    }
-                }
-        }
-    }
-
-    private fun onViewScreen(forceRefresh: Boolean = false) {
-        _state.update { currentState ->
-            currentState.copy(isLoading = true)
-        }
-        viewModelScope.launch(dispatcher) {
-            try {
-                getCoursesUseCase(
-                    categories = listOf(Category.AUDIOCOURSES),
-                    forceRefresh = forceRefresh
-                )
-                    .onRight { audioCourses ->
+        private fun onViewScreen(forceRefresh: Boolean = false) {
+            _state.update { currentState ->
+                currentState.copy(isLoading = true)
+            }
+            viewModelScope.launch(dispatcher) {
+                try {
+                    getCoursesUseCase(
+                        categories = listOf(Category.AUDIOCOURSES),
+                        forceRefresh = forceRefresh,
+                    ).onRight { audioCourses ->
                         _state.update { currentState ->
                             currentState.copy(
                                 isLoading = false,
                                 audiocourses = audioCourses,
                             )
                         }
-                    }
-                    .onLeft { throwable: Throwable ->
+                    }.onLeft { throwable: Throwable ->
                         handleThrowable(throwable)
                         _state.update { currentState ->
                             currentState.copy(isLoading = false)
                         }
                     }
-            } catch (e: Exception) {
-                handleThrowable(e)
+                } catch (e: Exception) {
+                    handleThrowable(e)
+                    _state.update { currentState ->
+                        currentState.copy(isLoading = false)
+                    }
+                }
+            }
+        }
+
+        private suspend fun handleThrowable(throwable: Throwable) {
+            when {
+                throwable is TokenExpiredException -> refreshToken()
+                throwable is HttpException && throwable.code() == TOKEN_EXPIRED_CODE ->
+                    refreshToken()
+
+                else -> eventChannel.emit(AudioCoursesListEvent.Error(throwable))
+            }
+        }
+
+        private fun refreshToken() {
+            if (state.value.hasRefreshTokenBeenCalled) {
+                showTokenExpiredError()
+            } else {
                 _state.update { currentState ->
-                    currentState.copy(isLoading = false)
+                    currentState.copy(hasRefreshTokenBeenCalled = true)
+                }
+                viewModelScope.launch(dispatcher) {
+                    refreshBearerTokenUseCase()
+                        .onRight {
+                            onViewScreen(forceRefresh = true)
+                        }.onLeft {
+                            showTokenExpiredError()
+                        }
+                }
+            }
+        }
+
+        fun onAction(action: AudioCoursesListAction) {
+            when (action) {
+                AudioCoursesListAction.OnRefreshContent -> {
+                    refreshContent()
+                }
+
+                else -> Unit
+            }
+        }
+
+        private fun showTokenExpiredError() {
+            viewModelScope.launch {
+                eventChannel.emit(AudioCoursesListEvent.ShowTokenExpiredError)
+            }
+        }
+
+        private fun refreshContent() {
+            viewModelScope.launch(dispatcher) {
+                _state.update { currentState ->
+                    currentState.copy(isRefreshing = true)
+                }
+                delay(REFRESH_DELAY)
+                onViewScreen(forceRefresh = true)
+                _state.update { currentState ->
+                    currentState.copy(isRefreshing = false)
                 }
             }
         }
     }
-
-    private suspend fun handleThrowable(throwable: Throwable) {
-        when {
-            throwable is TokenExpiredException -> refreshToken()
-            throwable is HttpException && throwable.code() == TOKEN_EXPIRED_CODE -> refreshToken()
-            else -> eventChannel.emit(AudioCoursesListEvent.Error(throwable))
-        }
-    }
-
-    private fun refreshToken() {
-        if (state.value.hasRefreshTokenBeenCalled) {
-            showTokenExpiredError()
-        } else {
-            _state.update { currentState ->
-                currentState.copy(hasRefreshTokenBeenCalled = true)
-            }
-            viewModelScope.launch(dispatcher) {
-                refreshBearerTokenUseCase()
-                    .onRight {
-                        onViewScreen(forceRefresh = true)
-                    }
-                    .onLeft {
-                        showTokenExpiredError()
-                    }
-            }
-        }
-    }
-
-    fun onAction(action: AudioCoursesListAction) {
-        when (action) {
-            AudioCoursesListAction.OnRefreshContent -> {
-                refreshContent()
-            }
-
-            else -> Unit
-        }
-    }
-
-    private fun showTokenExpiredError() {
-        viewModelScope.launch {
-            eventChannel.emit(AudioCoursesListEvent.ShowTokenExpiredError)
-        }
-    }
-
-    private fun refreshContent() {
-        viewModelScope.launch(dispatcher) {
-            _state.update { currentState ->
-                currentState.copy(isRefreshing = true)
-            }
-            delay(REFRESH_DELAY)
-            onViewScreen(forceRefresh = true)
-            _state.update { currentState ->
-                currentState.copy(isRefreshing = false)
-            }
-        }
-    }
-}
 
 private const val REFRESH_DELAY = 1_500L
 private const val STOP_TIMEOUT_MILLIS = 5_000L

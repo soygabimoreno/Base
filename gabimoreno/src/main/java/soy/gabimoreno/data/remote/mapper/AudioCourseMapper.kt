@@ -24,10 +24,11 @@ fun CourseApiModel.toDomain(): AudioCourse {
         excerpt = excerpt.removeHtmlTags(),
         category = categoryIds.toCategory() ?: Category.AUDIOCOURSES,
         url = url,
-        saga = Saga(
-            author = findAuthorDisplayNameById(authorId) ?: UNKNOWN_AUTHOR_DISPLAY_NAME,
-            categoryIds.toSubcategory()?.title ?: Category.AUDIOCOURSES.title
-        ),
+        saga =
+            Saga(
+                author = findAuthorDisplayNameById(authorId) ?: UNKNOWN_AUTHOR_DISPLAY_NAME,
+                categoryIds.toSubcategory()?.title ?: Category.AUDIOCOURSES.title,
+            ),
         pubDateMillis = dateString.toMillis() ?: EMPTY_PUB_DATE_MILLIS,
         videoUrl = content.extractLoomUrl() ?: "",
         thumbnailUrl = yoastHeadJsonApiModel.ogImage[0].url,
@@ -37,29 +38,32 @@ fun CourseApiModel.toDomain(): AudioCourse {
     )
 }
 
-fun List<AudioCourseItemDbModel>.toAudioCourseMapper(): List<AudioCourseItem> = map {
-    val audioCourseList = mutableListOf<AudioCourseItem>()
-    this.forEach { audioCourse ->
-        audioCourseList.add(
-            AudioCourseItem(
-                id = audioCourse.id,
-                title = audioCourse.title,
-                url = audioCourse.url,
-                hasBeenListened = audioCourse.hasBeenListened
+fun List<AudioCourseItemDbModel>.toAudioCourseMapper(): List<AudioCourseItem> =
+    map {
+        val audioCourseList = mutableListOf<AudioCourseItem>()
+        this.forEach { audioCourse ->
+            audioCourseList.add(
+                AudioCourseItem(
+                    id = audioCourse.id,
+                    title = audioCourse.title,
+                    url = audioCourse.url,
+                    hasBeenListened = audioCourse.hasBeenListened,
+                ),
             )
-        )
+        }
+        return audioCourseList
     }
-    return audioCourseList
-}
 
-internal fun AudioCourseItem.toAudioCourseItemDbModelMapper(idAudioCourse: String): AudioCourseItemDbModel =
+internal fun AudioCourseItem.toAudioCourseItemDbModelMapper(
+    idAudioCourse: String,
+): AudioCourseItemDbModel =
     AudioCourseItemDbModel(
         id = id,
         title = decodeUnicodeEscapedText(title),
         url = url,
         idAudioCourse = idAudioCourse,
         hasBeenListened = hasBeenListened,
-        markedAsFavorite = markedAsFavorite
+        markedAsFavorite = markedAsFavorite,
     )
 
 internal fun String.isRestrictedByRcp(): Boolean {
@@ -76,12 +80,12 @@ internal fun String.extractLoomUrl(): String? {
 internal fun String.extractAudioItems(idAudioCourse: String): List<AudioCourseItem> {
     val regex = Regex("title\"\\s*:\\s*\"(.*?)\".*?mp3\"\\s*:\\s*\"(https:\\\\/\\\\/.*?\\.mp3)\"")
     var counter = 0
-    return regex.findAll(this)
+    return regex
+        .findAll(this)
         .map { match ->
             val title = match.groupValues[1]
             val url = match.groupValues[2].replace("\\/", "/")
             AudioCourseItem(id = "$idAudioCourse-${counter++}", title = title, url = url)
-        }
-        .distinctBy { it.url }
+        }.distinctBy { it.url }
         .toList()
 }

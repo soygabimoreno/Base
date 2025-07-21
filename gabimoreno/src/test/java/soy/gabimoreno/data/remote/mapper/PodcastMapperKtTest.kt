@@ -13,7 +13,6 @@ import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 import java.util.Date
 
 class PodcastMapperKtTest {
-
     @Test
     fun `GIVEN a Channel WHEN toDomain THEN get the expected PodcastSearch`() {
         val channel = buildChannel()
@@ -57,78 +56,84 @@ class PodcastMapperKtTest {
         }
     }
 
-    private fun buildChannel(): Channel {
-        return Channel(
+    private fun buildChannel(): Channel =
+        Channel(
             title = PODCAST_TITLE,
             link = "link",
             description = "description",
-            image = Image(
-                "title",
-                "url",
-                "link",
-                "description"
-            ),
+            image =
+                Image(
+                    "title",
+                    "url",
+                    "link",
+                    "description",
+                ),
             lastBuildDate = "lastBuildDate",
             updatePeriod = "updatePeriod",
-            articles = listOf(
-                buildArticle(EPISODE_AUDIO_LENGTH_IN_SECONDS.toString()),
-                run {
-                    val duration = EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED
-                    buildArticle(duration).copy(
-                        itunesArticleData = buildItunesArticleData(duration).copy(
-                            episode = null
+            articles =
+                listOf(
+                    buildArticle(EPISODE_AUDIO_LENGTH_IN_SECONDS.toString()),
+                    run {
+                        val duration = EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED
+                        buildArticle(duration).copy(
+                            itunesArticleData =
+                                buildItunesArticleData(duration).copy(
+                                    episode = null,
+                                ),
                         )
-                    )
-                },
-                buildArticle(EPISODE_AUDIO_LENGTH_NULL)
-            ),
-            itunesChannelData = ItunesChannelData(
-                author = "author",
-                categories = listOf("categories"),
-                duration = "2000",
-                explicit = "explicit",
-                image = "channelImage",
-                keywords = listOf("keywords"),
-                newsFeedUrl = "newsFeedUrl",
-                owner = ItunesOwner(
-                    "name",
-                    "email"
+                    },
+                    buildArticle(EPISODE_AUDIO_LENGTH_NULL),
                 ),
-                subtitle = "subtitle",
-                summary = "summary",
-                type = "type"
-            )
+            itunesChannelData =
+                ItunesChannelData(
+                    author = "author",
+                    categories = listOf("categories"),
+                    duration = "2000",
+                    explicit = "explicit",
+                    image = "channelImage",
+                    keywords = listOf("keywords"),
+                    newsFeedUrl = "newsFeedUrl",
+                    owner =
+                        ItunesOwner(
+                            "name",
+                            "email",
+                        ),
+                    subtitle = "subtitle",
+                    summary = "summary",
+                    type = "type",
+                ),
         )
-    }
 
-    private fun buildArticle(duration: String?) = Article(
-        guid = "$EPISODE_ID$IVOOX_URL",
-        title = EPISODE_TITLE,
-        author = "author",
-        link = "link",
-        pubDate = EPISODE_PUB_DATE,
-        description = "$EPISODE_DESCRIPTION$ANCHOR_MESSAGE",
-        content = "content",
-        image = null,
-        audio = EPISODE_AUDIO_URL,
-        video = "video",
-        sourceName = "sourceName",
-        sourceUrl = "sourceUrl",
-        categories = listOf("categories"),
-        itunesArticleData = buildItunesArticleData(duration)
-    )
+    private fun buildArticle(duration: String?) =
+        Article(
+            guid = "$EPISODE_ID$IVOOX_URL",
+            title = EPISODE_TITLE,
+            author = "author",
+            link = "link",
+            pubDate = EPISODE_PUB_DATE,
+            description = "$EPISODE_DESCRIPTION$ANCHOR_MESSAGE",
+            content = "content",
+            image = null,
+            audio = EPISODE_AUDIO_URL,
+            video = "video",
+            sourceName = "sourceName",
+            sourceUrl = "sourceUrl",
+            categories = listOf("categories"),
+            itunesArticleData = buildItunesArticleData(duration),
+        )
 
-    private fun buildItunesArticleData(duration: String?) = ItunesArticleData(
-        author = "author",
-        duration = duration,
-        episode = EPISODE_NUMBER,
-        episodeType = "episodeType",
-        explicit = "explicit",
-        image = EPISODE_IMAGE_URL,
-        keywords = listOf("keywords"),
-        subtitle = "subtitle",
-        summary = "summary"
-    )
+    private fun buildItunesArticleData(duration: String?) =
+        ItunesArticleData(
+            author = "author",
+            duration = duration,
+            episode = EPISODE_NUMBER,
+            episodeType = "episodeType",
+            explicit = "explicit",
+            image = EPISODE_IMAGE_URL,
+            keywords = listOf("keywords"),
+            subtitle = "subtitle",
+            summary = "summary",
+        )
 }
 
 private const val EPISODE_ID = "guid"

@@ -11,7 +11,6 @@ import javax.inject.Qualifier
 @InstallIn(SingletonComponent::class)
 @Module
 object CoroutinesDispatchersModule {
-
     @Main
     @Provides
     fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main

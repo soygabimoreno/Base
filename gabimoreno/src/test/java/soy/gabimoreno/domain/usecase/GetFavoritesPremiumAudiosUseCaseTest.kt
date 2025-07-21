@@ -13,7 +13,6 @@ import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildPremiumAudio
 
 class GetFavoritesPremiumAudiosUseCaseTest {
-
     private val repository = mockk<PremiumAudiosRepository>()
     private lateinit var useCase: GetFavoritesPremiumAudiosUseCase
 
@@ -35,12 +34,13 @@ class GetFavoritesPremiumAudiosUseCaseTest {
         }
 
     @Test
-    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() = runTest {
-        val error = Throwable("Server error")
-        coEvery { repository.getAllFavoritePremiumAudios() } returns left(error)
+    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() =
+        runTest {
+            val error = Throwable("Server error")
+            coEvery { repository.getAllFavoritePremiumAudios() } returns left(error)
 
-        val result = useCase()
+            val result = useCase()
 
-        result shouldBeEqualTo left(error)
-    }
+            result shouldBeEqualTo left(error)
+        }
 }

@@ -52,7 +52,7 @@ import soy.gabimoreno.presentation.ui.dialog.TypeDialog
 fun PlaylistScreenRoot(
     onBackClicked: () -> Unit,
     onItemClick: (playlistId: String) -> Unit,
-    viewModel: PlaylistViewModel = hiltViewModel()
+    viewModel: PlaylistViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -75,7 +75,7 @@ fun PlaylistScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -85,18 +85,20 @@ fun PlaylistScreen(
     onAction: (PlaylistAction) -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+                .fillMaxSize(),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(Spacing.s96),
-                verticalAlignment = Alignment.CenterVertically
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(Spacing.s96),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -107,8 +109,9 @@ fun PlaylistScreen(
                 Text(
                     text = stringResource(id = R.string.playlists_title).uppercase(),
                     style = MaterialTheme.typography.h5,
-                    modifier = Modifier
-                        .padding(start = Spacing.s16)
+                    modifier =
+                        Modifier
+                            .padding(start = Spacing.s16),
                 )
             }
 
@@ -117,7 +120,7 @@ fun PlaylistScreen(
                 state.isLoading -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         CircularProgressIndicator()
                     }
@@ -130,30 +133,35 @@ fun PlaylistScreen(
                         titleError = state.dialogTitleError,
                         description = state.dialogDescription,
                         onTitleChange = { onAction(PlaylistAction.OnDialogTitleChange(it)) },
-                        onDescriptionChange = { onAction(PlaylistAction.OnDialogDescriptionChange(it)) },
+                        onDescriptionChange = {
+                            onAction(
+                                PlaylistAction.OnDialogDescriptionChange(it),
+                            )
+                        },
                         onConfirm = { onAction(PlaylistAction.OnAddPlaylistConfirmDialog) },
-                        onDismiss = { onAction(PlaylistAction.OnAddPlaylistDismissDialog) }
+                        onDismiss = { onAction(PlaylistAction.OnAddPlaylistDismissDialog) },
                     )
                 }
 
                 state.playlists.isEmpty() -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
-                        val annotatedLoginString = buildAnnotatedString {
-                            append(stringResource(R.string.playlists_empty))
-                            append(" ")
-                            withStyle(
-                                SpanStyle(
-                                    color = Orange,
-                                    fontWeight = FontWeight.Bold,
-                                    textDecoration = TextDecoration.Underline
-                                )
-                            ) {
-                                append(stringResource(R.string.playlists_name).uppercase())
+                        val annotatedLoginString =
+                            buildAnnotatedString {
+                                append(stringResource(R.string.playlists_empty))
+                                append(" ")
+                                withStyle(
+                                    SpanStyle(
+                                        color = Orange,
+                                        fontWeight = FontWeight.Bold,
+                                        textDecoration = TextDecoration.Underline,
+                                    ),
+                                ) {
+                                    append(stringResource(R.string.playlists_name).uppercase())
+                                }
                             }
-                        }
                         Text(
                             text = annotatedLoginString,
                             style = MaterialTheme.typography.h6,
@@ -169,7 +177,7 @@ fun PlaylistScreen(
                         dismissText = stringResource(R.string.close),
                         onConfirm = { onAction(PlaylistAction.OnConfirmDeleteDialog) },
                         onDismiss = { onAction(PlaylistAction.OnDismissDeleteDialog) },
-                        typeDialog = TypeDialog.CONFIRMATION
+                        typeDialog = TypeDialog.CONFIRMATION,
                     )
                 }
 
@@ -184,23 +192,24 @@ fun PlaylistScreen(
                         },
                         onRemovePlaylistClicked = { playlistId ->
                             onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
-                        }
+                        },
                     )
                 }
             }
         }
         FloatingActionButton(
             onClick = { onAction(PlaylistAction.OnAddNewPlaylistClicked) },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(Spacing.s16)
-                .padding(bottom = Spacing.s64),
-            backgroundColor = Orange
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(Spacing.s16)
+                    .padding(bottom = Spacing.s64),
+            backgroundColor = Orange,
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Add playlist",
-                tint = White
+                tint = White,
             )
         }
     }
@@ -208,14 +217,14 @@ fun PlaylistScreen(
 
 @Preview(
     showBackground = true,
-    showSystemUi = true
+    showSystemUi = true,
 )
 @Composable
 private fun Preview() {
     GabiMorenoTheme {
         PlaylistScreen(
             state = PlaylistState(),
-            onAction = {}
+            onAction = {},
         )
     }
 }

@@ -16,7 +16,6 @@ import soy.gabimoreno.domain.repository.playlist.PlaylistRepository
 import soy.gabimoreno.framework.datastore.getEmail
 
 class ResetPlaylistByIdUseCaseTest {
-
     private val context: Context = mockk()
     private val playlistRepository = mockk<PlaylistRepository>()
 
@@ -30,18 +29,19 @@ class ResetPlaylistByIdUseCaseTest {
     }
 
     @Test
-    fun `GIVEN valid playlist id WHEN invoke THEN returns right with unit`() = runTest {
-        val playlistId = 123
-        val expectedEither = Either.Right(Unit)
-        coEvery { playlistRepository.resetPlaylistById(playlistId, EMAIL) } returns expectedEither
+    fun `GIVEN valid playlist id WHEN invoke THEN returns right with unit`() =
+        runTest {
+            val playlistId = 123
+            val expectedEither = Either.Right(Unit)
+            coEvery { playlistRepository.resetPlaylistById(playlistId, EMAIL) } returns expectedEither
 
-        val result = useCase(playlistId)
+            val result = useCase(playlistId)
 
-        result shouldBeEqualTo expectedEither
-        coVerifyOnce {
-            playlistRepository.resetPlaylistById(playlistId, EMAIL)
+            result shouldBeEqualTo expectedEither
+            coVerifyOnce {
+                playlistRepository.resetPlaylistById(playlistId, EMAIL)
+            }
         }
-    }
 
     @Test
     fun `GIVEN repository throws exception WHEN invoke THEN returns left with throwable`() =
@@ -52,7 +52,7 @@ class ResetPlaylistByIdUseCaseTest {
             coEvery {
                 playlistRepository.resetPlaylistById(
                     playlistId,
-                    EMAIL
+                    EMAIL,
                 )
             } returns expectedEither
 
@@ -65,18 +65,19 @@ class ResetPlaylistByIdUseCaseTest {
         }
 
     @Test
-    fun `GIVEN empty playlist id WHEN invoke THEN delegates to repository`() = runTest {
-        val playlistId = -1
-        val expectedEither = Either.Right(Unit)
-        coEvery { playlistRepository.resetPlaylistById(playlistId, EMAIL) } returns expectedEither
+    fun `GIVEN empty playlist id WHEN invoke THEN delegates to repository`() =
+        runTest {
+            val playlistId = -1
+            val expectedEither = Either.Right(Unit)
+            coEvery { playlistRepository.resetPlaylistById(playlistId, EMAIL) } returns expectedEither
 
-        val result = useCase(playlistId)
+            val result = useCase(playlistId)
 
-        result shouldBeEqualTo expectedEither
-        coVerifyOnce {
-            playlistRepository.resetPlaylistById(playlistId, EMAIL)
+            result shouldBeEqualTo expectedEither
+            coVerifyOnce {
+                playlistRepository.resetPlaylistById(playlistId, EMAIL)
+            }
         }
-    }
 }
 
 private const val EMAIL = "test@test.com"

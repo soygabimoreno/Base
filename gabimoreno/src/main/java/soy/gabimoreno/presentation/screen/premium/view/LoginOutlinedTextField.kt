@@ -51,9 +51,10 @@ fun LoginOutlinedTextField(
                     Icons.Filled.Error,
                     errorText,
                     tint = MaterialTheme.colors.error,
-                    modifier = Modifier.clickable {
-                        context.toast(errorText)
-                    }
+                    modifier =
+                        Modifier.clickable {
+                            context.toast(errorText)
+                        },
                 )
             }
         },
@@ -61,10 +62,12 @@ fun LoginOutlinedTextField(
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            backgroundColor = White.copy(alpha = 0.1f),
-        )
+        modifier =
+            Modifier
+                .fillMaxWidth(),
+        colors =
+            TextFieldDefaults.outlinedTextFieldColors(
+                backgroundColor = White.copy(alpha = 0.1f),
+            ),
     )
 }

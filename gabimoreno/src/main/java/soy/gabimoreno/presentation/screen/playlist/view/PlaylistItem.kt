@@ -46,70 +46,75 @@ fun PlaylistItem(
     selectable: Boolean = false,
     isPlaylistSelected: Boolean = false,
     onItemClick: (String) -> Unit = {},
-    onToggleClick: (playlistId: Int) -> Unit = {}
+    onToggleClick: (playlistId: Int) -> Unit = {},
 ) {
     val iconColor by animateColorAsState(
         targetValue = if (isPlaylistSelected) PurpleLight else Black.copy(alpha = 0.2f),
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
-        label = "selectedPlaylistIconColorAnimation"
+        label = "selectedPlaylistIconColorAnimation",
     )
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(White)
-            .padding(Spacing.s16)
-            .clickable { onItemClick(playlist.id.toString()) },
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(White)
+                .padding(Spacing.s16)
+                .clickable { onItemClick(playlist.id.toString()) },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Icon(
             imageVector = playlist.category.icon,
             contentDescription = "Playlist",
             modifier = Modifier.size(Spacing.s64),
-            tint = playlist.category.color
+            tint = playlist.category.color,
         )
         Spacer(modifier = Modifier.width(Spacing.s16))
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 playlist.title,
                 color = Black,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(bottom = Spacing.s4)
+                modifier = Modifier.padding(bottom = Spacing.s4),
             )
             Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(Spacing.s4)
-                    .background(playlist.category.color)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(Spacing.s4)
+                        .background(playlist.category.color),
             )
             Text(
                 playlist.description,
                 color = Black.copy(alpha = 0.8f),
                 fontWeight = FontWeight.Light,
-                modifier = Modifier.padding(top = Spacing.s4)
+                modifier = Modifier.padding(top = Spacing.s4),
             )
         }
         if (selectable) {
             Box(
-                modifier = Modifier
-                    .size(Spacing.s32)
-                    .border(
-                        1.dp,
-                        playlist.category.color,
-                        shape = CircleShape,
-                    )
-                    .padding(Spacing.s4),
+                modifier =
+                    Modifier
+                        .size(Spacing.s32)
+                        .border(
+                            1.dp,
+                            playlist.category.color,
+                            shape = CircleShape,
+                        ).padding(Spacing.s4),
             ) {
                 IconButton(
                     onClick = { onToggleClick(playlist.id) },
                 ) {
                     Icon(
-                        modifier = Modifier
-                            .size(Spacing.s32),
+                        modifier =
+                            Modifier
+                                .size(Spacing.s32),
                         imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(R.string.playlists_add_audio_to_playlist) + " " + playlist.title,
+                        contentDescription =
+                            stringResource(R.string.playlists_add_audio_to_playlist) + " " +
+                                playlist.title,
                         tint = iconColor,
                     )
                 }
@@ -120,7 +125,7 @@ fun PlaylistItem(
 
 @Preview(
     showBackground = true,
-    showSystemUi = true
+    showSystemUi = true,
 )
 @Composable
 private fun PlaylistItemPreview() {
@@ -131,36 +136,39 @@ private fun PlaylistItemPreview() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             PlaylistItem(
-                playlist = Playlist(
-                    id = 1,
-                    title = "Playlist 1",
-                    description = "Description 1",
-                    items = emptyList(),
-                    position = 0
-                )
+                playlist =
+                    Playlist(
+                        id = 1,
+                        title = "Playlist 1",
+                        description = "Description 1",
+                        items = emptyList(),
+                        position = 0,
+                    ),
             )
             PlaylistItem(
-                playlist = Playlist(
-                    id = 2,
-                    title = "Playlist 2",
-                    description = "Description 2",
-                    items = emptyList(),
-                    position = 1
-                ),
+                playlist =
+                    Playlist(
+                        id = 2,
+                        title = "Playlist 2",
+                        description = "Description 2",
+                        items = emptyList(),
+                        position = 1,
+                    ),
                 selectable = true,
-                isPlaylistSelected = true
+                isPlaylistSelected = true,
             )
             PlaylistItem(
-                playlist = Playlist(
-                    id = 3,
-                    title = "Learning CI/CD",
-                    description = "Educational roadmap",
-                    items = emptyList(),
-                    category = PlaylistCategory.ROADMAP_PLAYLIST,
-                    position = 2
-                ),
+                playlist =
+                    Playlist(
+                        id = 3,
+                        title = "Learning CI/CD",
+                        description = "Educational roadmap",
+                        items = emptyList(),
+                        category = PlaylistCategory.ROADMAP_PLAYLIST,
+                        position = 2,
+                    ),
                 selectable = true,
-                isPlaylistSelected = false
+                isPlaylistSelected = false,
             )
         }
     }

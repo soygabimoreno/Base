@@ -6,12 +6,11 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-fun Context.isMemberActive(): Flow<Boolean> {
-    return dataStore.data
+fun Context.isMemberActive(): Flow<Boolean> =
+    dataStore.data
         .map { preferences ->
             preferences[key] ?: DEFAULT_IS_MEMBER_ACTIVE
         }
-}
 
 suspend fun Context.setMemberActive(isMemberActive: Boolean) {
     dataStore.edit { settings ->
@@ -22,4 +21,3 @@ suspend fun Context.setMemberActive(isMemberActive: Boolean) {
 private const val DEFAULT_IS_MEMBER_ACTIVE = false
 private const val IS_MEMBER_ACTIVE = "IS_MEMBER_ACTIVE"
 private val key = booleanPreferencesKey(IS_MEMBER_ACTIVE)
-

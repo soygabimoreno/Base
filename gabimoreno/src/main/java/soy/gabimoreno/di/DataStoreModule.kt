@@ -46,7 +46,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
-
     @Provides
     @Singleton
     fun provideSaveCredentialsInDataStoreUseCase(
@@ -137,11 +136,12 @@ object DataStoreModule {
         audioCoursesRepository: AudioCoursesRepository,
         premiumAudiosRepository: PremiumAudiosRepository,
         @ApplicationContext context: Context,
-    ): UpdateAudioItemFavoriteStateUseCase = UpdateAudioItemFavoriteStateUseCase(
-        audioCoursesRepository = audioCoursesRepository,
-        context = context,
-        premiumAudioCoursesRepository = premiumAudiosRepository
-    )
+    ): UpdateAudioItemFavoriteStateUseCase =
+        UpdateAudioItemFavoriteStateUseCase(
+            audioCoursesRepository = audioCoursesRepository,
+            context = context,
+            premiumAudioCoursesRepository = premiumAudiosRepository,
+        )
 
     @Provides
     @Singleton
@@ -159,7 +159,7 @@ object DataStoreModule {
     ): MarkAudioCourseItemAsListenedUseCase =
         MarkAudioCourseItemAsListenedUseCase(
             context = context,
-            audioCoursesRepository = audioCoursesRepository
+            audioCoursesRepository = audioCoursesRepository,
         )
 
     @Provides
@@ -167,138 +167,152 @@ object DataStoreModule {
     fun provideSetAllAudiocoursesAsUnlistenedUseCase(
         audioCoursesRepository: AudioCoursesRepository,
         @ApplicationContext context: Context,
-    ): SetAllAudiocoursesAsUnlistenedUseCase = SetAllAudiocoursesAsUnlistenedUseCase(
-        context = context,
-        audioCoursesRepository = audioCoursesRepository
-    )
+    ): SetAllAudiocoursesAsUnlistenedUseCase =
+        SetAllAudiocoursesAsUnlistenedUseCase(
+            context = context,
+            audioCoursesRepository = audioCoursesRepository,
+        )
 
     @Provides
     @Singleton
     fun provideMarkPremiumAudioAsListenedUseCase(
         premiumAudiosRepository: PremiumAudiosRepository,
         @ApplicationContext context: Context,
-    ): MarkPremiumAudioAsListenedUseCase = MarkPremiumAudioAsListenedUseCase(
-        context = context,
-        premiumAudiosRepository = premiumAudiosRepository
-    )
+    ): MarkPremiumAudioAsListenedUseCase =
+        MarkPremiumAudioAsListenedUseCase(
+            context = context,
+            premiumAudiosRepository = premiumAudiosRepository,
+        )
 
     @Provides
     @Singleton
     fun provideSetAllPremiumAudiosAsUnlistenedUseCase(
         premiumAudiosRepository: PremiumAudiosRepository,
         @ApplicationContext context: Context,
-    ): SetAllPremiumAudiosAsUnlistenedUseCase = SetAllPremiumAudiosAsUnlistenedUseCase(
-        context = context,
-        premiumAudiosRepository = premiumAudiosRepository
-    )
+    ): SetAllPremiumAudiosAsUnlistenedUseCase =
+        SetAllPremiumAudiosAsUnlistenedUseCase(
+            context = context,
+            premiumAudiosRepository = premiumAudiosRepository,
+        )
 
     @Provides
     @Singleton
     fun provideGetPremiumAudiosManagedUseCase(
         @ApplicationContext context: Context,
         premiumAudiosRepository: PremiumAudiosRepository,
-    ): GetPremiumAudiosManagedUseCase = GetPremiumAudiosManagedUseCase(
-        context = context,
-        premiumAudiosRepository = premiumAudiosRepository
-    )
+    ): GetPremiumAudiosManagedUseCase =
+        GetPremiumAudiosManagedUseCase(
+            context = context,
+            premiumAudiosRepository = premiumAudiosRepository,
+        )
 
     @Provides
     @Singleton
     fun provideDeleteAllPlaylistUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): DeleteAllPlaylistUseCase = DeleteAllPlaylistUseCase(
-        context = context,
-        playlistRepository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): DeleteAllPlaylistUseCase =
+        DeleteAllPlaylistUseCase(
+            context = context,
+            playlistRepository = playlistRepository,
+        )
 
     @Provides
     @Singleton
     fun provideDeletePlaylistByIdUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): DeletePlaylistByIdUseCase = DeletePlaylistByIdUseCase(
-        context = context,
-        playlistRepository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): DeletePlaylistByIdUseCase =
+        DeletePlaylistByIdUseCase(
+            context = context,
+            playlistRepository = playlistRepository,
+        )
 
     @Provides
     @Singleton
     fun provideDeletePlaylistItemByIdUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): DeletePlaylistItemByIdUseCase = DeletePlaylistItemByIdUseCase(
-        context = context,
-        playlistRepository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): DeletePlaylistItemByIdUseCase =
+        DeletePlaylistItemByIdUseCase(
+            context = context,
+            playlistRepository = playlistRepository,
+        )
 
     @Provides
     @Singleton
     fun provideGetAllPlaylistUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): GetAllPlaylistUseCase = GetAllPlaylistUseCase(
-        context = context,
-        playlistRepository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): GetAllPlaylistUseCase =
+        GetAllPlaylistUseCase(
+            context = context,
+            playlistRepository = playlistRepository,
+        )
 
     @Provides
     @Singleton
     fun provideResetPlaylistByIdUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): ResetPlaylistByIdUseCase = ResetPlaylistByIdUseCase(
-        context = context,
-        playlistRepository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): ResetPlaylistByIdUseCase =
+        ResetPlaylistByIdUseCase(
+            context = context,
+            playlistRepository = playlistRepository,
+        )
 
     @Provides
     @Singleton
     fun provideSavePlaylistUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): SavePlaylistUseCase = SavePlaylistUseCase(
-        context = context,
-        playlistRepository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): SavePlaylistUseCase =
+        SavePlaylistUseCase(
+            context = context,
+            playlistRepository = playlistRepository,
+        )
 
     @Provides
     @Singleton
     fun provideSetPlaylistItemsUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): SetPlaylistItemsUseCase = SetPlaylistItemsUseCase(
-        context = context,
-        repository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): SetPlaylistItemsUseCase =
+        SetPlaylistItemsUseCase(
+            context = context,
+            repository = playlistRepository,
+        )
 
     @Provides
     @Singleton
     fun provideUpdatePlaylistItemsUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): UpdatePlaylistItemsUseCase = UpdatePlaylistItemsUseCase(
-        context = context,
-        repository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): UpdatePlaylistItemsUseCase =
+        UpdatePlaylistItemsUseCase(
+            context = context,
+            repository = playlistRepository,
+        )
 
     @Provides
     @Singleton
     fun provideUpsertPlaylistsUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): UpsertPlaylistsUseCase = UpsertPlaylistsUseCase(
-        context = context,
-        repository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): UpsertPlaylistsUseCase =
+        UpsertPlaylistsUseCase(
+            context = context,
+            repository = playlistRepository,
+        )
 
     @Provides
     @Singleton
     fun provideInsertPlaylistUseCase(
         @ApplicationContext context: Context,
-        playlistRepository: PlaylistRepository
-    ): InsertPlaylistUseCase = InsertPlaylistUseCase(
-        context = context,
-        playlistRepository = playlistRepository
-    )
+        playlistRepository: PlaylistRepository,
+    ): InsertPlaylistUseCase =
+        InsertPlaylistUseCase(
+            context = context,
+            playlistRepository = playlistRepository,
+        )
 }

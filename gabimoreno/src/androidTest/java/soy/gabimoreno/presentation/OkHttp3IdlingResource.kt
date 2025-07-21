@@ -9,15 +9,12 @@ class OkHttp3IdlingResource private constructor(
     private val name: String,
     private val dispatcher: Dispatcher,
 ) : IdlingResource {
-
     companion object {
         @CheckResult
         fun create(
             name: String,
             client: OkHttpClient,
-        ): OkHttp3IdlingResource {
-            return OkHttp3IdlingResource(name, client.dispatcher)
-        }
+        ): OkHttp3IdlingResource = OkHttp3IdlingResource(name, client.dispatcher)
     }
 
     init {

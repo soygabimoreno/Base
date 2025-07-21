@@ -20,12 +20,12 @@ fun App() {
 
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Button(
             onClick = {
                 count++
-            }
+            },
         ) {
             Text(text = "Click me: $count")
         }

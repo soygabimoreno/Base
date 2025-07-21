@@ -9,11 +9,8 @@ class MediaPlayerQueueNavigator(
     mediaSession: MediaSessionCompat,
     private val mediaSource: AudioMediaSource,
 ) : TimelineQueueNavigator(mediaSession) {
-
     override fun getMediaDescription(
         player: Player,
         windowIndex: Int,
-    ): MediaDescriptionCompat {
-        return mediaSource.audioMediaMetadataCompat[windowIndex].description
-    }
+    ): MediaDescriptionCompat = mediaSource.audioMediaMetadataCompat[windowIndex].description
 }

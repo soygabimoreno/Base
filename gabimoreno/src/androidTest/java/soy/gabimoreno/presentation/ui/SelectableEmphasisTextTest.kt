@@ -7,7 +7,6 @@ import org.junit.Rule
 import org.junit.Test
 
 internal class SelectableEmphasisTextTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -17,7 +16,7 @@ internal class SelectableEmphasisTextTest {
 
         composeTestRule.setContent {
             SelectableEmphasisText(
-                text = expectedText
+                text = expectedText,
             )
         }
 

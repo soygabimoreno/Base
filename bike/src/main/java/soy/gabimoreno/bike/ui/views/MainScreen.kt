@@ -16,11 +16,11 @@ fun MainScreen(viewModel: MainViewModel) {
     val viewState by viewModel.viewState.collectAsState()
     Box(
         Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             fontSize = 128.sp,
-            text = (viewState as? MainViewModel.ViewState.Content)?.dataString ?: ""
+            text = (viewState as? MainViewModel.ViewState.Content)?.dataString ?: "",
         )
     }
 }

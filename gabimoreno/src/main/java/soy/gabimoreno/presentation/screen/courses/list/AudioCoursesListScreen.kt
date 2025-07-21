@@ -76,7 +76,7 @@ fun AudioCoursesListScreenRoot(
                 else -> Unit
             }
             coursesListViewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -85,68 +85,84 @@ private fun CoursesListScreenScreen(
     state: AudioCoursesListState,
     onAction: (AudioCoursesListAction) -> Unit,
 ) {
-    val pullRefreshState = rememberPullRefreshState(
-        state.isRefreshing,
-        { onAction(AudioCoursesListAction.OnRefreshContent) })
+    val pullRefreshState =
+        rememberPullRefreshState(
+            state.isRefreshing,
+            { onAction(AudioCoursesListAction.OnRefreshContent) },
+        )
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top)),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Spacing.s16),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(Spacing.s16),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = stringResource(id = R.string.nav_item_courses).uppercase(),
                 style = MaterialTheme.typography.h5,
-                modifier = Modifier
-                    .weight(0.8f)
+                modifier =
+                    Modifier
+                        .weight(0.8f),
             )
             Icon(
                 imageVector = Icons.Default.LibraryMusic,
                 contentDescription = "Playlist",
-                modifier = Modifier
-                    .clickable {
-                        onAction(AudioCoursesListAction.OnPlaylistClicked)
-                    }
+                modifier =
+                    Modifier
+                        .clickable {
+                            onAction(AudioCoursesListAction.OnPlaylistClicked)
+                        },
             )
         }
         Spacer(
-            modifier = Modifier
-                .padding(top = Spacing.s8)
+            modifier =
+                Modifier
+                    .padding(top = Spacing.s8),
         )
         Box(
             Modifier
                 .fillMaxSize()
-                .pullRefresh(pullRefreshState)
+                .pullRefresh(pullRefreshState),
         ) {
             if (state.isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.Center)
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center),
                 )
             } else {
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = Spacing.s8),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = Spacing.s8),
                     verticalArrangement = Arrangement.spacedBy(Spacing.s16),
                 ) {
                     items(
                         count = state.audiocourses.size,
-                        key = { state.audiocourses[it].id }
+                        key = { state.audiocourses[it].id },
                     ) { index ->
                         ItemListCourse(
                             audioCourse = state.audiocourses[index],
-                            onItemClick = { onAction(AudioCoursesListAction.OnItemClicked(state.audiocourses[index].id)) }
+                            onItemClick = {
+                                onAction(
+                                    AudioCoursesListAction.OnItemClicked(
+                                        state.audiocourses[index].id,
+                                    ),
+                                )
+                            },
                         )
-                        if (state.audiocourses.size == index + 1)
+                        if (state.audiocourses.size == index + 1) {
                             Spacer(modifier = Modifier.padding(bottom = Spacing.s16))
+                        }
                     }
                 }
             }
@@ -154,7 +170,7 @@ private fun CoursesListScreenScreen(
             PullRefreshIndicator(
                 refreshing = state.isRefreshing,
                 state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
+                modifier = Modifier.align(Alignment.TopCenter),
             )
         }
     }

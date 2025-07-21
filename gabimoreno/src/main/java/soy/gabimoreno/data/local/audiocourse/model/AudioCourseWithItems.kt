@@ -7,7 +7,7 @@ data class AudioCourseWithItems(
     @Embedded val course: AudioCourseDbModel,
     @Relation(
         parentColumn = "id",
-        entityColumn = "idAudioCourse"
+        entityColumn = "idAudioCourse",
     )
-    val audios: List<AudioCourseItemDbModel>
+    val audios: List<AudioCourseItemDbModel>,
 )

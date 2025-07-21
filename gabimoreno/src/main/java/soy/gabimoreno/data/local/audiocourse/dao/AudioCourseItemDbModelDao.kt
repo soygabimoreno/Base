@@ -22,11 +22,21 @@ interface AudioCourseItemDbModelDao {
     @Upsert()
     fun upsertAudioCourseItems(audioCourseItems: List<AudioCourseItemDbModel>)
 
-    @Query("UPDATE AudioCourseItems SET markedAsFavorite = :markedAsFavorite WHERE id = :audioCourseId")
-    fun updateMarkedAsFavorite(audioCourseId: String, markedAsFavorite: Boolean)
+    @Query(
+        "UPDATE AudioCourseItems SET markedAsFavorite = :markedAsFavorite WHERE id = :audioCourseId",
+    )
+    fun updateMarkedAsFavorite(
+        audioCourseId: String,
+        markedAsFavorite: Boolean,
+    )
 
-    @Query("UPDATE AudioCourseItems SET hasBeenListened = :hasBeenListened WHERE id = :audioCourseId")
-    fun updateHasBeenListened(audioCourseId: String, hasBeenListened: Boolean)
+    @Query(
+        "UPDATE AudioCourseItems SET hasBeenListened = :hasBeenListened WHERE id = :audioCourseId",
+    )
+    fun updateHasBeenListened(
+        audioCourseId: String,
+        hasBeenListened: Boolean,
+    )
 
     @Query("UPDATE AudioCourseItems SET hasBeenListened = 0")
     fun markAllAudioCourseItemsAsUnlistened()

@@ -6,7 +6,6 @@ import soy.gabimoreno.framework.KLog
 import javax.inject.Inject
 
 class DefaultFirebaseMessagingService : FirebaseMessagingService() {
-
     @Inject
     lateinit var tracker: Tracker
 

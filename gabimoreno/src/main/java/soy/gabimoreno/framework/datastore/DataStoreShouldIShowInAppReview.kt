@@ -9,15 +9,17 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 val Context.dataStoreInAppReviewCounter: Flow<Int>
-    get() = dataStore.data
-        .map { it[key] ?: DEFAULT_SHOW_IN_APP_REVIEW }
-        .distinctUntilChanged()
+    get() =
+        dataStore.data
+            .map { it[key] ?: DEFAULT_SHOW_IN_APP_REVIEW }
+            .distinctUntilChanged()
 
 suspend fun Context.dataStoreShouldIShowInAppReview(): Boolean {
-    val counterAudios = dataStore.data
-        .map { preferences ->
-            preferences[key] ?: DEFAULT_SHOW_IN_APP_REVIEW
-        }.first()
+    val counterAudios =
+        dataStore.data
+            .map { preferences ->
+                preferences[key] ?: DEFAULT_SHOW_IN_APP_REVIEW
+            }.first()
 
     return when (counterAudios) {
         InAppReviewPrefs.USER_DO_NOT_SHOW_AGAIN -> false

@@ -8,17 +8,17 @@ import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.tracker.Tracker
 
 class SubscribeToTopicUseCaseTest {
-
     private val firebaseMessaging: FirebaseMessaging = relaxedMockk()
     private val tracker: Tracker = relaxedMockk()
     private lateinit var useCase: SubscribeToTopicUseCase
 
     @Before
     fun setUp() {
-        useCase = SubscribeToTopicUseCase(
-            firebaseMessaging,
-            tracker
-        )
+        useCase =
+            SubscribeToTopicUseCase(
+                firebaseMessaging,
+                tracker,
+            )
     }
 
     @Test

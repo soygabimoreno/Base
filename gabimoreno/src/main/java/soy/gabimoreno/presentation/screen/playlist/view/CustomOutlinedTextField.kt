@@ -28,12 +28,12 @@ fun CustomOutlinedTextField(
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = errorText ?: "",
-            color = MaterialTheme.colors.error
+            color = MaterialTheme.colors.error,
         )
         OutlinedTextField(
             value = value,
@@ -42,30 +42,32 @@ fun CustomOutlinedTextField(
             placeholder = { Text(text = placeholderText) },
             maxLines = 1,
             isError = errorText != null,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                backgroundColor = White.copy(alpha = 0.95f),
-                focusedBorderColor = White,
-                unfocusedBorderColor = White.copy(alpha = 0.5f),
-                textColor = PurpleDark,
-                placeholderColor = PurpleDark.copy(alpha = 0.8f),
-            )
+            colors =
+                TextFieldDefaults.outlinedTextFieldColors(
+                    backgroundColor = White.copy(alpha = 0.95f),
+                    focusedBorderColor = White,
+                    unfocusedBorderColor = White.copy(alpha = 0.5f),
+                    textColor = PurpleDark,
+                    placeholderColor = PurpleDark.copy(alpha = 0.8f),
+                ),
         )
     }
 }
 
 @Preview(
     showBackground = true,
-    showSystemUi = true
+    showSystemUi = true,
 )
 @Composable
 private fun CustomOutlinedTextFieldPreview() {
     GabiMorenoTheme {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(Spacing.s16),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(Spacing.s16),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             CustomOutlinedTextField(
                 value = "",

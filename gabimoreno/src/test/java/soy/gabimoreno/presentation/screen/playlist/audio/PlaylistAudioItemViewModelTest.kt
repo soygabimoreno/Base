@@ -32,7 +32,6 @@ import soy.gabimoreno.fake.buildPlaylist
 import soy.gabimoreno.fake.buildPremiumAudio
 
 class PlaylistAudioItemViewModelTest {
-
     private val getPremiumAudioByIdUseCase = mockk<GetPremiumAudioByIdUseCase>()
     private val getAudioCourseItemByIdUseCase = mockk<GetAudioCourseItemByIdUseCase>()
     private val getAllPlaylistUseCase = mockk<GetAllPlaylistUseCase>()
@@ -46,15 +45,16 @@ class PlaylistAudioItemViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = PlaylistAudioItemViewModel(
-            getPremiumAudioByIdUseCase = getPremiumAudioByIdUseCase,
-            getAudioCourseItemByIdUseCase = getAudioCourseItemByIdUseCase,
-            getAllPlaylistUseCase = getAllPlaylistUseCase,
-            getPlaylistByPlaylistItemIdUseCase = getPlaylistByPlaylistItemIdUseCase,
-            setPlaylistItemsUseCase = setPlaylistItemsUseCase,
-            deletePlaylistItemUseCase = deletePlaylistItemUseCase,
-            dispatcher = testDispatcher
-        )
+        viewModel =
+            PlaylistAudioItemViewModel(
+                getPremiumAudioByIdUseCase = getPremiumAudioByIdUseCase,
+                getAudioCourseItemByIdUseCase = getAudioCourseItemByIdUseCase,
+                getAllPlaylistUseCase = getAllPlaylistUseCase,
+                getPlaylistByPlaylistItemIdUseCase = getPlaylistByPlaylistItemIdUseCase,
+                setPlaylistItemsUseCase = setPlaylistItemsUseCase,
+                deletePlaylistItemUseCase = deletePlaylistItemUseCase,
+                dispatcher = testDispatcher,
+            )
     }
 
     @After
@@ -63,23 +63,26 @@ class PlaylistAudioItemViewModelTest {
     }
 
     @Test
-    fun `GIVEN playlists loaded WHEN toggle one THEN its selection changes`() = runTest {
-        val playlist = buildPlaylist()
-        val premiumAudio = buildPremiumAudio()
-        val playlistIds = emptyList<Int>()
-        coEvery { getPremiumAudioByIdUseCase(premiumAudio.id) } returns right(premiumAudio)
-        coEvery { getAllPlaylistUseCase() } returns right(listOf(playlist))
-        coEvery {
-            getPlaylistByPlaylistItemIdUseCase(premiumAudio.id)
-        } returns right(playlistIds)
+    fun `GIVEN playlists loaded WHEN toggle one THEN its selection changes`() =
+        runTest {
+            val playlist = buildPlaylist()
+            val premiumAudio = buildPremiumAudio()
+            val playlistIds = emptyList<Int>()
+            coEvery { getPremiumAudioByIdUseCase(premiumAudio.id) } returns right(premiumAudio)
+            coEvery { getAllPlaylistUseCase() } returns right(listOf(playlist))
+            coEvery {
+                getPlaylistByPlaylistItemIdUseCase(premiumAudio.id)
+            } returns right(playlistIds)
 
-        viewModel.onViewScreen(premiumAudio.id)
-        advanceUntilIdle()
+            viewModel.onViewScreen(premiumAudio.id)
+            advanceUntilIdle()
 
-        viewModel.onAction(PlaylistAudioItemAction.OnTogglePlaylist(playlistId = 1))
+            viewModel.onAction(PlaylistAudioItemAction.OnTogglePlaylist(playlistId = 1))
 
-        viewModel.state.playlists.first().isSelected shouldBe true
-    }
+            viewModel.state.playlists
+                .first()
+                .isSelected shouldBe true
+        }
 
     @Test
     fun `GIVEN selected playlist WHEN save THEN it calls setPlaylistItems and emits success`() =

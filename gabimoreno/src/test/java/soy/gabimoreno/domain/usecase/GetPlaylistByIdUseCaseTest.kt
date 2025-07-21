@@ -13,7 +13,6 @@ import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildPlaylist
 
 class GetPlaylistByIdUseCaseTest {
-
     private val playlistRepository: PlaylistRepository = relaxedMockk()
     private lateinit var useCase: GetPlaylistByIdUseCase
 
@@ -23,17 +22,18 @@ class GetPlaylistByIdUseCaseTest {
     }
 
     @Test
-    fun `GIVEN valid playlist id WHEN invoke THEN returns right with playlist`() = runTest {
-        val playlist = buildPlaylist()
-        coEvery { playlistRepository.getPlaylistById(playlist.id) } returns right(playlist)
+    fun `GIVEN valid playlist id WHEN invoke THEN returns right with playlist`() =
+        runTest {
+            val playlist = buildPlaylist()
+            coEvery { playlistRepository.getPlaylistById(playlist.id) } returns right(playlist)
 
-        val result = useCase(playlist.id)
+            val result = useCase(playlist.id)
 
-        result shouldBeEqualTo right(playlist)
-        coVerifyOnce {
-            playlistRepository.getPlaylistById(playlist.id)
+            result shouldBeEqualTo right(playlist)
+            coVerifyOnce {
+                playlistRepository.getPlaylistById(playlist.id)
+            }
         }
-    }
 
     @Test
     fun `GIVEN repository throws exception WHEN invoke THEN returns left with throwable`() =
@@ -51,15 +51,16 @@ class GetPlaylistByIdUseCaseTest {
         }
 
     @Test
-    fun `GIVEN empty playlistId WHEN invoke THEN delegates to repository`() = runTest {
-        val playlist = buildPlaylist()
-        coEvery { playlistRepository.getPlaylistById(playlist.id) } returns right(playlist)
+    fun `GIVEN empty playlistId WHEN invoke THEN delegates to repository`() =
+        runTest {
+            val playlist = buildPlaylist()
+            coEvery { playlistRepository.getPlaylistById(playlist.id) } returns right(playlist)
 
-        val result = useCase(playlist.id)
+            val result = useCase(playlist.id)
 
-        result shouldBeEqualTo right(playlist)
-        coVerifyOnce {
-            playlistRepository.getPlaylistById(playlist.id)
+            result shouldBeEqualTo right(playlist)
+            coVerifyOnce {
+                playlistRepository.getPlaylistById(playlist.id)
+            }
         }
-    }
 }

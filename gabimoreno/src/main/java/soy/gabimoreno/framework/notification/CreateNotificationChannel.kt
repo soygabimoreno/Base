@@ -12,9 +12,10 @@ fun createNotificationChannel(context: Context) {
         val description = context.getString(R.string.new_premium_audio_channel_description)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channelId = context.getString(R.string.new_premium_audio_channel_id)
-        val channel = NotificationChannel(channelId, name, importance).apply {
-            this.description = description
-        }
+        val channel =
+            NotificationChannel(channelId, name, importance).apply {
+                this.description = description
+            }
         val notificationManager: NotificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)

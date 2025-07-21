@@ -4,7 +4,6 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
 
 class CamelToSnakeUpperCaseKtTest {
-
     @Test
     fun `GIVEN a camelCase text WHEN call THEN get the expected text`() {
         val camelCaseText = "camelCaseText"

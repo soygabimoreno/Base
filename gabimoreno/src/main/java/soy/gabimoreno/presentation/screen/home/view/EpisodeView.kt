@@ -20,19 +20,20 @@ fun EpisodeView(
     onClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colors.background)
-            .clickable(onClick = onClick),
+        modifier =
+            modifier
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colors.background)
+                .clickable(onClick = onClick),
     ) {
         AudioImage(
             url = episode.thumbnailUrl,
-            aspectRatio = 1f
+            aspectRatio = 1f,
         )
         Text(
             episode.title,
             style = MaterialTheme.typography.body1,
-            modifier = Modifier.padding(Spacing.s8)
+            modifier = Modifier.padding(Spacing.s8),
         )
     }
 }

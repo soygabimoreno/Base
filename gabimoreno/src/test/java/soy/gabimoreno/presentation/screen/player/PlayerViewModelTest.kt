@@ -28,7 +28,6 @@ import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 
 @ExperimentalCoroutinesApi
 class PlayerViewModelTest {
-
     private val tracker: Tracker = relaxedMockk()
     private val mediaPlayerServiceConnection: MediaPlayerServiceConnection = relaxedMockk()
     private val memberSession: MemberSession = relaxedMockk()
@@ -45,16 +44,17 @@ class PlayerViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = PlayerViewModel(
-            mediaPlayerServiceConnection,
-            tracker,
-            memberSession,
-            remoteConfigProvider,
-            markPremiumAudioAsListenedUseCase,
-            markAudioCourseItemAsListenedUseCase,
-            checkShouldIShowInAppReviewUseCase,
-            testDispatcher
-        )
+        viewModel =
+            PlayerViewModel(
+                mediaPlayerServiceConnection,
+                tracker,
+                memberSession,
+                remoteConfigProvider,
+                markPremiumAudioAsListenedUseCase,
+                markAudioCourseItemAsListenedUseCase,
+                checkShouldIShowInAppReviewUseCase,
+                testDispatcher,
+            )
     }
 
     @After
@@ -218,7 +218,6 @@ class PlayerViewModelTest {
 
     @Test
     fun `WHEN onSliderChangeFinished THEN track the corresponding event`() {
-
         // TODO
 //        val currentPlayingAudio = buildAudio()
 //        every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio

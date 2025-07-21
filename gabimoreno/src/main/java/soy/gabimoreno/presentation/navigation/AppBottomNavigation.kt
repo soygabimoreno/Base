@@ -22,19 +22,22 @@ fun AppBottomNavigation(
         NavItem.entries.forEach { item ->
             val title = stringResource(id = item.titleResId)
             BottomNavigationItem(
-                modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
+                modifier =
+                    Modifier
+                        .windowInsetsPadding(
+                            WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom),
+                        ),
                 selected = currentRoute.contains(item.navCommand.feature.route),
                 onClick = { onNavItemClick(item) },
                 icon = {
                     Icon(
                         imageVector = item.icon,
-                        contentDescription = title
+                        contentDescription = title,
                     )
                 },
                 label = {
                     Text(text = title)
-                }
+                },
             )
         }
     }

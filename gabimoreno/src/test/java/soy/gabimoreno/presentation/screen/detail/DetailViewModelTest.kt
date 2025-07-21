@@ -19,7 +19,6 @@ import soy.gabimoreno.fake.buildAudio
 import soy.gabimoreno.framework.intent.StartChooser
 
 class DetailViewModelTest {
-
     private val tracker: Tracker = relaxedMockk()
     private val startChooser: StartChooser = relaxedMockk()
     private val updateAudioItemFavoriteStateUseCase =
@@ -28,11 +27,12 @@ class DetailViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = DetailViewModel(
-            tracker,
-            startChooser,
-            updateAudioItemFavoriteStateUseCase
-        )
+        viewModel =
+            DetailViewModel(
+                tracker,
+                startChooser,
+                updateAudioItemFavoriteStateUseCase,
+            )
     }
 
     @Test
@@ -48,7 +48,7 @@ class DetailViewModelTest {
                     val parameters = event.parameters
                     parameters[TRACKER_KEY_AUDIO_ID] shouldBe audio.id
                     parameters[TRACKER_KEY_AUDIO_TITLE] shouldBe audio.title
-                }
+                },
             )
         }
     }
@@ -66,7 +66,7 @@ class DetailViewModelTest {
                     val parameters = event.parameters
                     parameters[TRACKER_KEY_AUDIO_ID] shouldBe audio.id
                     parameters[TRACKER_KEY_AUDIO_TITLE] shouldBe audio.title
-                }
+                },
             )
         }
     }

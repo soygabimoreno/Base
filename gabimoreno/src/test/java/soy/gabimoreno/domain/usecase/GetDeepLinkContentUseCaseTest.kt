@@ -7,7 +7,6 @@ import org.junit.Test
 import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 
 class GetDeepLinkContentUseCaseTest {
-
     private lateinit var useCase: GetDeepLinkContentUseCase
 
     @Before

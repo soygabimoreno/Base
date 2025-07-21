@@ -18,7 +18,6 @@ import soy.gabimoreno.domain.repository.playlist.PlaylistRepository
 import soy.gabimoreno.framework.datastore.getEmail
 
 class DeleteAllPlaylistUseCaseTest {
-
     private val context: Context = mockk()
     private val playlistRepository: PlaylistRepository = relaxedMockk()
 
@@ -32,36 +31,39 @@ class DeleteAllPlaylistUseCaseTest {
     }
 
     @Test
-    fun `GIVEN repository returns Right WHEN invoke THEN returns Right with Unit`() = runTest {
-        coEvery { playlistRepository.deleteAllPlaylists(EMAIL) } returns Either.Right(Unit)
+    fun `GIVEN repository returns Right WHEN invoke THEN returns Right with Unit`() =
+        runTest {
+            coEvery { playlistRepository.deleteAllPlaylists(EMAIL) } returns Either.Right(Unit)
 
-        val result = useCase()
+            val result = useCase()
 
-        result shouldBeInstanceOf Either.Right::class
-        result.getOrNull() shouldBeEqualTo Unit
-    }
-
-    @Test
-    fun `GIVEN repository returns Left WHEN invoke THEN returns Left with exception`() = runTest {
-        val exception = RuntimeException("Database error")
-        coEvery { playlistRepository.deleteAllPlaylists(EMAIL) } returns Either.Left(exception)
-
-        val result = useCase()
-
-        result shouldBeInstanceOf Either.Left::class
-        result.leftOrNull() shouldBeEqualTo exception
-    }
-
-    @Test
-    fun `GIVEN repository WHEN invoke THEN deleteAllPlaylists is called`() = runTest {
-        coEvery { playlistRepository.deleteAllPlaylists(EMAIL) } returns Either.Right(Unit)
-
-        useCase()
-
-        coVerifyOnce {
-            playlistRepository.deleteAllPlaylists(EMAIL)
+            result shouldBeInstanceOf Either.Right::class
+            result.getOrNull() shouldBeEqualTo Unit
         }
-    }
+
+    @Test
+    fun `GIVEN repository returns Left WHEN invoke THEN returns Left with exception`() =
+        runTest {
+            val exception = RuntimeException("Database error")
+            coEvery { playlistRepository.deleteAllPlaylists(EMAIL) } returns Either.Left(exception)
+
+            val result = useCase()
+
+            result shouldBeInstanceOf Either.Left::class
+            result.leftOrNull() shouldBeEqualTo exception
+        }
+
+    @Test
+    fun `GIVEN repository WHEN invoke THEN deleteAllPlaylists is called`() =
+        runTest {
+            coEvery { playlistRepository.deleteAllPlaylists(EMAIL) } returns Either.Right(Unit)
+
+            useCase()
+
+            coVerifyOnce {
+                playlistRepository.deleteAllPlaylists(EMAIL)
+            }
+        }
 }
 
 private const val EMAIL = "test@test.com"

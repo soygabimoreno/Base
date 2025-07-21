@@ -18,28 +18,24 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatasourceModule {
-
     @Provides
     @Singleton
     fun providePodcastUrl(): PodcastUrl = PODCAST_URL
 
     @Provides
     @Singleton
-    fun provideLoginDatasource(
-        loginService: LoginService,
-    ): LoginDatasource = RemoteLoginDatasource(loginService)
+    fun provideLoginDatasource(loginService: LoginService): LoginDatasource =
+        RemoteLoginDatasource(loginService)
 
     @Provides
     @Singleton
-    fun provideContentDatasource(
-        postService: PostService,
-    ): PremiumAudiosDataSource = RemotePremiumAudiosDataSource(postService)
+    fun provideContentDatasource(postService: PostService): PremiumAudiosDataSource =
+        RemotePremiumAudiosDataSource(postService)
 
     @Provides
     @Singleton
-    fun providePodcastDatasource(
-        rssParser: Parser,
-    ): PodcastDatasource = RemotePodcastDatasource(rssParser)
+    fun providePodcastDatasource(rssParser: Parser): PodcastDatasource =
+        RemotePodcastDatasource(rssParser)
 }
 
 typealias PodcastUrl = String

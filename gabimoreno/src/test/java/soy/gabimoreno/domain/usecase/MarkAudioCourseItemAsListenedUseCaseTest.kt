@@ -15,7 +15,6 @@ import soy.gabimoreno.fake.buildAudioCourse
 import soy.gabimoreno.framework.datastore.getEmail
 
 class MarkAudioCourseItemAsListenedUseCaseTest {
-
     private val context: Context = mockk()
     private val repository = relaxedMockk<AudioCoursesRepository>()
 
@@ -29,24 +28,26 @@ class MarkAudioCourseItemAsListenedUseCaseTest {
     }
 
     @Test
-    fun `GIVEN item is listened WHEN invoke THEN repository is called`() = runTest {
-        val audioCourse = buildAudioCourse()
-        useCase(audioCourse.id, true)
+    fun `GIVEN item is listened WHEN invoke THEN repository is called`() =
+        runTest {
+            val audioCourse = buildAudioCourse()
+            useCase(audioCourse.id, true)
 
-        coVerifyOnce {
-            repository.markAudioCourseItemAsListened(audioCourse.id, EMAIL, true)
+            coVerifyOnce {
+                repository.markAudioCourseItemAsListened(audioCourse.id, EMAIL, true)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN item is unlistened WHEN invoke THEN repository is called`() = runTest {
-        val audioCourse = buildAudioCourse()
-        useCase(audioCourse.id, false)
+    fun `GIVEN item is unlistened WHEN invoke THEN repository is called`() =
+        runTest {
+            val audioCourse = buildAudioCourse()
+            useCase(audioCourse.id, false)
 
-        coVerifyOnce {
-            repository.markAudioCourseItemAsListened(audioCourse.id, EMAIL, false)
+            coVerifyOnce {
+                repository.markAudioCourseItemAsListened(audioCourse.id, EMAIL, false)
+            }
         }
-    }
 }
 
 private const val EMAIL = "test@test.com"

@@ -23,21 +23,22 @@ fun FlatIconButton(
     onItemClicked: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier
-            .clickable { onItemClicked() },
+        modifier =
+            modifier
+                .clickable { onItemClicked() },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp
+            fontSize = 16.sp,
         )
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = White,
-            modifier = Modifier.size(Spacing.s32)
+            modifier = Modifier.size(Spacing.s32),
         )
     }
 }

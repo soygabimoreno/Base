@@ -46,19 +46,21 @@ fun ReorderablePlaylistColumn(
     onItemClick: (Int) -> Unit,
     onDragFinish: (reorderedPlaylists: List<Playlist>) -> Unit,
     onRemovePlaylistClicked: (playlistId: Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val haptic = rememberReorderHapticFeedback()
     var reorderedPlaylists by remember { mutableStateOf(playlists) }
 
     val lazyListState = rememberLazyListState()
-    val reorderableLazyColumnState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        reorderedPlaylists = reorderedPlaylists.toMutableList().apply {
-            add(to.index, removeAt(from.index))
-        }
+    val reorderableLazyColumnState =
+        rememberReorderableLazyListState(lazyListState) { from, to ->
+            reorderedPlaylists =
+                reorderedPlaylists.toMutableList().apply {
+                    add(to.index, removeAt(from.index))
+                }
 
-        haptic.performHapticFeedback(ReorderHapticFeedbackType.MOVE)
-    }
+            haptic.performHapticFeedback(ReorderHapticFeedbackType.MOVE)
+        }
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -73,52 +75,57 @@ fun ReorderablePlaylistColumn(
                 val labelDown = stringResource(R.string.accessibility_action_down)
 
                 Box(
-                    modifier = Modifier
-                        .height(IntrinsicSize.Min)
-                        .semantics {
-                            customActions = buildAccessibilityActions(
-                                index = index,
-                                listSize = reorderedPlaylists.size,
-                                onReorder = { newList -> reorderedPlaylists = newList },
-                                reorderedItems = reorderedPlaylists,
-                                labelUp = labelUp,
-                                labelDown = labelDown,
-                            )
-                        },
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .height(IntrinsicSize.Min)
+                            .semantics {
+                                customActions =
+                                    buildAccessibilityActions(
+                                        index = index,
+                                        listSize = reorderedPlaylists.size,
+                                        onReorder = { newList -> reorderedPlaylists = newList },
+                                        reorderedItems = reorderedPlaylists,
+                                        labelUp = labelUp,
+                                        labelDown = labelDown,
+                                    )
+                            },
+                    contentAlignment = Alignment.Center,
                 ) {
                     PlaylistItem(
                         playlist = reorderedPlaylists[index],
                         onItemClick = {
                             onItemClick(reorderedPlaylists[index].id)
-                        }
+                        },
                     )
                     IconButton(
-                        modifier = Modifier
-                            .draggableHandle(
-                                onDragStarted = {
-                                    haptic.performHapticFeedback(ReorderHapticFeedbackType.START)
-                                },
-                                onDragStopped = {
-                                    haptic.performHapticFeedback(ReorderHapticFeedbackType.END)
-                                    onDragFinish(reorderedPlaylists.updatePositions())
-                                },
-                                interactionSource = interactionSource,
-                            )
-                            .align(Alignment.TopEnd)
-                            .clearAndSetSemantics { },
+                        modifier =
+                            Modifier
+                                .draggableHandle(
+                                    onDragStarted = {
+                                        haptic.performHapticFeedback(
+                                            ReorderHapticFeedbackType.START,
+                                        )
+                                    },
+                                    onDragStopped = {
+                                        haptic.performHapticFeedback(ReorderHapticFeedbackType.END)
+                                        onDragFinish(reorderedPlaylists.updatePositions())
+                                    },
+                                    interactionSource = interactionSource,
+                                ).align(Alignment.TopEnd)
+                                .clearAndSetSemantics { },
                         onClick = {},
                     ) {
                         Icon(
                             Icons.Rounded.DragHandle,
                             contentDescription = stringResource(R.string.playlists_reorder),
                             modifier = Modifier.size(Spacing.s32),
-                            tint = PurpleDark
+                            tint = PurpleDark,
                         )
                     }
                     IconButton(
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd),
+                        modifier =
+                            Modifier
+                                .align(Alignment.BottomEnd),
                         onClick = {
                             onRemovePlaylistClicked(reorderedPlaylists[index].id)
                         },
@@ -127,7 +134,7 @@ fun ReorderablePlaylistColumn(
                             Icons.Rounded.DeleteForever,
                             contentDescription = stringResource(R.string.playlists_remove),
                             modifier = Modifier.size(Spacing.s32),
-                            tint = Pink
+                            tint = Pink,
                         )
                     }
                 }

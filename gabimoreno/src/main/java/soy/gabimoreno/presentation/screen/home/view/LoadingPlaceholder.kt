@@ -17,24 +17,26 @@ fun LoadingPlaceholder() {
     StaggeredVerticalGrid(
         crossAxisCount = 2,
         spacing = Spacing.s16,
-        modifier = Modifier.padding(horizontal = Spacing.s16)
+        modifier = Modifier.padding(horizontal = Spacing.s16),
     ) {
         (1..10).map {
             Column(
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colors.background)
+                modifier =
+                    Modifier
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colors.background),
             ) {
                 Box(
                     Modifier
                         .clip(MaterialTheme.shapes.medium)
                         .aspectRatio(1f)
-                        .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f))
+                        .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f)),
                 )
                 Box(
-                    modifier = Modifier
-                        .padding(Spacing.s8)
-                        .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f))
+                    modifier =
+                        Modifier
+                            .padding(Spacing.s8)
+                            .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f)),
                 )
             }
         }

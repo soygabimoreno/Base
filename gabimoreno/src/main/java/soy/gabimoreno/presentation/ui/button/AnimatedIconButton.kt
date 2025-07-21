@@ -52,86 +52,96 @@ fun AnimatedIconButton(
     val animatedScale by infiniteTransition.animateFloat(
         initialValue = 1.1f,
         targetValue = if (showAnimation) 1.4f else 1.1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = ANIMATION_DURATION,
-                easing = FastOutSlowInEasing
+        animationSpec =
+            infiniteRepeatable(
+                animation =
+                    tween(
+                        durationMillis = ANIMATION_DURATION,
+                        easing = FastOutSlowInEasing,
+                    ),
+                repeatMode = RepeatMode.Reverse,
             ),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "scaleAnim"
+        label = "scaleAnim",
     )
 
     val animatedAlpha by infiniteTransition.animateFloat(
         initialValue = 0.05f,
         targetValue = if (showAnimation) 1f else 0.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = ANIMATION_DURATION_COLOR_CIRCLE,
-                easing = FastOutSlowInEasing
+        animationSpec =
+            infiniteRepeatable(
+                animation =
+                    tween(
+                        durationMillis = ANIMATION_DURATION_COLOR_CIRCLE,
+                        easing = FastOutSlowInEasing,
+                    ),
+                repeatMode = RepeatMode.Reverse,
             ),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "circleAlpha"
+        label = "circleAlpha",
     )
 
     val animatedSize by infiniteTransition.animateValue(
         initialValue = baseSize * 1.1f,
         targetValue = if (showAnimation) baseSize * 1.5f else baseSize * 1.1f,
         typeConverter = Dp.VectorConverter,
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = ANIMATION_DURATION,
-                easing = FastOutLinearInEasing
+        animationSpec =
+            infiniteRepeatable(
+                animation =
+                    tween(
+                        durationMillis = ANIMATION_DURATION,
+                        easing = FastOutLinearInEasing,
+                    ),
+                repeatMode = RepeatMode.Reverse,
             ),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulsingSize"
+        label = "pulsingSize",
     )
 
     val animatedTint by infiniteTransition.animateColor(
         initialValue = tint,
         targetValue = if (showAnimation) transitionTint else tint,
-        animationSpec = infiniteRepeatable(
-            animation = tween(ANIMATION_DURATION),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "tint"
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(ANIMATION_DURATION),
+                repeatMode = RepeatMode.Restart,
+            ),
+        label = "tint",
     )
 
     val animatedCircleColor by infiniteTransition.animateColor(
         initialValue = tint,
         targetValue = if (showAnimation) transitionTint else tint,
-        animationSpec = infiniteRepeatable(
-            animation = tween(ANIMATION_DURATION_COLOR_CIRCLE),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "circleColor"
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(ANIMATION_DURATION_COLOR_CIRCLE),
+                repeatMode = RepeatMode.Restart,
+            ),
+        label = "circleColor",
     )
 
     Box(contentAlignment = Alignment.Center) {
         Box(
-            modifier = modifier
-                .size(animatedSize)
-                .clip(CircleShape)
-                .border(
-                    width = 2.dp,
-                    color = animatedCircleColor.copy(alpha = animatedAlpha),
-                    shape = CircleShape
-                )
+            modifier =
+                modifier
+                    .size(animatedSize)
+                    .clip(CircleShape)
+                    .border(
+                        width = 2.dp,
+                        color = animatedCircleColor.copy(alpha = animatedAlpha),
+                        shape = CircleShape,
+                    ),
         )
         IconButton(
             imageVector = imageVector,
             contentDescription = contentDescription,
             padding = padding,
-            modifier = modifier
-                .padding(end = Spacing.s4)
-                .graphicsLayer {
-                    scaleX = animatedScale
-                    scaleY = animatedScale
-                },
+            modifier =
+                modifier
+                    .padding(end = Spacing.s4)
+                    .graphicsLayer {
+                        scaleX = animatedScale
+                        scaleY = animatedScale
+                    },
             tint = animatedTint,
-            onClick = onClick
+            onClick = onClick,
         )
     }
 }
@@ -143,13 +153,12 @@ private const val ANIMATION_DURATION_COLOR_CIRCLE = 700
 @Composable
 private fun AnimatedIconButtonPreview() {
     GabiMorenoTheme {
-
         AnimatedIconButton(
             showAnimation = true,
             imageVector = Icons.Default.Share,
             contentDescription = "Share",
             padding = Spacing.s16,
-            onClick = {}
+            onClick = {},
         )
     }
 }

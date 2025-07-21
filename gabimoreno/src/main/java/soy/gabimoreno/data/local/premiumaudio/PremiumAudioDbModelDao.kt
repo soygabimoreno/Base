@@ -29,13 +29,19 @@ interface PremiumAudioDbModelDao {
     fun upsertPremiumAudioDbModels(premiumAudioDbModels: List<PremiumAudioDbModel>)
 
     @Query("UPDATE PremiumAudioDbModel SET markedAsFavorite = :markedAsFavorite WHERE id = :id")
-    fun updateMarkedAsFavorite(id: String, markedAsFavorite: Boolean)
+    fun updateMarkedAsFavorite(
+        id: String,
+        markedAsFavorite: Boolean,
+    )
 
     @Query("UPDATE PremiumAudioDbModel SET hasBeenListened = 0")
     fun markAllPremiumAudiosAsUnlistened()
 
     @Query("UPDATE PremiumAudioDbModel SET hasBeenListened = :hasBeenListened WHERE id = :id")
-    fun updateHasBeenListened(id: String, hasBeenListened: Boolean)
+    fun updateHasBeenListened(
+        id: String,
+        hasBeenListened: Boolean,
+    )
 
     @Query("DELETE FROM PremiumAudioDbModel")
     fun deleteAllPremiumAudioDbModels()

@@ -55,33 +55,42 @@ fun ItemAudioCourse(
     val iconColor by animateColorAsState(
         targetValue = if (audioCourseItem.hasBeenListened) PurpleDark else Black.copy(alpha = 0.1f),
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
-        label = "checkIconColorAnimation"
+        label = "checkIconColorAnimation",
     )
     val iconFavoriteColor by animateColorAsState(
-        targetValue = if (audioCourseItem.markedAsFavorite) PinkBright else Black.copy(alpha = 0.2f),
+        targetValue =
+            if (audioCourseItem.markedAsFavorite) {
+                PinkBright
+            } else {
+                Black.copy(
+                    alpha = 0.2f,
+                )
+            },
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
-        label = "favoriteIconColorAnimation"
+        label = "favoriteIconColorAnimation",
     )
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .padding(Spacing.s8),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .padding(Spacing.s8),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(
-            modifier = Modifier
-                .clickable { onItemClicked(audioCourseItem) }
-                .weight(0.80f),
-            verticalArrangement = Arrangement.SpaceEvenly
+            modifier =
+                Modifier
+                    .clickable { onItemClicked(audioCourseItem) }
+                    .weight(0.80f),
+            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             Text(audioCourseItem.title, color = Black, fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.height(Spacing.s4))
             Text(
                 audioCourseTitle,
                 color = Black.copy(alpha = 0.70f),
-                fontWeight = FontWeight.Light
+                fontWeight = FontWeight.Light,
             )
         }
         IconButton(
@@ -89,9 +98,10 @@ fun ItemAudioCourse(
             onClick = { onItemListenedToggled(audioCourseItem) },
         ) {
             Icon(
-                modifier = Modifier
-                    .weight(0.10f)
-                    .size(Spacing.s32),
+                modifier =
+                    Modifier
+                        .weight(0.10f)
+                        .size(Spacing.s32),
                 imageVector = Icons.Default.Check,
                 contentDescription = stringResource(R.string.course_listened),
                 tint = iconColor,
@@ -103,9 +113,15 @@ fun ItemAudioCourse(
             onClick = { onFavoriteStatusChanged(audioCourseItem) },
         ) {
             Icon(
-                modifier = Modifier
-                    .size(Spacing.s32),
-                imageVector = if (audioCourseItem.markedAsFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                modifier =
+                    Modifier
+                        .size(Spacing.s32),
+                imageVector =
+                    if (audioCourseItem.markedAsFavorite) {
+                        Icons.Default.Favorite
+                    } else {
+                        Icons.Default.FavoriteBorder
+                    },
                 contentDescription = stringResource(R.string.audio_favorite),
                 tint = iconFavoriteColor,
             )
@@ -116,8 +132,9 @@ fun ItemAudioCourse(
             onClick = { onAddToPlaylistClicked(audioCourseItem.id) },
         ) {
             Icon(
-                modifier = Modifier
-                    .size(Spacing.s32),
+                modifier =
+                    Modifier
+                        .size(Spacing.s32),
                 imageVector = Icons.Default.LibraryMusic,
                 contentDescription = stringResource(R.string.playlists_add_audio_to_playlist),
                 tint = PurpleLight,
@@ -128,50 +145,54 @@ fun ItemAudioCourse(
 
 @Preview(
     showBackground = true,
-    showSystemUi = true
+    showSystemUi = true,
 )
 @Composable
 fun ItemAudioCoursePreview() {
     GabiMorenoTheme {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(White)
-                .border(1.dp, Gray),
-            verticalArrangement = Arrangement.Center
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(White)
+                    .border(1.dp, Gray),
+            verticalArrangement = Arrangement.Center,
         ) {
             ItemAudioCourse(
                 audioCourseTitle = "Audio curso",
-                audioCourseItem = AudioCourseItem(
-                    id = "1",
-                    title = "item title",
-                    url = "item url",
-                    hasBeenListened = true
-                ),
+                audioCourseItem =
+                    AudioCourseItem(
+                        id = "1",
+                        title = "item title",
+                        url = "item url",
+                        hasBeenListened = true,
+                    ),
                 onItemClicked = {},
                 onItemListenedToggled = {},
                 onAddToPlaylistClicked = {},
-                onFavoriteStatusChanged = {}
+                onFavoriteStatusChanged = {},
             )
             Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Black.copy(alpha = 0.2f))
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Black.copy(alpha = 0.2f)),
             )
             ItemAudioCourse(
                 audioCourseTitle = "Audio curso",
-                audioCourseItem = AudioCourseItem(
-                    id = "1",
-                    title = "item title",
-                    url = "item url",
-                    hasBeenListened = false,
-                    markedAsFavorite = true
-                ),
+                audioCourseItem =
+                    AudioCourseItem(
+                        id = "1",
+                        title = "item title",
+                        url = "item url",
+                        hasBeenListened = false,
+                        markedAsFavorite = true,
+                    ),
                 onItemClicked = {},
                 onItemListenedToggled = {},
                 onAddToPlaylistClicked = {},
-                onFavoriteStatusChanged = {}
+                onFavoriteStatusChanged = {},
             )
         }
     }

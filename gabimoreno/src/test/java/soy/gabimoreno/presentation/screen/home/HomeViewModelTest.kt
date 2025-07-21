@@ -30,7 +30,6 @@ import soy.gabimoreno.domain.usecase.SetShouldIReversePodcastOrderUseCase
 
 @ExperimentalCoroutinesApi
 class HomeViewModelTest {
-
     private val podcastDatasource: PodcastRepository = relaxedMockk()
     private val tracker: Tracker = relaxedMockk()
     private val getAppVersionNameUseCase: GetAppVersionNameUseCase = relaxedMockk()
@@ -43,15 +42,16 @@ class HomeViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = HomeViewModel(
-            podcastDatasource,
-            tracker,
-            getAppVersionNameUseCase,
-            encodeUrlUseCase,
-            getShouldIReversePodcastOrderUseCase,
-            setShouldIReversePodcastOrderUseCase,
-            testDispatcher
-        )
+        viewModel =
+            HomeViewModel(
+                podcastDatasource,
+                tracker,
+                getAppVersionNameUseCase,
+                encodeUrlUseCase,
+                getShouldIReversePodcastOrderUseCase,
+                setShouldIReversePodcastOrderUseCase,
+                testDispatcher,
+            )
     }
 
     @After
@@ -67,10 +67,11 @@ class HomeViewModelTest {
 
     @Ignore
     @Test
-    fun `WHEN init THEN getEpisodes`() = runTest(testDispatcher) {
-        viewModel.viewState shouldBe HomeViewModel.ViewState.Loading
-        coVerifyOnce { podcastDatasource.getEpisodes() }
-    }
+    fun `WHEN init THEN getEpisodes`() =
+        runTest(testDispatcher) {
+            viewModel.viewState shouldBe HomeViewModel.ViewState.Loading
+            coVerifyOnce { podcastDatasource.getEpisodes() }
+        }
 
     @Test
     fun `WHEN onViewScreen THEN track event`() {
@@ -90,9 +91,9 @@ class HomeViewModelTest {
                 HomeTrackerEvent.ClickEpisode(
                     mapOf(
                         TRACKER_KEY_EPISODE_ID to episodeId,
-                        TRACKER_KEY_EPISODE_TITLE to episodeTitle
-                    )
-                )
+                        TRACKER_KEY_EPISODE_TITLE to episodeTitle,
+                    ),
+                ),
             )
         }
     }
@@ -108,9 +109,9 @@ class HomeViewModelTest {
                 HomeTrackerEvent.ReceiveDeepLink(
                     mapOf(
                         TRACKER_KEY_EPISODE_ID to episodeId,
-                        TRACKER_KEY_EPISODE_TITLE to episodeTitle
-                    )
-                )
+                        TRACKER_KEY_EPISODE_TITLE to episodeTitle,
+                    ),
+                ),
             )
         }
     }

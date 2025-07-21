@@ -12,28 +12,32 @@ import soy.gabimoreno.R
 import soy.gabimoreno.presentation.MainActivity
 
 fun buildNotification(context: Context) {
-    val intent = Intent(context, MainActivity::class.java).apply {
-        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-    }
-    val pendingIntent: PendingIntent = PendingIntent.getActivity(
-        context,
-        NOTIFICATION_REQUEST_CODE,
-        intent,
-        PendingIntent.FLAG_IMMUTABLE
-    )
+    val intent =
+        Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+    val pendingIntent: PendingIntent =
+        PendingIntent.getActivity(
+            context,
+            NOTIFICATION_REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE,
+        )
 
     val channelId = context.getString(R.string.new_premium_audio_channel_id)
-    val builder = NotificationCompat.Builder(context, channelId)
-        .setSmallIcon(R.drawable.ic_stat_name)
-        .setContentTitle("textTitle")
-        .setContentText("textContent")
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .setContentIntent(pendingIntent)
-        .setAutoCancel(true)
+    val builder =
+        NotificationCompat
+            .Builder(context, channelId)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setContentTitle("textTitle")
+            .setContentText("textContent")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
 
     if (ContextCompat.checkSelfPermission(
             context,
-            Manifest.permission.POST_NOTIFICATIONS
+            Manifest.permission.POST_NOTIFICATIONS,
         ) == PackageManager.PERMISSION_GRANTED
     ) {
         with(NotificationManagerCompat.from(context)) {

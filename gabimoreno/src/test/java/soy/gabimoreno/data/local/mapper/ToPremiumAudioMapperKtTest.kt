@@ -6,7 +6,6 @@ import org.junit.Test
 import soy.gabimoreno.fake.buildPremiumAudioDbModel
 
 class ToPremiumAudioMapperKtTest {
-
     @Test
     fun `GIVEN a PremiumAudioDbModel WHEN toPremiumAudio THEN get the expected PremiumAudio`() {
         val premiumAudioDbModel = buildPremiumAudioDbModel()

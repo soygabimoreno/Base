@@ -19,16 +19,17 @@ import soy.gabimoreno.presentation.theme.Spacing
 fun BackButton(
     modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colors.onBackground,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Icon(
         Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = stringResource(R.string.back),
         tint = tint,
-        modifier = modifier
-            .padding(top = Spacing.s8, start = Spacing.s8)
-            .clip(CircleShape)
-            .clickable(onClick = onClick)
-            .padding(Spacing.s8)
+        modifier =
+            modifier
+                .padding(top = Spacing.s8, start = Spacing.s8)
+                .clip(CircleShape)
+                .clickable(onClick = onClick)
+                .padding(Spacing.s8),
     )
 }

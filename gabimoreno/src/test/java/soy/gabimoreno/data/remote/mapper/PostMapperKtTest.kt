@@ -8,7 +8,6 @@ import soy.gabimoreno.data.remote.model.post.PostApiModel
 import soy.gabimoreno.data.remote.model.post.TitleApiModel
 
 class PostMapperKtTest {
-
     @Test
     fun `GIVEN a PostApiModel list WHEN toDomain THEN return the expected posts`() {
         val postApiModelList = listOf(buildPostApiModel())
@@ -24,16 +23,17 @@ class PostMapperKtTest {
         }
     }
 
-    private fun buildPostApiModel() = PostApiModel(
-        id = ID,
-        titleApiModel = TitleApiModel(TITLE),
-        excerptApiModel = ExcerptApiModel(EXCERPT),
-        contentApiModel = ContentApiModel(CONTENT),
-        authorId = AUTHOR_ID,
-        categoryIds = CATEGORY_IDS,
-        url = URL,
-        dateString = DATE_STRING
-    )
+    private fun buildPostApiModel() =
+        PostApiModel(
+            id = ID,
+            titleApiModel = TitleApiModel(TITLE),
+            excerptApiModel = ExcerptApiModel(EXCERPT),
+            contentApiModel = ContentApiModel(CONTENT),
+            authorId = AUTHOR_ID,
+            categoryIds = CATEGORY_IDS,
+            url = URL,
+            dateString = DATE_STRING,
+        )
 }
 
 private const val ID = 1234L

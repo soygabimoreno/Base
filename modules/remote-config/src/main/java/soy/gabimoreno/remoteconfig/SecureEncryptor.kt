@@ -7,12 +7,10 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
-import javax.inject.Singleton
 
 class SecureEncryptor(
-    private val masterKey: String
+    private val masterKey: String,
 ) {
-
     fun encrypt(plainText: String): String {
         val salt = generateRandomBytes(SALT_LENGTH)
         val iv = generateRandomBytes(IV_LENGTH)
@@ -38,7 +36,10 @@ class SecureEncryptor(
         return String(decrypted)
     }
 
-    private fun deriveKey(password: String, salt: ByteArray): SecretKeySpec {
+    private fun deriveKey(
+        password: String,
+        salt: ByteArray,
+    ): SecretKeySpec {
         val factory = SecretKeyFactory.getInstance(KEY_ALGORITHM)
         val spec = PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT, KEY_LENGTH)
         val keyBytes = factory.generateSecret(spec).encoded

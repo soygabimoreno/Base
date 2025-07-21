@@ -14,16 +14,15 @@ import soy.gabimoreno.R
 import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
-fun ArrowDownButton(
-    onClick: () -> Unit,
-) {
+fun ArrowDownButton(onClick: () -> Unit) {
     Icon(
         imageVector = Icons.Default.KeyboardArrowDown,
         contentDescription = stringResource(R.string.close),
-        modifier = Modifier
-            .padding(top = Spacing.s8, start = Spacing.s8)
-            .clip(CircleShape)
-            .clickable(onClick = onClick)
-            .padding(Spacing.s8)
+        modifier =
+            Modifier
+                .padding(top = Spacing.s8, start = Spacing.s8)
+                .clip(CircleShape)
+                .clickable(onClick = onClick)
+                .padding(Spacing.s8),
     )
 }

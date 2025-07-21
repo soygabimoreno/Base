@@ -22,63 +22,65 @@ class PremiumAudiosRemoteMediator(
     private val localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
     private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
-    private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase: SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+    private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
+        SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
 ) : RemoteMediator<Int, PremiumAudioDbModel>() {
-
-    override suspend fun initialize(): InitializeAction {
-        return if (refreshPremiumAudiosFromRemoteUseCase(
+    override suspend fun initialize(): InitializeAction =
+        if (refreshPremiumAudiosFromRemoteUseCase(
                 currentTimeInMillis = System.currentTimeMillis(),
-                timeToRefreshInMillis = TWELVE_HOURS_IN_MILLIS
+                timeToRefreshInMillis = TWELVE_HOURS_IN_MILLIS,
             )
         ) {
             InitializeAction.LAUNCH_INITIAL_REFRESH
         } else {
             InitializeAction.SKIP_INITIAL_REFRESH
         }
-    }
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, PremiumAudioDbModel>
+        state: PagingState<Int, PremiumAudioDbModel>,
     ): MediatorResult {
         val categories = listOf(Category.PREMIUM)
 
         return try {
-            val currentPage = when (loadType) {
-                LoadType.REFRESH -> STARTING_PAGE_INDEX
-                LoadType.PREPEND -> return MediatorResult.Success(
-                    endOfPaginationReached = true
-                )
+            val currentPage =
+                when (loadType) {
+                    LoadType.REFRESH -> STARTING_PAGE_INDEX
+                    LoadType.PREPEND -> return MediatorResult.Success(
+                        endOfPaginationReached = true,
+                    )
 
-                LoadType.APPEND -> {
-                    val totalAudios = localPremiumAudiosDataSource.getTotalPremiumAudios()
-                    ceil(totalAudios.toDouble() / state.config.pageSize.toDouble()).toInt() + 1
+                    LoadType.APPEND -> {
+                        val totalAudios = localPremiumAudiosDataSource.getTotalPremiumAudios()
+                        ceil(totalAudios.toDouble() / state.config.pageSize.toDouble()).toInt() + 1
+                    }
                 }
-            }
 
-            val response = remotePremiumAudiosDataSource.getPremiumAudios(
-                categories = categories,
-                postsPerPage = state.config.pageSize,
-                page = currentPage,
-            )
+            val response =
+                remotePremiumAudiosDataSource.getPremiumAudios(
+                    categories = categories,
+                    postsPerPage = state.config.pageSize,
+                    page = currentPage,
+                )
 
             return response.fold({
                 MediatorResult.Error(it)
             }, { premiumAudios ->
-                val finalPremiumAudios = if (loadType == LoadType.REFRESH) {
-                    val mergedPremiumAudios = mergeWithCloudData(premiumAudios, email)
-                    localPremiumAudiosDataSource.reset()
-                    saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
-                        System.currentTimeMillis()
-                    )
-                    mergedPremiumAudios
-                } else {
-                    mergeWithCloudData(premiumAudios, email)
-                }
+                val finalPremiumAudios =
+                    if (loadType == LoadType.REFRESH) {
+                        val mergedPremiumAudios = mergeWithCloudData(premiumAudios, email)
+                        localPremiumAudiosDataSource.reset()
+                        saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
+                            System.currentTimeMillis(),
+                        )
+                        mergedPremiumAudios
+                    } else {
+                        mergeWithCloudData(premiumAudios, email)
+                    }
 
                 localPremiumAudiosDataSource.savePremiumAudios(finalPremiumAudios)
                 MediatorResult.Success(
-                    endOfPaginationReached = premiumAudios.isEmpty()
+                    endOfPaginationReached = premiumAudios.isEmpty(),
                 )
             })
         } catch (e: IOException) {
@@ -88,18 +90,19 @@ class PremiumAudiosRemoteMediator(
 
     private suspend fun mergeWithCloudData(
         premiumAudios: List<PremiumAudio>,
-        email: String
+        email: String,
     ): List<PremiumAudio> {
         if (email.isEmpty()) return premiumAudios
-        val cloudPremiumAudiosSnapshot = cloudDataSource
-            .getPremiumAudioItems(email)
-            .associateBy { it.id }
+        val cloudPremiumAudiosSnapshot =
+            cloudDataSource
+                .getPremiumAudioItems(email)
+                .associateBy { it.id }
 
         return premiumAudios.map { remotePremiumAudio ->
             val localPremiumAudio = cloudPremiumAudiosSnapshot[remotePremiumAudio.id]
             remotePremiumAudio.copy(
                 hasBeenListened = localPremiumAudio?.hasBeenListened ?: false,
-                markedAsFavorite = localPremiumAudio?.markedAsFavorite ?: false
+                markedAsFavorite = localPremiumAudio?.markedAsFavorite ?: false,
             )
         }
     }

@@ -12,7 +12,6 @@ class MediaPlaybackPreparer(
     private val mediaSource: AudioMediaSource,
     private val playerPrepared: (MediaMetadataCompat?) -> Unit,
 ) : MediaSessionConnector.PlaybackPreparer {
-
     override fun onPrepareFromSearch(
         query: String,
         playWhenReady: Boolean,
@@ -26,9 +25,9 @@ class MediaPlaybackPreparer(
         cb: ResultReceiver?,
     ): Boolean = false
 
-    override fun getSupportedPrepareActions(): Long {
-        return PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID
-    }
+    override fun getSupportedPrepareActions(): Long =
+        PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or
+            PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID
 
     override fun onPrepareFromMediaId(
         mediaId: String,
@@ -36,9 +35,10 @@ class MediaPlaybackPreparer(
         extras: Bundle?,
     ) {
         mediaSource.whenReady {
-            val itemToPlay = mediaSource.audioMediaMetadataCompat.find {
-                it.description.mediaId == mediaId
-            }
+            val itemToPlay =
+                mediaSource.audioMediaMetadataCompat.find {
+                    it.description.mediaId == mediaId
+                }
             playerPrepared(itemToPlay)
         }
     }

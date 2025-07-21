@@ -18,7 +18,6 @@ import soy.gabimoreno.fake.buildPremiumAudio
 import soy.gabimoreno.framework.datastore.getEmail
 
 class UpdateAudioItemFavoriteStateUseCaseTest {
-
     private val audioRepository = mockk<AudioCoursesRepository>()
     private val context: Context = mockk()
     private val premiumRepository = mockk<PremiumAudiosRepository>()
@@ -33,28 +32,29 @@ class UpdateAudioItemFavoriteStateUseCaseTest {
     }
 
     @Test
-    fun `GIVEN id contains dash WHEN invoked THEN audioCoursesRepository is called`() = runTest {
-        val audioCourseItem = buildAudioCourseItem(markedAsFavorite = false)
-        coJustRun {
-            audioRepository.updateMarkedAsFavorite(
+    fun `GIVEN id contains dash WHEN invoked THEN audioCoursesRepository is called`() =
+        runTest {
+            val audioCourseItem = buildAudioCourseItem(markedAsFavorite = false)
+            coJustRun {
+                audioRepository.updateMarkedAsFavorite(
+                    audioCourseItem.id,
+                    EMAIL,
+                    true,
+                )
+            }
+
+            useCase(
                 audioCourseItem.id,
-                EMAIL,
-                true
+                true,
             )
-        }
 
-        useCase(
-            audioCourseItem.id,
-            true
-        )
-
-        coVerifyOnce {
-            audioRepository.updateMarkedAsFavorite(audioCourseItem.id, EMAIL, true)
+            coVerifyOnce {
+                audioRepository.updateMarkedAsFavorite(audioCourseItem.id, EMAIL, true)
+            }
+            coVerifyNever {
+                premiumRepository.markPremiumAudioAsFavorite(EMAIL, any(), any())
+            }
         }
-        coVerifyNever {
-            premiumRepository.markPremiumAudioAsFavorite(EMAIL, any(), any())
-        }
-    }
 
     @Test
     fun `GIVEN id does not contain dash WHEN invoked THEN premiumAudioRepository is called`() =
@@ -64,7 +64,7 @@ class UpdateAudioItemFavoriteStateUseCaseTest {
                 premiumRepository.markPremiumAudioAsFavorite(
                     EMAIL,
                     premiumAudio.id,
-                    true
+                    true,
                 )
             }
 

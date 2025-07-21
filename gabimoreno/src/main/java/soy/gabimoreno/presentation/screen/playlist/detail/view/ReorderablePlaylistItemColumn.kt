@@ -54,20 +54,22 @@ fun ReorderablePlaylistItemColumn(
     onItemClicked: (playlistAudioItem: PlaylistAudioItem) -> Unit,
     onDragFinish: (reorderedAudioItems: List<PlaylistAudioItem>) -> Unit,
     onRemoveClicked: (playlistAudioItem: PlaylistAudioItem) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val haptic = rememberReorderHapticFeedback()
     var reorderedAudioItems by remember(playlistAudioItems) {
         mutableStateOf(playlistAudioItems)
     }
     val lazyListState = rememberLazyListState()
-    val reorderableLazyColumnState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        reorderedAudioItems = reorderedAudioItems.toMutableList().apply {
-            add(to.index, removeAt(from.index))
-        }
+    val reorderableLazyColumnState =
+        rememberReorderableLazyListState(lazyListState) { from, to ->
+            reorderedAudioItems =
+                reorderedAudioItems.toMutableList().apply {
+                    add(to.index, removeAt(from.index))
+                }
 
-        haptic.performHapticFeedback(ReorderHapticFeedbackType.MOVE)
-    }
+            haptic.performHapticFeedback(ReorderHapticFeedbackType.MOVE)
+        }
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -81,75 +83,82 @@ fun ReorderablePlaylistItemColumn(
                 val labelDown = stringResource(R.string.accessibility_action_down)
 
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                        .semantics {
-                            customActions = buildAccessibilityActions(
-                                index = index,
-                                listSize = reorderedAudioItems.size,
-                                onReorder = { newList -> reorderedAudioItems = newList },
-                                reorderedItems = reorderedAudioItems,
-                                labelUp = labelUp,
-                                labelDown = labelDown,
-                            )
-                        },
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(IntrinsicSize.Min)
+                            .semantics {
+                                customActions =
+                                    buildAccessibilityActions(
+                                        index = index,
+                                        listSize = reorderedAudioItems.size,
+                                        onReorder = { newList -> reorderedAudioItems = newList },
+                                        reorderedItems = reorderedAudioItems,
+                                        labelUp = labelUp,
+                                        labelDown = labelDown,
+                                    )
+                            },
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onItemClicked(reorderedAudioItems[index]) }
-                            .background(White.copy(alpha = 0.95f))
-                            .padding(
-                                start = Spacing.s8,
-                                top = Spacing.s16,
-                                bottom = Spacing.s16,
-                                end = Spacing.s48
-                            ),
-                        verticalArrangement = Arrangement.SpaceEvenly
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { onItemClicked(reorderedAudioItems[index]) }
+                                .background(White.copy(alpha = 0.95f))
+                                .padding(
+                                    start = Spacing.s8,
+                                    top = Spacing.s16,
+                                    bottom = Spacing.s16,
+                                    end = Spacing.s48,
+                                ),
+                        verticalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         Text(
                             reorderedAudioItems[index].title,
                             color = Black,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
                         )
                         Spacer(modifier = Modifier.height(Spacing.s8))
                         Text(
-                            if (reorderedAudioItems[index].id.contains("-"))
+                            if (reorderedAudioItems[index].id.contains("-")) {
                                 reorderedAudioItems[index].description
-                            else
-                                reorderedAudioItems[index].category.title,
+                            } else {
+                                reorderedAudioItems[index].category.title
+                            },
                             color = Black.copy(alpha = 0.8f),
-                            fontWeight = FontWeight.Light
+                            fontWeight = FontWeight.Light,
                         )
                     }
                     IconButton(
-                        modifier = Modifier
-                            .draggableHandle(
-                                onDragStarted = {
-                                    haptic.performHapticFeedback(ReorderHapticFeedbackType.START)
-                                },
-                                onDragStopped = {
-                                    haptic.performHapticFeedback(ReorderHapticFeedbackType.END)
-                                    onDragFinish(reorderedAudioItems.updatePositions())
-                                },
-                                interactionSource = interactionSource,
-                            )
-                            .align(Alignment.TopEnd)
-                            .clearAndSetSemantics { },
+                        modifier =
+                            Modifier
+                                .draggableHandle(
+                                    onDragStarted = {
+                                        haptic.performHapticFeedback(
+                                            ReorderHapticFeedbackType.START,
+                                        )
+                                    },
+                                    onDragStopped = {
+                                        haptic.performHapticFeedback(ReorderHapticFeedbackType.END)
+                                        onDragFinish(reorderedAudioItems.updatePositions())
+                                    },
+                                    interactionSource = interactionSource,
+                                ).align(Alignment.TopEnd)
+                                .clearAndSetSemantics { },
                         onClick = {},
                     ) {
                         Icon(
                             Icons.Rounded.DragHandle,
                             contentDescription = stringResource(R.string.playlists_reorder),
                             modifier = Modifier.size(Spacing.s32),
-                            tint = PurpleDark
+                            tint = PurpleDark,
                         )
                     }
                     IconButton(
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd),
+                        modifier =
+                            Modifier
+                                .align(Alignment.BottomEnd),
                         onClick = {
                             onRemoveClicked(reorderedAudioItems[index])
                         },
@@ -158,7 +167,7 @@ fun ReorderablePlaylistItemColumn(
                             Icons.Rounded.DeleteForever,
                             contentDescription = stringResource(R.string.playlists_remove),
                             modifier = Modifier.size(Spacing.s32),
-                            tint = Pink
+                            tint = Pink,
                         )
                     }
                 }

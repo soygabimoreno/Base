@@ -20,10 +20,9 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [RemoteDataModule::class]
+    replaces = [RemoteDataModule::class],
 )
 object TestRemoteDataModule {
-
     @Provides
     fun provideHttpClient(): OkHttpClient = APIClient.createHttpClient()
 
@@ -36,29 +35,33 @@ object TestRemoteDataModule {
     fun provideRetrofit(
         client: OkHttpClient,
         @BaseUrl baseUrl: String,
-    ): Retrofit = Retrofit.Builder()
-        .client(client)
-        .baseUrl(baseUrl)
-        .addConverterFactory(MoshiConverterFactory.create())
-        .build()
+    ): Retrofit =
+        Retrofit
+            .Builder()
+            .client(client)
+            .baseUrl(baseUrl)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
 
     @Provides
     @Singleton
-    fun provideLoginService(
-        retrofit: Retrofit,
-    ): LoginService = retrofit.create(LoginService::class.java)
+    fun provideLoginService(retrofit: Retrofit): LoginService =
+        retrofit.create(LoginService::class.java)
 
     @Provides
     @Singleton
-    fun provideContentService(
-        retrofit: Retrofit,
-    ): PostService = retrofit.create(PostService::class.java)
+    fun provideContentService(retrofit: Retrofit): PostService =
+        retrofit.create(PostService::class.java)
 
     @Provides
-    fun provideRSSParser(@ApplicationContext context: Context): Parser = Parser.Builder()
-        .context(context)
-        .cacheExpirationMillis(ONE_DAY_IN_MILLIS)
-        .build()
+    fun provideRSSParser(
+        @ApplicationContext context: Context,
+    ): Parser =
+        Parser
+            .Builder()
+            .context(context)
+            .cacheExpirationMillis(ONE_DAY_IN_MILLIS)
+            .build()
 }
 
 private const val TEST_BASE_URL = "http://localhost:8080/"

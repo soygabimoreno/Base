@@ -13,11 +13,9 @@ class RemotePodcastRepository(
     private val podcastDatasource: PodcastDatasource,
     private val podcastUrl: PodcastUrl,
 ) : PodcastRepository {
-    override fun getEpisodesStream(): Either<Throwable, Flow<List<Episode>>> {
-        return podcastDatasource.getEpisodesStream(podcastUrl)
-    }
+    override fun getEpisodesStream(): Either<Throwable, Flow<List<Episode>>> =
+        podcastDatasource.getEpisodesStream(podcastUrl)
 
-    override suspend fun getEpisodes(): Either<Throwable, EpisodesWrapper> {
-        return podcastDatasource.getEpisodes(podcastUrl)
-    }
+    override suspend fun getEpisodes(): Either<Throwable, EpisodesWrapper> =
+        podcastDatasource.getEpisodes(podcastUrl)
 }

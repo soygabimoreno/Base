@@ -26,9 +26,10 @@ fun IconButton(
         imageVector = imageVector,
         contentDescription = contentDescription,
         tint = tint,
-        modifier = modifier
-            .clip(CircleShape)
-            .clickable(onClick = onClick)
-            .padding(padding)
+        modifier =
+            modifier
+                .clip(CircleShape)
+                .clickable(onClick = onClick)
+                .padding(padding),
     )
 }

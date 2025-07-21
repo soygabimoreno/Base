@@ -18,15 +18,15 @@ import soy.gabimoreno.data.remote.service.LoginService
 
 @ExperimentalCoroutinesApi
 class RemoteLoginDatasourceTest {
-
     private val service: LoginService = mockk()
     private lateinit var repository: RemoteLoginDatasource
 
     @Before
     fun setUp() {
-        repository = RemoteLoginDatasource(
-            service
-        )
+        repository =
+            RemoteLoginDatasource(
+                service,
+            )
     }
 
     @Test
@@ -111,9 +111,10 @@ class RemoteLoginDatasourceTest {
         }
 }
 
-private fun buildMembers() = listOf(
-    MemberApiModel(
-        statusApiModel = StatusApiModel.ACTIVE,
-        isActive = true
+private fun buildMembers() =
+    listOf(
+        MemberApiModel(
+            statusApiModel = StatusApiModel.ACTIVE,
+            isActive = true,
+        ),
     )
-)

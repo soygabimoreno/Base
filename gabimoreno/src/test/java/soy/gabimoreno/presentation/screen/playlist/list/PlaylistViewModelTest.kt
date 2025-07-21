@@ -35,7 +35,6 @@ import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildPlaylist
 
 class PlaylistViewModelTest {
-
     private val getAllPlaylistUseCase = mockk<GetAllPlaylistUseCase>()
     private val insertPlaylistUseCase = mockk<InsertPlaylistUseCase>()
     private val upsertPlaylistsUseCase = mockk<UpsertPlaylistsUseCase>()
@@ -47,13 +46,14 @@ class PlaylistViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         coEvery { getAllPlaylistUseCase() } returns right(emptyList())
-        viewModel = PlaylistViewModel(
-            getAllPlaylistUseCase = getAllPlaylistUseCase,
-            insertPlaylistUseCase = insertPlaylistUseCase,
-            upsertPlaylistsUseCase = upsertPlaylistsUseCase,
-            deletePlaylistByIdUseCase = deletePlaylistByIdUseCase,
-            dispatcher = testDispatcher
-        )
+        viewModel =
+            PlaylistViewModel(
+                getAllPlaylistUseCase = getAllPlaylistUseCase,
+                insertPlaylistUseCase = insertPlaylistUseCase,
+                upsertPlaylistsUseCase = upsertPlaylistsUseCase,
+                deletePlaylistByIdUseCase = deletePlaylistByIdUseCase,
+                dispatcher = testDispatcher,
+            )
     }
 
     @After
@@ -62,13 +62,14 @@ class PlaylistViewModelTest {
     }
 
     @Test
-    fun `GIVEN initialization WHEN state is collected THEN initial state is correct`() = runTest {
-        val expectedState = PlaylistState()
+    fun `GIVEN initialization WHEN state is collected THEN initial state is correct`() =
+        runTest {
+            val expectedState = PlaylistState()
 
-        val initialState = viewModel.state.first()
+            val initialState = viewModel.state.first()
 
-        initialState shouldBeEqualTo expectedState
-    }
+            initialState shouldBeEqualTo expectedState
+        }
 
     @Test
     fun `GIVEN init WHEN onStart THEN state isLoading true and then playlists loaded and isLoading false`() =
@@ -77,9 +78,10 @@ class PlaylistViewModelTest {
             coEvery { getAllPlaylistUseCase() } returns right(playlists)
 
             val states = mutableListOf<PlaylistState>()
-            val job = launch(UnconfinedTestDispatcher()) {
-                viewModel.state.toList(states)
-            }
+            val job =
+                launch(UnconfinedTestDispatcher()) {
+                    viewModel.state.toList(states)
+                }
             advanceUntilIdle()
 
             states[0].isLoading shouldBe true
@@ -110,34 +112,36 @@ class PlaylistViewModelTest {
         }
 
     @Test
-    fun `GIVEN OnAddNewPlaylistClicked WHEN onAction THEN dialog shown`() = runTest {
-        val states = mutableListOf<PlaylistState>()
-        val stateJob = launch { viewModel.state.toList(states) }
+    fun `GIVEN OnAddNewPlaylistClicked WHEN onAction THEN dialog shown`() =
+        runTest {
+            val states = mutableListOf<PlaylistState>()
+            val stateJob = launch { viewModel.state.toList(states) }
 
-        viewModel.onAction(PlaylistAction.OnAddNewPlaylistClicked)
-        advanceUntilIdle()
+            viewModel.onAction(PlaylistAction.OnAddNewPlaylistClicked)
+            advanceUntilIdle()
 
-        states.last().shouldIShowAddPlaylistDialog shouldBe true
-        stateJob.cancel()
-    }
+            states.last().shouldIShowAddPlaylistDialog shouldBe true
+            stateJob.cancel()
+        }
 
     @Test
-    fun `GIVEN OnAddPlaylistDismissDialog WHEN onAction THEN dialog reset`() = runTest {
-        val emptyString = ""
-        viewModel.onAction(PlaylistAction.OnAddPlaylistDismissDialog)
+    fun `GIVEN OnAddPlaylistDismissDialog WHEN onAction THEN dialog reset`() =
+        runTest {
+            val emptyString = ""
+            viewModel.onAction(PlaylistAction.OnAddPlaylistDismissDialog)
 
-        val states = mutableListOf<PlaylistState>()
-        val stateJob = launch { viewModel.state.toList(states) }
-        advanceUntilIdle()
+            val states = mutableListOf<PlaylistState>()
+            val stateJob = launch { viewModel.state.toList(states) }
+            advanceUntilIdle()
 
-        states.last().apply {
-            shouldIShowAddPlaylistDialog shouldBe false
-            dialogTitle shouldBe emptyString
-            dialogDescription shouldBe emptyString
-            dialogTitleError shouldBe false
+            states.last().apply {
+                shouldIShowAddPlaylistDialog shouldBe false
+                dialogTitle shouldBe emptyString
+                dialogDescription shouldBe emptyString
+                dialogTitleError shouldBe false
+            }
+            stateJob.cancel()
         }
-        stateJob.cancel()
-    }
 
     @Test
     fun `GIVEN OnDialogTitleChange with value WHEN onAction THEN title updated and error false`() =
@@ -157,17 +161,18 @@ class PlaylistViewModelTest {
         }
 
     @Test
-    fun `GIVEN empty title WHEN OnDialogTitleChange THEN error true`() = runTest {
-        val emptyTitle = ""
-        viewModel.onAction(PlaylistAction.OnDialogTitleChange(emptyTitle))
+    fun `GIVEN empty title WHEN OnDialogTitleChange THEN error true`() =
+        runTest {
+            val emptyTitle = ""
+            viewModel.onAction(PlaylistAction.OnDialogTitleChange(emptyTitle))
 
-        val states = mutableListOf<PlaylistState>()
-        val stateJob = launch { viewModel.state.toList(states) }
-        advanceUntilIdle()
+            val states = mutableListOf<PlaylistState>()
+            val stateJob = launch { viewModel.state.toList(states) }
+            advanceUntilIdle()
 
-        states.last().dialogTitleError shouldBe true
-        stateJob.cancel()
-    }
+            states.last().dialogTitleError shouldBe true
+            stateJob.cancel()
+        }
 
     @Test
     fun `GIVEN valid input WHEN OnAddPlaylistConfirmDialog THEN insert and update state`() =
@@ -250,39 +255,41 @@ class PlaylistViewModelTest {
         }
 
     @Test
-    fun `GIVEN OnItemDragFinish WHEN onAction THEN playlists updated`() = runTest {
-        val reorderedPlaylists = listOf(buildPlaylist())
-        coEvery {
-            upsertPlaylistsUseCase(reorderedPlaylists)
-        } returns right(Unit)
-        val states = mutableListOf<PlaylistState>()
-        val stateJob = launch { viewModel.state.toList(states) }
-        advanceUntilIdle()
+    fun `GIVEN OnItemDragFinish WHEN onAction THEN playlists updated`() =
+        runTest {
+            val reorderedPlaylists = listOf(buildPlaylist())
+            coEvery {
+                upsertPlaylistsUseCase(reorderedPlaylists)
+            } returns right(Unit)
+            val states = mutableListOf<PlaylistState>()
+            val stateJob = launch { viewModel.state.toList(states) }
+            advanceUntilIdle()
 
-        viewModel.onAction(PlaylistAction.OnItemDragFinish(reorderedPlaylists))
-        advanceUntilIdle()
+            viewModel.onAction(PlaylistAction.OnItemDragFinish(reorderedPlaylists))
+            advanceUntilIdle()
 
-        coVerifyOnce {
-            upsertPlaylistsUseCase(reorderedPlaylists)
+            coVerifyOnce {
+                upsertPlaylistsUseCase(reorderedPlaylists)
+            }
+            stateJob.cancel()
         }
-        stateJob.cancel()
-    }
 
     @Test
-    fun `GIVEN playlistId WHEN OnRemovePlaylistClicked THEN confirm dialog is shown`() = runTest {
-        val playlistId = 1
-        val states = mutableListOf<PlaylistState>()
-        val job = launch { viewModel.state.toList(states) }
+    fun `GIVEN playlistId WHEN OnRemovePlaylistClicked THEN confirm dialog is shown`() =
+        runTest {
+            val playlistId = 1
+            val states = mutableListOf<PlaylistState>()
+            val job = launch { viewModel.state.toList(states) }
 
-        viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
-        advanceUntilIdle()
+            viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
+            advanceUntilIdle()
 
-        states.last().apply {
-            selectedPlaylistId shouldBeEqualTo playlistId
-            shouldIShowConfirmDialog shouldBe true
+            states.last().apply {
+                selectedPlaylistId shouldBeEqualTo playlistId
+                shouldIShowConfirmDialog shouldBe true
+            }
+            job.cancel()
         }
-        job.cancel()
-    }
 
     @Test
     fun `GIVEN selectedPlaylistId WHEN OnConfirmDeleteDialog THEN delete and update state`() =
@@ -309,25 +316,26 @@ class PlaylistViewModelTest {
         }
 
     @Test
-    fun `GIVEN delete error WHEN OnConfirmDeleteDialog THEN error emitted`() = runTest {
-        val playlistId = 42
-        val error = Throwable("Delete failed")
-        coEvery { deletePlaylistByIdUseCase(playlistId) } returns left(error)
-        val events = mutableListOf<PlaylistEvent>()
-        val states = mutableListOf<PlaylistState>()
-        val eventJob = launch { viewModel.events.toList(events) }
-        val stateJob = launch { viewModel.state.toList(states) }
+    fun `GIVEN delete error WHEN OnConfirmDeleteDialog THEN error emitted`() =
+        runTest {
+            val playlistId = 42
+            val error = Throwable("Delete failed")
+            coEvery { deletePlaylistByIdUseCase(playlistId) } returns left(error)
+            val events = mutableListOf<PlaylistEvent>()
+            val states = mutableListOf<PlaylistState>()
+            val eventJob = launch { viewModel.events.toList(events) }
+            val stateJob = launch { viewModel.state.toList(states) }
 
-        viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
-        advanceUntilIdle()
-        viewModel.onAction(PlaylistAction.OnConfirmDeleteDialog)
-        advanceUntilIdle()
+            viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
+            advanceUntilIdle()
+            viewModel.onAction(PlaylistAction.OnConfirmDeleteDialog)
+            advanceUntilIdle()
 
-        events.first() shouldBeEqualTo PlaylistEvent.Error(error)
-        coVerifyOnce {
-            deletePlaylistByIdUseCase(playlistId)
+            events.first() shouldBeEqualTo PlaylistEvent.Error(error)
+            coVerifyOnce {
+                deletePlaylistByIdUseCase(playlistId)
+            }
+            stateJob.cancel()
+            eventJob.cancel()
         }
-        stateJob.cancel()
-        eventJob.cancel()
-    }
 }

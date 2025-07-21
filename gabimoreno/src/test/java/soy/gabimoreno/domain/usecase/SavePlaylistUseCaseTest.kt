@@ -17,7 +17,6 @@ import soy.gabimoreno.domain.repository.playlist.PlaylistRepository
 import soy.gabimoreno.framework.datastore.getEmail
 
 class SavePlaylistUseCaseTest {
-
     private val context: Context = mockk()
     private val playlistRepository = mockk<PlaylistRepository>()
 
@@ -31,18 +30,19 @@ class SavePlaylistUseCaseTest {
     }
 
     @Test
-    fun `GIVEN valid playlist WHEN invoke THEN returns right with unit`() = runTest {
-        val playlist = mockk<Playlist>()
-        val expectedEither = Either.Right(Unit)
-        coEvery { playlistRepository.savePlaylist(playlist, EMAIL) } returns expectedEither
+    fun `GIVEN valid playlist WHEN invoke THEN returns right with unit`() =
+        runTest {
+            val playlist = mockk<Playlist>()
+            val expectedEither = Either.Right(Unit)
+            coEvery { playlistRepository.savePlaylist(playlist, EMAIL) } returns expectedEither
 
-        val result = useCase(playlist)
+            val result = useCase(playlist)
 
-        result shouldBeEqualTo expectedEither
-        coVerifyOnce {
-            playlistRepository.savePlaylist(playlist, EMAIL)
+            result shouldBeEqualTo expectedEither
+            coVerifyOnce {
+                playlistRepository.savePlaylist(playlist, EMAIL)
+            }
         }
-    }
 
     @Test
     fun `GIVEN repository throws exception WHEN invoke THEN returns left with throwable`() =

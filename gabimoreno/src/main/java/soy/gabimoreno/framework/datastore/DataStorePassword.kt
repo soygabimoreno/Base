@@ -6,12 +6,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-fun Context.getPassword(): Flow<String> {
-    return dataStore.data
+fun Context.getPassword(): Flow<String> =
+    dataStore.data
         .map { preferences ->
             preferences[key] ?: EMPTY_PASSWORD
         }
-}
 
 suspend fun Context.setPassword(password: String) {
     dataStore.edit { settings ->

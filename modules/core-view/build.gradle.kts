@@ -6,10 +6,16 @@ plugins {
 
 android {
     namespace = "soy.gabimoreno.core.view"
-    compileSdk = libs.versions.sdk.compile.get().toInt()
+    compileSdk =
+        libs.versions.sdk.compile
+            .get()
+            .toInt()
 
     defaultConfig {
-        minSdk = libs.versions.sdk.minimum.get().toInt()
+        minSdk =
+            libs.versions.sdk.minimum
+                .get()
+                .toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -20,7 +26,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }

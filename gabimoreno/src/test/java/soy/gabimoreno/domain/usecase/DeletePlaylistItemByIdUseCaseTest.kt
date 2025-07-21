@@ -17,7 +17,6 @@ import soy.gabimoreno.ext.right
 import soy.gabimoreno.framework.datastore.getEmail
 
 class DeletePlaylistItemByIdUseCaseTest {
-
     private val context: Context = mockk()
     private val playlistRepository: PlaylistRepository = mockk()
 
@@ -31,38 +30,40 @@ class DeletePlaylistItemByIdUseCaseTest {
     }
 
     @Test
-    fun `GIVEN valid playlistItemId WHEN invoke THEN returns Right with Unit`() = runTest {
-        val audioItemId = "audio-123"
-        val playlistId = 1
-        coEvery {
-            playlistRepository.deletePlaylistItemById(
-                audioItemId,
-                playlistId,
-                EMAIL
-            )
-        } returns right(Unit)
+    fun `GIVEN valid playlistItemId WHEN invoke THEN returns Right with Unit`() =
+        runTest {
+            val audioItemId = "audio-123"
+            val playlistId = 1
+            coEvery {
+                playlistRepository.deletePlaylistItemById(
+                    audioItemId,
+                    playlistId,
+                    EMAIL,
+                )
+            } returns right(Unit)
 
-        val result = useCase(audioItemId, playlistId)
+            val result = useCase(audioItemId, playlistId)
 
-        result shouldBeEqualTo right(Unit)
-        coVerifyOnce {
-            playlistRepository.deletePlaylistItemById(audioItemId, playlistId, EMAIL)
+            result shouldBeEqualTo right(Unit)
+            coVerifyOnce {
+                playlistRepository.deletePlaylistItemById(audioItemId, playlistId, EMAIL)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN repository returns Left WHEN invoke THEN returns Left with exception`() = runTest {
-        val audioItemId = "audio-123"
-        val playlistId = 1
-        val exception = RuntimeException("Database error")
-        coEvery {
-            playlistRepository.deletePlaylistItemById(audioItemId, playlistId, EMAIL)
-        } returns left(exception)
+    fun `GIVEN repository returns Left WHEN invoke THEN returns Left with exception`() =
+        runTest {
+            val audioItemId = "audio-123"
+            val playlistId = 1
+            val exception = RuntimeException("Database error")
+            coEvery {
+                playlistRepository.deletePlaylistItemById(audioItemId, playlistId, EMAIL)
+            } returns left(exception)
 
-        val result = useCase(audioItemId, playlistId)
+            val result = useCase(audioItemId, playlistId)
 
-        result shouldBeEqualTo left(exception)
-    }
+            result shouldBeEqualTo left(exception)
+        }
 }
 
 private const val EMAIL = "test@test.com"

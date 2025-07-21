@@ -29,12 +29,21 @@ android {
     }
 
     namespace = "soy.gabimoreno"
-    compileSdk = libs.versions.sdk.compile.get().toInt()
+    compileSdk =
+        libs.versions.sdk.compile
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "soy.gabimoreno"
-        minSdk = libs.versions.sdk.minimum.get().toInt()
-        targetSdk = libs.versions.sdk.target.get().toInt()
+        minSdk =
+            libs.versions.sdk.minimum
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.sdk.target
+                .get()
+                .toInt()
         versionCode = 61
         versionName = "3.4.0"
 
@@ -60,7 +69,7 @@ android {
             isCrunchPngs = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             extra["enableCrashlytics"] = false
             extra["alwaysUpdateBuildId"] = false
@@ -77,7 +86,7 @@ android {
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             if (isLocalBuild()) {
                 signingConfig = signingConfigs.getByName(name)
@@ -193,6 +202,4 @@ dependencies {
     debugImplementation(libs.compose.ui.test.manifest)
 }
 
-fun isLocalBuild(): Boolean {
-    return System.getenv("CI") == null
-}
+fun isLocalBuild(): Boolean = System.getenv("CI") == null

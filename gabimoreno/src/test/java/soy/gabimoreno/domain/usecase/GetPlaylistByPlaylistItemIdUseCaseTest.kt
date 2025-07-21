@@ -12,7 +12,6 @@ import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildPlaylist
 
 class GetPlaylistByPlaylistItemIdUseCaseTest {
-
     private val repository: PlaylistRepository = relaxedMockk()
     private lateinit var useCase: GetPlaylistByPlaylistItemIdUseCase
 

@@ -19,7 +19,6 @@ import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 import soy.gabimoreno.framework.datastore.getEmail
 
 class GetAudioCoursesUseCaseTest {
-
     private val context = mockk<Context>()
 
     private val repository = mockk<AudioCoursesRepository>()
@@ -33,28 +32,30 @@ class GetAudioCoursesUseCaseTest {
     }
 
     @Test
-    fun `GIVEN repository returns Right WHEN invoked THEN returns list of AudioCourse`() = runTest {
-        val expectedCourses = listOf(relaxedMockk<AudioCourse>())
-        coEvery {
-            repository.getCourses(categories = CATEGORIES, email = EMAIL, forceRefresh = false)
-        } returns expectedCourses.right()
+    fun `GIVEN repository returns Right WHEN invoked THEN returns list of AudioCourse`() =
+        runTest {
+            val expectedCourses = listOf(relaxedMockk<AudioCourse>())
+            coEvery {
+                repository.getCourses(categories = CATEGORIES, email = EMAIL, forceRefresh = false)
+            } returns expectedCourses.right()
 
-        val result = useCase(CATEGORIES)
+            val result = useCase(CATEGORIES)
 
-        result shouldBeEqualTo expectedCourses.right()
-    }
+            result shouldBeEqualTo expectedCourses.right()
+        }
 
     @Test
-    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() = runTest {
-        val error = Throwable("Network error")
-        coEvery {
-            repository.getCourses(categories = CATEGORIES, email = EMAIL, forceRefresh = false)
-        } returns error.left()
+    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() =
+        runTest {
+            val error = Throwable("Network error")
+            coEvery {
+                repository.getCourses(categories = CATEGORIES, email = EMAIL, forceRefresh = false)
+            } returns error.left()
 
-        val result = useCase(CATEGORIES)
+            val result = useCase(CATEGORIES)
 
-        result shouldBeEqualTo error.left()
-    }
+            result shouldBeEqualTo error.left()
+        }
 }
 
 private val CATEGORIES = listOf(Category.PREMIUM)

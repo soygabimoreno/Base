@@ -12,10 +12,10 @@ import androidx.room.PrimaryKey
             entity = AudioCourseDbModel::class,
             parentColumns = ["id"],
             childColumns = ["idAudioCourse"],
-            onDelete = ForeignKey.CASCADE
-        )
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
-    indices = [Index("idAudioCourse")]
+    indices = [Index("idAudioCourse")],
 )
 data class AudioCourseItemDbModel(
     @PrimaryKey

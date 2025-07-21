@@ -6,7 +6,6 @@ import soy.gabimoreno.data.remote.model.MemberApiModel
 import soy.gabimoreno.data.remote.model.StatusApiModel
 
 class MemberMapperKtTest {
-
     @Test
     fun `GIVEN an MemberApiModel list WHEN toDomain THEN return the expected member`() {
         val memberApiModelList = listOf(buildMemberApiModel())
@@ -16,10 +15,11 @@ class MemberMapperKtTest {
         result.isActive shouldBe IS_ACTIVE
     }
 
-    private fun buildMemberApiModel() = MemberApiModel(
-        statusApiModel = statusApiModel,
-        isActive = IS_ACTIVE
-    )
+    private fun buildMemberApiModel() =
+        MemberApiModel(
+            statusApiModel = statusApiModel,
+            isActive = IS_ACTIVE,
+        )
 }
 
 private const val IS_ACTIVE = true

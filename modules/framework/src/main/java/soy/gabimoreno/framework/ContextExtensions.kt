@@ -8,20 +8,22 @@ fun Context.toast(
     @StringRes resId: Int,
     duration: Int = Toast.LENGTH_SHORT,
 ) {
-    Toast.makeText(
-        this,
-        resId,
-        duration
-    ).show()
+    Toast
+        .makeText(
+            this,
+            resId,
+            duration,
+        ).show()
 }
 
 fun Context.toast(
     message: CharSequence,
     duration: Int = Toast.LENGTH_SHORT,
 ) {
-    Toast.makeText(
-        this,
-        message,
-        duration
-    ).show()
+    Toast
+        .makeText(
+            this,
+            message,
+            duration,
+        ).show()
 }

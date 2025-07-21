@@ -16,15 +16,15 @@ import soy.gabimoreno.data.remote.service.PostService
 
 @ExperimentalCoroutinesApi
 class RemotePremiumAudiosDataSourceTest {
-
     private val postService: PostService = mockk()
     private lateinit var remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource
 
     @Before
     fun setUp() {
-        remotePremiumAudiosDataSource = RemotePremiumAudiosDataSource(
-            postService
-        )
+        remotePremiumAudiosDataSource =
+            RemotePremiumAudiosDataSource(
+                postService,
+            )
     }
 
     @Test

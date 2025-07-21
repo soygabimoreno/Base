@@ -27,55 +27,58 @@ import soy.gabimoreno.fake.buildPlaylist
 import soy.gabimoreno.fake.buildPlaylistItems
 
 class DefaultPlaylistRepositoryTest {
-
     private val cloudDataSource: CloudPlaylistDataSource = mockk()
     private val localPlaylistDataSource: LocalPlaylistDataSource = relaxedMockk()
     private lateinit var repository: DefaultPlaylistRepository
 
     @Before
     fun setUp() {
-        repository = DefaultPlaylistRepository(
-            cloudDataSource,
-            localPlaylistDataSource
-        )
+        repository =
+            DefaultPlaylistRepository(
+                cloudDataSource,
+                localPlaylistDataSource,
+            )
     }
 
     @Test
-    fun `GIVEN valid parameters WHEN insertPlaylist THEN returns Right with playlist`() = runTest {
-        val name = "Playlist Name"
-        val description = "Playlist Description"
-        val playList = Playlist(
-            id = 1,
-            title = name,
-            description = description,
-            items = emptyList(),
-            position = 0
-        )
-        coEvery { localPlaylistDataSource.insertPlaylist(name, description) } returns playList
-        coJustRun { cloudDataSource.updatePlaylist(EMAIL, playList.toCloudPlaylistResponse()) }
+    fun `GIVEN valid parameters WHEN insertPlaylist THEN returns Right with playlist`() =
+        runTest {
+            val name = "Playlist Name"
+            val description = "Playlist Description"
+            val playList =
+                Playlist(
+                    id = 1,
+                    title = name,
+                    description = description,
+                    items = emptyList(),
+                    position = 0,
+                )
+            coEvery { localPlaylistDataSource.insertPlaylist(name, description) } returns playList
+            coJustRun { cloudDataSource.updatePlaylist(EMAIL, playList.toCloudPlaylistResponse()) }
 
-        val result = repository.insertPlaylist(name, description, EMAIL)
+            val result = repository.insertPlaylist(name, description, EMAIL)
 
-        result shouldBeInstanceOf Either.Right::class
-        result.getOrNull() shouldBeEqualTo playList
-        coVerifyOnce {
-            localPlaylistDataSource.insertPlaylist(name, description)
-            cloudDataSource.updatePlaylist(EMAIL, playList.toCloudPlaylistResponse())
+            result shouldBeInstanceOf Either.Right::class
+            result.getOrNull() shouldBeEqualTo playList
+            coVerifyOnce {
+                localPlaylistDataSource.insertPlaylist(name, description)
+                cloudDataSource.updatePlaylist(EMAIL, playList.toCloudPlaylistResponse())
+            }
         }
-    }
 
     @Test
     fun `GIVEN valid parameters and empty email WHEN insertPlaylist THEN returns Right and does not update cloud`() =
         runTest {
             val name = "Playlist Name"
             val description = "Playlist Description"
-            val playList = Playlist(
-                id = 1,
-                title = name,
-                description = description,
-                items = emptyList(),
-                position = 0
-            )
+            val playList =
+                Playlist(
+                    id = 1,
+                    title = name,
+                    description = description,
+                    items = emptyList(),
+                    position = 0,
+                )
             coEvery { localPlaylistDataSource.insertPlaylist(name, description) } returns playList
 
             val result = repository.insertPlaylist(name, description, EMPTY_STRING)
@@ -91,56 +94,60 @@ class DefaultPlaylistRepositoryTest {
         }
 
     @Test
-    fun `GIVEN datasource returns true WHEN isEmpty THEN returns Right with true`() = runTest {
-        coEvery { localPlaylistDataSource.isEmpty() } returns true
+    fun `GIVEN datasource returns true WHEN isEmpty THEN returns Right with true`() =
+        runTest {
+            coEvery { localPlaylistDataSource.isEmpty() } returns true
 
-        val result = repository.isEmpty()
+            val result = repository.isEmpty()
 
-        result shouldBeInstanceOf Either.Right::class
-        result.getOrNull() shouldBeEqualTo true
-    }
+            result shouldBeInstanceOf Either.Right::class
+            result.getOrNull() shouldBeEqualTo true
+        }
 
     @Test
-    fun `GIVEN datasource returns false WHEN isEmpty THEN returns Right with false`() = runTest {
-        coEvery { localPlaylistDataSource.isEmpty() } returns false
+    fun `GIVEN datasource returns false WHEN isEmpty THEN returns Right with false`() =
+        runTest {
+            coEvery { localPlaylistDataSource.isEmpty() } returns false
 
-        val result = repository.isEmpty()
+            val result = repository.isEmpty()
 
-        result shouldBeInstanceOf Either.Right::class
-        result.getOrNull() shouldBeEqualTo false
-    }
+            result shouldBeInstanceOf Either.Right::class
+            result.getOrNull() shouldBeEqualTo false
+        }
 
     @Test
-    fun `GIVEN valid playlist WHEN savePlaylist THEN returns Right with Unit`() = runTest {
-        val playlist = buildPlaylist()
-        coJustRun { localPlaylistDataSource.savePlaylist(listOf(playlist)) }
-        coJustRun { cloudDataSource.updatePlaylist(EMAIL, playlist.toCloudPlaylistResponse()) }
+    fun `GIVEN valid playlist WHEN savePlaylist THEN returns Right with Unit`() =
+        runTest {
+            val playlist = buildPlaylist()
+            coJustRun { localPlaylistDataSource.savePlaylist(listOf(playlist)) }
+            coJustRun { cloudDataSource.updatePlaylist(EMAIL, playlist.toCloudPlaylistResponse()) }
 
-        val result = repository.savePlaylist(playlist, EMAIL)
+            val result = repository.savePlaylist(playlist, EMAIL)
 
-        result shouldBeInstanceOf Either.Right::class
-        result.getOrNull() shouldBeEqualTo Unit
-        coVerifyOnce {
-            localPlaylistDataSource.savePlaylist(listOf(playlist))
-            cloudDataSource.updatePlaylist(EMAIL, playlist.toCloudPlaylistResponse())
+            result shouldBeInstanceOf Either.Right::class
+            result.getOrNull() shouldBeEqualTo Unit
+            coVerifyOnce {
+                localPlaylistDataSource.savePlaylist(listOf(playlist))
+                cloudDataSource.updatePlaylist(EMAIL, playlist.toCloudPlaylistResponse())
+            }
         }
-    }
 
     @Test
-    fun `GIVEN playlist and empty email WHEN savePlaylist THEN updates local only`() = runTest {
-        val playlist = buildPlaylist()
-        coJustRun { localPlaylistDataSource.savePlaylist(listOf(playlist)) }
+    fun `GIVEN playlist and empty email WHEN savePlaylist THEN updates local only`() =
+        runTest {
+            val playlist = buildPlaylist()
+            coJustRun { localPlaylistDataSource.savePlaylist(listOf(playlist)) }
 
-        val result = repository.savePlaylist(playlist, EMPTY_STRING)
+            val result = repository.savePlaylist(playlist, EMPTY_STRING)
 
-        result shouldBeEqualTo right(Unit)
-        coVerifyOnce {
-            localPlaylistDataSource.savePlaylist(listOf(playlist))
+            result shouldBeEqualTo right(Unit)
+            coVerifyOnce {
+                localPlaylistDataSource.savePlaylist(listOf(playlist))
+            }
+            coVerifyNever {
+                cloudDataSource.updatePlaylist(any(), any())
+            }
         }
-        coVerifyNever {
-            cloudDataSource.updatePlaylist(any(), any())
-        }
-    }
 
     @Test
     fun `GIVEN empty email WHEN getAllPlaylists THEN returns Right with local playlists only`() =
@@ -166,16 +173,17 @@ class DefaultPlaylistRepositoryTest {
         }
 
     @Test
-    fun `GIVEN valid playlist id WHEN getPlaylistById THEN returns Right with flow`() = runTest {
-        val playlistId = 1
-        val playlist = buildPlaylist()
-        every { localPlaylistDataSource.getPlaylistById(playlistId) } returns flowOf(playlist)
+    fun `GIVEN valid playlist id WHEN getPlaylistById THEN returns Right with flow`() =
+        runTest {
+            val playlistId = 1
+            val playlist = buildPlaylist()
+            every { localPlaylistDataSource.getPlaylistById(playlistId) } returns flowOf(playlist)
 
-        val result = repository.getPlaylistById(playlistId)
+            val result = repository.getPlaylistById(playlistId)
 
-        result shouldBeInstanceOf Either.Right::class
-        result.getOrNull() shouldBeEqualTo playlist
-    }
+            result shouldBeInstanceOf Either.Right::class
+            result.getOrNull() shouldBeEqualTo playlist
+        }
 
     @Test
     fun `GIVEN non-existent playlist id WHEN getPlaylistById THEN returns Right with null`() =
@@ -190,20 +198,21 @@ class DefaultPlaylistRepositoryTest {
         }
 
     @Test
-    fun `GIVEN valid playlist id WHEN resetPlaylistById THEN returns Right with Unit`() = runTest {
-        val playlistId = 1
-        coJustRun {
-            localPlaylistDataSource.resetPlaylistById(playlistId)
-        }
+    fun `GIVEN valid playlist id WHEN resetPlaylistById THEN returns Right with Unit`() =
+        runTest {
+            val playlistId = 1
+            coJustRun {
+                localPlaylistDataSource.resetPlaylistById(playlistId)
+            }
 
-        val result = repository.resetPlaylistById(playlistId, EMAIL)
+            val result = repository.resetPlaylistById(playlistId, EMAIL)
 
-        result shouldBeInstanceOf Either.Right::class
-        result.getOrNull() shouldBeEqualTo Unit
-        coVerifyOnce {
-            localPlaylistDataSource.resetPlaylistById(playlistId)
+            result shouldBeInstanceOf Either.Right::class
+            result.getOrNull() shouldBeEqualTo Unit
+            coVerifyOnce {
+                localPlaylistDataSource.resetPlaylistById(playlistId)
+            }
         }
-    }
 
     @Test
     fun `GIVEN datasource succeeds WHEN deleteAllPlaylists THEN returns Right with Unit`() =
@@ -222,19 +231,20 @@ class DefaultPlaylistRepositoryTest {
         }
 
     @Test
-    fun `GIVEN empty email WHEN deleteAllPlaylists THEN deletes local only`() = runTest {
-        coJustRun { localPlaylistDataSource.deleteAllPlaylists() }
+    fun `GIVEN empty email WHEN deleteAllPlaylists THEN deletes local only`() =
+        runTest {
+            coJustRun { localPlaylistDataSource.deleteAllPlaylists() }
 
-        val result = repository.deleteAllPlaylists(EMPTY_STRING)
+            val result = repository.deleteAllPlaylists(EMPTY_STRING)
 
-        result shouldBeEqualTo right(Unit)
-        coVerifyOnce {
-            localPlaylistDataSource.deleteAllPlaylists()
+            result shouldBeEqualTo right(Unit)
+            coVerifyOnce {
+                localPlaylistDataSource.deleteAllPlaylists()
+            }
+            coVerifyNever {
+                cloudDataSource.deleteAllPlaylists(any())
+            }
         }
-        coVerifyNever {
-            cloudDataSource.deleteAllPlaylists(any())
-        }
-    }
 
     @Test
     fun `GIVEN a valid playlistId WHEN getPlaylistIdsByItemId THEN playlistIds are returned`() =
@@ -263,13 +273,13 @@ class DefaultPlaylistRepositoryTest {
             coJustRun {
                 cloudDataSource.updatePlaylist(
                     EMAIL,
-                    playlists[0].toCloudPlaylistResponse()
+                    playlists[0].toCloudPlaylistResponse(),
                 )
             }
             coJustRun {
                 cloudDataSource.updatePlaylist(
                     EMAIL,
-                    playlists[1].toCloudPlaylistResponse()
+                    playlists[1].toCloudPlaylistResponse(),
                 )
             }
 
@@ -293,9 +303,10 @@ class DefaultPlaylistRepositoryTest {
             } throws exception
             coJustRun { cloudDataSource.updatePlaylist(EMPTY_STRING, any()) }
 
-            val result = runCatching {
-                repository.upsertPlaylists(playlists, EMPTY_STRING)
-            }.getOrDefault(left(exception))
+            val result =
+                runCatching {
+                    repository.upsertPlaylists(playlists, EMPTY_STRING)
+                }.getOrDefault(left(exception))
 
             result shouldBeEqualTo left(exception)
             coVerifyOnce {
@@ -307,20 +318,21 @@ class DefaultPlaylistRepositoryTest {
         }
 
     @Test
-    fun `GIVEN playlists and empty email WHEN upsertPlaylists THEN updates local only`() = runTest {
-        val playlists = listOf(buildPlaylist(), buildPlaylist(2))
-        coJustRun { localPlaylistDataSource.upsertPlaylistDbModels(playlists) }
+    fun `GIVEN playlists and empty email WHEN upsertPlaylists THEN updates local only`() =
+        runTest {
+            val playlists = listOf(buildPlaylist(), buildPlaylist(2))
+            coJustRun { localPlaylistDataSource.upsertPlaylistDbModels(playlists) }
 
-        val result = repository.upsertPlaylists(playlists, EMPTY_STRING)
+            val result = repository.upsertPlaylists(playlists, EMPTY_STRING)
 
-        result shouldBeEqualTo right(Unit)
-        coVerifyOnce {
-            localPlaylistDataSource.upsertPlaylistDbModels(playlists)
+            result shouldBeEqualTo right(Unit)
+            coVerifyOnce {
+                localPlaylistDataSource.upsertPlaylistDbModels(playlists)
+            }
+            coVerifyNever {
+                cloudDataSource.updatePlaylist(any(), any())
+            }
         }
-        coVerifyNever {
-            cloudDataSource.updatePlaylist(any(), any())
-        }
-    }
 
     @Test
     fun `GIVEN playlistIds WHEN upsertPlaylistItemsDbModel THEN upserts items with correct positions`() =
@@ -357,9 +369,10 @@ class DefaultPlaylistRepositoryTest {
                 localPlaylistDataSource.upsertPlaylistItemsDbModel(playlistItemId, playlistIds)
             } throws exception
 
-            val result = runCatching {
-                repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
-            }.getOrDefault(left(exception))
+            val result =
+                runCatching {
+                    repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
+                }.getOrDefault(left(exception))
 
             result shouldBeEqualTo left(exception)
             coVerifyOnce {
@@ -376,7 +389,7 @@ class DefaultPlaylistRepositoryTest {
             coJustRun {
                 localPlaylistDataSource.deletePlaylistItemDbModelById(
                     audioItemId,
-                    playlistId
+                    playlistId,
                 )
             }
             coEvery {
@@ -386,7 +399,7 @@ class DefaultPlaylistRepositoryTest {
                 cloudDataSource.deletePlaylistItem(
                     EMAIL,
                     playlistId.toString(),
-                    itemToDelete.toString()
+                    itemToDelete.toString(),
                 )
             }
 
@@ -399,7 +412,7 @@ class DefaultPlaylistRepositoryTest {
                 cloudDataSource.deletePlaylistItem(
                     EMAIL,
                     playlistId.toString(),
-                    itemToDelete.toString()
+                    itemToDelete.toString(),
                 )
             }
         }
@@ -409,9 +422,10 @@ class DefaultPlaylistRepositoryTest {
         runTest {
             val playlistId = 42
             val playlistAudioItems = buildPlaylistItems()
-            val playlistItemsDbModel = playlistAudioItems.map { playlistAudioItem ->
-                playlistAudioItem.toPlaylistItemDbModel(playlistId)
-            }
+            val playlistItemsDbModel =
+                playlistAudioItems.map { playlistAudioItem ->
+                    playlistAudioItem.toPlaylistItemDbModel(playlistId)
+                }
             coJustRun { cloudDataSource.savePlaylistItem(EMAIL, any()) }
 
             val result = repository.updatePlaylistItems(playlistId, playlistAudioItems, EMAIL)
@@ -426,19 +440,20 @@ class DefaultPlaylistRepositoryTest {
         }
 
     @Test
-    fun `GIVEN playlistId WHEN deletePlaylistById THEN deletes playlist`() = runTest {
-        val playlistId = 1
-        coJustRun { localPlaylistDataSource.deletePlaylistDbModelById(playlistId) }
-        coJustRun { cloudDataSource.deletePlaylist(EMAIL, playlistId.toString()) }
+    fun `GIVEN playlistId WHEN deletePlaylistById THEN deletes playlist`() =
+        runTest {
+            val playlistId = 1
+            coJustRun { localPlaylistDataSource.deletePlaylistDbModelById(playlistId) }
+            coJustRun { cloudDataSource.deletePlaylist(EMAIL, playlistId.toString()) }
 
-        val result = repository.deletePlaylistById(playlistId, EMAIL)
+            val result = repository.deletePlaylistById(playlistId, EMAIL)
 
-        result shouldBeEqualTo right(Unit)
-        coVerifyOnce {
-            localPlaylistDataSource.deletePlaylistDbModelById(playlistId)
-            cloudDataSource.deletePlaylist(EMAIL, playlistId.toString())
+            result shouldBeEqualTo right(Unit)
+            coVerifyOnce {
+                localPlaylistDataSource.deletePlaylistDbModelById(playlistId)
+                cloudDataSource.deletePlaylist(EMAIL, playlistId.toString())
+            }
         }
-    }
 
     @Test
     fun `GIVEN playlistId and empty email WHEN deletePlaylistById THEN deletes local only`() =

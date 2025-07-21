@@ -31,21 +31,23 @@ fun CommonButton(
     onClick: () -> Unit,
 ) {
     Box(
-        modifier = modifier
-            .defaultMinSize(Spacing.oddSpacing200)
-            .height(height)
-            .clip(CircleShape)
-            .background(background)
-            .clickable(onClick = onClick)
-            .testTag(COMMON_BUTTON_BOX_ID)
+        modifier =
+            modifier
+                .defaultMinSize(Spacing.oddSpacing200)
+                .height(height)
+                .clip(CircleShape)
+                .background(background)
+                .clickable(onClick = onClick)
+                .testTag(COMMON_BUTTON_BOX_ID),
     ) {
         Text(
             text = text,
             color = MaterialTheme.colors.onPrimary,
             style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .padding(horizontal = Spacing.s16)
-                .align(Alignment.Center)
+            modifier =
+                Modifier
+                    .padding(horizontal = Spacing.s16)
+                    .align(Alignment.Center),
         )
     }
 }
@@ -57,7 +59,7 @@ fun CommonButtonPreview() {
         CommonButton(
             "Play",
             height = Spacing.s48,
-            MaterialTheme.colors.primary
+            MaterialTheme.colors.primary,
         ) {}
     }
 }

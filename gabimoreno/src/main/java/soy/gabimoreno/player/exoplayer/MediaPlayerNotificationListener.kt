@@ -9,7 +9,6 @@ import soy.gabimoreno.player.service.MediaPlayerService
 class MediaPlayerNotificationListener(
     private val mediaService: MediaPlayerService,
 ) : PlayerNotificationManager.NotificationListener {
-
     override fun onNotificationCancelled(
         notificationId: Int,
         dismissedByUser: Boolean,
@@ -32,7 +31,7 @@ class MediaPlayerNotificationListener(
             if (ongoing || !isForegroundService) {
                 ContextCompat.startForegroundService(
                     this,
-                    Intent(applicationContext, this::class.java)
+                    Intent(applicationContext, this::class.java),
                 )
                 startForeground(PLAYBACK_NOTIFICATION_ID, notification)
                 isForegroundService = true

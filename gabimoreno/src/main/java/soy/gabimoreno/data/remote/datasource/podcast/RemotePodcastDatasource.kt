@@ -13,9 +13,8 @@ import soy.gabimoreno.domain.model.podcast.EpisodesWrapper
 class RemotePodcastDatasource(
     private val rssParser: Parser,
 ) : PodcastDatasource {
-
-    override fun getEpisodesStream(podcastUrl: PodcastUrl): Either<Throwable, Flow<List<Episode>>> {
-        return Either.catch {
+    override fun getEpisodesStream(podcastUrl: PodcastUrl): Either<Throwable, Flow<List<Episode>>> =
+        Either.catch {
             flow {
                 val channel = rssParser.getChannel(podcastUrl)
                 val episodes = channel.toDomain().episodes
@@ -31,12 +30,10 @@ class RemotePodcastDatasource(
                 }
             }
         }
-    }
 
-    override suspend fun getEpisodes(podcastUrl: PodcastUrl): Either<Throwable, EpisodesWrapper> {
-        return Either.catch {
+    override suspend fun getEpisodes(podcastUrl: PodcastUrl): Either<Throwable, EpisodesWrapper> =
+        Either.catch {
             val channel = rssParser.getChannel(podcastUrl)
             channel.toDomain()
         }
-    }
 }

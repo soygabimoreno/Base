@@ -30,22 +30,25 @@ fun AudioImage(
         modifier
             .clip(MaterialTheme.shapes.medium)
             .aspectRatio(aspectRatio)
-            .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f))
+            .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f)),
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(url)
-                .crossfade(true)
-                .diskCachePolicy(CachePolicy.ENABLED)
-                .memoryCachePolicy(CachePolicy.ENABLED)
-                .build(),
+            model =
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(url)
+                    .crossfade(true)
+                    .diskCachePolicy(CachePolicy.ENABLED)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .build(),
             contentDescription = stringResource(R.string.podcast_thumbnail),
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
             error = painterResource(R.drawable.ic_baseline_mic_24),
-            placeholder = rememberVectorPainter(
-                image = ImageVector.vectorResource(R.drawable.ic_baseline_mic_24)
-            )
+            placeholder =
+                rememberVectorPainter(
+                    image = ImageVector.vectorResource(R.drawable.ic_baseline_mic_24),
+                ),
         )
     }
 }

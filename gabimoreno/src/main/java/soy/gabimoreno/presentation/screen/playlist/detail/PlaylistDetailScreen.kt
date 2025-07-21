@@ -61,7 +61,7 @@ import soy.gabimoreno.presentation.ui.dialog.TypeDialog
 fun PlaylistDetailScreenRoot(
     playlistId: String,
     onBackClicked: () -> Unit,
-    viewModel: PlaylistDetailViewModel = hiltViewModel()
+    viewModel: PlaylistDetailViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val playerViewModel = ViewModelProvider.playerViewModel
@@ -69,7 +69,7 @@ fun PlaylistDetailScreenRoot(
         viewModel.onScreenView(playlistId.toInt())
     }
     LaunchedEffect(Unit) {
-        viewModel.events.collect() { event ->
+        viewModel.events.collect { event ->
             when (event) {
                 is PlaylistDetailEvent.Error -> {
                     context.toast(context.getString(R.string.unexpected_error))
@@ -79,7 +79,7 @@ fun PlaylistDetailScreenRoot(
                     if (viewModel.state.playlistAudioItems.isNotEmpty()) {
                         playerViewModel.playPauseAudio(
                             viewModel.state.playlistAudioItems,
-                            viewModel.state.audio as Audio
+                            viewModel.state.audio as Audio,
                         )
                     }
                 }
@@ -95,7 +95,7 @@ fun PlaylistDetailScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -105,9 +105,10 @@ fun PlaylistDetailScreen(
     onAction: (PlaylistDetailAction) -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PurpleLight)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(PurpleLight),
     ) {
         when {
             state.playlist != null && !state.isLoading -> {
@@ -121,11 +122,11 @@ fun PlaylistDetailScreen(
                         onRemoveClicked = {
                             onAction(
                                 PlaylistDetailAction.OnRemovePlaylistAudioItem(
-                                    it.id
-                                )
+                                    it.id,
+                                ),
                             )
                         },
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
                     )
                 } else {
                     PlaylistEmptyState()
@@ -146,23 +147,24 @@ fun PlaylistDetailScreen(
 @Composable
 private fun PlaylistDetailHeader(
     state: PlaylistDetailState,
-    onAction: (PlaylistDetailAction) -> Unit
+    onAction: (PlaylistDetailAction) -> Unit,
 ) {
     Box(contentAlignment = Alignment.TopStart) {
         Image(
             painter = painterResource(R.drawable.ic_audiocourses_header),
             contentDescription = stringResource(R.string.playlist_detail_header),
             contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
         )
 
         IconOverlay(
             icon = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = stringResource(R.string.back),
             onClick = { onAction(PlaylistDetailAction.OnBackClicked) },
-            modifier = Modifier.align(Alignment.TopStart)
+            modifier = Modifier.align(Alignment.TopStart),
         )
 
         if (state.playlistAudioItems.isNotEmpty()) {
@@ -171,7 +173,7 @@ private fun PlaylistDetailHeader(
                 contentDescription = stringResource(R.string.play),
                 onClick = { onAction(PlaylistDetailAction.OnPlayClicked) },
                 modifier = Modifier.align(Alignment.TopCenter),
-                size = Spacing.s96
+                size = Spacing.s96,
             )
         }
 
@@ -180,7 +182,7 @@ private fun PlaylistDetailHeader(
             contentDescription = stringResource(R.string.playlist_edit),
             onClick = { onAction(PlaylistDetailAction.OnEditPlaylistClicked) },
             modifier = Modifier.align(Alignment.TopEnd),
-            size = Spacing.s48
+            size = Spacing.s48,
         )
 
         PlaylistHeaderText(
@@ -196,22 +198,24 @@ private fun IconOverlay(
     contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier,
-    size: Dp = Spacing.s64
+    size: Dp = Spacing.s64,
 ) {
     Box(
-        modifier = modifier
-            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
-            .clip(CircleShape)
-            .background(PurpleDark.copy(alpha = 0.8f))
+        modifier =
+            modifier
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+                .clip(CircleShape)
+                .background(PurpleDark.copy(alpha = 0.8f)),
     ) {
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
             tint = Orange,
-            modifier = Modifier
-                .size(size)
-                .padding(Spacing.s8)
-                .clickable(onClick = onClick)
+            modifier =
+                Modifier
+                    .size(size)
+                    .padding(Spacing.s8)
+                    .clickable(onClick = onClick),
         )
     }
 }
@@ -222,18 +226,19 @@ private fun PlaylistHeaderText(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(PurpleDark.copy(alpha = 0.8f))
-            .padding(Spacing.s16),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(PurpleDark.copy(alpha = 0.8f))
+                .padding(Spacing.s16),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         state.playlist?.let {
             Text(
                 text = it.title,
                 color = White,
                 style = MaterialTheme.typography.subtitle1,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
         }
         state.playlist?.let {
@@ -241,7 +246,7 @@ private fun PlaylistHeaderText(
                 text = it.description,
                 color = White,
                 style = MaterialTheme.typography.body2,
-                fontWeight = FontWeight.W300
+                fontWeight = FontWeight.W300,
             )
         }
     }
@@ -252,17 +257,17 @@ private fun PlaylistEmptyState() {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(R.string.playlist_playlist_empty),
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.h6,
         )
         Text(
             text = stringResource(R.string.playlist_add_items),
             style = MaterialTheme.typography.h6,
             color = Orange,
-            textDecoration = TextDecoration.Underline
+            textDecoration = TextDecoration.Underline,
         )
     }
 }
@@ -270,7 +275,7 @@ private fun PlaylistEmptyState() {
 @Composable
 private fun PlaylistDialogs(
     state: PlaylistDetailState,
-    onAction: (PlaylistDetailAction) -> Unit
+    onAction: (PlaylistDetailAction) -> Unit,
 ) {
     when {
         state.shouldIShowDialog && state.dialogType is PlaylistDialogType.Delete -> {
@@ -281,7 +286,7 @@ private fun PlaylistDialogs(
                 dismissText = stringResource(R.string.close),
                 onConfirm = { onAction(PlaylistDetailAction.OnConfirmDialog) },
                 onDismiss = { onAction(PlaylistDetailAction.OnDismissDialog) },
-                typeDialog = TypeDialog.CONFIRMATION
+                typeDialog = TypeDialog.CONFIRMATION,
             )
         }
 
@@ -292,9 +297,13 @@ private fun PlaylistDialogs(
                 titleError = state.dialogTitleError,
                 description = state.dialogDescription,
                 onTitleChange = { onAction(PlaylistDetailAction.OnDialogTitleChange(it)) },
-                onDescriptionChange = { onAction(PlaylistDetailAction.OnDialogDescriptionChange(it)) },
+                onDescriptionChange = {
+                    onAction(
+                        PlaylistDetailAction.OnDialogDescriptionChange(it),
+                    )
+                },
                 onConfirm = { onAction(PlaylistDetailAction.OnEditPlaylistConfirmDialog) },
-                onDismiss = { onAction(PlaylistDetailAction.OnEditPlaylistDismissDialog) }
+                onDismiss = { onAction(PlaylistDetailAction.OnEditPlaylistDismissDialog) },
             )
         }
     }
@@ -305,16 +314,18 @@ private fun PlaylistDialogs(
 private fun Preview() {
     GabiMorenoTheme {
         PlaylistDetailScreen(
-            state = PlaylistDetailState(
-                playlist = Playlist(
-                    id = 1,
-                    title = "Audiocurso de CI/CD",
-                    description = "Domina con este curso CI/CD para AHORRAR TIEMPO Y EVITAR ERRORES en tu dia a  dia como programador",
-                    position = 0,
-                    items = emptyList()
-                )
-            ),
-            onAction = {}
+            state =
+                PlaylistDetailState(
+                    playlist =
+                        Playlist(
+                            id = 1,
+                            title = "Audiocurso de CI/CD",
+                            description = "Domina con este curso CI/CD para AHORRAR TIEMPO",
+                            position = 0,
+                            items = emptyList(),
+                        ),
+                ),
+            onAction = {},
         )
     }
 }

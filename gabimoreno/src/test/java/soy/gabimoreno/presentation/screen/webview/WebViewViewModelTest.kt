@@ -11,15 +11,15 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_WEB_VIEW_URL
 import soy.gabimoreno.data.tracker.main.WebViewTrackerEvent
 
 class WebViewViewModelTest {
-
     private val tracker: Tracker = relaxedMockk()
     private lateinit var viewModel: WebViewViewModel
 
     @Before
     fun setUp() {
-        viewModel = WebViewViewModel(
-            tracker
-        )
+        viewModel =
+            WebViewViewModel(
+                tracker,
+            )
     }
 
     @Test
@@ -33,7 +33,7 @@ class WebViewViewModelTest {
                     event shouldBeInstanceOf WebViewTrackerEvent.ViewScreen::class.java
                     val parameters = event.parameters
                     parameters[TRACKER_KEY_WEB_VIEW_URL] shouldBe url
-                }
+                },
             )
         }
     }
@@ -49,7 +49,7 @@ class WebViewViewModelTest {
                     event shouldBeInstanceOf WebViewTrackerEvent.ClickBack::class.java
                     val parameters = event.parameters
                     parameters[TRACKER_KEY_WEB_VIEW_URL] shouldBe url
-                }
+                },
             )
         }
     }
@@ -65,7 +65,7 @@ class WebViewViewModelTest {
                     event shouldBeInstanceOf WebViewTrackerEvent.ViewPage::class.java
                     val parameters = event.parameters
                     parameters[TRACKER_KEY_WEB_VIEW_URL] shouldBe url
-                }
+                },
             )
         }
     }

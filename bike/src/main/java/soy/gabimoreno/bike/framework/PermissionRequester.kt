@@ -17,7 +17,6 @@ class PermissionRequester(
                 activity.shouldShowRequestPermissionRationale(permission) -> onShowRationale()
                 else -> onDenied()
             }
-
         }
 
     fun runWithPermission(onGranted: () -> Unit) {

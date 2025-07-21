@@ -53,7 +53,7 @@ import soy.gabimoreno.presentation.ui.button.PrimaryButton
 fun AuthModalBottomSheetRoot(
     modalBottomSheetState: ModalBottomSheetState,
     onHideBottomSheet: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
     val authViewModel = ViewModelProvider.authViewModel
@@ -87,7 +87,7 @@ fun AuthModalBottomSheetRoot(
         state = authViewModel.state,
         modalBottomSheetState = modalBottomSheetState,
         onAction = authViewModel::onAction,
-        content = content
+        content = content,
     )
 }
 
@@ -96,7 +96,7 @@ fun AuthModalBottomSheetLayout(
     state: AuthState,
     modalBottomSheetState: ModalBottomSheetState,
     onAction: (AuthAction) -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -105,25 +105,30 @@ fun AuthModalBottomSheetLayout(
         scrimColor = PurpleDark.copy(alpha = 0.5f),
         sheetBackgroundColor = PurpleLight,
         sheetElevation = Spacing.s4,
-        sheetShape = RoundedCornerShape(
-            topStart = Spacing.s16,
-            topEnd = Spacing.s16
-        ),
+        sheetShape =
+            RoundedCornerShape(
+                topStart = Spacing.s16,
+                topEnd = Spacing.s16,
+            ),
         sheetContent = {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .imePadding()
-                    .padding(Spacing.s16)
-                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .imePadding()
+                        .padding(Spacing.s16)
+                        .windowInsetsPadding(
+                            WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom),
+                        ),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .height(Spacing.s4)
-                        .clip(RoundedCornerShape(Spacing.s16))
-                        .background(Orange),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(0.5f)
+                            .height(Spacing.s4)
+                            .clip(RoundedCornerShape(Spacing.s16))
+                            .background(Orange),
                 )
                 Spacer(modifier = Modifier.height(Spacing.s24))
                 if (state.shouldShowAccess) {
@@ -137,9 +142,12 @@ fun AuthModalBottomSheetLayout(
                         value = state.email,
                         placeholderText = stringResource(id = R.string.premium_email),
                         showError = state.showInvalidEmailFormatError,
-                        errorText = stringResource(id = R.string.premium_email_error_invalid_format),
+                        errorText =
+                            stringResource(
+                                id = R.string.premium_email_error_invalid_format,
+                            ),
                         leadingIcon = Icons.Filled.Email,
-                        onValueChange = { onAction(AuthAction.OnEmailChanged(it)) }
+                        onValueChange = { onAction(AuthAction.OnEmailChanged(it)) },
                     )
                     Spacer(modifier = Modifier.height(Spacing.s16))
                     LoginOutlinedTextField(
@@ -148,11 +156,12 @@ fun AuthModalBottomSheetLayout(
                         showError = state.showInvalidPasswordError,
                         errorText = stringResource(id = R.string.premium_password_error_invalid),
                         visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(
-                            autoCorrectEnabled = false,
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done,
-                        ),
+                        keyboardOptions =
+                            KeyboardOptions(
+                                autoCorrectEnabled = false,
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Done,
+                            ),
                         keyboardActions =
                             KeyboardActions(
                                 onAny = {
@@ -161,13 +170,13 @@ fun AuthModalBottomSheetLayout(
                                 },
                             ),
                         leadingIcon = Icons.Filled.Password,
-                        onValueChange = { onAction(AuthAction.OnPasswordChanged(it)) }
+                        onValueChange = { onAction(AuthAction.OnPasswordChanged(it)) },
                     )
                     Spacer(modifier = Modifier.height(Spacing.s24))
                     PrimaryButton(
                         text = stringResource(id = R.string.premium_login),
                         height = Spacing.s48,
-                        isEnabled = !state.isLoading
+                        isEnabled = !state.isLoading,
                     ) {
                         onAction(AuthAction.OnLoginClicked)
                     }
@@ -196,6 +205,6 @@ fun AuthModalBottomSheetLayout(
                     CircularProgressIndicator()
                 }
             }
-        }
+        },
     )
 }

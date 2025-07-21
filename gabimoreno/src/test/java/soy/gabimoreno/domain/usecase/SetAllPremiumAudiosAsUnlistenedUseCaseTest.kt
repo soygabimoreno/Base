@@ -14,9 +14,7 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.framework.datastore.getEmail
 
-
 class SetAllPremiumAudiosAsUnlistenedUseCaseTest {
-
     private val context: Context = mockk()
     private val premiumAudiosRepository: PremiumAudiosRepository = relaxedMockk()
 
@@ -30,17 +28,18 @@ class SetAllPremiumAudiosAsUnlistenedUseCaseTest {
     }
 
     @Test
-    fun `GIVEN useCase WHEN invoke THEN repository is called`() = runTest {
-        coEvery {
-            premiumAudiosRepository.markAllPremiumAudiosAsUnlistened(EMAIL)
-        } returns Unit
+    fun `GIVEN useCase WHEN invoke THEN repository is called`() =
+        runTest {
+            coEvery {
+                premiumAudiosRepository.markAllPremiumAudiosAsUnlistened(EMAIL)
+            } returns Unit
 
-        useCase()
+            useCase()
 
-        coVerifyOnce {
-            premiumAudiosRepository.markAllPremiumAudiosAsUnlistened(EMAIL)
+            coVerifyOnce {
+                premiumAudiosRepository.markAllPremiumAudiosAsUnlistened(EMAIL)
+            }
         }
-    }
 }
 
 private const val EMAIL = "test@test.com"

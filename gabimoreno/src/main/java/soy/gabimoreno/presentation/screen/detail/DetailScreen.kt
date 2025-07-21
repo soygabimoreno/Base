@@ -104,8 +104,9 @@ fun DetailScreen(
 
     Surface {
         Column(
-            modifier = Modifier
-                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+            modifier =
+                Modifier
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top)),
         ) {
             Row {
                 BackButton {
@@ -117,63 +118,79 @@ fun DetailScreen(
             }
 
             if (audio != null) {
-                val isPlaying = playerViewModel.podcastIsPlaying &&
-                    playerViewModel.currentPlayingAudio.value?.id == audio.id
+                val isPlaying =
+                    playerViewModel.podcastIsPlaying &&
+                        playerViewModel.currentPlayingAudio.value?.id == audio.id
                 val playButtonText =
                     if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play)
                 val iconFavoriteColor by animateColorAsState(
-                    targetValue = if (detailViewModel.audioState is PremiumAudio &&
-                        (detailViewModel.audioState as PremiumAudio).markedAsFavorite
-                    )
-                        PinkBright else White.copy(alpha = 0.2f),
+                    targetValue =
+                        if (detailViewModel.audioState is PremiumAudio &&
+                            (detailViewModel.audioState as PremiumAudio).markedAsFavorite
+                        ) {
+                            PinkBright
+                        } else {
+                            White.copy(alpha = 0.2f)
+                        },
                     animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
-                    label = "favoriteIconColorAnimation"
+                    label = "favoriteIconColorAnimation",
                 )
 
                 Column(
-                    modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .navigationBarsPadding()
-                        .padding(vertical = Spacing.s24, horizontal = Spacing.s16)
-                        .padding(bottom = if (playerViewModel.currentPlayingAudio.value != null) Spacing.s64 else Spacing.s0)
-
+                    modifier =
+                        Modifier
+                            .verticalScroll(scrollState)
+                            .navigationBarsPadding()
+                            .padding(vertical = Spacing.s24, horizontal = Spacing.s16)
+                            .padding(
+                                bottom =
+                                    if (playerViewModel.currentPlayingAudio.value !=
+                                        null
+                                    ) {
+                                        Spacing.s64
+                                    } else {
+                                        Spacing.s0
+                                    },
+                            ),
                 ) {
                     AudioImage(
                         url = audio.imageUrl,
-                        modifier = Modifier.height(Spacing.oddSpacing120)
+                        modifier = Modifier.height(Spacing.oddSpacing120),
                     )
 
                     Spacer(modifier = Modifier.height(Spacing.s32))
 
                     Text(
                         audio.title,
-                        style = MaterialTheme.typography.h4
+                        style = MaterialTheme.typography.h4,
                     )
                     Spacer(modifier = Modifier.height(Spacing.s24))
 
                     Text(
                         audio.saga.author,
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.body1,
                     )
 
                     val dateAndDurationText =
                         if (audio.audioLengthInSeconds != EMPTY_AUDIO_LENGTH_IN_SECONDS) {
-                            "${audio.pubDateMillis.formatMillisecondsAsDate("MMM dd")} • ${audio.audioLengthInSeconds.toDurationMinutes()}"
+                            "${audio.pubDateMillis.formatMillisecondsAsDate(
+                                "MMM dd",
+                            )} • ${audio.audioLengthInSeconds.toDurationMinutes()}"
                         } else {
                             audio.pubDateMillis.formatMillisecondsAsDate("MMM dd")
                         }
                     EmphasisText(
-                        text = dateAndDurationText
+                        text = dateAndDurationText,
                     )
 
                     Spacer(modifier = Modifier.height(Spacing.s16))
 
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         PrimaryButton(
                             text = playButtonText,
-                            height = Spacing.s48
+                            height = Spacing.s48,
                         ) {
                             detailViewModel.onPlayPauseClicked(audio, isPlaying.toPlayPause())
                             audios?.let {
@@ -189,11 +206,21 @@ fun DetailScreen(
                                 onClick = { detailViewModel.onFavoriteStatusChanged() },
                             ) {
                                 Icon(
-                                    modifier = Modifier
-                                        .size(Spacing.s32),
-                                    imageVector = if ((detailViewModel.audioState as PremiumAudio).markedAsFavorite)
-                                        Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                    contentDescription = stringResource(R.string.audio_favorite),
+                                    modifier =
+                                        Modifier
+                                            .size(Spacing.s32),
+                                    imageVector =
+                                        if ((detailViewModel.audioState as PremiumAudio)
+                                                .markedAsFavorite
+                                        ) {
+                                            Icons.Default.Favorite
+                                        } else {
+                                            Icons.Default.FavoriteBorder
+                                        },
+                                    contentDescription =
+                                        stringResource(
+                                            R.string.audio_favorite,
+                                        ),
                                     tint = iconFavoriteColor,
                                 )
                             }
@@ -203,11 +230,12 @@ fun DetailScreen(
                         AnimatedIconButton(
                             showAnimation = (
                                 playerViewModel.currentPlayingAudio.value?.id == audio.id &&
-                                    playerViewModel.hasTriggeredEightyPercent),
+                                    playerViewModel.hasTriggeredEightyPercent
+                            ),
                             imageVector = Icons.Default.Share,
                             contentDescription = stringResource(R.string.share),
                             tint = White,
-                            padding = Spacing.s16
+                            padding = Spacing.s16,
                         ) {
                             detailViewModel.onShareClicked(currentContext, audio)
                         }
@@ -215,20 +243,22 @@ fun DetailScreen(
                     Spacer(modifier = Modifier.height(Spacing.s16))
                     if (audio is PremiumAudio) {
                         SelectableEmphasisText(
-                            text = audio.excerpt.parseFromHtmlFormat()
+                            text = audio.excerpt.parseFromHtmlFormat(),
                         )
                     }
                     Spacer(modifier = Modifier.height(Spacing.s16))
-                    if (audio !is PremiumAudio || audio.category != Category.PREMIUM_AUDIO_COURSES) {
+                    if (audio !is PremiumAudio ||
+                        audio.category != Category.PREMIUM_AUDIO_COURSES
+                    ) {
                         SelectableEmphasisText(
-                            text = audio.description.parseFromHtmlFormat()
+                            text = audio.description.parseFromHtmlFormat(),
                         )
                     }
                 }
             } else {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
                 }

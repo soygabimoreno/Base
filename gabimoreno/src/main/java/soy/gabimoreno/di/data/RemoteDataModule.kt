@@ -19,7 +19,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RemoteDataModule {
-
     @Provides
     fun provideHttpClient(): OkHttpClient = APIClient.createHttpClient()
 
@@ -32,29 +31,33 @@ object RemoteDataModule {
     fun provideRetrofit(
         okHttpClient: OkHttpClient,
         @BaseUrl baseUrl: String,
-    ): Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
-        .baseUrl(baseUrl)
-        .addConverterFactory(MoshiConverterFactory.create())
-        .build()
+    ): Retrofit =
+        Retrofit
+            .Builder()
+            .client(okHttpClient)
+            .baseUrl(baseUrl)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
 
     @Provides
     @Singleton
-    fun provideLoginService(
-        retrofit: Retrofit,
-    ): LoginService = retrofit.create(LoginService::class.java)
+    fun provideLoginService(retrofit: Retrofit): LoginService =
+        retrofit.create(LoginService::class.java)
 
     @Provides
     @Singleton
-    fun provideContentService(
-        retrofit: Retrofit,
-    ): PostService = retrofit.create(PostService::class.java)
+    fun provideContentService(retrofit: Retrofit): PostService =
+        retrofit.create(PostService::class.java)
 
     @Provides
-    fun provideRSSParser(@ApplicationContext context: Context): Parser = Parser.Builder()
-        .context(context)
-        .cacheExpirationMillis(ONE_DAY_IN_MILLIS)
-        .build()
+    fun provideRSSParser(
+        @ApplicationContext context: Context,
+    ): Parser =
+        Parser
+            .Builder()
+            .context(context)
+            .cacheExpirationMillis(ONE_DAY_IN_MILLIS)
+            .build()
 }
 
 internal const val ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000L

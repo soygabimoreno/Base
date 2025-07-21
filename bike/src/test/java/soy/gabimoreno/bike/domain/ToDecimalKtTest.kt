@@ -1,7 +1,6 @@
 package soy.gabimoreno.bike.domain
 
 class ToDecimalKtTest {
-
     // TODO
 //    @Test
 //    fun `GIVEN a ByteArray WHEN toDecimal THEN get the expected number`() {
