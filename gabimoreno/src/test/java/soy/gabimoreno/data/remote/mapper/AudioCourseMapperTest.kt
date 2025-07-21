@@ -14,7 +14,6 @@ import soy.gabimoreno.fake.buildAudioCourseItem
 import soy.gabimoreno.fake.buildAudioCourseItemDbModel
 
 class AudioCourseMapperTest {
-
     @Test
     fun `GIVEN valid CourseApiModel WHEN toDomain THEN maps correctly`() {
         val apiModel = buildApiModel()
@@ -48,10 +47,11 @@ class AudioCourseMapperTest {
 
     @Test
     fun `GIVEN list of AudioCourseItemDbModel WHEN toAudioCourseMapper THEN maps correctly`() {
-        val list = listOf(
-            buildAudioCourseItemDbModel(),
-            buildAudioCourseItemDbModel().copy(id = "1-2", url = "url2")
-        )
+        val list =
+            listOf(
+                buildAudioCourseItemDbModel(),
+                buildAudioCourseItemDbModel().copy(id = "1-2", url = "url2"),
+            )
 
         val result = list.toAudioCourseMapper()
 
@@ -106,7 +106,7 @@ class AudioCourseMapperTest {
         val result = input.extractAudioItems(ID.toString())
 
         result.size shouldBeEqualTo 1
-        result[0].id shouldBeEqualTo "${ID}-0"
+        result[0].id shouldBeEqualTo "$ID-0"
         result[0].title shouldBeEqualTo "Intro"
         result[0].url shouldBeEqualTo "https://cdn.com/audio.mp3"
     }
@@ -121,17 +121,18 @@ class AudioCourseMapperTest {
     }
 }
 
-private fun buildApiModel(id: Long = ID): CourseApiModel = CourseApiModel(
-    id = id,
-    titleApiModel = TitleApiModel(TITLE),
-    excerptApiModel = ExcerptApiModel(EXCERPT),
-    contentApiModel = ContentApiModel(CONTENT),
-    categoryIds = CATEGORY_IDS,
-    url = URL,
-    authorId = AUTHOR_ID,
-    dateString = DATE_STRING,
-    yoastHeadJsonApiModel = YoastHeadJsonApiModel(listOf(OgImageApiModel(YOAST_HEAD_JSON)))
-)
+private fun buildApiModel(id: Long = ID): CourseApiModel =
+    CourseApiModel(
+        id = id,
+        titleApiModel = TitleApiModel(TITLE),
+        excerptApiModel = ExcerptApiModel(EXCERPT),
+        contentApiModel = ContentApiModel(CONTENT),
+        categoryIds = CATEGORY_IDS,
+        url = URL,
+        authorId = AUTHOR_ID,
+        dateString = DATE_STRING,
+        yoastHeadJsonApiModel = YoastHeadJsonApiModel(listOf(OgImageApiModel(YOAST_HEAD_JSON))),
+    )
 
 private const val ID = 1234L
 private const val TITLE = "title"
@@ -147,4 +148,3 @@ private const val CONTENT = """
             title":"Intro","mp3":"https:\/\/cdn.com/audio.mp3"
             title":"Intro Again","mp3":"https:\/\/cdn.com/audio.mp3"
         """
-

@@ -10,7 +10,7 @@ interface AudioCoursesRepository {
     suspend fun getCourses(
         categories: List<Category>,
         email: String,
-        forceRefresh: Boolean = false
+        forceRefresh: Boolean = false,
     ): Either<Throwable, List<AudioCourse>>
     suspend fun getCourseById(idCourse: String): Either<Throwable, Flow<AudioCourse>>
     suspend fun getAudioCourseItem(audioCourseItemId: String): Either<Throwable, AudioCourseItem>
@@ -18,9 +18,13 @@ interface AudioCoursesRepository {
     suspend fun markAudioCourseItemAsListened(
         audioCourseId: String,
         email: String,
-        hasBeenListened: Boolean
+        hasBeenListened: Boolean,
     )
     suspend fun markAllAudioCourseItemsAsUnlistened(email: String)
     suspend fun reset()
-    suspend fun updateMarkedAsFavorite(audioCourseId: String, email: String, isFavorite: Boolean)
+    suspend fun updateMarkedAsFavorite(
+        audioCourseId: String,
+        email: String,
+        isFavorite: Boolean,
+    )
 }

@@ -18,7 +18,6 @@ import soy.gabimoreno.fake.buildPlaylist
 import soy.gabimoreno.framework.datastore.getEmail
 
 class UpsertPlaylistsUseCaseTest {
-
     private val context: Context = mockk()
     private val repository = mockk<PlaylistRepository>()
 
@@ -32,33 +31,36 @@ class UpsertPlaylistsUseCaseTest {
     }
 
     @Test
-    fun `GIVEN valid list of playlist WHEN invoke THEN Right unit is returned`() = runTest {
-        val playlists = listOf(buildPlaylist(), buildPlaylist(2))
-        coEvery { repository.upsertPlaylists(playlists, EMAIL) } returns right(Unit)
+    fun `GIVEN valid list of playlist WHEN invoke THEN Right unit is returned`() =
+        runTest {
+            val playlists = listOf(buildPlaylist(), buildPlaylist(2))
+            coEvery { repository.upsertPlaylists(playlists, EMAIL) } returns right(Unit)
 
-        val result = useCase(playlists)
+            val result = useCase(playlists)
 
-        result shouldBeEqualTo right(Unit)
-        coVerifyOnce {
-            repository.upsertPlaylists(playlists, EMAIL)
+            result shouldBeEqualTo right(Unit)
+            coVerifyOnce {
+                repository.upsertPlaylists(playlists, EMAIL)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN repository fails WHEN invoke THEN Left with throwable is returned`() = runTest {
-        val playlists = listOf(buildPlaylist(), buildPlaylist(2))
-        val exception = IllegalStateException("unexpected failure")
-        coEvery { repository.upsertPlaylists(playlists, EMAIL) } throws exception
+    fun `GIVEN repository fails WHEN invoke THEN Left with throwable is returned`() =
+        runTest {
+            val playlists = listOf(buildPlaylist(), buildPlaylist(2))
+            val exception = IllegalStateException("unexpected failure")
+            coEvery { repository.upsertPlaylists(playlists, EMAIL) } throws exception
 
-        val result = runCatching {
-            useCase(playlists)
-        }.getOrDefault(left(exception))
+            val result =
+                runCatching {
+                    useCase(playlists)
+                }.getOrDefault(left(exception))
 
-        result shouldBeEqualTo left(exception)
-        coVerifyOnce {
-            repository.upsertPlaylists(playlists, EMAIL)
+            result shouldBeEqualTo left(exception)
+            coVerifyOnce {
+                repository.upsertPlaylists(playlists, EMAIL)
+            }
         }
-    }
 }
 
 private const val EMAIL = "test@test.com"

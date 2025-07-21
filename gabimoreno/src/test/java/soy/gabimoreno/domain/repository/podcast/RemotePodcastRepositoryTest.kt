@@ -23,7 +23,6 @@ import soy.gabimoreno.fake.buildEpisodesWrapper
 
 @ExperimentalCoroutinesApi
 class RemotePodcastRepositoryTest {
-
     private val podcastDatasource: PodcastDatasource = mockk()
     private val podcastUrl: PodcastUrl = "podcastUrl"
 
@@ -31,67 +30,73 @@ class RemotePodcastRepositoryTest {
 
     @Before
     fun setUp() {
-        repository = RemotePodcastRepository(
-            podcastDatasource,
-            podcastUrl
-        )
+        repository =
+            RemotePodcastRepository(
+                podcastDatasource,
+                podcastUrl,
+            )
     }
 
     @Test
-    fun `GIVEN successful response WHEN getEpisodesFlow THEN get the expected result`() = runTest {
-        val channel = buildChannel(podcastUrl)
-        val episodesWrapper = channel.toDomain()
-        coEvery { podcastDatasource.getEpisodesStream(podcastUrl) } returns Either.Right(
-            flowOf(episodesWrapper.episodes)
-        )
+    fun `GIVEN successful response WHEN getEpisodesFlow THEN get the expected result`() =
+        runTest {
+            val channel = buildChannel(podcastUrl)
+            val episodesWrapper = channel.toDomain()
+            coEvery { podcastDatasource.getEpisodesStream(podcastUrl) } returns
+                Either.Right(
+                    flowOf(episodesWrapper.episodes),
+                )
 
-        val result = repository.getEpisodesStream()
+            val result = repository.getEpisodesStream()
 
-        result.isRight() shouldBe true
-        val episodes = mutableListOf<List<Episode>>()
-        result.onRight { flow ->
-            flow.toList(episodes)
+            result.isRight() shouldBe true
+            val episodes = mutableListOf<List<Episode>>()
+            result.onRight { flow ->
+                flow.toList(episodes)
+            }
+            episodes shouldBeEqualTo episodesWrapper.episodes.chunked(15)
+            coVerifyOnce { podcastDatasource.getEpisodesStream(podcastUrl) }
         }
-        episodes shouldBeEqualTo episodesWrapper.episodes.chunked(15)
-        coVerifyOnce { podcastDatasource.getEpisodesStream(podcastUrl) }
-    }
 
     @Test
-    fun `GIVEN failure response WHEN getEpisodesFlow THEN get the expected error`()= runTest {
-        val throwable = Throwable()
-        coEvery { podcastDatasource.getEpisodesStream(podcastUrl) } returns throwable.left()
+    fun `GIVEN failure response WHEN getEpisodesFlow THEN get the expected error`() =
+        runTest {
+            val throwable = Throwable()
+            coEvery { podcastDatasource.getEpisodesStream(podcastUrl) } returns throwable.left()
 
-        val result = repository.getEpisodesStream()
+            val result = repository.getEpisodesStream()
 
-        coVerifyOnce {
-            podcastDatasource.getEpisodesStream(podcastUrl)
+            coVerifyOnce {
+                podcastDatasource.getEpisodesStream(podcastUrl)
+            }
+            result shouldBeEqualTo throwable.left()
         }
-        result shouldBeEqualTo throwable.left()
-    }
 
     @Test
-    fun `GIVEN successful response WHEN getEpisodes THEN get the expected result`() = runTest {
-        val episodesWrapper = buildEpisodesWrapper()
-        coEvery { podcastDatasource.getEpisodes(podcastUrl) } returns episodesWrapper.right()
+    fun `GIVEN successful response WHEN getEpisodes THEN get the expected result`() =
+        runTest {
+            val episodesWrapper = buildEpisodesWrapper()
+            coEvery { podcastDatasource.getEpisodes(podcastUrl) } returns episodesWrapper.right()
 
-        val result = repository.getEpisodes()
+            val result = repository.getEpisodes()
 
-        coVerifyOnce {
-            podcastDatasource.getEpisodes(podcastUrl)
+            coVerifyOnce {
+                podcastDatasource.getEpisodes(podcastUrl)
+            }
+            result shouldBeEqualTo episodesWrapper.right()
         }
-        result shouldBeEqualTo episodesWrapper.right()
-    }
 
     @Test
-    fun `GIVEN failure response WHEN getEpisodes THEN get the expected error`() = runTest {
-        val throwable = Throwable()
-        coEvery { podcastDatasource.getEpisodes(podcastUrl) } returns throwable.left()
+    fun `GIVEN failure response WHEN getEpisodes THEN get the expected error`() =
+        runTest {
+            val throwable = Throwable()
+            coEvery { podcastDatasource.getEpisodes(podcastUrl) } returns throwable.left()
 
-        val result = repository.getEpisodes()
+            val result = repository.getEpisodes()
 
-        coVerifyOnce {
-            podcastDatasource.getEpisodes(podcastUrl)
+            coVerifyOnce {
+                podcastDatasource.getEpisodes(podcastUrl)
+            }
+            result shouldBeEqualTo throwable.left()
         }
-        result shouldBeEqualTo throwable.left()
-    }
 }

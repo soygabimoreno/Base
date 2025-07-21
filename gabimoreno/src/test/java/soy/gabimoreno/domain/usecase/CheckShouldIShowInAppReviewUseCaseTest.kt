@@ -21,7 +21,6 @@ import soy.gabimoreno.framework.datastore.dataStore
 import soy.gabimoreno.framework.datastore.setDataStoreShouldIShowInAppReview
 
 class CheckShouldIShowInAppReviewUseCaseTest {
-
     private val context: Context = mockk()
     private val dataStore: DataStore<Preferences> = mockk()
     private val preferences: Preferences = mockk()
@@ -45,13 +44,14 @@ class CheckShouldIShowInAppReviewUseCaseTest {
     }
 
     @Test
-    fun `GIVEN counter is USER_DO_NOT_SHOW_AGAIN WHEN invoke THEN returns false`() = runTest {
-        every { preferences[key] } returns InAppReviewPrefs.USER_DO_NOT_SHOW_AGAIN
+    fun `GIVEN counter is USER_DO_NOT_SHOW_AGAIN WHEN invoke THEN returns false`() =
+        runTest {
+            every { preferences[key] } returns InAppReviewPrefs.USER_DO_NOT_SHOW_AGAIN
 
-        val result = useCase()
+            val result = useCase()
 
-        result shouldBeEqualTo false
-    }
+            result shouldBeEqualTo false
+        }
 
     @Test
     fun `GIVEN counter is REPEAT_SHOW_IN_APP_REVIEW WHEN invoke THEN returns true and resets counter`() =
@@ -68,18 +68,19 @@ class CheckShouldIShowInAppReviewUseCaseTest {
         }
 
     @Test
-    fun `GIVEN counter is 1 WHEN invoke THEN returns true and increments counter`() = runTest {
-        val counterValue = 1
-        val incrementedCounterValue = 2
-        every { preferences[key] } returns counterValue
+    fun `GIVEN counter is 1 WHEN invoke THEN returns true and increments counter`() =
+        runTest {
+            val counterValue = 1
+            val incrementedCounterValue = 2
+            every { preferences[key] } returns counterValue
 
-        val result = useCase()
+            val result = useCase()
 
-        result shouldBeEqualTo true
-        coVerifyOnce {
-            context.setDataStoreShouldIShowInAppReview(incrementedCounterValue)
+            result shouldBeEqualTo true
+            coVerifyOnce {
+                context.setDataStoreShouldIShowInAppReview(incrementedCounterValue)
+            }
         }
-    }
 
     @Test
     fun `GIVEN no preference stored WHEN invoke THEN uses default value and returns true`() =
@@ -97,4 +98,3 @@ class CheckShouldIShowInAppReviewUseCaseTest {
 }
 
 private const val SHOULD_I_SHOW_IN_APP_REVIEW = "SHOULD_I_SHOW_IN_APP_REVIEW"
-

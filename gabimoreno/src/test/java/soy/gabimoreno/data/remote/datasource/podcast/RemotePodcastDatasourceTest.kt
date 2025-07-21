@@ -20,15 +20,15 @@ import soy.gabimoreno.fake.buildChannel
 
 @ExperimentalCoroutinesApi
 class RemotePodcastDatasourceTest {
-
     private val rssParser: Parser = mockk()
     private lateinit var datasource: RemotePodcastDatasource
 
     @Before
     fun setUp() {
-        datasource = RemotePodcastDatasource(
-            rssParser
-        )
+        datasource =
+            RemotePodcastDatasource(
+                rssParser,
+            )
     }
 
     @Test
@@ -53,22 +53,23 @@ class RemotePodcastDatasourceTest {
         }
 
     @Test
-    fun `GIVEN a failure response WHEN getEpisodesStream THEN get the error`() = runTest {
-        val url = "url"
-        coEvery { rssParser.getChannel(url) } throws Throwable()
+    fun `GIVEN a failure response WHEN getEpisodesStream THEN get the error`() =
+        runTest {
+            val url = "url"
+            coEvery { rssParser.getChannel(url) } throws Throwable()
 
-        val result = datasource.getEpisodesStream(url)
+            val result = datasource.getEpisodesStream(url)
 
-        result.isRight().shouldBeTrue()
-        runCatching {
-            result.onRight { flow ->
-                flow.toList()
+            result.isRight().shouldBeTrue()
+            runCatching {
+                result.onRight { flow ->
+                    flow.toList()
+                }
+            }.exceptionOrNull() shouldNotBe null
+            coVerifyOnce {
+                rssParser.getChannel(url)
             }
-        }.exceptionOrNull() shouldNotBe null
-        coVerifyOnce {
-            rssParser.getChannel(url)
         }
-    }
 
     @Test
     fun `GIVEN a success response WHEN getEpisodes THEN get the expected EpisodesWrapper`() =

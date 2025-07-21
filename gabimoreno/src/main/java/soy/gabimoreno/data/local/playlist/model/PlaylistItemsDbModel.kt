@@ -12,10 +12,10 @@ import androidx.room.PrimaryKey
             entity = PlaylistDbModel::class,
             parentColumns = ["id"],
             childColumns = ["playlistId"],
-            onDelete = ForeignKey.CASCADE
-        )
+            onDelete = ForeignKey.CASCADE,
+        ),
     ],
-    indices = [Index("playlistId")]
+    indices = [Index("playlistId")],
 )
 data class PlaylistItemsDbModel(
     @PrimaryKey(autoGenerate = true)

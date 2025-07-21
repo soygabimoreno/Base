@@ -6,7 +6,6 @@ import org.junit.Test
 import soy.gabimoreno.fake.buildAudioCourse
 
 class ToAudioCourseDbModelMapperKtTest {
-
     @Test
     fun `GIVEN an AudioCourse WHEN toAudioCourseDbModel THEN get the expected AudioCourseDbModel`() {
         val audioCourse = buildAudioCourse()

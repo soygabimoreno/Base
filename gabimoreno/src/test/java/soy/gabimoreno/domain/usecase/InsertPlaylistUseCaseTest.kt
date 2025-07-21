@@ -18,7 +18,6 @@ import soy.gabimoreno.domain.repository.playlist.PlaylistRepository
 import soy.gabimoreno.framework.datastore.getEmail
 
 class InsertPlaylistUseCaseTest {
-
     private val context: Context = mockk()
     private val playlistRepository = mockk<PlaylistRepository>()
 
@@ -36,13 +35,14 @@ class InsertPlaylistUseCaseTest {
         runTest {
             val name = "Playlist Name"
             val description = "Playlist Description"
-            val playList = Playlist(
-                id = 1,
-                title = name,
-                description = description,
-                items = emptyList(),
-                position = 0
-            )
+            val playList =
+                Playlist(
+                    id = 1,
+                    title = name,
+                    description = description,
+                    items = emptyList(),
+                    position = 0,
+                )
             coEvery {
                 playlistRepository.insertPlaylist(name, description, EMAIL)
             } returns playList.right()

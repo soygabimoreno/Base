@@ -1,5 +1,3 @@
 package soy.gabimoreno.core
 
-fun String.removeHtmlTags(): String {
-    return replace(Regex("<.*?>"), "").trim()
-}
+fun String.removeHtmlTags(): String = replace(Regex("<.*?>"), "").trim()

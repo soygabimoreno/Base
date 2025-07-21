@@ -15,7 +15,6 @@ import soy.gabimoreno.fake.buildPremiumAudio
 import soy.gabimoreno.framework.datastore.getEmail
 
 class MarkPremiumAudioAsListenedUseCaseTest {
-
     private val context: Context = mockk()
     private val repository = relaxedMockk<PremiumAudiosRepository>()
 
@@ -29,24 +28,26 @@ class MarkPremiumAudioAsListenedUseCaseTest {
     }
 
     @Test
-    fun `GIVEN premiumAudio is listened WHEN invoke THEN repository is called`() = runTest {
-        val premiumAudio = buildPremiumAudio()
-        useCase(premiumAudio.id, true)
+    fun `GIVEN premiumAudio is listened WHEN invoke THEN repository is called`() =
+        runTest {
+            val premiumAudio = buildPremiumAudio()
+            useCase(premiumAudio.id, true)
 
-        coVerifyOnce {
-            repository.markPremiumAudioAsListened(EMAIL, premiumAudio.id, true)
+            coVerifyOnce {
+                repository.markPremiumAudioAsListened(EMAIL, premiumAudio.id, true)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN premiumAudio is unlistened WHEN invoke THEN repository is called`() = runTest {
-        val premiumAudio = buildPremiumAudio()
-        useCase(premiumAudio.id, false)
+    fun `GIVEN premiumAudio is unlistened WHEN invoke THEN repository is called`() =
+        runTest {
+            val premiumAudio = buildPremiumAudio()
+            useCase(premiumAudio.id, false)
 
-        coVerifyOnce {
-            repository.markPremiumAudioAsListened(EMAIL, premiumAudio.id, false)
+            coVerifyOnce {
+                repository.markPremiumAudioAsListened(EMAIL, premiumAudio.id, false)
+            }
         }
-    }
 }
 
 private const val EMAIL = "test@test.com"

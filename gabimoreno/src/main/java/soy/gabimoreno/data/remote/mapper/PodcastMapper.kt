@@ -21,22 +21,20 @@ fun Channel.toDomain(): EpisodesWrapper {
     return EpisodesWrapper(
         count = numberOfEpisodes,
         total = numberOfEpisodes,
-        episodes = articles.toDomain(podcastAuthor, podcastTitle)
+        episodes = articles.toDomain(podcastAuthor, podcastTitle),
     )
 }
 
 fun List<Article>.toDomain(
     podcastAuthor: String,
     podcastTitle: String,
-): List<Episode> {
-    return map { it.toDomain(podcastAuthor, podcastTitle) }
-}
+): List<Episode> = map { it.toDomain(podcastAuthor, podcastTitle) }
 
 fun Article.toDomain(
     podcastAuthor: String,
     podcastTitle: String,
-): Episode {
-    return run {
+): Episode =
+    run {
         val description = description?.removeAnchorMessage() ?: ""
         val imageUrl = getEpisodeCoverUrl()
         Episode(
@@ -44,39 +42,38 @@ fun Article.toDomain(
             url = getEpisodeUrl(),
             audioUrl = audio!!,
             imageUrl = imageUrl,
-            saga = Saga(
-                author = podcastAuthor,
-                title = podcastTitle
-            ),
+            saga =
+                Saga(
+                    author = podcastAuthor,
+                    title = podcastTitle,
+                ),
             thumbnailUrl = imageUrl,
             pubDateMillis = Date(pubDate).time,
             title = title ?: "",
             audioLengthInSeconds = itunesArticleData.getAudioLengthInSeconds(),
             description = description,
             hasBeenListened = false,
-            markedAsFavorite = false
+            markedAsFavorite = false,
         )
     }
-}
 
 private fun String.removeAnchorMessage() = replace(ANCHOR_MESSAGE, "")
 
-private fun Article.getEpisodeUrl(): String {
-    return "$GABI_MORENO_WEB_BASE_URL/${getEpisodeNumber()}"
-}
+private fun Article.getEpisodeUrl(): String = "$GABI_MORENO_WEB_BASE_URL/${getEpisodeNumber()}"
 
 private fun Article.getEpisodeCoverUrl(): String = itunesArticleData?.image.orEmpty()
 
 private fun Article.getEpisodeNumber(): String {
-    val episodeNumber = if (itunesArticleData != null && itunesArticleData?.episode != null) {
-        itunesArticleData?.episode
-    } else {
-        title?.let { title ->
-            val index = title.indexOfFirst { it == '.' }
-            if (index == -1) return INVALID_EPISODE_NUMBER
-            title.substring(0, index)
-        } ?: ""
-    }
+    val episodeNumber =
+        if (itunesArticleData != null && itunesArticleData?.episode != null) {
+            itunesArticleData?.episode
+        } else {
+            title?.let { title ->
+                val index = title.indexOfFirst { it == '.' }
+                if (index == -1) return INVALID_EPISODE_NUMBER
+                title.substring(0, index)
+            } ?: ""
+        }
     return episodeNumber.toString()
 }
 

@@ -8,7 +8,6 @@ import soy.gabimoreno.data.remote.model.JwtAuthApiModel
 import soy.gabimoreno.data.remote.model.MemberApiModel
 
 interface LoginService {
-
     @GET("api/user/generate_auth_cookie/")
     suspend fun generateAuthCookie(
         @Query("email") email: String,

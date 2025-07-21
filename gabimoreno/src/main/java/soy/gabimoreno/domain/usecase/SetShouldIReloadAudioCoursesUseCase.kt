@@ -4,10 +4,11 @@ import android.content.Context
 import soy.gabimoreno.framework.datastore.setDataStoreShouldIReloadAudiosCourses
 import javax.inject.Inject
 
-class SetShouldIReloadAudioCoursesUseCase @Inject constructor(
-    private val context: Context,
-) {
-    suspend operator fun invoke(shouldReload: Boolean) {
-        return context.setDataStoreShouldIReloadAudiosCourses(shouldReload)
+class SetShouldIReloadAudioCoursesUseCase
+    @Inject
+    constructor(
+        private val context: Context,
+    ) {
+        suspend operator fun invoke(shouldReload: Boolean) =
+            context.setDataStoreShouldIReloadAudiosCourses(shouldReload)
     }
-}

@@ -29,7 +29,6 @@ import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildPlaylist
 
 class PlaylistDetailScreenKtTest {
-
     private val getPlaylistByIdUseCase = mockk<GetPlaylistByIdUseCase>()
     private val updatePlaylistItemsUseCase = mockk<UpdatePlaylistItemsUseCase>()
     private val deletePlaylistItemByIdUseCase = mockk<DeletePlaylistItemByIdUseCase>()
@@ -41,13 +40,14 @@ class PlaylistDetailScreenKtTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = PlaylistDetailViewModel(
-            getPlaylistByIdUseCase = getPlaylistByIdUseCase,
-            updatePlaylistItemsUseCase = updatePlaylistItemsUseCase,
-            deletePlaylistItemByIdUseCase = deletePlaylistItemByIdUseCase,
-            upsertPlaylistsUseCase = upsertPlaylistsUseCase,
-            dispatcher = testDispatcher
-        )
+        viewModel =
+            PlaylistDetailViewModel(
+                getPlaylistByIdUseCase = getPlaylistByIdUseCase,
+                updatePlaylistItemsUseCase = updatePlaylistItemsUseCase,
+                deletePlaylistItemByIdUseCase = deletePlaylistItemByIdUseCase,
+                upsertPlaylistsUseCase = upsertPlaylistsUseCase,
+                dispatcher = testDispatcher,
+            )
     }
 
     @After
@@ -56,36 +56,38 @@ class PlaylistDetailScreenKtTest {
     }
 
     @Test
-    fun `GIVEN playlist WHEN onScreenView THEN state is updated with playlist`() = runTest {
-        val playlist = buildPlaylist()
-        coEvery {
-            getPlaylistByIdUseCase(playlist.id)
-        } returns right(playlist)
+    fun `GIVEN playlist WHEN onScreenView THEN state is updated with playlist`() =
+        runTest {
+            val playlist = buildPlaylist()
+            coEvery {
+                getPlaylistByIdUseCase(playlist.id)
+            } returns right(playlist)
 
-        viewModel.onScreenView(playlist.id)
-        advanceUntilIdle()
+            viewModel.onScreenView(playlist.id)
+            advanceUntilIdle()
 
-        viewModel.state.playlist shouldBe playlist
-        viewModel.state.isLoading shouldBe false
-        coVerifyOnce {
-            getPlaylistByIdUseCase(playlist.id)
+            viewModel.state.playlist shouldBe playlist
+            viewModel.state.isLoading shouldBe false
+            coVerifyOnce {
+                getPlaylistByIdUseCase(playlist.id)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN error WHEN onScreenView THEN event is emitted and loading false`() = runTest {
-        val error = Throwable("error")
-        coEvery { getPlaylistByIdUseCase(any()) } returns left(error)
-        val events = mutableListOf<PlaylistDetailEvent>()
-        val job = launch { viewModel.events.toList(events) }
+    fun `GIVEN error WHEN onScreenView THEN event is emitted and loading false`() =
+        runTest {
+            val error = Throwable("error")
+            coEvery { getPlaylistByIdUseCase(any()) } returns left(error)
+            val events = mutableListOf<PlaylistDetailEvent>()
+            val job = launch { viewModel.events.toList(events) }
 
-        viewModel.onScreenView(1)
-        advanceUntilIdle()
+            viewModel.onScreenView(1)
+            advanceUntilIdle()
 
-        events shouldContain PlaylistDetailEvent.Error(error)
-        viewModel.state.isLoading shouldBe false
-        job.cancel()
-    }
+            events shouldContain PlaylistDetailEvent.Error(error)
+            viewModel.state.isLoading shouldBe false
+            job.cancel()
+        }
 
     @Test
     fun `GIVEN OnPlayClicked WHEN audio items exist THEN audio is set and event is emitted`() =
@@ -127,61 +129,63 @@ class PlaylistDetailScreenKtTest {
             }
         }
 
-
     @Test
-    fun `GIVEN valid item WHEN OnConfirmDialog THEN item is removed and state updated`() = runTest {
-        val playlist = buildPlaylist()
-        viewModel.onScreenView(playlist.id)
-        val id = playlist.items.first().id
-        coEvery { getPlaylistByIdUseCase(playlist.id) } returns right(playlist)
-        coEvery {
-            deletePlaylistItemByIdUseCase(audioItemId = id, playlistId = playlist.id)
-        } returns right(Unit)
-        advanceUntilIdle()
+    fun `GIVEN valid item WHEN OnConfirmDialog THEN item is removed and state updated`() =
+        runTest {
+            val playlist = buildPlaylist()
+            viewModel.onScreenView(playlist.id)
+            val id = playlist.items.first().id
+            coEvery { getPlaylistByIdUseCase(playlist.id) } returns right(playlist)
+            coEvery {
+                deletePlaylistItemByIdUseCase(audioItemId = id, playlistId = playlist.id)
+            } returns right(Unit)
+            advanceUntilIdle()
 
-        viewModel.onAction(PlaylistDetailAction.OnRemovePlaylistAudioItem(id))
-        viewModel.onAction(PlaylistDetailAction.OnConfirmDialog)
-        advanceUntilIdle()
+            viewModel.onAction(PlaylistDetailAction.OnRemovePlaylistAudioItem(id))
+            viewModel.onAction(PlaylistDetailAction.OnConfirmDialog)
+            advanceUntilIdle()
 
-        viewModel.state.playlistAudioItems.none { it.id == id } shouldBe true
-        viewModel.state.shouldIShowDialog shouldBe false
-        coVerifyOnce {
-            deletePlaylistItemByIdUseCase(audioItemId = id, playlistId = playlist.id)
+            viewModel.state.playlistAudioItems.none { it.id == id } shouldBe true
+            viewModel.state.shouldIShowDialog shouldBe false
+            coVerifyOnce {
+                deletePlaylistItemByIdUseCase(audioItemId = id, playlistId = playlist.id)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN empty title WHEN OnEditPlaylistConfirmDialog THEN error is set true`() = runTest {
-        viewModel.onAction(PlaylistDetailAction.OnDialogTitleChange(""))
+    fun `GIVEN empty title WHEN OnEditPlaylistConfirmDialog THEN error is set true`() =
+        runTest {
+            viewModel.onAction(PlaylistDetailAction.OnDialogTitleChange(""))
 
-        viewModel.onAction(PlaylistDetailAction.OnEditPlaylistConfirmDialog)
-        advanceUntilIdle()
+            viewModel.onAction(PlaylistDetailAction.OnEditPlaylistConfirmDialog)
+            advanceUntilIdle()
 
-        viewModel.state.dialogTitleError shouldBe true
-    }
-
-    @Test
-    fun `GIVEN valid data WHEN OnEditPlaylistConfirmDialog THEN playlist is updated`() = runTest {
-        val newTitle = "Updated Title"
-        val newDesc = "Updated Description"
-        val playlist = buildPlaylist()
-        viewModel.onScreenView(playlist.id)
-        coEvery { getPlaylistByIdUseCase(playlist.id) } returns right(playlist)
-        coEvery {
-            upsertPlaylistsUseCase(listOf(playlist.copy(title = newTitle, description = newDesc)))
-        } returns right(Unit)
-        advanceUntilIdle()
-
-        viewModel.onAction(PlaylistDetailAction.OnDialogTitleChange(newTitle))
-        viewModel.onAction(PlaylistDetailAction.OnDialogDescriptionChange(newDesc))
-        viewModel.onAction(PlaylistDetailAction.OnEditPlaylistConfirmDialog)
-        advanceUntilIdle()
-
-        viewModel.state.playlist!!.title shouldBeEqualTo newTitle
-        viewModel.state.playlist!!.description shouldBeEqualTo newDesc
-        viewModel.state.shouldIShowDialog shouldBe false
-        coVerifyOnce {
-            upsertPlaylistsUseCase(listOf(playlist.copy(title = newTitle, description = newDesc)))
+            viewModel.state.dialogTitleError shouldBe true
         }
-    }
+
+    @Test
+    fun `GIVEN valid data WHEN OnEditPlaylistConfirmDialog THEN playlist is updated`() =
+        runTest {
+            val newTitle = "Updated Title"
+            val newDesc = "Updated Description"
+            val playlist = buildPlaylist()
+            viewModel.onScreenView(playlist.id)
+            coEvery { getPlaylistByIdUseCase(playlist.id) } returns right(playlist)
+            coEvery {
+                upsertPlaylistsUseCase(listOf(playlist.copy(title = newTitle, description = newDesc)))
+            } returns right(Unit)
+            advanceUntilIdle()
+
+            viewModel.onAction(PlaylistDetailAction.OnDialogTitleChange(newTitle))
+            viewModel.onAction(PlaylistDetailAction.OnDialogDescriptionChange(newDesc))
+            viewModel.onAction(PlaylistDetailAction.OnEditPlaylistConfirmDialog)
+            advanceUntilIdle()
+
+            viewModel.state.playlist!!.title shouldBeEqualTo newTitle
+            viewModel.state.playlist!!.description shouldBeEqualTo newDesc
+            viewModel.state.shouldIShowDialog shouldBe false
+            coVerifyOnce {
+                upsertPlaylistsUseCase(listOf(playlist.copy(title = newTitle, description = newDesc)))
+            }
+        }
 }

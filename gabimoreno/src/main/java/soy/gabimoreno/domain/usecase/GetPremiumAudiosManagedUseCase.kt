@@ -11,13 +11,16 @@ import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.framework.datastore.getEmail
 import javax.inject.Inject
 
-class GetPremiumAudiosManagedUseCase @Inject constructor(
-    private val context: Context,
-    private val premiumAudiosRepository: PremiumAudiosRepository,
-) {
-    suspend operator fun invoke(categories: List<Category>):
-        Either<Throwable, Flow<PagingData<PremiumAudio>>> {
-        val email = context.getEmail().first()
-        return premiumAudiosRepository.getPremiumAudioMediator(categories, email)
+class GetPremiumAudiosManagedUseCase
+    @Inject
+    constructor(
+        private val context: Context,
+        private val premiumAudiosRepository: PremiumAudiosRepository,
+    ) {
+        suspend operator fun invoke(
+            categories: List<Category>,
+        ): Either<Throwable, Flow<PagingData<PremiumAudio>>> {
+            val email = context.getEmail().first()
+            return premiumAudiosRepository.getPremiumAudioMediator(categories, email)
+        }
     }
-}

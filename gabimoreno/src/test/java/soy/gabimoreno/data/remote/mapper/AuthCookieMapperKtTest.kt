@@ -6,7 +6,6 @@ import soy.gabimoreno.data.remote.model.AuthCookieApiModel
 import soy.gabimoreno.data.remote.model.UserApiModel
 
 class AuthCookieMapperKtTest {
-
     @Test
     fun `GIVEN an AuthCookieApiModel WHEN toDomain THEN return the expected AuthCookie`() {
         val authCookieApiModel = buildAuthCookieApiModel()
@@ -35,29 +34,31 @@ class AuthCookieMapperKtTest {
     }
 }
 
-private fun buildAuthCookieApiModel() = AuthCookieApiModel(
-    status = STATUS,
-    cookie = COOKIE,
-    cookieAdmin = COOKIE_ADMIN,
-    cookieName = COOKIE_NAME,
-    userApiModel = buildUserApiModel()
-)
+private fun buildAuthCookieApiModel() =
+    AuthCookieApiModel(
+        status = STATUS,
+        cookie = COOKIE,
+        cookieAdmin = COOKIE_ADMIN,
+        cookieName = COOKIE_NAME,
+        userApiModel = buildUserApiModel(),
+    )
 
-private fun buildUserApiModel() = UserApiModel(
-    id = ID,
-    username = USERNAME,
-    niceName = NICE_NAME,
-    email = EMAIL,
-    url = URL,
-    registered = REGISTERED,
-    displayName = DISPLAY_NAME,
-    firstName = FIRST_NAME,
-    lastName = LAST_NAME,
-    nickname = NICKNAME,
-    description = DESCRIPTION,
-    capabilities = CAPABILITIES,
-    avatar = AVATAR
-)
+private fun buildUserApiModel() =
+    UserApiModel(
+        id = ID,
+        username = USERNAME,
+        niceName = NICE_NAME,
+        email = EMAIL,
+        url = URL,
+        registered = REGISTERED,
+        displayName = DISPLAY_NAME,
+        firstName = FIRST_NAME,
+        lastName = LAST_NAME,
+        nickname = NICKNAME,
+        description = DESCRIPTION,
+        capabilities = CAPABILITIES,
+        avatar = AVATAR,
+    )
 
 private const val STATUS = "status"
 private const val COOKIE = "cookie"

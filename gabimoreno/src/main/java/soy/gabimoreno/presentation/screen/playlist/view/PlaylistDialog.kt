@@ -40,23 +40,32 @@ fun PlaylistDialog(
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Column(
-            modifier = Modifier
-                .width(310.dp)
-                .height(intrinsicSize = IntrinsicSize.Min)
-                .border(1.dp, White, RoundedCornerShape(Spacing.s16))
-                .background(PurpleLight, RoundedCornerShape(Spacing.s16))
-                .padding(Spacing.s16),
+            modifier =
+                Modifier
+                    .width(310.dp)
+                    .height(intrinsicSize = IntrinsicSize.Min)
+                    .border(1.dp, White, RoundedCornerShape(Spacing.s16))
+                    .background(PurpleLight, RoundedCornerShape(Spacing.s16))
+                    .padding(Spacing.s16),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 titleDialog.uppercase(),
-                style = MaterialTheme.typography.h6, color = White
+                style = MaterialTheme.typography.h6,
+                color = White,
             )
             Spacer(modifier = Modifier.height(Spacing.s8))
             CustomOutlinedTextField(
                 value = title,
                 placeholderText = stringResource(id = R.string.playlists_create_title_hint),
-                errorText = if (titleError) stringResource(R.string.playlists_create_error_empty) else null,
+                errorText =
+                    if (titleError) {
+                        stringResource(
+                            R.string.playlists_create_error_empty,
+                        )
+                    } else {
+                        null
+                    },
                 onValueChange = { onTitleChange(it) },
             )
             Spacer(modifier = Modifier.height(Spacing.s8))

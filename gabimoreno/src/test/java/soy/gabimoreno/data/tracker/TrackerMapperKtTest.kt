@@ -7,7 +7,6 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.fake.buildEpisode
 
 class TrackerMapperKtTest {
-
     @Test
     fun `GIVEN an episode WHEN toMap() THEN get the expected map`() {
         val episode = buildEpisode()

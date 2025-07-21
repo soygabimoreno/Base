@@ -6,10 +6,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
 
-enum class ReorderHapticFeedbackType(val hapticConstant: Int) {
+enum class ReorderHapticFeedbackType(
+    val hapticConstant: Int,
+) {
     START(HapticFeedbackConstantsCompat.GESTURE_START),
     MOVE(HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK),
-    END(HapticFeedbackConstantsCompat.GESTURE_END)
+    END(HapticFeedbackConstantsCompat.GESTURE_END),
 }
 
 fun interface ReorderHapticFeedback {

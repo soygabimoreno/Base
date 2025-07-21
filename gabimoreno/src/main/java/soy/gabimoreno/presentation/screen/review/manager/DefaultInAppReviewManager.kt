@@ -18,43 +18,47 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 @Singleton
-class DefaultInAppReviewManager @Inject constructor(
-    @ApplicationContext private val context: Context,
-) : InAppReviewManager {
+class DefaultInAppReviewManager
+    @Inject
+    constructor(
+        @ApplicationContext private val context: Context,
+    ) : InAppReviewManager {
+        private val _inAppPreviewEvents =
+            MutableSharedFlow<InAppReviewEvent>(
+                replay = 0,
+                extraBufferCapacity = 1,
+            )
+        override val inAppPreviewEvents: SharedFlow<InAppReviewEvent> =
+            _inAppPreviewEvents.asSharedFlow()
 
-    private val _inAppPreviewEvents = MutableSharedFlow<InAppReviewEvent>(
-        replay = 0,
-        extraBufferCapacity = 1
-    )
-    override val inAppPreviewEvents: SharedFlow<InAppReviewEvent> =
-        _inAppPreviewEvents.asSharedFlow()
+        override suspend fun onInAppReviewClicked(activity: Activity) {
+            val reviewManager =
+                if (BuildConfig.DEBUG) {
+                    FakeReviewManager(context)
+                } else {
+                    ReviewManagerFactory.create(context)
+                }
 
-    override suspend fun onInAppReviewClicked(activity: Activity) {
-        val reviewManager = if (BuildConfig.DEBUG) {
-            FakeReviewManager(context)
-        } else {
-            ReviewManagerFactory.create(context)
-        }
-
-        try {
-            val reviewInfo = reviewManager.requestReviewFlow().await()
-            reviewManager.launchReviewFlow(activity, reviewInfo).await()
-            _inAppPreviewEvents.emit(InAppReviewEvent.Completed)
-        } catch (e: Exception) {
-            Log.w("InAppReviewManager", "InAppReviewManager failed:", e)
-            _inAppPreviewEvents.emit(InAppReviewEvent.Failed)
-        }
-    }
-
-    private suspend fun <T> Task<T>.await(): T = suspendCancellableCoroutine { continuation ->
-        addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                continuation.resume(task.result)
-            } else {
-                continuation.resumeWithException(
-                    task.exception ?: RuntimeException("Task failed without exception")
-                )
+            try {
+                val reviewInfo = reviewManager.requestReviewFlow().await()
+                reviewManager.launchReviewFlow(activity, reviewInfo).await()
+                _inAppPreviewEvents.emit(InAppReviewEvent.Completed)
+            } catch (e: Exception) {
+                Log.w("InAppReviewManager", "InAppReviewManager failed:", e)
+                _inAppPreviewEvents.emit(InAppReviewEvent.Failed)
             }
         }
+
+        private suspend fun <T> Task<T>.await(): T =
+            suspendCancellableCoroutine { continuation ->
+                addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        continuation.resume(task.result)
+                    } else {
+                        continuation.resumeWithException(
+                            task.exception ?: RuntimeException("Task failed without exception"),
+                        )
+                    }
+                }
+            }
     }
-}

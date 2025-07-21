@@ -7,33 +7,33 @@ import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.domain.model.content.AudioCourseItem
 import soy.gabimoreno.domain.model.content.PlaylistAudioItem
 
-fun AudioCourseDbModel.toAudioCourseMapper() = AudioCourse(
-    id,
-    title,
-    description,
-    excerpt,
-    saga,
-    url,
-    videoUrl,
-    thumbnailUrl,
-    pubDateMillis,
-    audioLengthInSeconds,
-    category,
-    isPurchased
-)
+fun AudioCourseDbModel.toAudioCourseMapper() =
+    AudioCourse(
+        id,
+        title,
+        description,
+        excerpt,
+        saga,
+        url,
+        videoUrl,
+        thumbnailUrl,
+        pubDateMillis,
+        audioLengthInSeconds,
+        category,
+        isPurchased,
+    )
 
-fun AudioCourseItemDbModel.toAudioCourseItem(): AudioCourseItem {
-    return AudioCourseItem(
+fun AudioCourseItemDbModel.toAudioCourseItem(): AudioCourseItem =
+    AudioCourseItem(
         id = id,
         title = title,
         url = url,
         hasBeenListened = hasBeenListened,
-        markedAsFavorite = markedAsFavorite
+        markedAsFavorite = markedAsFavorite,
     )
-}
 
-fun AudioCourseWithItems.toAudioCourse(): AudioCourse {
-    return AudioCourse(
+fun AudioCourseWithItems.toAudioCourse(): AudioCourse =
+    AudioCourse(
         id = course.id,
         title = course.title,
         description = course.description,
@@ -46,15 +46,14 @@ fun AudioCourseWithItems.toAudioCourse(): AudioCourse {
         audioLengthInSeconds = course.audioLengthInSeconds,
         category = course.category,
         isPurchased = course.isPurchased,
-        audios = audios.map { it.toAudioCourseItem() }
+        audios = audios.map { it.toAudioCourseItem() },
     )
-}
 
 fun AudioCourseItemDbModel.toPlaylistAudioItem(
     audioCourseDbModel: AudioCourseDbModel,
     position: Int,
-): PlaylistAudioItem {
-    return PlaylistAudioItem(
+): PlaylistAudioItem =
+    PlaylistAudioItem(
         id = id,
         title = title,
         description = audioCourseDbModel.title,
@@ -70,6 +69,5 @@ fun AudioCourseItemDbModel.toPlaylistAudioItem(
         excerpt = audioCourseDbModel.excerpt,
         position = position,
         playlistItemId = null,
-        markedAsFavorite = markedAsFavorite
+        markedAsFavorite = markedAsFavorite,
     )
-}

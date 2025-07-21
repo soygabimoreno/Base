@@ -8,31 +8,35 @@ import soy.gabimoreno.BuildConfig
 import soy.gabimoreno.framework.datastore.EMPTY_BEARER_TOKEN
 
 object APIClient {
-
     var bearerToken = EMPTY_BEARER_TOKEN
 
     fun createHttpClient(): OkHttpClient {
-        val requestInterceptor = Interceptor { chain ->
-            val request = chain
-                .request()
-                .newBuilder()
+        val requestInterceptor =
+            Interceptor { chain ->
+                val request =
+                    chain
+                        .request()
+                        .newBuilder()
 
-            if (bearerToken != EMPTY_BEARER_TOKEN) {
-                request.addHeader(AUTHORIZATION, bearerToken)
+                if (bearerToken != EMPTY_BEARER_TOKEN) {
+                    request.addHeader(AUTHORIZATION, bearerToken)
+                }
+
+                return@Interceptor chain.proceed(request.build())
             }
 
-            return@Interceptor chain.proceed(request.build())
-        }
-
         val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.level = when {
-            BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BODY
-            else -> HttpLoggingInterceptor.Level.NONE
-        }
+        httpLoggingInterceptor.level =
+            when {
+                BuildConfig.DEBUG -> HttpLoggingInterceptor.Level.BODY
+                else -> HttpLoggingInterceptor.Level.NONE
+            }
 
-        val httpClient = OkHttpClient.Builder()
-            .addInterceptor(requestInterceptor)
-            .addInterceptor(httpLoggingInterceptor)
+        val httpClient =
+            OkHttpClient
+                .Builder()
+                .addInterceptor(requestInterceptor)
+                .addInterceptor(httpLoggingInterceptor)
         return httpClient.build()
     }
 }

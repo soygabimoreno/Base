@@ -20,5 +20,5 @@ data class PlaylistAudioItem(
     val category: Category,
     val excerpt: String,
     val position: Int,
-    val playlistItemId: Int?
+    val playlistItemId: Int?,
 ) : Audio

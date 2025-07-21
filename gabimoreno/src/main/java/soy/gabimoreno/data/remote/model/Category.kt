@@ -22,66 +22,66 @@ enum class Category(
         262,
         "Premium",
         Icons.Default.WorkspacePremium,
-        "${COVER_URL_PREFIX}premium$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}premium$COVER_URL_SUFFIX",
     ),
     PREMIUM_ALGORITHMS(
         267,
         "Algoritmos",
         Icons.Default.Calculate,
-        "${COVER_URL_PREFIX}algoritmos$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}algoritmos$COVER_URL_SUFFIX",
     ),
     PREMIUM_ANDROID_STORIES(
         270,
         "Historias androides",
         Icons.Default.AutoStories,
-        "${COVER_URL_PREFIX}historias-androides$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}historias-androides$COVER_URL_SUFFIX",
     ),
     PREMIUM_AUDIO_COURSES(
         263,
         "AudioCursos",
         Icons.AutoMirrored.Filled.MenuBook,
-        "${COVER_URL_PREFIX}audiocursos$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}audiocursos$COVER_URL_SUFFIX",
     ),
     PREMIUM_AUDIO_TIPS(
         264,
         "AudioTips",
         Icons.Default.TipsAndUpdates,
-        "${COVER_URL_PREFIX}audiotips$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}audiotips$COVER_URL_SUFFIX",
     ),
     PREMIUM_BIOGRAPHIES(
         265,
         "Biografías",
         Icons.Default.HistoryEdu,
-        "${COVER_URL_PREFIX}biografias$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}biografias$COVER_URL_SUFFIX",
     ),
     PREMIUM_INTERVIEWS(
         269,
         "Entrevistas",
         Icons.Default.Group,
-        "${COVER_URL_PREFIX}entrevistas$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}entrevistas$COVER_URL_SUFFIX",
     ),
     PREMIUM_NEWS(
         266,
         "Noticias",
         Icons.AutoMirrored.Filled.Feed,
-        "${COVER_URL_PREFIX}noticias$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}noticias$COVER_URL_SUFFIX",
     ),
     PREMIUM_TECH_TALKS(
         268,
         "Charlas Técnicas",
         Icons.Default.Code,
-        "${COVER_URL_PREFIX}charlas-tecnicas$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}charlas-tecnicas$COVER_URL_SUFFIX",
     ),
     AUDIOCOURSES(
         294,
         "Audiocursos",
         Icons.AutoMirrored.Filled.MenuBook,
-        "${COVER_URL_PREFIX}audiocursos$COVER_URL_SUFFIX"
+        "${COVER_URL_PREFIX}audiocursos$COVER_URL_SUFFIX",
     ),
 }
 
-fun getPremiumCategories(): List<Category> {
-    return listOf(
+fun getPremiumCategories(): List<Category> =
+    listOf(
         Category.PREMIUM,
         Category.PREMIUM_ALGORITHMS,
         Category.PREMIUM_ANDROID_STORIES,
@@ -90,9 +90,8 @@ fun getPremiumCategories(): List<Category> {
         Category.PREMIUM_BIOGRAPHIES,
         Category.PREMIUM_INTERVIEWS,
         Category.PREMIUM_NEWS,
-        Category.PREMIUM_TECH_TALKS
+        Category.PREMIUM_TECH_TALKS,
     )
-}
 
 @Throws
 fun List<Category>.toQueryValue(): String {

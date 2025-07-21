@@ -5,7 +5,6 @@ import org.junit.Test
 import soy.gabimoreno.data.remote.model.JwtAuthApiModel
 
 class JwtAuthMapperKtTest {
-
     @Test
     fun `GIVEN an JwtAuthApiModel WHEN toDomain THEN return the expected JwtAuth`() {
         val jwtAuthApiModel = buildJwtAuthApiModel()
@@ -19,12 +18,13 @@ class JwtAuthMapperKtTest {
     }
 }
 
-private fun buildJwtAuthApiModel() = JwtAuthApiModel(
-    token = TOKEN,
-    userEmail = USER_EMAIL,
-    userNiceName = USER_NICE_NAME,
-    userDisplayName = USER_DISPLAY_NAME
-)
+private fun buildJwtAuthApiModel() =
+    JwtAuthApiModel(
+        token = TOKEN,
+        userEmail = USER_EMAIL,
+        userNiceName = USER_NICE_NAME,
+        userDisplayName = USER_DISPLAY_NAME,
+    )
 
 private const val TOKEN = "token"
 private const val USER_EMAIL = "userEmail"

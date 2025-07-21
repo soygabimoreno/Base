@@ -10,9 +10,8 @@ import soy.gabimoreno.presentation.screen.review.manager.InAppReviewManager
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class InAppReviewModule {
-
     @Binds
     abstract fun bindInAppReviewManagerHelper(
-        inAppReviewManager: DefaultInAppReviewManager
+        inAppReviewManager: DefaultInAppReviewManager,
     ): InAppReviewManager
 }

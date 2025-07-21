@@ -8,15 +8,15 @@ import org.junit.Test
 import soy.gabimoreno.domain.interoperability.BuildConfigBridge
 
 class GetAppVersionNameUseCaseTest {
-
     private val buildConfigBridge: BuildConfigBridge = mockk()
     private lateinit var useCase: GetAppVersionNameUseCase
 
     @Before
     fun setUp() {
-        useCase = GetAppVersionNameUseCase(
-            buildConfigBridge
-        )
+        useCase =
+            GetAppVersionNameUseCase(
+                buildConfigBridge,
+            )
     }
 
     @Test

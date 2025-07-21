@@ -6,12 +6,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-fun Context.getBearerToken(): Flow<String> {
-    return dataStore.data
+fun Context.getBearerToken(): Flow<String> =
+    dataStore.data
         .map { preferences ->
             preferences[key] ?: EMPTY_BEARER_TOKEN
         }
-}
 
 suspend fun Context.setBearerToken(bearerToken: String) {
     dataStore.edit { settings ->

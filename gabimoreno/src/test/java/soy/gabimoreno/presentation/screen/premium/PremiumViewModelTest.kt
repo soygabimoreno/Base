@@ -20,7 +20,6 @@ import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 
 @ExperimentalCoroutinesApi
 class PremiumViewModelTest {
-
     private val getPremiumAudiosMediatorUseCase = relaxedMockk<GetPremiumAudiosManagedUseCase>()
     private val getPremiumAudioByIdUseCase = relaxedMockk<GetPremiumAudioByIdUseCase>()
     private val markPremiumAudioAsListenedUseCase =
@@ -43,14 +42,15 @@ class PremiumViewModelTest {
     @Test
     fun `GIVEN shouldIAccessPremium true WHEN onViewScreen THEN state is updated with access granted`() =
         runTest {
-            val viewModel = PremiumViewModel(
-                getPremiumAudiosMediatorUseCase,
-                getPremiumAudioByIdUseCase,
-                markPremiumAudioAsListenedUseCase,
-                refreshBearerTokenUseCase,
-                updateAudioItemFavoriteStateUseCase,
-                testDispatcher
-            )
+            val viewModel =
+                PremiumViewModel(
+                    getPremiumAudiosMediatorUseCase,
+                    getPremiumAudioByIdUseCase,
+                    markPremiumAudioAsListenedUseCase,
+                    refreshBearerTokenUseCase,
+                    updateAudioItemFavoriteStateUseCase,
+                    testDispatcher,
+                )
 
             viewModel.onViewScreen(true)
             advanceUntilIdle()
@@ -61,14 +61,15 @@ class PremiumViewModelTest {
     @Test
     fun `GIVEN shouldIAccessPremium false WHEN onViewScreen THEN state is updated with access denied`() =
         runTest {
-            val viewModel = PremiumViewModel(
-                getPremiumAudiosMediatorUseCase,
-                getPremiumAudioByIdUseCase,
-                markPremiumAudioAsListenedUseCase,
-                refreshBearerTokenUseCase,
-                updateAudioItemFavoriteStateUseCase,
-                testDispatcher
-            )
+            val viewModel =
+                PremiumViewModel(
+                    getPremiumAudiosMediatorUseCase,
+                    getPremiumAudioByIdUseCase,
+                    markPremiumAudioAsListenedUseCase,
+                    refreshBearerTokenUseCase,
+                    updateAudioItemFavoriteStateUseCase,
+                    testDispatcher,
+                )
 
             viewModel.onViewScreen(false)
             advanceUntilIdle()

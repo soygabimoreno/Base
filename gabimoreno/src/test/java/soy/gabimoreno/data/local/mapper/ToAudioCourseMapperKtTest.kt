@@ -7,9 +7,7 @@ import soy.gabimoreno.fake.buildAudioCourseDbModel
 import soy.gabimoreno.fake.buildAudioCourseItemDbModel
 import soy.gabimoreno.fake.buildAudioCourseWithItems
 
-
 class ToAudioCourseMapperKtTest {
-
     @Test
     fun `GIVEN an AudioCourseDbModel WHEN toAudioCourse THEN get the expected AudioCourse`() {
         val audioCourseDbModel = buildAudioCourseDbModel()

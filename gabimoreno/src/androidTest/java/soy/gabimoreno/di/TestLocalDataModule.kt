@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.CoroutineDispatcher
-import soy.gabimoreno.data.local.GabiMorenoDatabase
+import soy.gabimoreno.data.local.ApplicationDatabase
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.di.data.LocalDataModule
 import javax.inject.Named
@@ -15,27 +15,28 @@ import javax.inject.Named
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [LocalDataModule::class]
+    replaces = [LocalDataModule::class],
 )
 object TestLocalDataModule {
-
     @Provides
     @Named(DB_TEST_NAME)
-    fun gabiMorenoDatabaseProvider(application: Application): GabiMorenoDatabase =
-        Room.inMemoryDatabaseBuilder(
-            application, GabiMorenoDatabase::class.java
-        ).allowMainThreadQueries()
+    fun gabiMorenoDatabaseProvider(application: Application): ApplicationDatabase =
+        Room
+            .inMemoryDatabaseBuilder(
+                application,
+                ApplicationDatabase::class.java,
+            ).allowMainThreadQueries()
             .build()
 
     @Provides
     fun provideLocalPremiumAudioDataSource(
         @Named(DB_TEST_NAME)
-        gabiMorenoDatabase: GabiMorenoDatabase,
+        gabiMorenoDatabase: ApplicationDatabase,
         @IO dispatcher: CoroutineDispatcher,
     ): LocalPremiumAudiosDataSource =
         LocalPremiumAudiosDataSource(
             gabiMorenoDatabase,
-            dispatcher
+            dispatcher,
         )
 }
 

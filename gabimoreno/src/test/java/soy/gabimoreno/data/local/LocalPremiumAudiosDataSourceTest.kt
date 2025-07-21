@@ -24,62 +24,66 @@ import soy.gabimoreno.fake.buildPremiumAudios
 
 @ExperimentalCoroutinesApi
 class LocalPremiumAudiosDataSourceTest {
-
     private val premiumAudioDbModelDao: PremiumAudioDbModelDao = mockk()
-    private val gabiMorenoDatabase: GabiMorenoDatabase = mockk()
+    private val gabiMorenoDatabase: ApplicationDatabase = mockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
     private lateinit var datasource: LocalPremiumAudiosDataSource
 
     @Before
     fun setUp() {
         every { gabiMorenoDatabase.premiumAudioDbModelDao() } returns premiumAudioDbModelDao
-        datasource = LocalPremiumAudiosDataSource(
-            gabiMorenoDatabase,
-            testDispatcher
-        )
+        datasource =
+            LocalPremiumAudiosDataSource(
+                gabiMorenoDatabase,
+                testDispatcher,
+            )
     }
 
     @Test
-    fun `GIVEN database empty WHEN isEmpty THEN return true`() = runTest {
-        every { premiumAudioDbModelDao.count() } returns EMPTY_DATABASE_COUNT
+    fun `GIVEN database empty WHEN isEmpty THEN return true`() =
+        runTest {
+            every { premiumAudioDbModelDao.count() } returns EMPTY_DATABASE_COUNT
 
-        val result = datasource.isEmpty()
+            val result = datasource.isEmpty()
 
-        result shouldBe true
-    }
-
-    @Test
-    fun `GIVEN database filled WHEN isEmpty THEN return false`() = runTest {
-        every { premiumAudioDbModelDao.count() } returns FILLED_DATABASE_COUNT
-
-        val result = datasource.isEmpty()
-
-        result shouldBe false
-    }
-
-    @Test
-    fun `WHEN savePremiumAudios THEN they are inserted into the database`() = runTest {
-        val premiumAudios = buildPremiumAudios()
-        val premiumAudioDbModels = premiumAudios.map { it.toPremiumAudioDbModel() }
-        every { premiumAudioDbModelDao.upsertPremiumAudioDbModels(premiumAudioDbModels) } returns Unit
-
-        datasource.savePremiumAudios(premiumAudios)
-
-        verifyOnce {
-            premiumAudioDbModelDao.upsertPremiumAudioDbModels(premiumAudioDbModels)
+            result shouldBe true
         }
-    }
 
     @Test
-    fun `WHEN getPremiumAudios THEN they are get from the database`() = runTest {
-        val premiumAudios = buildPremiumAudios()
-        val premiumAudioDbModels = premiumAudios.map { it.toPremiumAudioDbModel() }
-        every { premiumAudioDbModelDao.getPremiumAudioDbModels() } returns premiumAudioDbModels
+    fun `GIVEN database filled WHEN isEmpty THEN return false`() =
+        runTest {
+            every { premiumAudioDbModelDao.count() } returns FILLED_DATABASE_COUNT
 
-        val result = datasource.getPremiumAudios()
+            val result = datasource.isEmpty()
 
-        result shouldBeEqualTo premiumAudios
-    }
+            result shouldBe false
+        }
+
+    @Test
+    fun `WHEN savePremiumAudios THEN they are inserted into the database`() =
+        runTest {
+            val premiumAudios = buildPremiumAudios()
+            val premiumAudioDbModels = premiumAudios.map { it.toPremiumAudioDbModel() }
+            every { premiumAudioDbModelDao.upsertPremiumAudioDbModels(premiumAudioDbModels) } returns Unit
+
+            datasource.savePremiumAudios(premiumAudios)
+
+            verifyOnce {
+                premiumAudioDbModelDao.upsertPremiumAudioDbModels(premiumAudioDbModels)
+            }
+        }
+
+    @Test
+    fun `WHEN getPremiumAudios THEN they are get from the database`() =
+        runTest {
+            val premiumAudios = buildPremiumAudios()
+            val premiumAudioDbModels = premiumAudios.map { it.toPremiumAudioDbModel() }
+            every { premiumAudioDbModelDao.getPremiumAudioDbModels() } returns premiumAudioDbModels
+
+            val result = datasource.getPremiumAudios()
+
+            result shouldBeEqualTo premiumAudios
+        }
 
     @Test
     fun `WHEN getPremiumAudiosPagingSource THEN paging source is get from the database`() =
@@ -96,36 +100,39 @@ class LocalPremiumAudiosDataSourceTest {
         }
 
     @Test
-    fun `WHEN getPremiumAudioById THEN they are get from the database`() = runTest {
-        val premiumAudio = buildPremiumAudios().first()
-        val premiumAudioDbModel = premiumAudio.toPremiumAudioDbModel()
-        every { premiumAudioDbModelDao.getPremiumAudioDbModelById(premiumAudio.id) } returns premiumAudioDbModel
+    fun `WHEN getPremiumAudioById THEN they are get from the database`() =
+        runTest {
+            val premiumAudio = buildPremiumAudios().first()
+            val premiumAudioDbModel = premiumAudio.toPremiumAudioDbModel()
+            every { premiumAudioDbModelDao.getPremiumAudioDbModelById(premiumAudio.id) } returns premiumAudioDbModel
 
-        val result = datasource.getPremiumAudioById(premiumAudio.id)
+            val result = datasource.getPremiumAudioById(premiumAudio.id)
 
-        result shouldBeEqualTo premiumAudio
-    }
+            result shouldBeEqualTo premiumAudio
+        }
 
     @Test
-    fun `GIVEN datasource WHEN markAllPremiumAudiosAsUnlistened THEN dao is called`() = runTest {
-        every {
-            premiumAudioDbModelDao.markAllPremiumAudiosAsUnlistened()
-        } returns Unit
+    fun `GIVEN datasource WHEN markAllPremiumAudiosAsUnlistened THEN dao is called`() =
+        runTest {
+            every {
+                premiumAudioDbModelDao.markAllPremiumAudiosAsUnlistened()
+            } returns Unit
 
-        datasource.markAllPremiumAudiosAsUnlistened()
+            datasource.markAllPremiumAudiosAsUnlistened()
 
-        verifyOnce {
-            premiumAudioDbModelDao.markAllPremiumAudiosAsUnlistened()
+            verifyOnce {
+                premiumAudioDbModelDao.markAllPremiumAudiosAsUnlistened()
+            }
         }
-    }
 
     @Test
     fun `GIVEN datasource WHEN getAllFavoritePremiumAudios THEN get all favorite premium audios`() =
         runTest {
-            val premiumAudios = listOf(
-                buildPremiumAudioDbModel(markedAsFavorite = true),
-                buildPremiumAudioDbModel(id = "2", markedAsFavorite = true)
-            )
+            val premiumAudios =
+                listOf(
+                    buildPremiumAudioDbModel(markedAsFavorite = true),
+                    buildPremiumAudioDbModel(id = "2", markedAsFavorite = true),
+                )
 
             coEvery { datasource.getAllFavoritePremiumAudios() } returns premiumAudios
 
@@ -153,9 +160,10 @@ class LocalPremiumAudiosDataSourceTest {
         }
 
     @Test
-    fun `WHEN reset THEN the database is empty`() = runTest {
-        // TODO: Maybe should I use the `gabimoreno-db-test` for this purpose?
-    }
+    fun `WHEN reset THEN the database is empty`() =
+        runTest {
+            // TODO: Maybe should I use the `gabimoreno-db-test` for this purpose?
+        }
 }
 
 private const val EMPTY_DATABASE_COUNT = 0

@@ -12,11 +12,8 @@ import soy.gabimoreno.presentation.ui.dialog.CustomDialog
 import soy.gabimoreno.presentation.ui.dialog.TypeDialog
 import soy.gabimoreno.util.sendEmail
 
-
 @Composable
-fun ReviewDialog(
-    viewModel: ReviewDialogViewModel = hiltViewModel()
-) {
+fun ReviewDialog(viewModel: ReviewDialogViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val state = viewModel.state
     val reviewStep = state.reviewDialogStep
@@ -34,7 +31,7 @@ fun ReviewDialog(
                             to = stringTo,
                             subject = stringSubject,
                             body = stringBody,
-                            errorText = stringError
+                            errorText = stringError,
                         )
                         viewModel.onAction(ReviewDialogAction.OnEmailSent)
                     }
@@ -60,7 +57,7 @@ fun ReviewDialog(
                     dismissText = stringResource(R.string.review_dialog_rate_app_no),
                     onConfirm = { viewModel.onAction(ReviewDialogAction.OnConfirmDialog) },
                     onDismiss = { viewModel.onAction(ReviewDialogAction.OnDismissDialog) },
-                    typeDialog = TypeDialog.CONFIRMATION
+                    typeDialog = TypeDialog.CONFIRMATION,
                 )
             }
 
@@ -71,11 +68,15 @@ fun ReviewDialog(
                     confirmText = stringResource(R.string.review_dialog_rate_app_yes),
                     dismissText = stringResource(R.string.review_dialog_rate_app_no),
                     isCheckboxChecked = state.shouldntWeAskAgain,
-                    onCheckboxChanged = { viewModel.onAction(ReviewDialogAction.OnShouldntWeAskAgainChanged) },
+                    onCheckboxChanged = {
+                        viewModel.onAction(
+                            ReviewDialogAction.OnShouldntWeAskAgainChanged,
+                        )
+                    },
                     checkBoxText = stringResource(R.string.review_dialog_dont_ask_again),
                     onConfirm = { viewModel.onAction(ReviewDialogAction.OnConfirmDialog) },
                     onDismiss = { viewModel.onAction(ReviewDialogAction.OnDismissDialog) },
-                    typeDialog = TypeDialog.CONFIRMATION_ERROR
+                    typeDialog = TypeDialog.CONFIRMATION_ERROR,
                 )
             }
 
@@ -86,11 +87,15 @@ fun ReviewDialog(
                     confirmText = stringResource(R.string.review_dialog_rate_app_yes),
                     dismissText = stringResource(R.string.review_dialog_rate_app_no),
                     isCheckboxChecked = state.shouldntWeAskAgain,
-                    onCheckboxChanged = { viewModel.onAction(ReviewDialogAction.OnShouldntWeAskAgainChanged) },
+                    onCheckboxChanged = {
+                        viewModel.onAction(
+                            ReviewDialogAction.OnShouldntWeAskAgainChanged,
+                        )
+                    },
                     checkBoxText = stringResource(R.string.review_dialog_dont_ask_again),
                     onConfirm = { viewModel.onAction(ReviewDialogAction.OnConfirmDialog) },
                     onDismiss = { viewModel.onAction(ReviewDialogAction.OnDismissDialog) },
-                    typeDialog = TypeDialog.CONFIRMATION_WITH_CHECKBOX
+                    typeDialog = TypeDialog.CONFIRMATION_WITH_CHECKBOX,
                 )
             }
 
@@ -100,7 +105,7 @@ fun ReviewDialog(
                     text = EMPTY_STRING,
                     confirmText = stringResource(R.string.review_dialog_rate_app_yes),
                     onConfirm = { viewModel.onAction(ReviewDialogAction.OnConfirmDialog) },
-                    typeDialog = TypeDialog.SUCCESS
+                    typeDialog = TypeDialog.SUCCESS,
                 )
             }
 

@@ -24,7 +24,6 @@ import javax.inject.Inject
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
-
     @get:Rule(order = 0)
     val hiltAndroidRule = HiltAndroidRule(this)
 
@@ -51,18 +50,22 @@ class MainActivityTest {
     }
 
     @Test
-    fun check_mock_web_server_is_working() = runTest {
-        val categories = Category.values().toList()
-        premiumAudiosRepository.getPremiumAudios(categories)
-            .fold({
-                      throw Exception(it.toString())
-                  }, { posts ->
-                      posts.size shouldBeEqualTo 4
-                      val post = posts[0]
-                      post.id shouldBeEqualTo FIRST_POST_ID
-                  }
-            )
-    }
+    fun check_mock_web_server_is_working() =
+        runTest {
+            val categories = Category.values().toList()
+            premiumAudiosRepository
+                .getPremiumAudios(categories)
+                .fold(
+                    {
+                        throw Exception(it.toString())
+                    },
+                    { posts ->
+                        posts.size shouldBeEqualTo 4
+                        val post = posts[0]
+                        post.id shouldBeEqualTo FIRST_POST_ID
+                    },
+                )
+        }
 }
 
 private const val FIRST_POST_ID = "5436"

@@ -85,39 +85,47 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     }
 }
 
-private val localHomeViewModel = staticCompositionLocalOf<HomeViewModel> {
-    error("No HomeViewModel provided")
-}
+private val localHomeViewModel =
+    staticCompositionLocalOf<HomeViewModel> {
+        error("No HomeViewModel provided")
+    }
 
-private val localDetailViewModel = staticCompositionLocalOf<DetailViewModel> {
-    error("No DetailViewModel provided")
-}
+private val localDetailViewModel =
+    staticCompositionLocalOf<DetailViewModel> {
+        error("No DetailViewModel provided")
+    }
 
-private val localPlayerViewModel = staticCompositionLocalOf<PlayerViewModel> {
-    error("No PlayerViewModel provided")
-}
+private val localPlayerViewModel =
+    staticCompositionLocalOf<PlayerViewModel> {
+        error("No PlayerViewModel provided")
+    }
 
-private val localWebViewViewModel = staticCompositionLocalOf<WebViewViewModel> {
-    error("No WebViewViewModel provided")
-}
+private val localWebViewViewModel =
+    staticCompositionLocalOf<WebViewViewModel> {
+        error("No WebViewViewModel provided")
+    }
 
-private val localPremiumViewModel = staticCompositionLocalOf<PremiumViewModel> {
-    error("No PremiumViewModel provided")
-}
+private val localPremiumViewModel =
+    staticCompositionLocalOf<PremiumViewModel> {
+        error("No PremiumViewModel provided")
+    }
 
-private val localAudioCoursesListViewModel = staticCompositionLocalOf<AudioCoursesListViewModel> {
-    error("No CoursesListViewModel provided")
-}
+private val localAudioCoursesListViewModel =
+    staticCompositionLocalOf<AudioCoursesListViewModel> {
+        error("No CoursesListViewModel provided")
+    }
 
 private val localAudioCourseDetailViewModel =
     staticCompositionLocalOf<AudioCourseDetailViewModel> {
         error("No AudioCoursesDetailViewModel provided")
     }
 
-private val localProfileViewModel = staticCompositionLocalOf<ProfileViewModel> {
-    error("No ProfileViewModel provided")
-}
+private val localProfileViewModel =
+    staticCompositionLocalOf<ProfileViewModel> {
+        error("No ProfileViewModel provided")
+    }
 
-private val localAuthViewModel = staticCompositionLocalOf<AuthViewModel> {
-    error("No AuthViewModel provided")
-}
+private val localAuthViewModel =
+    staticCompositionLocalOf<AuthViewModel> {
+        error("No AuthViewModel provided")
+    }

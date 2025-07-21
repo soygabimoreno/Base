@@ -17,13 +17,14 @@ fun ErrorView(
     onClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = Spacing.s24)
+        modifier = Modifier.padding(horizontal = Spacing.s24),
     ) {
         Text(
             text,
-            modifier = Modifier
-                .padding(horizontal = Spacing.s8)
-                .padding(bottom = Spacing.s8)
+            modifier =
+                Modifier
+                    .padding(horizontal = Spacing.s8)
+                    .padding(bottom = Spacing.s8),
         )
         TextButton(onClick = onClick) {
             Text(

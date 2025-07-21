@@ -32,7 +32,6 @@ import soy.gabimoreno.fake.buildCloudAudioCourseResponses
 import soy.gabimoreno.fake.buildCloudAudiocourseResponseList
 
 class DefaultAudioCoursesRepositoryTest {
-
     private val cloudDataSource: AudioCoursesCloudDataSource = mockk()
     private val localAudioCoursesDataSource = relaxedMockk<LocalAudioCoursesDataSource>()
     private val remoteAudioCoursesDataSource = relaxedMockk<RemoteAudioCoursesDataSource>()
@@ -42,12 +41,13 @@ class DefaultAudioCoursesRepositoryTest {
 
     @Before
     fun setUp() {
-        repository = DefaultAudioCoursesRepository(
-            cloudDataSource,
-            localAudioCoursesDataSource,
-            remoteAudioCoursesDataSource,
-            refreshPremiumAudiosFromRemoteUseCase
-        )
+        repository =
+            DefaultAudioCoursesRepository(
+                cloudDataSource,
+                localAudioCoursesDataSource,
+                remoteAudioCoursesDataSource,
+                refreshPremiumAudiosFromRemoteUseCase,
+            )
     }
 
     @Test
@@ -88,14 +88,18 @@ class DefaultAudioCoursesRepositoryTest {
 
             repository.getCourses(categories = categories, email = EMAIL, forceRefresh = false)
 
-            val expectedMerged = remoteCourses.map { course ->
-                course.copy(audios = course.audios.map {
-                    it.copy(
-                        hasBeenListened = true,
-                        markedAsFavorite = false
+            val expectedMerged =
+                remoteCourses.map { course ->
+                    course.copy(
+                        audios =
+                            course.audios.map {
+                                it.copy(
+                                    hasBeenListened = true,
+                                    markedAsFavorite = false,
+                                )
+                            },
                     )
-                })
-            }
+                }
             coVerifyOnce {
                 cloudDataSource.getAudioCoursesItems(EMAIL)
                 localAudioCoursesDataSource.saveAudioCourses(expectedMerged)
@@ -121,45 +125,50 @@ class DefaultAudioCoursesRepositoryTest {
             expectedHasBeenListened shouldBeEqualTo true
 
             coVerifyOnce {
-                localAudioCoursesDataSource.saveAudioCourses(match {
-                    it.flatMap { audioCourse -> audioCourse.audios }
-                        .none { audioCourseItem -> audioCourseItem.hasBeenListened }
-                })
+                localAudioCoursesDataSource.saveAudioCourses(
+                    match {
+                        it
+                            .flatMap { audioCourse -> audioCourse.audios }
+                            .none { audioCourseItem -> audioCourseItem.hasBeenListened }
+                    },
+                )
             }
         }
 
     @Test
-    fun `GIVEN local is empty WHEN getCourses THEN fetch from remote`() = runTest {
-        val categories = listOf(Category.AUDIOCOURSES)
-        val remoteCourses = buildAudioCourses()
-        val cloudAudioCourses = buildCloudAudioCourseResponses(remoteCourses)
-        coEvery { refreshPremiumAudiosFromRemoteUseCase(any(), any()) } returns false
-        coEvery { localAudioCoursesDataSource.isEmpty() } returns true
-        coEvery { localAudioCoursesDataSource.getAudioCoursesWithItems() } returns emptyList()
-        coEvery { remoteAudioCoursesDataSource.getAudioCourses(categories) } returns remoteCourses.right()
-        coEvery { cloudDataSource.getAudioCoursesItems(EMAIL) } returns cloudAudioCourses
-        coEvery { localAudioCoursesDataSource.getAudioCourses() } returns remoteCourses
+    fun `GIVEN local is empty WHEN getCourses THEN fetch from remote`() =
+        runTest {
+            val categories = listOf(Category.AUDIOCOURSES)
+            val remoteCourses = buildAudioCourses()
+            val cloudAudioCourses = buildCloudAudioCourseResponses(remoteCourses)
+            coEvery { refreshPremiumAudiosFromRemoteUseCase(any(), any()) } returns false
+            coEvery { localAudioCoursesDataSource.isEmpty() } returns true
+            coEvery { localAudioCoursesDataSource.getAudioCoursesWithItems() } returns emptyList()
+            coEvery { remoteAudioCoursesDataSource.getAudioCourses(categories) } returns remoteCourses.right()
+            coEvery { cloudDataSource.getAudioCoursesItems(EMAIL) } returns cloudAudioCourses
+            coEvery { localAudioCoursesDataSource.getAudioCourses() } returns remoteCourses
 
-        val result = repository.getCourses(categories, EMAIL, forceRefresh = false)
+            val result = repository.getCourses(categories, EMAIL, forceRefresh = false)
 
-        result shouldBeEqualTo remoteCourses.right()
-        coVerifyOnce {
-            remoteAudioCoursesDataSource.getAudioCourses(categories)
-            localAudioCoursesDataSource.saveAudioCourses(remoteCourses)
+            result shouldBeEqualTo remoteCourses.right()
+            coVerifyOnce {
+                remoteAudioCoursesDataSource.getAudioCourses(categories)
+                localAudioCoursesDataSource.saveAudioCourses(remoteCourses)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN remote fails WHEN getCourses THEN return error`() = runTest {
-        val categories = listOf(Category.AUDIOCOURSES)
-        val error = Throwable("Network error")
-        coEvery { refreshPremiumAudiosFromRemoteUseCase(any(), any()) } returns true
-        coEvery { remoteAudioCoursesDataSource.getAudioCourses(categories) } returns error.left()
+    fun `GIVEN remote fails WHEN getCourses THEN return error`() =
+        runTest {
+            val categories = listOf(Category.AUDIOCOURSES)
+            val error = Throwable("Network error")
+            coEvery { refreshPremiumAudiosFromRemoteUseCase(any(), any()) } returns true
+            coEvery { remoteAudioCoursesDataSource.getAudioCourses(categories) } returns error.left()
 
-        val result = repository.getCourses(listOf(Category.AUDIOCOURSES), EMAIL)
+            val result = repository.getCourses(listOf(Category.AUDIOCOURSES), EMAIL)
 
-        result shouldBeEqualTo error.left()
-    }
+            result shouldBeEqualTo error.left()
+        }
 
     @Test
     fun `GIVEN no refresh and local is not empty WHEN getCourses THEN fetch from local only`() =
@@ -179,30 +188,32 @@ class DefaultAudioCoursesRepositoryTest {
         }
 
     @Test
-    fun `GIVEN valid course id WHEN getCourseById THEN return course`() = runTest {
-        val course = relaxedMockk<AudioCourse>()
-        val id = "id"
-        coEvery {
-            localAudioCoursesDataSource.getAudioCourseById(id)
-        } returns flowOf(course)
+    fun `GIVEN valid course id WHEN getCourseById THEN return course`() =
+        runTest {
+            val course = relaxedMockk<AudioCourse>()
+            val id = "id"
+            coEvery {
+                localAudioCoursesDataSource.getAudioCourseById(id)
+            } returns flowOf(course)
 
-        val result = repository.getCourseById(id)
+            val result = repository.getCourseById(id)
 
-        result.isRight() shouldBe true
-        result.getOrNull()!!.first() shouldBe course
-    }
+            result.isRight() shouldBe true
+            result.getOrNull()!!.first() shouldBe course
+        }
 
     @Test
-    fun `GIVEN invalid course id WHEN getCourseById THEN return error`() = runTest {
-        coEvery {
-            localAudioCoursesDataSource.getAudioCourseById("invalid")
-        } returns flowOf(null)
+    fun `GIVEN invalid course id WHEN getCourseById THEN return error`() =
+        runTest {
+            coEvery {
+                localAudioCoursesDataSource.getAudioCourseById("invalid")
+            } returns flowOf(null)
 
-        val result = repository.getCourseById("invalid")
+            val result = repository.getCourseById("invalid")
 
-        result.isLeft() shouldBe true
-        result.mapLeft { it.message shouldBe "AudioCourse not found" }
-    }
+            result.isLeft() shouldBe true
+            result.mapLeft { it.message shouldBe "AudioCourse not found" }
+        }
 
     @Test
     fun `GIVEN item is listened WHEN markAudioCourseItemAsListened THEN field is updated`() =
@@ -210,10 +221,12 @@ class DefaultAudioCoursesRepositoryTest {
             val audioCourse = buildAudioCourse()
             coJustRun {
                 cloudDataSource.upsertAudioCourseItemFields(
-                    EMAIL, audioCourse.id, mapOf(
+                    EMAIL,
+                    audioCourse.id,
+                    mapOf(
                         "id" to audioCourse.id,
-                        "hasBeenListened" to true
-                    )
+                        "hasBeenListened" to true,
+                    ),
                 )
             }
             repository.markAudioCourseItemAsListened(audioCourse.id, EMAIL, true)
@@ -221,10 +234,12 @@ class DefaultAudioCoursesRepositoryTest {
             coVerifyOnce {
                 localAudioCoursesDataSource.updateHasBeenListened(audioCourse.id, true)
                 cloudDataSource.upsertAudioCourseItemFields(
-                    EMAIL, audioCourse.id, mapOf(
+                    EMAIL,
+                    audioCourse.id,
+                    mapOf(
                         "id" to audioCourse.id,
-                        "hasBeenListened" to true
-                    )
+                        "hasBeenListened" to true,
+                    ),
                 )
             }
         }
@@ -235,10 +250,12 @@ class DefaultAudioCoursesRepositoryTest {
             val audioCourse = buildAudioCourse()
             coJustRun {
                 cloudDataSource.upsertAudioCourseItemFields(
-                    EMAIL, audioCourse.id, mapOf(
+                    EMAIL,
+                    audioCourse.id,
+                    mapOf(
                         "id" to audioCourse.id,
-                        "hasBeenListened" to false
-                    )
+                        "hasBeenListened" to false,
+                    ),
                 )
             }
             repository.markAudioCourseItemAsListened(audioCourse.id, EMAIL, false)
@@ -246,10 +263,12 @@ class DefaultAudioCoursesRepositoryTest {
             coVerifyOnce {
                 localAudioCoursesDataSource.updateHasBeenListened(audioCourse.id, false)
                 cloudDataSource.upsertAudioCourseItemFields(
-                    EMAIL, audioCourse.id, mapOf(
+                    EMAIL,
+                    audioCourse.id,
+                    mapOf(
                         "id" to audioCourse.id,
-                        "hasBeenListened" to false
-                    )
+                        "hasBeenListened" to false,
+                    ),
                 )
             }
         }
@@ -263,7 +282,7 @@ class DefaultAudioCoursesRepositoryTest {
             coJustRun {
                 cloudDataSource.batchUpdateFieldsForAllAudioCoursesItems(
                     EMAIL,
-                    mapOf("hasBeenListened" to false)
+                    mapOf("hasBeenListened" to false),
                 )
             }
 
@@ -273,58 +292,62 @@ class DefaultAudioCoursesRepositoryTest {
                 localAudioCoursesDataSource.markAllAudioCourseItemsAsUnlistened()
                 cloudDataSource.batchUpdateFieldsForAllAudioCoursesItems(
                     EMAIL,
-                    mapOf("hasBeenListened" to false)
+                    mapOf("hasBeenListened" to false),
                 )
             }
         }
 
     @Test
-    fun `WHEN reset THEN call reset on local`() = runTest {
-        coEvery { localAudioCoursesDataSource.reset() } returns Unit
+    fun `WHEN reset THEN call reset on local`() =
+        runTest {
+            coEvery { localAudioCoursesDataSource.reset() } returns Unit
 
-        repository.reset()
+            repository.reset()
 
-        coVerifyOnce { localAudioCoursesDataSource.reset() }
-    }
+            coVerifyOnce { localAudioCoursesDataSource.reset() }
+        }
 
     @Test
-    fun `GIVEN audioCourseItemId WHEN getAudioCourseItem THEN return AudioCourseItem`() = runTest {
-        val audioCourseItem = buildAudioCourseItemDbModel()
-        coEvery {
-            localAudioCoursesDataSource.getAudioCourseItem(audioCourseItem.id)
-        } returns audioCourseItem
+    fun `GIVEN audioCourseItemId WHEN getAudioCourseItem THEN return AudioCourseItem`() =
+        runTest {
+            val audioCourseItem = buildAudioCourseItemDbModel()
+            coEvery {
+                localAudioCoursesDataSource.getAudioCourseItem(audioCourseItem.id)
+            } returns audioCourseItem
 
-        val result = repository.getAudioCourseItem(audioCourseItem.id)
+            val result = repository.getAudioCourseItem(audioCourseItem.id)
 
-        result.isRight() shouldBe true
-        result.getOrNull() shouldBeEqualTo audioCourseItem.toAudioCourseItem()
-        coVerifyOnce {
-            localAudioCoursesDataSource.getAudioCourseItem(audioCourseItem.id)
+            result.isRight() shouldBe true
+            result.getOrNull() shouldBeEqualTo audioCourseItem.toAudioCourseItem()
+            coVerifyOnce {
+                localAudioCoursesDataSource.getAudioCourseItem(audioCourseItem.id)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN audioCourseItemId WHEN getAudioCourseItem THEN return null`() = runTest {
-        val audioCourseItemId = "1"
-        coEvery {
-            localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
-        } returns null
+    fun `GIVEN audioCourseItemId WHEN getAudioCourseItem THEN return null`() =
+        runTest {
+            val audioCourseItemId = "1"
+            coEvery {
+                localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
+            } returns null
 
-        val result = repository.getAudioCourseItem(audioCourseItemId)
+            val result = repository.getAudioCourseItem(audioCourseItemId)
 
-        result.isLeft() shouldBe true
-        coVerifyOnce {
-            localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
+            result.isLeft() shouldBe true
+            coVerifyOnce {
+                localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
+            }
         }
-    }
 
     @Test
     fun `GIVEN repository WHEN getAllFavoriteAudioCoursesItems THEN return AudioCourseItem list with favorites`() =
         runTest {
-            val audioCourseItems = listOf(
-                buildAudioCourseItemDbModel(markedAsFavorite = true),
-                buildAudioCourseItemDbModel(markedAsFavorite = true),
-            )
+            val audioCourseItems =
+                listOf(
+                    buildAudioCourseItemDbModel(markedAsFavorite = true),
+                    buildAudioCourseItemDbModel(markedAsFavorite = true),
+                )
             coEvery {
                 localAudioCoursesDataSource.getAllFavoriteAudioCoursesItems()
             } returns audioCourseItems
@@ -351,8 +374,8 @@ class DefaultAudioCoursesRepositoryTest {
                     audioCourseItem.id,
                     mapOf(
                         "id" to audioCourseItem.id,
-                        "markedAsFavorite" to true
-                    )
+                        "markedAsFavorite" to true,
+                    ),
                 )
             }
 
@@ -365,8 +388,8 @@ class DefaultAudioCoursesRepositoryTest {
                     audioCourseItem.id,
                     mapOf(
                         "id" to audioCourseItem.id,
-                        "markedAsFavorite" to true
-                    )
+                        "markedAsFavorite" to true,
+                    ),
                 )
             }
         }

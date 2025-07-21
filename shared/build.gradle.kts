@@ -23,7 +23,7 @@ kotlin {
         listOf(
             iosX64(),
             iosArm64(),
-            iosSimulatorArm64()
+            iosSimulatorArm64(),
         ).forEach {
             it.binaries.framework {
                 baseName = "shared"
@@ -85,9 +85,15 @@ kotlin {
 
 android {
     namespace = "soy.gabimoreno.shared"
-    compileSdk = libs.versions.sdk.compile.get().toInt()
+    compileSdk =
+        libs.versions.sdk.compile
+            .get()
+            .toInt()
     defaultConfig {
-        minSdk = libs.versions.sdk.minimum.get().toInt()
+        minSdk =
+            libs.versions.sdk.minimum
+                .get()
+                .toInt()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21

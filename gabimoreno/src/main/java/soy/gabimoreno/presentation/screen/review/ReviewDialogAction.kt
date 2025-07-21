@@ -7,5 +7,7 @@ sealed interface ReviewDialogAction {
     data object OnDismissDialog : ReviewDialogAction
     data object OnConfirmDialog : ReviewDialogAction
     data object OnEmailSent : ReviewDialogAction
-    data class SetOnReviewDialog(val activity: Activity) : ReviewDialogAction
+    data class SetOnReviewDialog(
+        val activity: Activity,
+    ) : ReviewDialogAction
 }

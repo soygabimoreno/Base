@@ -25,7 +25,6 @@ import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIReloadAudioCoursesUseCase
 
 class AuthViewModelTest {
-
     private val tracker: Tracker = relaxedMockk()
     private val loginValidationUseCase: LoginValidationUseCase = relaxedMockk()
     private val saveCredentialsInDataStoreUseCase: SaveCredentialsInDataStoreUseCase =
@@ -43,18 +42,19 @@ class AuthViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = AuthViewModel(
-            tracker = tracker,
-            loginValidationUseCase = loginValidationUseCase,
-            saveCredentialsInDataStoreUseCase = saveCredentialsInDataStoreUseCase,
-            memberSession = memberSession,
-            loginUseCase = loginUseCase,
-            isBearerTokenValid = isBearerTokenValid,
-            setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
-            resetJwtAuthTokenUseCase = resetJwtAuthTokenUseCase,
-            refreshAudioCoursesUseCase = refreshAudioCoursesUseCase,
-            dispatcher = testDispatcher
-        )
+        viewModel =
+            AuthViewModel(
+                tracker = tracker,
+                loginValidationUseCase = loginValidationUseCase,
+                saveCredentialsInDataStoreUseCase = saveCredentialsInDataStoreUseCase,
+                memberSession = memberSession,
+                loginUseCase = loginUseCase,
+                isBearerTokenValid = isBearerTokenValid,
+                setShouldIReloadAudioCoursesUseCase = setShouldIReloadAudioCoursesUseCase,
+                resetJwtAuthTokenUseCase = resetJwtAuthTokenUseCase,
+                refreshAudioCoursesUseCase = refreshAudioCoursesUseCase,
+                dispatcher = testDispatcher,
+            )
     }
 
     @After

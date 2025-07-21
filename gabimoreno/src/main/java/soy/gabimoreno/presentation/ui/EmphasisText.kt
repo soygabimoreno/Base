@@ -24,7 +24,7 @@ fun EmphasisText(
     CompositionLocalProvider(LocalContentAlpha provides contentAlpha) {
         Text(
             text,
-            style = style
+            style = style,
         )
     }
 }
@@ -40,7 +40,7 @@ fun SelectableEmphasisText(
         EmphasisText(
             text = text,
             contentAlpha = contentAlpha,
-            style = style
+            style = style,
         )
     }
 }
@@ -49,15 +49,17 @@ fun SelectableEmphasisText(
 @Composable
 private fun SelectableEmphasisTextWithLongContentPreview() {
     SelectableEmphasisText(
-        text = """
-        <p>Descubre el UNIT TESTING de la mano de Sergio Sastre. Aprende y potencia esta skill para impulsar tu carrera de Android Developer. 🎯</p>
-        <p>
-        👉🏼 NOTAS DEL EPISODIO:</p>
-        <p>https://gabimoreno.soy/unit-testing-topic3-2024</p>
-        """.trimIndent(),
-        modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .fillMaxSize()
-            .padding(8.dp)
+        text =
+            """
+            <p>Descubre el UNIT TESTING de la mano de Sergio Sastre. Aprende y potencia esta skill para impulsar tu carrera de Android Developer. 🎯</p>
+            <p>
+            👉🏼 NOTAS DEL EPISODIO:</p>
+            <p>https://gabimoreno.soy/unit-testing-topic3-2024</p>
+            """.trimIndent(),
+        modifier =
+            Modifier
+                .background(MaterialTheme.colors.background)
+                .fillMaxSize()
+                .padding(8.dp),
     )
 }

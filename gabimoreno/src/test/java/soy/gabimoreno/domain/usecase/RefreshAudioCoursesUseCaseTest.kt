@@ -1,6 +1,5 @@
 package soy.gabimoreno.domain.usecase
 
-import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -9,7 +8,6 @@ import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCoursesRepository
 
 class RefreshAudioCoursesUseCaseTest {
-
     private val repository = mockk<DefaultAudioCoursesRepository>(relaxed = true)
 
     private lateinit var useCase: RefreshAudioCoursesUseCase
@@ -20,9 +18,10 @@ class RefreshAudioCoursesUseCaseTest {
     }
 
     @Test
-    fun `WHEN invoked THEN calls repository reset`() = runTest {
-        useCase()
+    fun `WHEN invoked THEN calls repository reset`() =
+        runTest {
+            useCase()
 
-        coVerifyOnce { repository.reset() }
-    }
+            coVerifyOnce { repository.reset() }
+        }
 }

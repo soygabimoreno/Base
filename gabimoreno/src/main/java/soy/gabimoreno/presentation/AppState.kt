@@ -18,13 +18,18 @@ fun rememberAppState(): AppState {
     }
 }
 
-class AppState(private val context: Context) {
-    val startDestination: String = runBlocking { // TODO: This is blocking the UI. Do it better
-        context.getStartDestination().first()
-    }
+class AppState(
+    private val context: Context,
+) {
+    val startDestination: String =
+        runBlocking {
+            // TODO: This is blocking the UI. Do it better
+            context.getStartDestination().first()
+        }
 
     fun setStartDestination(feature: Feature) {
-        runBlocking { // TODO: This is blocking the UI. Do it better
+        runBlocking {
+            // TODO: This is blocking the UI. Do it better
             context.setStartDestination(feature)
         }
     }

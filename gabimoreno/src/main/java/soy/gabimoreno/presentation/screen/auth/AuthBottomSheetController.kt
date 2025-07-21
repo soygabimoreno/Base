@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 
 class AuthBottomSheetController(
     private val state: ModalBottomSheetState,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
 ) {
     fun show() = scope.launch { state.show() }
     fun hide() = scope.launch { state.hide() }

@@ -11,7 +11,6 @@ import soy.gabimoreno.domain.model.login.Status
 class StatusMapperKtTest(
     private val statusApiModel: StatusApiModel,
 ) {
-
     @Test
     fun `WHEN toDomain THEN get the expected Status`() {
         val result = statusApiModel.toDomain()
@@ -22,14 +21,13 @@ class StatusMapperKtTest(
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "statusApiModel: {0}")
-        fun data(): List<StatusApiModel> {
-            return listOf(
+        fun data(): List<StatusApiModel> =
+            listOf(
                 StatusApiModel.ACTIVE,
                 StatusApiModel.EXPIRED,
                 StatusApiModel.CANCELED,
                 StatusApiModel.PENDING,
                 StatusApiModel.FREE,
             )
-        }
     }
 }

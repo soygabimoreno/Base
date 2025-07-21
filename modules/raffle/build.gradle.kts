@@ -8,7 +8,6 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-
 dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kluent.android)

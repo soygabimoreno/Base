@@ -5,7 +5,8 @@ import soy.gabimoreno.data.tracker.TrackerEvent
 sealed class PremiumTrackerEvent(
     override val parameters: Map<String, Any> = mapOf(),
 ) : TrackerEvent {
-
     object ViewScreen : PremiumTrackerEvent()
-    data class ClickLogin(override val parameters: Map<String, Any>) : PremiumTrackerEvent()
+    data class ClickLogin(
+        override val parameters: Map<String, Any>,
+    ) : PremiumTrackerEvent()
 }

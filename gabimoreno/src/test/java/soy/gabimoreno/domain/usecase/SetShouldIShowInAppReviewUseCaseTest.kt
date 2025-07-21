@@ -14,7 +14,6 @@ import soy.gabimoreno.framework.datastore.InAppReviewPrefs
 import soy.gabimoreno.framework.datastore.setDataStoreShouldIShowInAppReview
 
 class SetShouldIShowInAppReviewUseCaseTest {
-
     private val context: Context = mockk()
     private lateinit var useCase: SetShouldIShowInAppReviewUseCase
 

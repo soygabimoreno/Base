@@ -32,7 +32,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MediaPlayerService : MediaBrowserServiceCompat() {
-
     @Inject
     lateinit var dataSourceFactory: CacheDataSource.Factory
 
@@ -67,67 +66,74 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 
     override fun onCreate() {
         super.onCreate()
-        val activityPendingIntent = Intent(this, MainActivity::class.java)
-            .let {
-                PendingIntent.getActivity(
-                    this,
-                    0,
-                    it,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
+        val activityPendingIntent =
+            Intent(this, MainActivity::class.java)
+                .let {
+                    PendingIntent.getActivity(
+                        this,
+                        0,
+                        it,
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+                    )
+                }
+
+        mediaSession =
+            MediaSessionCompat(this, TAG).apply {
+                setSessionActivity(activityPendingIntent)
+                isActive = true
             }
 
-        mediaSession = MediaSessionCompat(this, TAG).apply {
-            setSessionActivity(activityPendingIntent)
-            isActive = true
-        }
-
-        val mediaPlaybackPreparer = MediaPlaybackPreparer(mediaSource) { mediaMetadata ->
-            currentPlayingMedia = mediaMetadata
-            preparePlayer(mediaSource.audioMediaMetadataCompat, mediaMetadata, true)
-        }
-        mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
-            setPlaybackPreparer(mediaPlaybackPreparer)
-            setQueueNavigator(MediaPlayerQueueNavigator(mediaSession, mediaSource))
-            setPlayer(exoPlayer)
-        }
+        val mediaPlaybackPreparer =
+            MediaPlaybackPreparer(mediaSource) { mediaMetadata ->
+                currentPlayingMedia = mediaMetadata
+                preparePlayer(mediaSource.audioMediaMetadataCompat, mediaMetadata, true)
+            }
+        mediaSessionConnector =
+            MediaSessionConnector(mediaSession).apply {
+                setPlaybackPreparer(mediaPlaybackPreparer)
+                setQueueNavigator(MediaPlayerQueueNavigator(mediaSession, mediaSource))
+                setPlayer(exoPlayer)
+            }
 
         this.sessionToken = mediaSession.sessionToken
 
-        mediaPlayerNotificationManager = MediaPlayerNotificationManager(
-            this,
-            mediaSession.sessionToken,
-            MediaPlayerNotificationListener(this)
-        ) {
-            currentDuration = exoPlayer.duration
-        }
+        mediaPlayerNotificationManager =
+            MediaPlayerNotificationManager(
+                this,
+                mediaSession.sessionToken,
+                MediaPlayerNotificationListener(this),
+            ) {
+                currentDuration = exoPlayer.duration
+            }
         exoPlayer.addListener(progressListener)
     }
 
-    private val progressListener = object : Player.Listener {
-        override fun onIsPlayingChanged(isPlaying: Boolean) {
-            if (isPlaying) {
-                startProgressUpdates()
-            } else {
-                stopProgressUpdates()
+    private val progressListener =
+        object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                if (isPlaying) {
+                    startProgressUpdates()
+                } else {
+                    stopProgressUpdates()
+                }
             }
         }
-    }
 
     private fun startProgressUpdates() {
         if (progressJob?.isActive == true) return
 
-        progressJob = serviceScope.launch(Dispatchers.Main) {
-            while (isActive) {
-                val position = exoPlayer.currentPosition
-                val duration = exoPlayer.duration.takeIf { it > 0 } ?: 1L
-                val progress = position.toFloat() / duration
+        progressJob =
+            serviceScope.launch(Dispatchers.Main) {
+                while (isActive) {
+                    val position = exoPlayer.currentPosition
+                    val duration = exoPlayer.duration.takeIf { it > 0 } ?: 1L
+                    val progress = position.toFloat() / duration
 
-                updatePlaybackState(progress)
+                    updatePlaybackState(progress)
 
-                delay(POSITION_UPDATE_INTERVAL)
+                    delay(POSITION_UPDATE_INTERVAL)
+                }
             }
-        }
     }
 
     private fun stopProgressUpdates() {
@@ -135,12 +141,15 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     }
 
     private fun updatePlaybackState(progress: Float) {
-        val state = PlaybackStateCompat.Builder()
-            .setState(PlaybackStateCompat.STATE_PLAYING, exoPlayer.currentPosition, 1f)
-            .setExtras(Bundle().apply {
-                putFloat(PROGRESS_EXTRA, progress)
-            })
-            .build()
+        val state =
+            PlaybackStateCompat
+                .Builder()
+                .setState(PlaybackStateCompat.STATE_PLAYING, exoPlayer.currentPosition, 1f)
+                .setExtras(
+                    Bundle().apply {
+                        putFloat(PROGRESS_EXTRA, progress)
+                    },
+                ).build()
 
         mediaSession.setPlaybackState(state)
     }
@@ -149,9 +158,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         intent: Intent?,
         flags: Int,
         startId: Int,
-    ): Int {
-        return Service.START_STICKY
-    }
+    ): Int = Service.START_STICKY
 
     override fun onCustomAction(
         action: String,
@@ -177,9 +184,7 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
         clientPackageName: String,
         clientUid: Int,
         rootHints: Bundle?,
-    ): BrowserRoot {
-        return BrowserRoot(MEDIA_ROOT_ID, null)
-    }
+    ): BrowserRoot = BrowserRoot(MEDIA_ROOT_ID, null)
 
     override fun onLoadChildren(
         parentId: String,
@@ -187,17 +192,19 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
     ) {
         when (parentId) {
             MEDIA_ROOT_ID -> {
-                val resultsSent = mediaSource.whenReady { isInitialized ->
-                    if (isInitialized) {
-
-                        result.sendResult(mediaSource.asMediaItems())
-                        if (!isPlayerInitialized && mediaSource.audioMediaMetadataCompat.isNotEmpty()) {
-                            isPlayerInitialized = true
+                val resultsSent =
+                    mediaSource.whenReady { isInitialized ->
+                        if (isInitialized) {
+                            result.sendResult(mediaSource.asMediaItems())
+                            if (!isPlayerInitialized &&
+                                mediaSource.audioMediaMetadataCompat.isNotEmpty()
+                            ) {
+                                isPlayerInitialized = true
+                            }
+                        } else {
+                            result.sendResult(null)
                         }
-                    } else {
-                        result.sendResult(null)
                     }
-                }
                 if (!resultsSent) {
                     result.detach()
                 }

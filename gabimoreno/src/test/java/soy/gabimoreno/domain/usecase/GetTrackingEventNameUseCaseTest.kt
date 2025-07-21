@@ -6,7 +6,6 @@ import org.junit.Test
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 
 class GetTrackingEventNameUseCaseTest {
-
     private lateinit var useCase: GetTrackingEventNameUseCase
 
     @Before

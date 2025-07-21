@@ -17,19 +17,21 @@ fun makeARaffle(
 }
 
 fun main() {
-    val prizes = setOf(
-        Prize(id = 1, name = "Prize 1"),
-        Prize(id = 2, name = "Prize 2"),
-        Prize(id = 3, name = "Prize 3"),
-        Prize(id = 4, name = "Prize 4")
-    )
-    val participants = setOf(
-        Participant(id = 1, name = "Participant 1"),
-        Participant(id = 2, name = "Participant 2"),
-        Participant(id = 3, name = "Participant 3"),
-        Participant(id = 4, name = "Participant 4"),
-        Participant(id = 5, name = "Participant 5"),
-    )
+    val prizes =
+        setOf(
+            Prize(id = 1, name = "Prize 1"),
+            Prize(id = 2, name = "Prize 2"),
+            Prize(id = 3, name = "Prize 3"),
+            Prize(id = 4, name = "Prize 4"),
+        )
+    val participants =
+        setOf(
+            Participant(id = 1, name = "Participant 1"),
+            Participant(id = 2, name = "Participant 2"),
+            Participant(id = 3, name = "Participant 3"),
+            Participant(id = 4, name = "Participant 4"),
+            Participant(id = 5, name = "Participant 5"),
+        )
     val result = makeARaffle(prizes, participants)
     result.forEach { winner ->
         println("${winner.participant.name} has won a ${winner.prize.name}")

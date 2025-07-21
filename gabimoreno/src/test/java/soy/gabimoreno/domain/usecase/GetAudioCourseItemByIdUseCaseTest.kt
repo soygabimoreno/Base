@@ -14,7 +14,6 @@ import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildAudioCourseItem
 
 class GetAudioCourseItemByIdUseCaseTest {
-
     private val repository = mockk<AudioCoursesRepository>()
     private lateinit var useCase: GetAudioCourseItemByIdUseCase
 
@@ -24,28 +23,30 @@ class GetAudioCourseItemByIdUseCaseTest {
     }
 
     @Test
-    fun `GIVEN repository returns Right WHEN invoked THEN returns AudioCourseItem`() = runTest {
-        val audioCourseItem = buildAudioCourseItem()
-        coEvery {
-            repository.getAudioCourseItem(audioCourseItem.id)
-        } returns right(audioCourseItem)
+    fun `GIVEN repository returns Right WHEN invoked THEN returns AudioCourseItem`() =
+        runTest {
+            val audioCourseItem = buildAudioCourseItem()
+            coEvery {
+                repository.getAudioCourseItem(audioCourseItem.id)
+            } returns right(audioCourseItem)
 
-        val result = useCase(audioCourseItem.id)
+            val result = useCase(audioCourseItem.id)
 
-        result.isRight() shouldBe true
-        result.getOrNull() shouldBe audioCourseItem
-    }
+            result.isRight() shouldBe true
+            result.getOrNull() shouldBe audioCourseItem
+        }
 
     @Test
-    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() = runTest {
-        val audioCourseItem = buildAudioCourseItem()
-        val error = Throwable("Network error")
-        coEvery {
-            repository.getAudioCourseItem(audioCourseItem.id)
-        } returns left(error)
+    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() =
+        runTest {
+            val audioCourseItem = buildAudioCourseItem()
+            val error = Throwable("Network error")
+            coEvery {
+                repository.getAudioCourseItem(audioCourseItem.id)
+            } returns left(error)
 
-        val result = useCase(audioCourseItem.id)
+            val result = useCase(audioCourseItem.id)
 
-        result shouldBeEqualTo error.left()
-    }
+            result shouldBeEqualTo error.left()
+        }
 }

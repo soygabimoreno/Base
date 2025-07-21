@@ -14,7 +14,6 @@ import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 import soy.gabimoreno.fake.buildAudioCourse
 
 class GetAudioCourseByIdUseCaseTest {
-
     private val repository = mockk<AudioCoursesRepository>()
     private lateinit var useCase: GetAudioCourseByIdUseCase
 
@@ -24,24 +23,26 @@ class GetAudioCourseByIdUseCaseTest {
     }
 
     @Test
-    fun `GIVEN repository returns Right WHEN invoked THEN returns AudioCourse`() = runTest {
-        val audioCourse = buildAudioCourse()
-        coEvery { repository.getCourseById(audioCourse.id) } returns flowOf(audioCourse).right()
+    fun `GIVEN repository returns Right WHEN invoked THEN returns AudioCourse`() =
+        runTest {
+            val audioCourse = buildAudioCourse()
+            coEvery { repository.getCourseById(audioCourse.id) } returns flowOf(audioCourse).right()
 
-        val result = useCase(audioCourse.id)
+            val result = useCase(audioCourse.id)
 
-        result.isRight() shouldBeEqualTo true
-        result.getOrNull()!!.first() shouldBeEqualTo audioCourse
-    }
+            result.isRight() shouldBeEqualTo true
+            result.getOrNull()!!.first() shouldBeEqualTo audioCourse
+        }
 
     @Test
-    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() = runTest {
-        val audioCourse = buildAudioCourse()
-        val error = Throwable("Network error")
-        coEvery { repository.getCourseById(audioCourse.id) } returns error.left()
+    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() =
+        runTest {
+            val audioCourse = buildAudioCourse()
+            val error = Throwable("Network error")
+            coEvery { repository.getCourseById(audioCourse.id) } returns error.left()
 
-        val result = useCase(audioCourse.id)
+            val result = useCase(audioCourse.id)
 
-        result shouldBeEqualTo error.left()
-    }
+            result shouldBeEqualTo error.left()
+        }
 }

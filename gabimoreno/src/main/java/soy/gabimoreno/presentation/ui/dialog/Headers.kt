@@ -4,8 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,7 +20,7 @@ import soy.gabimoreno.R
 @Composable
 internal fun HeaderDialog(
     modifier: Modifier = Modifier,
-    typeDialog: TypeDialog
+    typeDialog: TypeDialog,
 ) {
     var visible by remember { mutableStateOf(false) }
 
@@ -48,45 +48,37 @@ internal fun HeaderDialog(
 }
 
 @Composable
-fun InfoHeader(
-    modifier: Modifier = Modifier
-) {
+fun InfoHeader(modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(R.drawable.ic_gabi_info),
         contentDescription = stringResource(R.string.dialog_info_header_cd),
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @Composable
-fun SuccessHeader(
-    modifier: Modifier = Modifier
-) {
+fun SuccessHeader(modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(R.drawable.ic_gabi_success),
         contentDescription = stringResource(R.string.dialog_success_header_cd),
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @Composable
-fun ErrorHeader(
-    modifier: Modifier = Modifier
-) {
+fun ErrorHeader(modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(R.drawable.ic_gabi_error),
         contentDescription = stringResource(R.string.dialog_error_header_cd),
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
 @Composable
-fun ConfirmationHeader(
-    modifier: Modifier = Modifier
-) {
+fun ConfirmationHeader(modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(R.drawable.ic_gabi_confirm),
         contentDescription = stringResource(R.string.dialog_confirmation_header_cd),
-        modifier = modifier
+        modifier = modifier,
     )
 }

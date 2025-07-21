@@ -6,12 +6,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-fun Context.getEmail(): Flow<String> {
-    return dataStore.data
+fun Context.getEmail(): Flow<String> =
+    dataStore.data
         .map { preferences ->
             preferences[key] ?: EMPTY_EMAIL
         }
-}
 
 suspend fun Context.setEmail(email: String?) {
     dataStore.edit { settings ->

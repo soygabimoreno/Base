@@ -6,13 +6,12 @@ import soy.gabimoreno.data.remote.model.course.CourseApiModel
 import soy.gabimoreno.data.remote.model.post.PostApiModel
 
 interface PostService {
-
     @GET("wp-json/wp/v2/posts/")
     suspend fun getPosts(
         @Query("categories") categoriesQuery: String,
         @Query("_fields") fieldsQuery: String = FIELDS,
         @Query("per_page") postsPerPage: Int = POSTS_PER_PAGE,
-        @Query("page") page: Int = POSTS_PAGE
+        @Query("page") page: Int = POSTS_PAGE,
     ): List<PostApiModel>
 
     @GET("wp-json/wp/v2/posts/")

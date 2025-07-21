@@ -4,7 +4,6 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
 
 class NormalizeTextKtTest {
-
     @Test
     fun `GIVEN a normal text WHEN normalizeText THEN return the proper string`() {
         val givenText = "aeiou"

@@ -31,12 +31,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
-
     @Provides
     @Singleton
-    fun provideLoginRepository(
-        loginDatasource: LoginDatasource,
-    ): LoginRepository = RemoteLoginRepository(loginDatasource)
+    fun provideLoginRepository(loginDatasource: LoginDatasource): LoginRepository =
+        RemoteLoginRepository(loginDatasource)
 
     @Provides
     @Singleton
@@ -45,24 +43,27 @@ object RepositoryModule {
         localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
         remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
         refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
-        saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase: SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
-    ): PremiumAudiosRepository = DefaultPremiumAudiosRepository(
-        cloudDataSource,
-        localPremiumAudiosDataSource,
-        remotePremiumAudiosDataSource,
-        refreshPremiumAudiosFromRemoteUseCase,
-        saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
-    )
+        saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
+            SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+    ): PremiumAudiosRepository =
+        DefaultPremiumAudiosRepository(
+            cloudDataSource,
+            localPremiumAudiosDataSource,
+            remotePremiumAudiosDataSource,
+            refreshPremiumAudiosFromRemoteUseCase,
+            saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+        )
 
     @Provides
     @Singleton
     fun providePodcastRepository(
         podcastDatasource: PodcastDatasource,
         podcastUrl: PodcastUrl,
-    ): PodcastRepository = RemotePodcastRepository(
-        podcastDatasource,
-        podcastUrl
-    )
+    ): PodcastRepository =
+        RemotePodcastRepository(
+            podcastDatasource,
+            podcastUrl,
+        )
 
     @Provides
     @Singleton
@@ -71,20 +72,22 @@ object RepositoryModule {
         localAudioCoursesDataSource: LocalAudioCoursesDataSource,
         remoteAudioCoursesDataSource: RemoteAudioCoursesDataSource,
         refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
-    ): AudioCoursesRepository = DefaultAudioCoursesRepository(
-        cloudDataSource,
-        localAudioCoursesDataSource,
-        remoteAudioCoursesDataSource,
-        refreshPremiumAudiosFromRemoteUseCase
-    )
+    ): AudioCoursesRepository =
+        DefaultAudioCoursesRepository(
+            cloudDataSource,
+            localAudioCoursesDataSource,
+            remoteAudioCoursesDataSource,
+            refreshPremiumAudiosFromRemoteUseCase,
+        )
 
     @Provides
     @Singleton
     fun providePlaylistRepository(
         cloudDataSource: CloudPlaylistDataSource,
         localPlaylistDataSource: LocalPlaylistDataSource,
-    ): PlaylistRepository = DefaultPlaylistRepository(
-        cloudDataSource,
-        localPlaylistDataSource
-    )
+    ): PlaylistRepository =
+        DefaultPlaylistRepository(
+            cloudDataSource,
+            localPlaylistDataSource,
+        )
 }

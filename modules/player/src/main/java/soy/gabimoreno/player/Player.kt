@@ -10,8 +10,9 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.StyledPlayerView
 
-class Player(private val context: Context) {
-
+class Player(
+    private val context: Context,
+) {
     private var player: SimpleExoPlayer? = null
     private var playing = false
     private lateinit var onStop: () -> Unit
@@ -27,9 +28,11 @@ class Player(private val context: Context) {
         val trackSelector = DefaultTrackSelector(context)
         player?.stop()
         player?.release()
-        player = SimpleExoPlayer.Builder(context)
-            .setTrackSelector(trackSelector)
-            .build()
+        player =
+            SimpleExoPlayer
+                .Builder(context)
+                .setTrackSelector(trackSelector)
+                .build()
         exoplayerView.player = player
 
         uriStrings.forEach {
@@ -38,18 +41,19 @@ class Player(private val context: Context) {
         player?.prepare()
 
         val componentName = ComponentName(context, "Exo")
-        val mediaSession = MediaSessionCompat(
-            context,
-            "ExoPlayer",
-            componentName,
-            null
-        )
+        val mediaSession =
+            MediaSessionCompat(
+                context,
+                "ExoPlayer",
+                componentName,
+                null,
+            )
 
         val playbackStateBuilder = PlaybackStateCompat.Builder()
         playbackStateBuilder.setActions(
             PlaybackStateCompat.ACTION_PLAY or
                 PlaybackStateCompat.ACTION_PAUSE or
-                PlaybackStateCompat.ACTION_FAST_FORWARD
+                PlaybackStateCompat.ACTION_FAST_FORWARD,
         )
 
         mediaSession.setPlaybackState(playbackStateBuilder.build())

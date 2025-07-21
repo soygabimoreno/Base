@@ -23,108 +23,116 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DefaultPremiumAudiosRepository @Inject constructor(
-    private val cloudDataSource: PremiumAudiosCloudDataSource,
-    private val localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
-    private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
-    private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
-    private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase: SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
-) : PremiumAudiosRepository {
+class DefaultPremiumAudiosRepository
+    @Inject
+    constructor(
+        private val cloudDataSource: PremiumAudiosCloudDataSource,
+        private val localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
+        private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
+        private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
+        private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
+            SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+    ) : PremiumAudiosRepository {
+        @OptIn(ExperimentalPagingApi::class)
+        override suspend fun getPremiumAudioMediator(
+            categories: List<Category>,
+            email: String,
+        ): Either<Throwable, Flow<PagingData<PremiumAudio>>> =
+            try {
+                val pager =
+                    Pager(
+                        config =
+                            PagingConfig(
+                                pageSize = MAX_ITEMS,
+                                prefetchDistance = PREFETCH_ITEMS,
+                                initialLoadSize = MAX_ITEMS * 2,
+                            ),
+                        remoteMediator =
+                            PremiumAudiosRemoteMediator(
+                                cloudDataSource = cloudDataSource,
+                                email = email,
+                                localPremiumAudiosDataSource = localPremiumAudiosDataSource,
+                                remotePremiumAudiosDataSource = remotePremiumAudiosDataSource,
+                                refreshPremiumAudiosFromRemoteUseCase =
+                                refreshPremiumAudiosFromRemoteUseCase,
+                                saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase =
+                                saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+                            ),
+                        pagingSourceFactory = {
+                            localPremiumAudiosDataSource.getPremiumAudiosPagingSource()
+                        },
+                    )
 
-    @OptIn(ExperimentalPagingApi::class)
-    override suspend fun getPremiumAudioMediator(
-        categories: List<Category>,
-        email: String,
-    ): Either<Throwable, Flow<PagingData<PremiumAudio>>> {
-        return try {
-            val pager = Pager(
-                config = PagingConfig(
-                    pageSize = MAX_ITEMS,
-                    prefetchDistance = PREFETCH_ITEMS,
-                    initialLoadSize = MAX_ITEMS * 2,
-                ),
-                remoteMediator = PremiumAudiosRemoteMediator(
-                    cloudDataSource = cloudDataSource,
-                    email = email,
-                    localPremiumAudiosDataSource = localPremiumAudiosDataSource,
-                    remotePremiumAudiosDataSource = remotePremiumAudiosDataSource,
-                    refreshPremiumAudiosFromRemoteUseCase = refreshPremiumAudiosFromRemoteUseCase,
-                    saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase = saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
-                ),
-                pagingSourceFactory = {
-                    localPremiumAudiosDataSource.getPremiumAudiosPagingSource()
-                }
-            )
+                (
+                    pager.flow.map { pagingData ->
+                        pagingData.map { it.toPremiumAudio() }
+                    }
+                ).right()
+            } catch (e: Exception) {
+                e.left()
+            }
 
-            (pager.flow.map { pagingData ->
-                pagingData.map { it.toPremiumAudio() }
-            }).right()
-        } catch (e: Exception) {
-            e.left()
-        }
-    }
-
-    override suspend fun markPremiumAudioAsListened(
-        email: String,
-        premiumAudioId: String,
-        hasBeenListened: Boolean
-    ) {
-        if (email.isNotEmpty()) {
-            cloudDataSource.upsertPremiumAudioItemFields(
-                email,
-                premiumAudioId,
-                mapOf(
-                    "id" to premiumAudioId,
-                    "hasBeenListened" to hasBeenListened
+        override suspend fun markPremiumAudioAsListened(
+            email: String,
+            premiumAudioId: String,
+            hasBeenListened: Boolean,
+        ) {
+            if (email.isNotEmpty()) {
+                cloudDataSource.upsertPremiumAudioItemFields(
+                    email,
+                    premiumAudioId,
+                    mapOf(
+                        "id" to premiumAudioId,
+                        "hasBeenListened" to hasBeenListened,
+                    ),
                 )
-            )
+            }
+            localPremiumAudiosDataSource.updateHasBeenListened(premiumAudioId, hasBeenListened)
         }
-        localPremiumAudiosDataSource.updateHasBeenListened(premiumAudioId, hasBeenListened)
-    }
 
-    override suspend fun getPremiumAudioById(premiumAudioId: String): Either<Throwable, PremiumAudio> {
-        return localPremiumAudiosDataSource.getPremiumAudioById(premiumAudioId)?.right()
-            ?: Throwable("PremiumAudio not found").left()
-    }
+        override suspend fun getPremiumAudioById(
+            premiumAudioId: String,
+        ): Either<Throwable, PremiumAudio> =
+            localPremiumAudiosDataSource.getPremiumAudioById(premiumAudioId)?.right()
+                ?: Throwable("PremiumAudio not found").left()
 
-    override suspend fun markAllPremiumAudiosAsUnlistened(email: String) {
-        if (email.isNotEmpty()) {
-            cloudDataSource.batchUpdateFieldsForAllPremiumAudioItems(
-                email,
-                mapOf("hasBeenListened" to false)
-            )
-        }
-        return localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
-    }
-
-    override suspend fun getAllFavoritePremiumAudios(): Either<Throwable, List<PremiumAudio>> {
-        return localPremiumAudiosDataSource.getAllFavoritePremiumAudios()?.let { premiumAudios ->
-            premiumAudios.map { it.toPremiumAudio() }.right()
-        } ?: Throwable("PremiumAudios not found").left()
-    }
-
-    override suspend fun markPremiumAudioAsFavorite(
-        email: String,
-        premiumAudioId: String,
-        isFavorite: Boolean
-    ) {
-        if (email.isNotEmpty()) {
-            cloudDataSource.upsertPremiumAudioItemFields(
-                email,
-                premiumAudioId,
-                mapOf(
-                    "id" to premiumAudioId,
-                    "markedAsFavorite" to isFavorite
+        override suspend fun markAllPremiumAudiosAsUnlistened(email: String) {
+            if (email.isNotEmpty()) {
+                cloudDataSource.batchUpdateFieldsForAllPremiumAudioItems(
+                    email,
+                    mapOf("hasBeenListened" to false),
                 )
-            )
+            }
+            return localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
         }
-        return localPremiumAudiosDataSource.updateMarkedAsFavorite(premiumAudioId, isFavorite)
-    }
 
-    suspend fun reset() {
-        localPremiumAudiosDataSource.reset()
+        override suspend fun getAllFavoritePremiumAudios(): Either<Throwable, List<PremiumAudio>> =
+            localPremiumAudiosDataSource.getAllFavoritePremiumAudios()?.let { premiumAudios ->
+                premiumAudios.map { it.toPremiumAudio() }.right()
+            } ?: Throwable("PremiumAudios not found").left()
+
+        override suspend fun markPremiumAudioAsFavorite(
+            email: String,
+            premiumAudioId: String,
+            isFavorite: Boolean,
+        ) {
+            if (email.isNotEmpty()) {
+                cloudDataSource.upsertPremiumAudioItemFields(
+                    email,
+                    premiumAudioId,
+                    mapOf(
+                        "id" to premiumAudioId,
+                        "markedAsFavorite" to isFavorite,
+                    ),
+                )
+            }
+            return localPremiumAudiosDataSource.updateMarkedAsFavorite(premiumAudioId, isFavorite)
+        }
+
+        suspend fun reset() {
+            localPremiumAudiosDataSource.reset()
+        }
     }
-}
 
 private const val MAX_ITEMS = 10
 private const val PREFETCH_ITEMS = 20

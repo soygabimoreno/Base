@@ -5,7 +5,7 @@ data class CloudPlaylistResponse(
     val categoryId: Int = DEFAULT_INT,
     val description: String = EMPTY_STRING,
     val position: Int = DEFAULT_INT,
-    val title: String = EMPTY_STRING
+    val title: String = EMPTY_STRING,
 )
 
 private const val EMPTY_STRING = ""

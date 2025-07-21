@@ -24,7 +24,6 @@ import soy.gabimoreno.remoteconfig.TokenCredentials
 
 @ExperimentalCoroutinesApi
 class LoginUseCaseTest {
-
     private val repository: RemoteLoginDatasource = mockk()
     private val remoteConfigProvider: RemoteConfigProvider = mockk()
     private val setJwtAuthTokenUseCase: SetJwtAuthTokenUseCase = relaxedMockk()
@@ -33,12 +32,13 @@ class LoginUseCaseTest {
 
     @Before
     fun setUp() {
-        useCase = LoginUseCase(
-            repository,
-            remoteConfigProvider,
-            setJwtAuthTokenUseCase,
-            resetJwtAuthTokenUseCase,
-        )
+        useCase =
+            LoginUseCase(
+                repository,
+                remoteConfigProvider,
+                setJwtAuthTokenUseCase,
+                resetJwtAuthTokenUseCase,
+            )
     }
 
     @Test
@@ -63,17 +63,18 @@ class LoginUseCaseTest {
             coEvery {
                 repository.obtainToken(
                     tokenCredentialUsername,
-                    tokenCredentialPassword
+                    tokenCredentialPassword,
                 )
             } returns jwtAuth.right()
             coEvery {
                 repository.obtainToken(email, password)
             } returns jwtAuth.right()
 
-            val member = Member(
-                status = Status.ACTIVE,
-                isActive = true
-            )
+            val member =
+                Member(
+                    status = Status.ACTIVE,
+                    isActive = true,
+                )
             coEvery { repository.getMember(email) } returns member.right()
 
             val result = useCase(email, password)
@@ -83,7 +84,7 @@ class LoginUseCaseTest {
             coVerifyOnce {
                 repository.obtainToken(
                     tokenCredentialUsername,
-                    tokenCredentialPassword
+                    tokenCredentialPassword,
                 )
             }
             coVerifyOnce { repository.obtainToken(email, password) }
@@ -174,7 +175,7 @@ class LoginUseCaseTest {
             coEvery {
                 repository.obtainToken(
                     tokenCredentialUsername,
-                    tokenCredentialPassword
+                    tokenCredentialPassword,
                 )
             } returns Throwable().left()
 
@@ -206,7 +207,7 @@ class LoginUseCaseTest {
             coEvery {
                 repository.obtainToken(
                     tokenCredentialUsername,
-                    tokenCredentialPassword
+                    tokenCredentialPassword,
                 )
             } returns jwtAuth.right()
             coEvery {
@@ -220,7 +221,6 @@ class LoginUseCaseTest {
             result.isLeft().shouldBeTrue()
             coVerifyOnce { repository.generateAuthCookie(email, password) }
         }
-
 
     @Test
     fun `GIVEN expired token WHEN invoke THEN get the expected result`() =
@@ -239,7 +239,7 @@ class LoginUseCaseTest {
             coEvery {
                 repository.obtainToken(
                     tokenCredentialUsername,
-                    tokenCredentialPassword
+                    tokenCredentialPassword,
                 )
             } returns Throwable().left()
 
@@ -250,7 +250,7 @@ class LoginUseCaseTest {
             coVerifyOnce {
                 repository.obtainToken(
                     tokenCredentialUsername,
-                    tokenCredentialPassword
+                    tokenCredentialPassword,
                 )
             }
             coVerifyOnce { resetJwtAuthTokenUseCase() }

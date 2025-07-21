@@ -55,14 +55,12 @@ import soy.gabimoreno.presentation.theme.Spacing
 import kotlin.math.roundToInt
 
 @Composable
-fun AudioBottomBar(
-    modifier: Modifier = Modifier,
-) {
+fun AudioBottomBar(modifier: Modifier = Modifier) {
     val audio = ViewModelProvider.playerViewModel.currentPlayingAudio.value
 
     AnimatedVisibility(
         visible = audio != null,
-        modifier = modifier
+        modifier = modifier,
     ) {
         if (audio != null) {
             AudioBottomBarContent(audio)
@@ -77,24 +75,26 @@ fun AudioBottomBarContent(audio: Audio) {
     val playerViewModel = ViewModelProvider.playerViewModel
 
     val endAnchor = LocalConfiguration.current.screenWidthDp * LocalDensity.current.density
-    val anchors = mapOf(
-        0f to 0,
-        endAnchor to 1
-    )
+    val anchors =
+        mapOf(
+            0f to 0,
+            endAnchor to 1,
+        )
 
     val isPlaying = playerViewModel.podcastIsPlaying
     val iconResId =
         if (isPlaying) R.drawable.ic_baseline_pause_24 else R.drawable.ic_baseline_play_arrow_24
 
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .swipeable(
-                state = swipeableState,
-                anchors = anchors,
-                thresholds = { _, _ -> FractionalThreshold(0.54f) },
-                orientation = Orientation.Horizontal
-            )
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .swipeable(
+                    state = swipeableState,
+                    anchors = anchors,
+                    thresholds = { _, _ -> FractionalThreshold(0.54f) },
+                    orientation = Orientation.Horizontal,
+                ),
     ) {
         if (swipeableState.currentValue >= 1) {
             LaunchedEffect("key") {
@@ -110,10 +110,10 @@ fun AudioBottomBarContent(audio: Audio) {
             onTooglePlaybackState = {
                 playerViewModel.onPlayPauseClickedFromAudioBottomBar(
                     audio,
-                    isPlaying.toPlayPause()
+                    isPlaying.toPlayPause(),
                 )
                 playerViewModel.togglePlaybackState()
-            }
+            },
         ) {
             playerViewModel.showPlayerFullScreen = true
         }
@@ -129,27 +129,30 @@ fun AudioBottomBarStatelessContent(
     onTap: (Offset) -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .offset { IntOffset(xOffset, 0) }
-            .background(PurpleLight)
-            .height(Spacing.s64)
-            .fillMaxWidth()
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = onTap
-                )
-            }
+        modifier =
+            Modifier
+                .offset { IntOffset(xOffset, 0) }
+                .background(PurpleLight)
+                .height(Spacing.s64)
+                .fillMaxWidth()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = onTap,
+                    )
+                },
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(audio.thumbnailUrl)
-                    .crossfade(true)
-                    .diskCachePolicy(CachePolicy.ENABLED)
-                    .memoryCachePolicy(CachePolicy.ENABLED)
-                    .build(),
+                model =
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(audio.thumbnailUrl)
+                        .crossfade(true)
+                        .diskCachePolicy(CachePolicy.ENABLED)
+                        .memoryCachePolicy(CachePolicy.ENABLED)
+                        .build(),
                 contentDescription = stringResource(R.string.podcast_thumbnail),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(Spacing.s64),
@@ -158,10 +161,11 @@ fun AudioBottomBarStatelessContent(
 
             Column(
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .padding(Spacing.s8),
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(Spacing.s8),
             ) {
                 Text(
                     audio.title,
@@ -177,9 +181,10 @@ fun AudioBottomBarStatelessContent(
                     color = MaterialTheme.colors.onBackground,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.graphicsLayer {
-                        alpha = 0.60f
-                    }
+                    modifier =
+                        Modifier.graphicsLayer {
+                            alpha = 0.60f
+                        },
                 )
             }
 
@@ -187,12 +192,13 @@ fun AudioBottomBarStatelessContent(
                 painter = painterResource(icon),
                 contentDescription = stringResource(R.string.play),
                 tint = MaterialTheme.colors.onBackground,
-                modifier = Modifier
-                    .padding(end = Spacing.s8)
-                    .size(Spacing.s40)
-                    .clip(CircleShape)
-                    .clickable(onClick = onTooglePlaybackState)
-                    .padding(Spacing.oddSpacing6)
+                modifier =
+                    Modifier
+                        .padding(end = Spacing.s8)
+                        .size(Spacing.s40)
+                        .clip(CircleShape)
+                        .clickable(onClick = onTooglePlaybackState)
+                        .padding(Spacing.oddSpacing6),
             )
         }
     }
@@ -203,24 +209,25 @@ fun AudioBottomBarStatelessContent(
 fun AudioBottomBarPreview() {
     PreviewContent {
         AudioBottomBarStatelessContent(
-            audio = Episode(
-                id = "1",
-                url = "",
-                audioUrl = "",
-                imageUrl = "https://picsum.photos/200",
-                saga = Saga("This is publisher", "This is podcast title"),
-                thumbnailUrl = "https://picsum.photos/200",
-                pubDateMillis = 0,
-                title = "This is a title",
-                audioLengthInSeconds = 2700,
-                description = "This is a description",
-                hasBeenListened = false,
-                markedAsFavorite = false
-            ),
+            audio =
+                Episode(
+                    id = "1",
+                    url = "",
+                    audioUrl = "",
+                    imageUrl = "https://picsum.photos/200",
+                    saga = Saga("This is publisher", "This is podcast title"),
+                    thumbnailUrl = "https://picsum.photos/200",
+                    pubDateMillis = 0,
+                    title = "This is a title",
+                    audioLengthInSeconds = 2700,
+                    description = "This is a description",
+                    hasBeenListened = false,
+                    markedAsFavorite = false,
+                ),
             xOffset = 0,
             icon = R.drawable.ic_baseline_play_arrow_24,
             onTooglePlaybackState = { },
-            onTap = { }
+            onTap = { },
         )
     }
 }

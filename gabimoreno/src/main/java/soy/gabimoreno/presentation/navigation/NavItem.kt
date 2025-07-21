@@ -23,22 +23,22 @@ enum class NavItem(
     PODCAST(
         navCommand = NavCommand.ContentType(Feature.PODCAST),
         icon = Icons.Default.Podcasts,
-        titleResId = R.string.nav_item_podcast
+        titleResId = R.string.nav_item_podcast,
     ),
     PREMIUM(
         navCommand = NavCommand.ContentType(Feature.PREMIUM),
         icon = Icons.Default.WorkspacePremium,
-        titleResId = R.string.nav_item_premium
+        titleResId = R.string.nav_item_premium,
     ),
     COURSES(
         navCommand = NavCommand.ContentType(Feature.AUDIOCOURSES),
         icon = Icons.Default.Diamond,
-        titleResId = R.string.nav_item_courses
+        titleResId = R.string.nav_item_courses,
     ),
     PROFILE(
         navCommand = NavCommand.ContentType(Feature.PROFILE),
         icon = Icons.Default.Person,
-        titleResId = R.string.nav_item_profile
+        titleResId = R.string.nav_item_profile,
     ),
 }
 
@@ -47,35 +47,39 @@ sealed class NavCommand(
     internal val subRoute: String = "home",
     private val navArgs: List<NavArg> = emptyList(),
 ) {
-
     val route: String
-        get() = buildString {
-            append("${feature.route}/$subRoute")
-            navArgs.forEach { append("/{${it.key}}") }
-        }
+        get() =
+            buildString {
+                append("${feature.route}/$subRoute")
+                navArgs.forEach { append("/{${it.key}}") }
+            }
 
     val arguments: List<NamedNavArgument>
-        get() = navArgs.map {
-            navArgument(it.key) { type = it.navType }
-        }
+        get() =
+            navArgs.map {
+                navArgument(it.key) { type = it.navType }
+            }
 
     val deepLinks: List<NavDeepLink>
-        get() = listOf(
-            navDeepLink {
-                uriPattern = "$GABI_MORENO_WEB_BASE_URL/$route"
-            }
-        )
+        get() =
+            listOf(
+                navDeepLink {
+                    uriPattern = "$GABI_MORENO_WEB_BASE_URL/$route"
+                },
+            )
 
-    class ContentType(feature: Feature) : NavCommand(feature)
+    class ContentType(
+        feature: Feature,
+    ) : NavCommand(feature)
 
     class ContentDetail(
         feature: Feature,
         navArgs: List<NavArg>,
     ) : NavCommand(
-        feature,
-        "detail",
-        navArgs
-    ) {
+            feature,
+            "detail",
+            navArgs,
+        ) {
         fun createRoute(audioId: String) = "${feature.route}/$subRoute/$audioId"
     }
 
@@ -83,10 +87,10 @@ sealed class NavCommand(
         feature: Feature,
         navArgs: List<NavArg>,
     ) : NavCommand(
-        feature,
-        "audiocoursedetail",
-        navArgs
-    ) {
+            feature,
+            "audiocoursedetail",
+            navArgs,
+        ) {
         fun createRoute(audioId: String) = "${feature.route}/$subRoute/$audioId"
     }
 
@@ -94,10 +98,10 @@ sealed class NavCommand(
         feature: Feature,
         navArgs: List<NavArg>,
     ) : NavCommand(
-        feature,
-        "playlistdetail",
-        navArgs
-    ) {
+            feature,
+            "playlistdetail",
+            navArgs,
+        ) {
         fun createRoute(playlistId: String) = "${feature.route}/$subRoute/$playlistId"
     }
 
@@ -105,24 +109,27 @@ sealed class NavCommand(
         feature: Feature,
         navArgs: List<NavArg>,
     ) : NavCommand(
-        feature,
-        "audioItemDetail",
-        navArgs
-    ) {
+            feature,
+            "audioItemDetail",
+            navArgs,
+        ) {
         fun createRoute(audioItemId: String) = "${feature.route}/$subRoute/$audioItemId"
     }
 
-    class ContentWebView(feature: Feature) : NavCommand(
-        feature,
-        "webView",
-        listOf(NavArg.EncodedUrl)
-    ) {
+    class ContentWebView(
+        feature: Feature,
+    ) : NavCommand(
+            feature,
+            "webView",
+            listOf(NavArg.EncodedUrl),
+        ) {
         fun createRoute(encodedUrl: String) = "${feature.route}/$subRoute/$encodedUrl"
     }
 
-    val args = navArgs.map {
-        navArgument(it.key) { type = it.navType }
-    }
+    val args =
+        navArgs.map {
+            navArgument(it.key) { type = it.navType }
+        }
 }
 
 enum class NavArg(
@@ -134,5 +141,5 @@ enum class NavArg(
     PremiumAudioId("premiumAudioId", NavType.StringType),
     AudioCourseId("audioCourseId", NavType.StringType),
     PlaylistId("playlistId", NavType.StringType),
-    AudioItemId("audioItemId", NavType.StringType)
+    AudioItemId("audioItemId", NavType.StringType),
 }

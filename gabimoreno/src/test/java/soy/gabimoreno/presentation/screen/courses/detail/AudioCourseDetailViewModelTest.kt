@@ -27,7 +27,6 @@ import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 import soy.gabimoreno.fake.buildAudioCourse
 
 class AudioCourseDetailViewModelTest {
-
     private val getAudioCourseByIdUseCase = relaxedMockk<GetAudioCourseByIdUseCase>()
     private val markAudioCourseItemAsListenedUseCase =
         relaxedMockk<MarkAudioCourseItemAsListenedUseCase>()
@@ -39,11 +38,12 @@ class AudioCourseDetailViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = AudioCourseDetailViewModel(
-            getAudioCourseByIdUseCase,
-            markAudioCourseItemAsListenedUseCase,
-            updateAudioItemFavoriteStateUseCase
-        )
+        viewModel =
+            AudioCourseDetailViewModel(
+                getAudioCourseByIdUseCase,
+                markAudioCourseItemAsListenedUseCase,
+                updateAudioItemFavoriteStateUseCase,
+            )
     }
 
     @After
@@ -52,35 +52,38 @@ class AudioCourseDetailViewModelTest {
     }
 
     @Test
-    fun `GIVEN success WHEN onViewScreen THEN state is updated`() = runTest {
-        val audioCourse = buildAudioCourse()
-        coEvery { getAudioCourseByIdUseCase(audioCourse.id) } returns flowOf(audioCourse).right()
+    fun `GIVEN success WHEN onViewScreen THEN state is updated`() =
+        runTest {
+            val audioCourse = buildAudioCourse()
+            coEvery { getAudioCourseByIdUseCase(audioCourse.id) } returns flowOf(audioCourse).right()
 
-        viewModel.onViewScreen(audioCourse.id)
-        advanceUntilIdle()
+            viewModel.onViewScreen(audioCourse.id)
+            advanceUntilIdle()
 
-        viewModel.state.isLoading shouldBeEqualTo false
-        viewModel.state.audioCourse shouldBeEqualTo audioCourse
-    }
-
-    @Test
-    fun `GIVEN failure WHEN onViewScreen THEN emits error event`() = runTest {
-        val audioCourse = buildAudioCourse()
-        val exception = Throwable("Something went wrong")
-        coEvery { getAudioCourseByIdUseCase(audioCourse.id) } returns exception.left()
-        val eventChannel = Channel<AudioCourseDetailEvent>(Channel.UNLIMITED)
-        val job = launch {
-            viewModel.events.collect {
-                eventChannel.trySend(it)
-            }
+            viewModel.state.isLoading shouldBeEqualTo false
+            viewModel.state.audioCourse shouldBeEqualTo audioCourse
         }
 
-        viewModel.onViewScreen(audioCourse.id)
-        advanceUntilIdle()
+    @Test
+    fun `GIVEN failure WHEN onViewScreen THEN emits error event`() =
+        runTest {
+            val audioCourse = buildAudioCourse()
+            val exception = Throwable("Something went wrong")
+            coEvery { getAudioCourseByIdUseCase(audioCourse.id) } returns exception.left()
+            val eventChannel = Channel<AudioCourseDetailEvent>(Channel.UNLIMITED)
+            val job =
+                launch {
+                    viewModel.events.collect {
+                        eventChannel.trySend(it)
+                    }
+                }
 
-        viewModel.state.isLoading shouldBeEqualTo false
-        viewModel.state.audioCourse shouldBeEqualTo null
-        eventChannel.receive() shouldBeEqualTo AudioCourseDetailEvent.Error(exception)
-        job.cancel()
-    }
+            viewModel.onViewScreen(audioCourse.id)
+            advanceUntilIdle()
+
+            viewModel.state.isLoading shouldBeEqualTo false
+            viewModel.state.audioCourse shouldBeEqualTo null
+            eventChannel.receive() shouldBeEqualTo AudioCourseDetailEvent.Error(exception)
+            job.cancel()
+        }
 }

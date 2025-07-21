@@ -8,10 +8,10 @@ data class PlaylistState(
     val shouldIShowConfirmDialog: Boolean = false,
     val playlists: List<Playlist> = emptyList(),
     val selectedPlaylistId: Int? = null,
-    val dialogTitle: String = emptyString,
-    val dialogDescription: String = emptyString,
+    val dialogTitle: String = EMPTY_STRING,
+    val dialogDescription: String = EMPTY_STRING,
     val dialogTitleError: Boolean = false,
     val dialogDescriptionError: Boolean = false,
 )
 
-internal const val emptyString = ""
+internal const val EMPTY_STRING = ""

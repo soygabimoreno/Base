@@ -18,7 +18,6 @@ import soy.gabimoreno.ext.right
 import soy.gabimoreno.framework.datastore.getEmail
 
 class SetPlaylistItemsUseCaseTest {
-
     private val context: Context = mockk()
     private val repository: PlaylistRepository = relaxedMockk()
 
@@ -32,40 +31,42 @@ class SetPlaylistItemsUseCaseTest {
     }
 
     @Test
-    fun `GIVEN valid playlistIds WHEN invoke THEN Right with inserted ids is returned`() = runTest {
-        val playlistItemId = "audio-123"
-        val playlistIds = listOf(1, 2)
-        val expectedIds = listOf(201L, 202L)
+    fun `GIVEN valid playlistIds WHEN invoke THEN Right with inserted ids is returned`() =
+        runTest {
+            val playlistItemId = "audio-123"
+            val playlistIds = listOf(1, 2)
+            val expectedIds = listOf(201L, 202L)
 
-        coEvery {
-            repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
-        } returns right(expectedIds)
+            coEvery {
+                repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
+            } returns right(expectedIds)
 
-        val result = useCase(playlistItemId, playlistIds)
+            val result = useCase(playlistItemId, playlistIds)
 
-        result shouldBeEqualTo right(expectedIds)
-        coVerifyOnce {
-            repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
+            result shouldBeEqualTo right(expectedIds)
+            coVerifyOnce {
+                repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN repository fails WHEN invoke THEN Left with throwable is returned`() = runTest {
-        val playlistItemId = "audio-123"
-        val playlistIds = listOf(1, 2)
-        val exception = IllegalStateException("unexpected failure")
+    fun `GIVEN repository fails WHEN invoke THEN Left with throwable is returned`() =
+        runTest {
+            val playlistItemId = "audio-123"
+            val playlistIds = listOf(1, 2)
+            val exception = IllegalStateException("unexpected failure")
 
-        coEvery {
-            repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
-        } returns left(exception)
+            coEvery {
+                repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
+            } returns left(exception)
 
-        val result = useCase(playlistItemId, playlistIds)
+            val result = useCase(playlistItemId, playlistIds)
 
-        result shouldBeEqualTo left(exception)
-        coVerifyOnce {
-            repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
+            result shouldBeEqualTo left(exception)
+            coVerifyOnce {
+                repository.upsertPlaylistItems(playlistItemId, playlistIds, EMAIL)
+            }
         }
-    }
 }
 
 private const val EMAIL = "test@test.com"

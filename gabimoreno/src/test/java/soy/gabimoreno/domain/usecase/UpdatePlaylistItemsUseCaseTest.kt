@@ -18,7 +18,6 @@ import soy.gabimoreno.fake.buildPlaylistItems
 import soy.gabimoreno.framework.datastore.getEmail
 
 class UpdatePlaylistItemsUseCaseTest {
-
     private val context: Context = mockk()
     private val repository = mockk<PlaylistRepository>()
 
@@ -49,22 +48,22 @@ class UpdatePlaylistItemsUseCaseTest {
         }
 
     @Test
-    fun `GIVEN repository fails WHEN invoke THEN error is returned`() = runTest {
-        val playlistId = 1
-        val playlistAudioItems = buildPlaylistItems()
-        val throwable = RuntimeException()
-        coEvery {
-            repository.updatePlaylistItems(playlistId, playlistAudioItems, EMAIL)
-        } returns left(throwable)
+    fun `GIVEN repository fails WHEN invoke THEN error is returned`() =
+        runTest {
+            val playlistId = 1
+            val playlistAudioItems = buildPlaylistItems()
+            val throwable = RuntimeException()
+            coEvery {
+                repository.updatePlaylistItems(playlistId, playlistAudioItems, EMAIL)
+            } returns left(throwable)
 
-        val result = useCase(playlistId, playlistAudioItems)
+            val result = useCase(playlistId, playlistAudioItems)
 
-        result shouldBeEqualTo left(throwable)
-        coVerifyOnce {
-            repository.updatePlaylistItems(playlistId, playlistAudioItems, EMAIL)
+            result shouldBeEqualTo left(throwable)
+            coVerifyOnce {
+                repository.updatePlaylistItems(playlistId, playlistAudioItems, EMAIL)
+            }
         }
-    }
 }
 
 private const val EMAIL = "test@test.com"
-

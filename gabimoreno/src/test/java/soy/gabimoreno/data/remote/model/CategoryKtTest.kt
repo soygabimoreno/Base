@@ -4,7 +4,6 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
 
 class CategoryKtTest {
-
     @Test
     fun `GIVEN a category WHEN toQueryValue THEN get the expected result`() {
         val list = listOf(Category.PREMIUM)

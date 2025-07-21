@@ -36,11 +36,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Run ktlintCheck
+        run: ./gradlew ktlintCheck
 
       - name: Run Detekt
         run: ./gradlew detekt
+
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest

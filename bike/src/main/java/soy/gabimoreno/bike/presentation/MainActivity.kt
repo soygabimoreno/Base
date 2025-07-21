@@ -25,32 +25,33 @@ import soy.gabimoreno.framework.toast
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     private val viewModel: MainViewModel by viewModels()
 
-    private val bluetoothScanPermission = PermissionRequester(
-        activity = this,
-        permission = Manifest.permission.BLUETOOTH_SCAN,
-        onShowRationale = {
-            toast(R.string.permission_bluetooth_scan_rationale)
-        },
-        onDenied = {
-            toast(R.string.permission_bluetooth_scan_denied)
-            openAppSettings()
-        }
-    )
+    private val bluetoothScanPermission =
+        PermissionRequester(
+            activity = this,
+            permission = Manifest.permission.BLUETOOTH_SCAN,
+            onShowRationale = {
+                toast(R.string.permission_bluetooth_scan_rationale)
+            },
+            onDenied = {
+                toast(R.string.permission_bluetooth_scan_denied)
+                openAppSettings()
+            },
+        )
 
-    private val bluetoothConnectPermission = PermissionRequester(
-        activity = this,
-        permission = Manifest.permission.BLUETOOTH_CONNECT,
-        onShowRationale = {
-            toast(R.string.permission_bluetooth_connect_rationale)
-        },
-        onDenied = {
-            toast(R.string.permission_bluetooth_connect_denied)
-            openAppSettings()
-        }
-    )
+    private val bluetoothConnectPermission =
+        PermissionRequester(
+            activity = this,
+            permission = Manifest.permission.BLUETOOTH_CONNECT,
+            onShowRationale = {
+                toast(R.string.permission_bluetooth_connect_rationale)
+            },
+            onDenied = {
+                toast(R.string.permission_bluetooth_connect_denied)
+                openAppSettings()
+            },
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +59,7 @@ class MainActivity : ComponentActivity() {
             BaseTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = MaterialTheme.colors.background,
                 ) {
                     LaunchedEffect(true) { collectViewEvents() }
                     MainScreen(viewModel)
@@ -77,8 +78,12 @@ class MainActivity : ComponentActivity() {
 
         viewModel.viewEvents.collect { viewEvent ->
             when (viewEvent) {
-                MainViewModel.ViewEvent.Error.ShowDeviceDoesNotSupportBluetooth -> showDeviceDoesNotSupportBluetooth()
-                MainViewModel.ViewEvent.Error.ShowDeviceDoesNotSupportBle -> showDeviceDoesNotSupportBle()
+                MainViewModel.ViewEvent.Error.ShowDeviceDoesNotSupportBluetooth ->
+                    showDeviceDoesNotSupportBluetooth()
+
+                MainViewModel.ViewEvent.Error.ShowDeviceDoesNotSupportBle ->
+                    showDeviceDoesNotSupportBle()
+
                 MainViewModel.ViewEvent.Error.ShowTurnOnBluetooth -> showTurnOnBluetooth()
                 MainViewModel.ViewEvent.Error.ShowConnectionFailed -> showConnectionFailed()
                 MainViewModel.ViewEvent.Error.ShowNullDeviceConnected -> showNullDeviceConnected()
@@ -86,8 +91,11 @@ class MainActivity : ComponentActivity() {
                 MainViewModel.ViewEvent.Error.ShowReadFailure -> showReadFailure()
                 MainViewModel.ViewEvent.Error.ShowNotLoadedDevice -> showNotLoadedDevice()
                 MainViewModel.ViewEvent.Foo -> foo()
-                is MainViewModel.ViewEvent.CheckPermissionsAndInitBle -> checkPermissionsAndInitBle(
-                    viewEvent.bleManager)
+                is MainViewModel.ViewEvent.CheckPermissionsAndInitBle ->
+                    checkPermissionsAndInitBle(
+                        viewEvent.bleManager,
+                    )
+
                 is MainViewModel.ViewEvent.ShowDeviceName -> showDeviceName(viewEvent.deviceName)
             }
         }
@@ -117,12 +125,12 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        bleManager.enableLog(true)
+        bleManager
+            .enableLog(true)
             .setReConnectCount(
                 RECONNECT_COUNT,
-                RECONNECT_INTERVAL_IN_MILLIS
-            )
-            .setSplitWriteNum(SPLIT_WRITE_NUM)
+                RECONNECT_INTERVAL_IN_MILLIS,
+            ).setSplitWriteNum(SPLIT_WRITE_NUM)
             .setConnectOverTime(CONNECT_OVER_TIME_IN_MILLIS)
             .operateTimeout = OPERATE_TIME_OUT
         viewModel.startConnection()
@@ -165,7 +173,7 @@ class MainActivity : ComponentActivity() {
         // TODO: Change CountDownTimer by a Timer
         object : CountDownTimer(
             60 * 60 * 1000,
-            COUNTDOWN_INTERVAL_IN_MILLIS
+            COUNTDOWN_INTERVAL_IN_MILLIS,
         ) {
             override fun onTick(millisUntilFinished: Long) {
                 viewModel.onReadData()

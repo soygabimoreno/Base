@@ -19,7 +19,7 @@ fun PrimaryButton(
             height = height,
             background = MaterialTheme.colors.primary,
             modifier = modifier,
-            onClick = onClick
+            onClick = onClick,
         )
     } else {
         CommonButton(
@@ -27,7 +27,7 @@ fun PrimaryButton(
             height = height,
             background = MaterialTheme.colors.primary.copy(alpha = 0.5f),
             modifier = modifier,
-            onClick = {}
+            onClick = {},
         )
     }
 }

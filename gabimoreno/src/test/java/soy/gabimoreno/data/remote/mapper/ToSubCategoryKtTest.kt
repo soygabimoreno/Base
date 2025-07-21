@@ -7,7 +7,6 @@ import soy.gabimoreno.data.remote.mapper.category.toSubcategory
 import soy.gabimoreno.data.remote.model.Category
 
 class ToSubCategoryKtTest {
-
     @Test
     fun `GIVEN the happy path WHEN call THEN return null`() {
         val categoryIds = listOf(Category.PREMIUM.id, Category.PREMIUM_AUDIO_COURSES.id)
@@ -46,12 +45,13 @@ class ToSubCategoryKtTest {
 
     @Test
     fun `GIVEN 2 premium categories and another additional WHEN call THEN return the right one`() {
-        val categoryIds = listOf(
-            Category.PREMIUM.id,
-            Category.PREMIUM_AUDIO_COURSES.id,
-            151,
-            12
-        )
+        val categoryIds =
+            listOf(
+                Category.PREMIUM.id,
+                Category.PREMIUM_AUDIO_COURSES.id,
+                151,
+                12,
+            )
 
         val result = categoryIds.toSubcategory()
 

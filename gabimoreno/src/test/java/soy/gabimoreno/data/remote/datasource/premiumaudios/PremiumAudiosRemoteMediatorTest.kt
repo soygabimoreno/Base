@@ -34,7 +34,6 @@ import java.io.IOException
 
 @ExperimentalCoroutinesApi
 class PremiumAudiosRemoteMediatorTest {
-
     private val cloudDataSource: PremiumAudiosCloudDataSource = mockk()
     private val localPremiumAudiosDataSource: LocalPremiumAudiosDataSource = relaxedMockk()
     private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource = relaxedMockk()
@@ -47,164 +46,177 @@ class PremiumAudiosRemoteMediatorTest {
 
     @Before
     fun setUp() {
-        mediator = PremiumAudiosRemoteMediator(
-            cloudDataSource,
-            EMAIL,
-            localPremiumAudiosDataSource,
-            remotePremiumAudiosDataSource,
-            refreshPremiumAudiosFromRemoteUseCase,
-            saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
-        )
+        mediator =
+            PremiumAudiosRemoteMediator(
+                cloudDataSource,
+                EMAIL,
+                localPremiumAudiosDataSource,
+                remotePremiumAudiosDataSource,
+                refreshPremiumAudiosFromRemoteUseCase,
+                saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+            )
 
         coEvery {
             remotePremiumAudiosDataSource.getPremiumAudios(
                 any(),
                 any(),
-                any()
+                any(),
             )
         } returns buildPremiumAudios().right()
     }
 
     @Test
-    fun `GIVEN refresh needed WHEN initialize THEN launch initial refresh`() = runTest {
-        coEvery {
-            refreshPremiumAudiosFromRemoteUseCase(
-                any(),
-                TWELVE_HOURS_IN_MILLIS
-            )
-        } returns true
+    fun `GIVEN refresh needed WHEN initialize THEN launch initial refresh`() =
+        runTest {
+            coEvery {
+                refreshPremiumAudiosFromRemoteUseCase(
+                    any(),
+                    TWELVE_HOURS_IN_MILLIS,
+                )
+            } returns true
 
-        val result = mediator.initialize()
+            val result = mediator.initialize()
 
-        result shouldBe InitializeAction.LAUNCH_INITIAL_REFRESH
-    }
-
-    @Test
-    fun `GIVEN refresh not needed WHEN initialize THEN skip initial refresh`() = runTest {
-        coEvery {
-            refreshPremiumAudiosFromRemoteUseCase(
-                any(),
-                TWELVE_HOURS_IN_MILLIS
-            )
-        } returns false
-
-        val result = mediator.initialize()
-
-        result shouldBe InitializeAction.SKIP_INITIAL_REFRESH
-    }
+            result shouldBe InitializeAction.LAUNCH_INITIAL_REFRESH
+        }
 
     @Test
-    fun `WHEN load PREPEND THEN endOfPaginationReached is true`() = runTest {
-        val result = mediator.load(LoadType.PREPEND, emptyPagingState)
+    fun `GIVEN refresh not needed WHEN initialize THEN skip initial refresh`() =
+        runTest {
+            coEvery {
+                refreshPremiumAudiosFromRemoteUseCase(
+                    any(),
+                    TWELVE_HOURS_IN_MILLIS,
+                )
+            } returns false
 
-        assertMediatorSuccess(result, true)
-    }
+            val result = mediator.initialize()
+
+            result shouldBe InitializeAction.SKIP_INITIAL_REFRESH
+        }
+
+    @Test
+    fun `WHEN load PREPEND THEN endOfPaginationReached is true`() =
+        runTest {
+            val result = mediator.load(LoadType.PREPEND, emptyPagingState)
+
+            assertMediatorSuccess(result, true)
+        }
 
     @Test()
-    fun `GIVEN success on REFRESH WHEN load THEN reset and return success`() = runTest {
-        val premiumAudios = buildPremiumAudios()
-        val cloudPremiumAudios = buildCloudPremiumAudiosResponseList()
+    fun `GIVEN success on REFRESH WHEN load THEN reset and return success`() =
+        runTest {
+            val premiumAudios = buildPremiumAudios()
+            val cloudPremiumAudios = buildCloudPremiumAudiosResponseList()
 
-        coEvery {
-            cloudDataSource.getPremiumAudioItems(EMAIL)
-        } returns cloudPremiumAudios
-        coEvery {
-            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 1)
-        } returns premiumAudios.right()
-        coEvery { localPremiumAudiosDataSource.reset() } returns Unit
-        coEvery { saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(any()) } returns Unit
-        coEvery { localPremiumAudiosDataSource.savePremiumAudios(any()) } returns Unit
+            coEvery {
+                cloudDataSource.getPremiumAudioItems(EMAIL)
+            } returns cloudPremiumAudios
+            coEvery {
+                remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 1)
+            } returns premiumAudios.right()
+            coEvery { localPremiumAudiosDataSource.reset() } returns Unit
+            coEvery { saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(any()) } returns Unit
+            coEvery { localPremiumAudiosDataSource.savePremiumAudios(any()) } returns Unit
 
-        val result = mediator.load(LoadType.REFRESH, emptyPagingState)
+            val result = mediator.load(LoadType.REFRESH, emptyPagingState)
 
-        assertMediatorSuccess(result, premiumAudios.isEmpty())
+            assertMediatorSuccess(result, premiumAudios.isEmpty())
 
-        coVerifyOnce {
-            saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(any())
-            localPremiumAudiosDataSource.savePremiumAudios(premiumAudios)
+            coVerifyOnce {
+                saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(any())
+                localPremiumAudiosDataSource.savePremiumAudios(premiumAudios)
+            }
         }
-    }
 
     @Test
-    fun `GIVEN error from API WHEN load REFRESH THEN return MediatorResult Error`() = runTest {
-        val error = IOException("Network error")
+    fun `GIVEN error from API WHEN load REFRESH THEN return MediatorResult Error`() =
+        runTest {
+            val error = IOException("Network error")
 
-        coEvery {
-            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 1)
-        } returns error.left()
+            coEvery {
+                remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 1)
+            } returns error.left()
 
-        val result = mediator.load(LoadType.REFRESH, emptyPagingState)
+            val result = mediator.load(LoadType.REFRESH, emptyPagingState)
 
-        result shouldBeInstanceOf MediatorResult.Error::class
-        (result as MediatorResult.Error).throwable shouldBe error
-    }
-
-    @Test
-    fun `GIVEN exception thrown WHEN load THEN return Error`() = runTest {
-        val error = IOException("Thrown")
-
-        coEvery {
-            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 1)
-        } throws error
-
-        val result = mediator.load(LoadType.REFRESH, emptyPagingState)
-
-        result shouldBeInstanceOf MediatorResult.Error::class
-        (result as MediatorResult.Error).throwable shouldBe error
-    }
-
-    @Test
-    fun `GIVEN items in database WHEN load APPEND THEN fetch next page`() = runTest {
-        val premiumAudios = buildPremiumAudios()
-        val totalAudios = 25
-        val cloudPremiumAudios = buildCloudPremiumAudiosResponseList()
-
-        coEvery {
-            cloudDataSource.getPremiumAudioItems(EMAIL)
-        } returns cloudPremiumAudios
-        coEvery { localPremiumAudiosDataSource.getTotalPremiumAudios() } returns totalAudios
-        coEvery {
-            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 2)
-        } returns premiumAudios.right()
-        coEvery { localPremiumAudiosDataSource.savePremiumAudios(premiumAudios) } returns Unit
-
-        val result = mediator.load(LoadType.APPEND, pagingStateWithItem())
-
-        assertMediatorSuccess(result, premiumAudios.isEmpty())
-
-        coVerifyOnce {
-            remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 3)
+            result shouldBeInstanceOf MediatorResult.Error::class
+            (result as MediatorResult.Error).throwable shouldBe error
         }
-    }
+
+    @Test
+    fun `GIVEN exception thrown WHEN load THEN return Error`() =
+        runTest {
+            val error = IOException("Thrown")
+
+            coEvery {
+                remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 1)
+            } throws error
+
+            val result = mediator.load(LoadType.REFRESH, emptyPagingState)
+
+            result shouldBeInstanceOf MediatorResult.Error::class
+            (result as MediatorResult.Error).throwable shouldBe error
+        }
+
+    @Test
+    fun `GIVEN items in database WHEN load APPEND THEN fetch next page`() =
+        runTest {
+            val premiumAudios = buildPremiumAudios()
+            val totalAudios = 25
+            val cloudPremiumAudios = buildCloudPremiumAudiosResponseList()
+
+            coEvery {
+                cloudDataSource.getPremiumAudioItems(EMAIL)
+            } returns cloudPremiumAudios
+            coEvery { localPremiumAudiosDataSource.getTotalPremiumAudios() } returns totalAudios
+            coEvery {
+                remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 2)
+            } returns premiumAudios.right()
+            coEvery { localPremiumAudiosDataSource.savePremiumAudios(premiumAudios) } returns Unit
+
+            val result = mediator.load(LoadType.APPEND, pagingStateWithItem())
+
+            assertMediatorSuccess(result, premiumAudios.isEmpty())
+
+            coVerifyOnce {
+                remotePremiumAudiosDataSource.getPremiumAudios(CATEGORIES, PAGE_SIZE, 3)
+            }
+        }
 }
 
 private fun pagingStateWithItem(): PagingState<Int, PremiumAudioDbModel> {
     val item = mockk<PremiumAudioDbModel>()
     return PagingState(
-        pages = listOf(
-            PagingSource.LoadResult.Page(
-                data = listOf(item),
-                prevKey = null,
-                nextKey = null
-            )
-        ),
+        pages =
+            listOf(
+                PagingSource.LoadResult.Page(
+                    data = listOf(item),
+                    prevKey = null,
+                    nextKey = null,
+                ),
+            ),
         anchorPosition = 0,
         config = PagingConfig(pageSize = PAGE_SIZE),
-        leadingPlaceholderCount = 0
+        leadingPlaceholderCount = 0,
     )
 }
 
-private fun assertMediatorSuccess(result: MediatorResult, endReached: Boolean) {
+private fun assertMediatorSuccess(
+    result: MediatorResult,
+    endReached: Boolean,
+) {
     result shouldBeInstanceOf MediatorResult.Success::class
     (result as MediatorResult.Success).endOfPaginationReached shouldBe endReached
 }
 
-private val emptyPagingState = PagingState<Int, PremiumAudioDbModel>(
-    pages = listOf(),
-    anchorPosition = null,
-    config = PagingConfig(pageSize = PAGE_SIZE),
-    leadingPlaceholderCount = 0
-)
+private val emptyPagingState =
+    PagingState<Int, PremiumAudioDbModel>(
+        pages = listOf(),
+        anchorPosition = null,
+        config = PagingConfig(pageSize = PAGE_SIZE),
+        leadingPlaceholderCount = 0,
+    )
 
 private const val PAGE_SIZE = 20
 private val CATEGORIES = listOf(Category.PREMIUM)

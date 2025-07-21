@@ -13,9 +13,7 @@ import soy.gabimoreno.data.remote.model.course.CourseApiModel
 import soy.gabimoreno.data.remote.model.toQueryValue
 import soy.gabimoreno.data.remote.service.PostService
 
-
 class RemoteAudioCoursesDataSourceTest {
-
     private val postService = mockk<PostService>()
     private lateinit var remoteAudioCoursesDataSource: RemoteAudioCoursesDataSource
 
@@ -25,27 +23,29 @@ class RemoteAudioCoursesDataSourceTest {
     }
 
     @Test
-    fun `GIVEN audioCourses WHEN getAudioCourses THEN get the expected result`() = runTest {
-        val categories = listOf(Category.AUDIOCOURSES)
-        val categoriesQuery = categories.toQueryValue()
-        val apiModelList: List<CourseApiModel> = relaxedMockk()
-        coEvery { postService.getAudioCourses(categoriesQuery) } returns apiModelList
+    fun `GIVEN audioCourses WHEN getAudioCourses THEN get the expected result`() =
+        runTest {
+            val categories = listOf(Category.AUDIOCOURSES)
+            val categoriesQuery = categories.toQueryValue()
+            val apiModelList: List<CourseApiModel> = relaxedMockk()
+            coEvery { postService.getAudioCourses(categoriesQuery) } returns apiModelList
 
-        val result = remoteAudioCoursesDataSource.getAudioCourses(categories)
+            val result = remoteAudioCoursesDataSource.getAudioCourses(categories)
 
-        result.isRight() shouldBe true
-        coVerifyOnce { postService.getAudioCourses(categoriesQuery) }
-    }
+            result.isRight() shouldBe true
+            coVerifyOnce { postService.getAudioCourses(categoriesQuery) }
+        }
 
     @Test
-    fun `GIVEN a failure audioCourses WHEN audioCourses THEN get the expected error`() = runTest {
-        val categories = listOf(Category.AUDIOCOURSES)
-        val categoriesQuery = categories.toQueryValue()
-        coEvery { postService.getAudioCourses(categoriesQuery) } throws Throwable()
+    fun `GIVEN a failure audioCourses WHEN audioCourses THEN get the expected error`() =
+        runTest {
+            val categories = listOf(Category.AUDIOCOURSES)
+            val categoriesQuery = categories.toQueryValue()
+            coEvery { postService.getAudioCourses(categoriesQuery) } throws Throwable()
 
-        val result = remoteAudioCoursesDataSource.getAudioCourses(categories)
+            val result = remoteAudioCoursesDataSource.getAudioCourses(categories)
 
-        result.isLeft() shouldBe true
-        coVerifyOnce { postService.getAudioCourses(categoriesQuery) }
-    }
+            result.isLeft() shouldBe true
+            coVerifyOnce { postService.getAudioCourses(categoriesQuery) }
+        }
 }

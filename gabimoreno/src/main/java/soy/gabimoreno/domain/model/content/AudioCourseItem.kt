@@ -5,5 +5,5 @@ data class AudioCourseItem(
     val title: String,
     val url: String,
     val hasBeenListened: Boolean = false,
-    val markedAsFavorite: Boolean = false
+    val markedAsFavorite: Boolean = false,
 )

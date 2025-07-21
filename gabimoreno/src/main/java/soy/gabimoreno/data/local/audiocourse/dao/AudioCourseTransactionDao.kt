@@ -14,7 +14,6 @@ import soy.gabimoreno.domain.model.content.AudioCourse
 
 @Dao
 interface AudioCourseTransactionDao {
-
     @Transaction
     @Query("SELECT * FROM AudioCourseDbModel WHERE id = :id")
     fun getAudioCourseWithItems(id: String): Flow<AudioCourseWithItems?>
@@ -24,13 +23,12 @@ interface AudioCourseTransactionDao {
     suspend fun getAudioCoursesWithItems(): List<AudioCourseWithItems>
 
     @Transaction
-    suspend fun upsertAudioCoursesWithItems(
-        audioCourses: List<AudioCourse>
-    ) {
+    suspend fun upsertAudioCoursesWithItems(audioCourses: List<AudioCourse>) {
         val courses = audioCourses.map { it.toAudioCourseDbModelMapper() }
-        val items = audioCourses.flatMap { course ->
-            course.audios.map { it.toAudioCourseItemDbModelMapper(course.id) }
-        }
+        val items =
+            audioCourses.flatMap { course ->
+                course.audios.map { it.toAudioCourseItemDbModelMapper(course.id) }
+            }
 
         upsertCourses(courses)
         upsertItems(items)

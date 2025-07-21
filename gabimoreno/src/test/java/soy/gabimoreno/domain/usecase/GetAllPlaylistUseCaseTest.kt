@@ -20,7 +20,6 @@ import soy.gabimoreno.fake.buildPlaylist
 import soy.gabimoreno.framework.datastore.getEmail
 
 class GetAllPlaylistUseCaseTest {
-
     private val context: Context = mockk()
     private val playlistRepository: PlaylistRepository = relaxedMockk()
 
@@ -49,9 +48,10 @@ class GetAllPlaylistUseCaseTest {
     fun `GIVEN repository returns Right with empty list WHEN invoke THEN returns Right with empty list`() =
         runTest {
             val emptyPlaylists = emptyList<Playlist>()
-            coEvery { playlistRepository.getAllPlaylists(EMAIL) } returns Either.Right(
-                emptyPlaylists
-            )
+            coEvery { playlistRepository.getAllPlaylists(EMAIL) } returns
+                Either.Right(
+                    emptyPlaylists,
+                )
 
             val result = useCase()
 
@@ -60,26 +60,28 @@ class GetAllPlaylistUseCaseTest {
         }
 
     @Test
-    fun `GIVEN repository returns Left WHEN invoke THEN returns Left with exception`() = runTest {
-        val exception = RuntimeException("Database error")
-        coEvery { playlistRepository.getAllPlaylists(EMAIL) } returns Either.Left(exception)
+    fun `GIVEN repository returns Left WHEN invoke THEN returns Left with exception`() =
+        runTest {
+            val exception = RuntimeException("Database error")
+            coEvery { playlistRepository.getAllPlaylists(EMAIL) } returns Either.Left(exception)
 
-        val result = useCase()
+            val result = useCase()
 
-        result shouldBeInstanceOf Either.Left::class
-        result.leftOrNull() shouldBeEqualTo exception
-    }
+            result shouldBeInstanceOf Either.Left::class
+            result.leftOrNull() shouldBeEqualTo exception
+        }
 
     @Test
-    fun `GIVEN repository WHEN invoke THEN getAllPlaylists is called`() = runTest {
-        coEvery { playlistRepository.getAllPlaylists(EMAIL) } returns Either.Right(emptyList())
+    fun `GIVEN repository WHEN invoke THEN getAllPlaylists is called`() =
+        runTest {
+            coEvery { playlistRepository.getAllPlaylists(EMAIL) } returns Either.Right(emptyList())
 
-        useCase()
+            useCase()
 
-        coVerifyOnce {
-            playlistRepository.getAllPlaylists(EMAIL)
+            coVerifyOnce {
+                playlistRepository.getAllPlaylists(EMAIL)
+            }
         }
-    }
 }
 
 private const val EMAIL = "test@test.com"

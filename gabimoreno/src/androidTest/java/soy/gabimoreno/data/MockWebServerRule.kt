@@ -5,7 +5,6 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 class MockWebServerRule : TestWatcher() {
-
     lateinit var server: MockWebServer
 
     override fun starting(description: Description) {

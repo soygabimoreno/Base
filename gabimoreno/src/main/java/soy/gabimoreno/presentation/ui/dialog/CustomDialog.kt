@@ -47,48 +47,54 @@ fun CustomDialog(
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Box(
-            modifier = Modifier
-                .width(310.dp)
-                .height(380.dp)
+            modifier =
+                Modifier
+                    .width(310.dp)
+                    .height(380.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .width(310.dp)
-                    .height(320.dp)
-                    .align(Alignment.BottomCenter),
+                modifier =
+                    Modifier
+                        .width(310.dp)
+                        .height(320.dp)
+                        .align(Alignment.BottomCenter),
             ) {
                 Spacer(modifier = Modifier.height(Spacing.s32))
                 Box(
-                    modifier = Modifier
-                        .width(310.dp)
-                        .height(244.dp)
-                        .border(1.dp, White, RoundedCornerShape(Spacing.s16))
-                        .background(PurpleLight, RoundedCornerShape(Spacing.s16))
+                    modifier =
+                        Modifier
+                            .width(310.dp)
+                            .height(244.dp)
+                            .border(1.dp, White, RoundedCornerShape(Spacing.s16))
+                            .background(PurpleLight, RoundedCornerShape(Spacing.s16)),
                 ) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(Spacing.s16),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(Spacing.s16),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         if (text.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(Spacing.s24))
                             Text(
                                 title.uppercase(),
-                                style = MaterialTheme.typography.h6, color = White
+                                style = MaterialTheme.typography.h6,
+                                color = White,
                             )
                             Spacer(modifier = Modifier.weight(0.3f))
                             Text(
                                 text,
                                 style = MaterialTheme.typography.subtitle2,
-                                color = White
+                                color = White,
                             )
                             Spacer(modifier = Modifier.weight(0.7f))
                         } else {
                             Spacer(modifier = Modifier.weight(0.3f))
                             Text(
                                 title.uppercase(),
-                                style = MaterialTheme.typography.h6, color = White
+                                style = MaterialTheme.typography.h6,
+                                color = White,
                             )
                             Spacer(modifier = Modifier.weight(0.3f))
                         }
@@ -116,23 +122,25 @@ fun CustomDialog(
 
                             TypeDialog.CONFIRMATION_WITH_CHECKBOX -> {
                                 Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Checkbox(
                                         checked = isCheckboxChecked,
                                         onCheckedChange = { onCheckboxChanged() },
-                                        colors = CheckboxDefaults.colors(
-                                            uncheckedColor = White,
-                                            checkmarkColor = Orange
-                                        )
+                                        colors =
+                                            CheckboxDefaults.colors(
+                                                uncheckedColor = White,
+                                                checkmarkColor = Orange,
+                                            ),
                                     )
                                     Text(
                                         checkBoxText,
                                         color = White,
-                                        style = MaterialTheme.typography.body2
+                                        style = MaterialTheme.typography.body2,
                                     )
                                 }
                                 Row(
@@ -167,10 +175,11 @@ fun CustomDialog(
                 }
             }
             HeaderDialog(
-                modifier = Modifier
-                    .size(Spacing.s128)
-                    .align(Alignment.TopCenter),
-                typeDialog = typeDialog
+                modifier =
+                    Modifier
+                        .size(Spacing.s128)
+                        .align(Alignment.TopCenter),
+                typeDialog = typeDialog,
             )
         }
     }
@@ -187,7 +196,7 @@ enum class TypeDialog {
 
 @Preview(
     showSystemUi = true,
-    showBackground = true
+    showBackground = true,
 )
 @Composable
 private fun CustomComposablePreview() {
@@ -195,7 +204,7 @@ private fun CustomComposablePreview() {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             CustomDialog(
                 title = "This is an example title",
@@ -205,9 +214,8 @@ private fun CustomComposablePreview() {
                 onConfirm = {},
                 onDismiss = {},
                 isCheckboxChecked = false,
-                typeDialog = TypeDialog.SUCCESS
+                typeDialog = TypeDialog.SUCCESS,
             )
         }
     }
 }
-

@@ -6,7 +6,6 @@ import soy.gabimoreno.domain.model.login.JwtAuth
 import soy.gabimoreno.domain.model.login.Member
 
 interface LoginDatasource {
-
     suspend fun generateAuthCookie(
         email: String,
         password: String,

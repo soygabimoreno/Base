@@ -48,27 +48,30 @@ fun AppUi(
             ProvideMultiViewModel {
                 AuthModalBottomSheetRoot(
                     modalBottomSheetState = stateModalBottomSheet,
-                    onHideBottomSheet = { authBottomSheetController.hide() }
+                    onHideBottomSheet = { authBottomSheetController.hide() },
                 ) {
                     Scaffold(
                         bottomBar = {
                             AppBottomNavigation(currentRoute) { item ->
-                                navController.navigatePoppingUpToStartDestination(item.navCommand.route)
+                                navController.navigatePoppingUpToStartDestination(
+                                    item.navCommand.route,
+                                )
                             }
-                        }
+                        },
                     ) { padding ->
                         Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .padding(padding)
+                            modifier =
+                                Modifier
+                                    .fillMaxHeight()
+                                    .padding(padding),
                         ) {
                             AppNavigation(
                                 navController = navController,
                                 appState = appState,
-                                onRequireAuth = { authBottomSheetController.show() }
+                                onRequireAuth = { authBottomSheetController.show() },
                             )
                             AudioBottomBar(
-                                modifier = Modifier.align(Alignment.BottomCenter)
+                                modifier = Modifier.align(Alignment.BottomCenter),
                             )
                         }
                     }
@@ -87,7 +90,7 @@ fun GabiMorenoScreen(content: @Composable () -> Unit) {
     GabiMorenoTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            color = MaterialTheme.colors.background,
         ) {
             content()
         }

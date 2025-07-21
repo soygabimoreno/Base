@@ -64,6 +64,7 @@ fun HomeScreen(
 ) {
     val scrollState = rememberLazyListState()
     val homeViewModel = ViewModelProvider.homeViewModel
+    val playerViewModel = ViewModelProvider.playerViewModel
     val viewState = homeViewModel.viewState
     var searchTextState by remember { mutableStateOf(TextFieldValue("")) }
     val pullRefreshState =
@@ -75,56 +76,64 @@ fun HomeScreen(
     Surface {
         Column {
             Text(
-                homeViewModel.appVersionName, modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
-                    .padding(start = Spacing.s16, bottom = Spacing.s4)
+                homeViewModel.appVersionName,
+                modifier =
+                    Modifier
+                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+                        .padding(start = Spacing.s16, bottom = Spacing.s4),
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 OutlinedTextField(
                     value = searchTextState,
                     onValueChange = { value ->
                         searchTextState = value
                     },
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                    keyboardOptions =
+                        KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Sentences,
+                        ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = stringResource(id = R.string.search)
+                            contentDescription = stringResource(id = R.string.search),
                         )
                     },
-                    modifier = Modifier
-                        .padding(start = Spacing.s16, bottom = Spacing.s16, end = Spacing.s16)
-                        .weight(0.95f)
+                    modifier =
+                        Modifier
+                            .padding(start = Spacing.s16, bottom = Spacing.s16, end = Spacing.s16)
+                            .weight(0.95f),
                 )
                 IconButton(
                     onClick = { homeViewModel.toggleShouldIReversePodcastOrder() },
-                    modifier = Modifier
-                        .padding(bottom = Spacing.s16, end = Spacing.s16)
+                    modifier =
+                        Modifier
+                            .padding(bottom = Spacing.s16, end = Spacing.s16),
                 ) {
                     AnimatedContent(
                         targetState = homeViewModel.shouldIReversePodcastOrder,
                         transitionSpec = {
                             scaleIn(tween(300)) togetherWith scaleOut(tween(500))
                         },
-                        label = "IconTransition"
+                        label = "IconTransition",
                     ) { reversed ->
                         if (reversed) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.Sort,
                                 contentDescription = stringResource(R.string.podcast_sort_desc),
-                                modifier = Modifier
-                                    .rotate(180f)
-                                    .size(Spacing.s48)
+                                modifier =
+                                    Modifier
+                                        .rotate(180f)
+                                        .size(Spacing.s48),
                             )
                         } else {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.Sort,
                                 contentDescription = stringResource(R.string.podcast_sort_asc),
-                                modifier = Modifier.size(Spacing.s48)
+                                modifier = Modifier.size(Spacing.s48),
                             )
                         }
                     }
@@ -133,7 +142,7 @@ fun HomeScreen(
             Box(
                 Modifier
                     .fillMaxSize()
-                    .pullRefresh(pullRefreshState)
+                    .pullRefresh(pullRefreshState),
             ) {
                 LazyColumn(state = scrollState) {
                     when (viewState) {
@@ -156,45 +165,31 @@ fun HomeScreen(
                                 StaggeredVerticalGrid(
                                     crossAxisCount = 2,
                                     spacing = Spacing.s16,
-                                    modifier = Modifier.padding(horizontal = Spacing.s16)
+                                    modifier = Modifier.padding(horizontal = Spacing.s16),
                                 ) {
                                     val searchText = searchTextState.text
 
                                     val episodes = viewState.episodes
-                                    val filteredEpisodes = if (searchText.isBlank()) {
-                                        episodes
-                                    } else {
-                                        episodes.filter { episode ->
-                                            val lowerCaseTitle = episode.title.normalizeText()
-                                            val lowerSearchText = searchText.normalizeText()
-                                            lowerCaseTitle.contains(lowerSearchText)
+                                    val filteredEpisodes =
+                                        if (searchText.isBlank()) {
+                                            episodes
+                                        } else {
+                                            episodes.filter { episode ->
+                                                val lowerCaseTitle = episode.title.normalizeText()
+                                                val lowerSearchText = searchText.normalizeText()
+                                                lowerCaseTitle.contains(lowerSearchText)
+                                            }
                                         }
-                                    }
                                     filteredEpisodes.forEach { episode ->
                                         EpisodeView(
                                             episode = episode,
-                                            modifier = Modifier.padding(bottom = Spacing.s16)
+                                            modifier = Modifier.padding(bottom = Spacing.s16),
                                         ) {
                                             val episodeId = episode.id
                                             homeViewModel.onEpisodeClicked(episodeId, episode.title)
                                             onItemClicked(episodeId)
                                         }
                                     }
-                                    // TODO: Manage deep links in a proper way
-//                                    val episodeNumber = DeepLinkEpisodeNumber.value
-//                                    if (episodeNumber != null) {
-//                                        DeepLinkEpisodeNumber.value = null
-//                                        val index = filteredEpisodes.size - episodeNumber
-//                                        val episode = filteredEpisodes[index]
-//                                        val episodeId = episode.id
-//                                        homeViewModel.onDeepLinkReceived(episodeId, episode.title)
-//                                        onDeepLinkReceived(episodeId)
-//                                    } else {
-//                                        DeepLinkUrl.value?.let { url ->
-//                                            DeepLinkUrl.value = null
-//                                            homeViewModel.onShowWebViewClicked(url)
-//                                        }
-//                                    }
                                 }
                             }
                         }
@@ -202,20 +197,25 @@ fun HomeScreen(
 
                     item {
                         Box(
-                            modifier = Modifier
-                                .navigationBarsPadding()
-                                .padding(bottom = Spacing.s32)
-                                .padding(
-                                    bottom = if (ViewModelProvider.playerViewModel.currentPlayingAudio.value != null) Spacing.s64
-                                    else Spacing.s0
-                                )
+                            modifier =
+                                Modifier
+                                    .navigationBarsPadding()
+                                    .padding(bottom = Spacing.s32)
+                                    .padding(
+                                        bottom =
+                                            if (playerViewModel.currentPlayingAudio.value != null) {
+                                                Spacing.s64
+                                            } else {
+                                                Spacing.s0
+                                            },
+                                    ),
                         )
                     }
                 }
                 PullRefreshIndicator(
                     refreshing = homeViewModel.isRefreshing,
                     state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
                 )
             }
         }

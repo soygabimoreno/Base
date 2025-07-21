@@ -11,7 +11,6 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class RefreshPremiumAudiosFromRemoteUseCaseTest {
-
     private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
         SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase = mockk()
 
@@ -22,31 +21,35 @@ class RefreshPremiumAudiosFromRemoteUseCaseTest {
 
     @Before
     fun setUp() {
-        useCase = RefreshPremiumAudiosFromRemoteUseCase(
-            saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
-            getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
-        )
+        useCase =
+            RefreshPremiumAudiosFromRemoteUseCase(
+                saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+                getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+            )
     }
 
     @Test
-    fun `GIVEN less elapsed time than time to refresh WHEN invoke THEN return false`() = runTest {
-        val lastTimeInMillis = 0L
-        val currentTimeInMillis = 1999L
-        val timeToRefreshInMillis = 2000L
-        coEvery { getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase() } returns flowOf(
-            lastTimeInMillis
-        )
-        coEvery {
-            saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(currentTimeInMillis)
-        } returns Unit
+    fun `GIVEN less elapsed time than time to refresh WHEN invoke THEN return false`() =
+        runTest {
+            val lastTimeInMillis = 0L
+            val currentTimeInMillis = 1999L
+            val timeToRefreshInMillis = 2000L
+            coEvery { getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase() } returns
+                flowOf(
+                    lastTimeInMillis,
+                )
+            coEvery {
+                saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(currentTimeInMillis)
+            } returns Unit
 
-        val result = useCase(
-            currentTimeInMillis,
-            timeToRefreshInMillis
-        )
+            val result =
+                useCase(
+                    currentTimeInMillis,
+                    timeToRefreshInMillis,
+                )
 
-        result shouldBe false
-    }
+            result shouldBe false
+        }
 
     @Test
     fun `GIVEN the same elapsed time than time to refresh WHEN invoke THEN return true`() =
@@ -54,39 +57,45 @@ class RefreshPremiumAudiosFromRemoteUseCaseTest {
             val lastTimeInMillis = 0L
             val currentTimeInMillis = 2000L
             val timeToRefreshInMillis = 2000L
-            coEvery { getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase() } returns flowOf(
-                lastTimeInMillis
-            )
+            coEvery { getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase() } returns
+                flowOf(
+                    lastTimeInMillis,
+                )
             coEvery {
                 saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
-                    currentTimeInMillis)
+                    currentTimeInMillis,
+                )
             } returns Unit
 
-            val result = useCase(
-                currentTimeInMillis,
-                timeToRefreshInMillis
-            )
+            val result =
+                useCase(
+                    currentTimeInMillis,
+                    timeToRefreshInMillis,
+                )
 
             result shouldBe true
         }
 
     @Test
-    fun `GIVEN more elapsed time than time to refresh WHEN invoke THEN return true`() = runTest {
-        val lastTimeInMillis = 0L
-        val currentTimeInMillis = 2001L
-        val timeToRefreshInMillis = 2000L
-        coEvery { getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase() } returns flowOf(
-            lastTimeInMillis
-        )
-        coEvery {
-            saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(currentTimeInMillis)
-        } returns Unit
+    fun `GIVEN more elapsed time than time to refresh WHEN invoke THEN return true`() =
+        runTest {
+            val lastTimeInMillis = 0L
+            val currentTimeInMillis = 2001L
+            val timeToRefreshInMillis = 2000L
+            coEvery { getLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase() } returns
+                flowOf(
+                    lastTimeInMillis,
+                )
+            coEvery {
+                saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(currentTimeInMillis)
+            } returns Unit
 
-        val result = useCase(
-            currentTimeInMillis,
-            timeToRefreshInMillis
-        )
+            val result =
+                useCase(
+                    currentTimeInMillis,
+                    timeToRefreshInMillis,
+                )
 
-        result shouldBe true
-    }
+            result shouldBe true
+        }
 }

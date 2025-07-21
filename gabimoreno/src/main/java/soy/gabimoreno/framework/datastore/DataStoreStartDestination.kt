@@ -7,12 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import soy.gabimoreno.presentation.navigation.Feature
 
-fun Context.getStartDestination(): Flow<String> {
-    return dataStore.data
+fun Context.getStartDestination(): Flow<String> =
+    dataStore.data
         .map { preferences ->
             preferences[key] ?: Feature.PODCAST.route
         }
-}
 
 suspend fun Context.setStartDestination(feature: Feature) {
     dataStore.edit { settings ->

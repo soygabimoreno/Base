@@ -12,12 +12,13 @@ private fun readJsonFile(jsonFilePath: String): String {
     val context = InstrumentationRegistry.getInstrumentation().context
     var br: BufferedReader? = null
     try {
-        br = BufferedReader(
-            InputStreamReader(
-                context.assets.open(jsonFilePath),
-                StandardCharsets.UTF_8
+        br =
+            BufferedReader(
+                InputStreamReader(
+                    context.assets.open(jsonFilePath),
+                    StandardCharsets.UTF_8,
+                ),
             )
-        )
         var line: String?
         val text = StringBuilder()
         do {

@@ -17,7 +17,6 @@ import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 import soy.gabimoreno.framework.datastore.getEmail
 
 class SetAllAudiocoursesAsUnlistenedUseCaseTest {
-
     private val audioCoursesRepository: AudioCoursesRepository = relaxedMockk()
     private val context: Context = mockk()
 
@@ -31,17 +30,18 @@ class SetAllAudiocoursesAsUnlistenedUseCaseTest {
     }
 
     @Test
-    fun `GIVEN useCase WHEN invoke THEN repository is called`() = runTest {
-        coEvery {
-            audioCoursesRepository.markAllAudioCourseItemsAsUnlistened(EMAIL)
-        } just Runs
+    fun `GIVEN useCase WHEN invoke THEN repository is called`() =
+        runTest {
+            coEvery {
+                audioCoursesRepository.markAllAudioCourseItemsAsUnlistened(EMAIL)
+            } just Runs
 
-        useCase()
+            useCase()
 
-        coVerifyOnce {
-            audioCoursesRepository.markAllAudioCourseItemsAsUnlistened(EMAIL)
+            coVerifyOnce {
+                audioCoursesRepository.markAllAudioCourseItemsAsUnlistened(EMAIL)
+            }
         }
-    }
 }
 
 private const val EMAIL = "test@test.com"

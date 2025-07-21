@@ -15,7 +15,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class RefreshTokenModule {
-
     @Provides
     @Singleton
     fun provideRefreshBearerTokenUseCase(
@@ -27,6 +26,6 @@ class RefreshTokenModule {
         loginDatasource,
         setJwtAuthTokenUseCase,
         resetJwtAuthTokenUseCase,
-        context
+        context,
     )
 }

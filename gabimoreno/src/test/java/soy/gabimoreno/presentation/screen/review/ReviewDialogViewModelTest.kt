@@ -27,7 +27,6 @@ import soy.gabimoreno.presentation.screen.review.manager.InAppReviewEvent
 import soy.gabimoreno.presentation.screen.review.manager.InAppReviewManager
 
 class ReviewDialogViewModelTest {
-
     private val inAppReviewManager = relaxedMockk<InAppReviewManager>()
     private val getInAppReviewCounterUseCase = relaxedMockk<GetInAppReviewCounterUseCase>()
     private val setShouldIShowInAppReviewUseCase = relaxedMockk<SetShouldIShowInAppReviewUseCase>()
@@ -44,12 +43,13 @@ class ReviewDialogViewModelTest {
         coEvery { getInAppReviewCounterUseCase() } returns emptyFlow()
         Dispatchers.setMain(dispatcher)
 
-        viewModel = ReviewDialogViewModel(
-            inAppReviewManager,
-            getInAppReviewCounterUseCase,
-            setShouldIShowInAppReviewUseCase,
-            dispatcher
-        )
+        viewModel =
+            ReviewDialogViewModel(
+                inAppReviewManager,
+                getInAppReviewCounterUseCase,
+                setShouldIShowInAppReviewUseCase,
+                dispatcher,
+            )
     }
 
     @After
@@ -74,34 +74,38 @@ class ReviewDialogViewModelTest {
     }
 
     @Test
-    fun `GIVEN counter is 3 WHEN init THEN should show review dialog`() = runTest {
-        coEvery { getInAppReviewCounterUseCase() } returns flowOf(3)
-        val viewModel = ReviewDialogViewModel(
-            inAppReviewManager = inAppReviewManager,
-            getInAppReviewCounterUseCase = getInAppReviewCounterUseCase,
-            setShouldIShowInAppReviewUseCase = setShouldIShowInAppReviewUseCase,
-            dispatcher = dispatcher
-        )
+    fun `GIVEN counter is 3 WHEN init THEN should show review dialog`() =
+        runTest {
+            coEvery { getInAppReviewCounterUseCase() } returns flowOf(3)
+            val viewModel =
+                ReviewDialogViewModel(
+                    inAppReviewManager = inAppReviewManager,
+                    getInAppReviewCounterUseCase = getInAppReviewCounterUseCase,
+                    setShouldIShowInAppReviewUseCase = setShouldIShowInAppReviewUseCase,
+                    dispatcher = dispatcher,
+                )
 
-        advanceUntilIdle()
+            advanceUntilIdle()
 
-        viewModel.state.shouldIShowReviewDialog shouldBe true
-        viewModel.state.reviewDialogStep shouldBe ReviewDialogStep.AskIfUserLikesTheApp
-    }
+            viewModel.state.shouldIShowReviewDialog shouldBe true
+            viewModel.state.reviewDialogStep shouldBe ReviewDialogStep.AskIfUserLikesTheApp
+        }
 
     @Test
-    fun `GIVEN counter is less than 3 WHEN init THEN should not show review dialog`() = runTest {
-        coEvery { getInAppReviewCounterUseCase() } returns flowOf(2)
-        val viewModel = ReviewDialogViewModel(
-            inAppReviewManager = inAppReviewManager,
-            getInAppReviewCounterUseCase = getInAppReviewCounterUseCase,
-            setShouldIShowInAppReviewUseCase = setShouldIShowInAppReviewUseCase,
-            dispatcher = dispatcher
-        )
+    fun `GIVEN counter is less than 3 WHEN init THEN should not show review dialog`() =
+        runTest {
+            coEvery { getInAppReviewCounterUseCase() } returns flowOf(2)
+            val viewModel =
+                ReviewDialogViewModel(
+                    inAppReviewManager = inAppReviewManager,
+                    getInAppReviewCounterUseCase = getInAppReviewCounterUseCase,
+                    setShouldIShowInAppReviewUseCase = setShouldIShowInAppReviewUseCase,
+                    dispatcher = dispatcher,
+                )
 
-        advanceUntilIdle()
+            advanceUntilIdle()
 
-        viewModel.state.shouldIShowReviewDialog shouldBe false
-        viewModel.state.reviewDialogStep shouldBe ReviewDialogStep.AskIfUserLikesTheApp
-    }
+            viewModel.state.shouldIShowReviewDialog shouldBe false
+            viewModel.state.reviewDialogStep shouldBe ReviewDialogStep.AskIfUserLikesTheApp
+        }
 }

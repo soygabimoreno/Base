@@ -8,15 +8,15 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 
 class EncodeUrlUseCaseKtTest {
-
     private val tracker: Tracker = relaxedMockk()
     private lateinit var useCase: EncodeUrlUseCase
 
     @Before
     fun setUp() {
-        useCase = EncodeUrlUseCase(
-            tracker
-        )
+        useCase =
+            EncodeUrlUseCase(
+                tracker,
+            )
     }
 
     @Test

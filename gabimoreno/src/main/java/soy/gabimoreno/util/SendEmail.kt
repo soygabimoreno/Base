@@ -11,14 +11,15 @@ fun Context.sendEmail(
     subject: String = "Sugerencia sobre la app",
     body: String = "Hola, me gustaría sugerir...",
     errorText: String = "No se encontró una app de correo instalada",
-    chooserTitle: String = "Enviar email"
+    chooserTitle: String = "Enviar email",
 ) {
-    val intent = Intent(Intent.ACTION_SEND).apply {
-        type = "message/rfc822"
-        putExtra(Intent.EXTRA_EMAIL, arrayOf(to))
-        putExtra(Intent.EXTRA_SUBJECT, subject)
-        putExtra(Intent.EXTRA_TEXT, body)
-    }
+    val intent =
+        Intent(Intent.ACTION_SEND).apply {
+            type = "message/rfc822"
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(to))
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            putExtra(Intent.EXTRA_TEXT, body)
+        }
 
     try {
         startActivity(Intent.createChooser(intent, chooserTitle))

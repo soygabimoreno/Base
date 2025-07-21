@@ -14,7 +14,6 @@ import soy.gabimoreno.domain.model.content.Playlist
 
 @Dao
 interface PlaylistTransactionDao {
-
     @Transaction
     @Query("SELECT * FROM PlaylistDbModel WHERE id = :id")
     fun getPlaylistWithItemsById(id: Int): Flow<PlaylistWithItems?>
@@ -24,13 +23,12 @@ interface PlaylistTransactionDao {
     suspend fun getPlaylistsWithItems(): List<PlaylistWithItems>
 
     @Transaction
-    suspend fun upsertPlaylistsWithItems(
-        playlists: List<Playlist>
-    ) {
+    suspend fun upsertPlaylistsWithItems(playlists: List<Playlist>) {
         val courses = playlists.map { it.toPlaylistDbModel() }
-        val items = playlists.flatMap { playlist ->
-            playlist.items.map { it.toPlaylistItemDbModel(playlist.id) }
-        }
+        val items =
+            playlists.flatMap { playlist ->
+                playlist.items.map { it.toPlaylistItemDbModel(playlist.id) }
+            }
         upsertPlaylists(courses)
         upsertItems(items)
     }

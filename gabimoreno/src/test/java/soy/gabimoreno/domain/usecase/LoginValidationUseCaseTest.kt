@@ -7,7 +7,6 @@ import org.junit.Before
 import org.junit.Test
 
 class LoginValidationUseCaseTest {
-
     private lateinit var useCase: LoginValidationUseCase
 
     @Before

@@ -18,7 +18,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Provides
     @Singleton
     fun provideMediaPlayerServiceConnection(
@@ -28,21 +27,22 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseMessaging(): FirebaseMessaging =
-        FirebaseMessaging.getInstance()
+    fun provideFirebaseMessaging(): FirebaseMessaging = FirebaseMessaging.getInstance()
 
     @Provides
     @Singleton
-    fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics =
-        FirebaseAnalytics.getInstance(context)
+    fun provideFirebaseAnalytics(
+        @ApplicationContext context: Context,
+    ): FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
     @Provides
     @Singleton
     fun provideTracker(
         firebaseAnalytics: FirebaseAnalytics,
         getTrackingEventNameUseCase: GetTrackingEventNameUseCase,
-    ): Tracker = DefaultTracker(
-        firebaseAnalytics,
-        getTrackingEventNameUseCase
-    )
+    ): Tracker =
+        DefaultTracker(
+            firebaseAnalytics,
+            getTrackingEventNameUseCase,
+        )
 }

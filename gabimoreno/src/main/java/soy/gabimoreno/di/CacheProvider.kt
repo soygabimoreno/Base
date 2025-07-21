@@ -7,12 +7,11 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import java.io.File
 
 object CacheProvider {
-
     @Volatile
     private var simpleCache: SimpleCache? = null
 
-    fun get(context: Context): SimpleCache {
-        return simpleCache ?: synchronized(this) {
+    fun get(context: Context): SimpleCache =
+        simpleCache ?: synchronized(this) {
             simpleCache ?: run {
                 val cacheDir = File(context.cacheDir, "media")
                 val databaseProvider = ExoDatabaseProvider(context)
@@ -21,7 +20,6 @@ object CacheProvider {
                 cache
             }
         }
-    }
 
     fun release() {
         simpleCache?.release()

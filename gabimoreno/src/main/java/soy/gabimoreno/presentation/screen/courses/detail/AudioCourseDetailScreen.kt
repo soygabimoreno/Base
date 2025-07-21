@@ -78,7 +78,7 @@ fun AudioCoursesDetailScreenRoot(
                     if (coursesDetailViewModel.state.audio != null) {
                         playerViewModel.playPauseAudio(
                             coursesDetailViewModel.state.audios,
-                            coursesDetailViewModel.state.audio as Episode
+                            coursesDetailViewModel.state.audio as Episode,
                         )
                     }
                 }
@@ -90,11 +90,15 @@ fun AudioCoursesDetailScreenRoot(
         onAction = { action ->
             when (action) {
                 is AudioCourseDetailAction.OnBackClicked -> onBackClicked()
-                is AudioCourseDetailAction.OnAddToPlaylistClicked -> onAddToPlaylistClicked(action.audioCourseId)
+                is AudioCourseDetailAction.OnAddToPlaylistClicked ->
+                    onAddToPlaylistClicked(
+                        action.audioCourseId,
+                    )
+
                 else -> Unit
             }
             coursesDetailViewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -105,73 +109,81 @@ fun AudioCourseDetailScreen(
 ) {
     val uriHandler = LocalUriHandler.current
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize(),
     ) {
         if (state.audioCourse != null && !state.isLoading) {
             Box(
                 modifier = Modifier,
-                contentAlignment = Alignment.TopStart
+                contentAlignment = Alignment.TopStart,
             ) {
                 AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(state.audioCourse.thumbnailUrl)
-                        .crossfade(true)
-                        .diskCachePolicy(CachePolicy.ENABLED)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .build(),
+                    model =
+                        ImageRequest
+                            .Builder(LocalContext.current)
+                            .data(state.audioCourse.thumbnailUrl)
+                            .crossfade(true)
+                            .diskCachePolicy(CachePolicy.ENABLED)
+                            .memoryCachePolicy(CachePolicy.ENABLED)
+                            .build(),
                     contentDescription = stringResource(R.string.course_thumbnail),
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
                     error = painterResource(R.drawable.ic_audiocourses_header),
                     placeholder = painterResource(R.drawable.ic_audiocourses_header),
                 )
                 Box(
-                    modifier = Modifier
-                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
-                        .clip(CircleShape)
-                        .background(PurpleDark.copy(alpha = 0.8f))
+                    modifier =
+                        Modifier
+                            .windowInsetsPadding(
+                                WindowInsets.safeDrawing.only(WindowInsetsSides.Top),
+                            ).clip(CircleShape)
+                            .background(PurpleDark.copy(alpha = 0.8f)),
                 ) {
                     BackButton(
                         modifier = Modifier.size(Spacing.s64),
                         tint = Orange,
-                        onClick = { onAction(AudioCourseDetailAction.OnBackClicked) }
+                        onClick = { onAction(AudioCourseDetailAction.OnBackClicked) },
                     )
                 }
             }
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .background(Pink)
-                    .padding(horizontal = Spacing.s16, vertical = Spacing.s8)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min)
+                        .background(Pink)
+                        .padding(horizontal = Spacing.s16, vertical = Spacing.s8),
             ) {
                 Text(
                     state.audioCourse.title,
                     color = White,
                     style = MaterialTheme.typography.subtitle1,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
                 Text(
                     state.audioCourse.excerpt,
                     color = White,
                     style = MaterialTheme.typography.body2,
-                    fontWeight = FontWeight.W300
+                    fontWeight = FontWeight.W300,
                 )
             }
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(White)
-                    .padding(horizontal = Spacing.s8)
-                    .border(1.dp, Black.copy(alpha = 0.2f)),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(White)
+                        .padding(horizontal = Spacing.s8)
+                        .border(1.dp, Black.copy(alpha = 0.2f)),
                 verticalArrangement = Arrangement.spacedBy(Spacing.s16),
             ) {
                 items(
                     count = state.audioCourse.audios.size,
-                    key = { state.audioCourse.audios[it].id }
+                    key = { state.audioCourse.audios[it].id },
                 ) { index ->
                     ItemAudioCourse(
                         audioCourseItem = state.audioCourse.audios[index],
@@ -179,55 +191,57 @@ fun AudioCourseDetailScreen(
                         onItemClicked = {
                             onAction(
                                 AudioCourseDetailAction.OnAudioCourseItemClicked(
-                                    state.audioCourse.audios[index]
-                                )
+                                    state.audioCourse.audios[index],
+                                ),
                             )
                         },
                         onItemListenedToggled = {
                             onAction(
                                 AudioCourseDetailAction.OnAudioItemListenedToggled(
-                                    state.audioCourse.audios[index]
-                                )
+                                    state.audioCourse.audios[index],
+                                ),
                             )
                         },
                         onAddToPlaylistClicked = {
                             onAction(
                                 AudioCourseDetailAction.OnAddToPlaylistClicked(
-                                    state.audioCourse.audios[index].id
-                                )
+                                    state.audioCourse.audios[index].id,
+                                ),
                             )
                         },
-                        onFavoriteStatusChanged ={
+                        onFavoriteStatusChanged = {
                             onAction(
                                 AudioCourseDetailAction.OnFavoriteStatusChanged(
-                                    state.audioCourse.audios[index]
-                                )
+                                    state.audioCourse.audios[index],
+                                ),
                             )
-                        }
+                        },
                     )
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(Black.copy(alpha = 0.2f))
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(1.dp)
+                                .background(Black.copy(alpha = 0.2f)),
                     )
                 }
                 item {
                     if (state.audioCourse.audios.size < FREE_AUDIO_SIZE) {
                         Spacer(modifier = Modifier.padding(bottom = Spacing.s32))
                         Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(IntrinsicSize.Min)
-                                .background(Orange),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .height(IntrinsicSize.Min)
+                                    .background(Orange),
                             onClick = {
                                 uriHandler.openUri(state.audioCourse.url)
-                            }
+                            },
                         ) {
                             Text(
                                 stringResource(R.string.course_link),
                                 fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
                             )
                         }
                     }
@@ -236,11 +250,12 @@ fun AudioCourseDetailScreen(
             }
         } else {
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.Center)
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center),
                 )
             }
         }
@@ -252,25 +267,27 @@ fun AudioCourseDetailScreen(
 private fun AudioCourseDetailPreview() {
     GabiMorenoTheme {
         AudioCourseDetailScreen(
-            state = AudioCourseDetailState(
-                audioCourse = AudioCourse(
-                    id = "1-1",
-                    url = "",
-                    videoUrl = "",
-                    thumbnailUrl = "",
-                    pubDateMillis = 0,
-                    title = "Audiocurso de CI/CD",
-                    audioLengthInSeconds = 2700,
-                    excerpt = "Domina con este curso CI/CD para AHORRAR TIEMPO Y EVITAR ERRORES en tu dia a  dia como programador",
-                    category = Category.AUDIOCOURSES,
-                    description = "excerpt",
-                    saga = Saga(author = "This is publisher", title = "This is saga title"),
-                    isPurchased = false,
-                    audios = emptyList()
+            state =
+                AudioCourseDetailState(
+                    audioCourse =
+                        AudioCourse(
+                            id = "1-1",
+                            url = "",
+                            videoUrl = "",
+                            thumbnailUrl = "",
+                            pubDateMillis = 0,
+                            title = "Audiocurso de CI/CD",
+                            audioLengthInSeconds = 2700,
+                            excerpt = "Domina con este curso CI/CD para AHORRAR TIEMPO",
+                            category = Category.AUDIOCOURSES,
+                            description = "excerpt",
+                            saga = Saga(author = "This is publisher", title = "This is saga title"),
+                            isPurchased = false,
+                            audios = emptyList(),
+                        ),
+                    isLoading = false,
                 ),
-                isLoading = false
-            ),
-            onAction = {}
+            onAction = {},
         )
     }
 }

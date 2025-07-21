@@ -7,31 +7,30 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
-import soy.gabimoreno.data.local.GabiMorenoDatabase
+import soy.gabimoreno.data.local.ApplicationDatabase
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.di.IO
 
 @Module
 @InstallIn(SingletonComponent::class)
 object LocalDataModule {
-
     @Provides
-    fun gabiMorenoDatabaseProvider(application: Application): GabiMorenoDatabase =
-        Room.databaseBuilder(
-            application,
-            GabiMorenoDatabase::class.java,
-            "gabimoreno-db",
-        )
-            .fallbackToDestructiveMigration(true)
+    fun gabiMorenoDatabaseProvider(application: Application): ApplicationDatabase =
+        Room
+            .databaseBuilder(
+                application,
+                ApplicationDatabase::class.java,
+                "gabimoreno-db",
+            ).fallbackToDestructiveMigration(true)
             .build()
 
     @Provides
     fun provideLocalPremiumAudioDataSource(
-        gabiMorenoDatabase: GabiMorenoDatabase,
+        gabiMorenoDatabase: ApplicationDatabase,
         @IO dispatcher: CoroutineDispatcher,
     ): LocalPremiumAudiosDataSource =
         LocalPremiumAudiosDataSource(
             gabiMorenoDatabase,
-            dispatcher
+            dispatcher,
         )
 }

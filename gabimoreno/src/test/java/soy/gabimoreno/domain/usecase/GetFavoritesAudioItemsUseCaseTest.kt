@@ -13,7 +13,6 @@ import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildAudioCourseItem
 
 class GetFavoritesAudioItemsUseCaseTest {
-
     private val repository = mockk<AudioCoursesRepository>()
     private lateinit var useCase: GetFavoritesAudioItemsUseCase
 
@@ -25,10 +24,11 @@ class GetFavoritesAudioItemsUseCaseTest {
     @Test
     fun `GIVEN repository returns Right WHEN invoked THEN returns list of AudioCourseItem`() =
         runTest {
-            val items = listOf(
-                buildAudioCourseItem(markedAsFavorite = true),
-                buildAudioCourseItem(markedAsFavorite = true)
-            )
+            val items =
+                listOf(
+                    buildAudioCourseItem(markedAsFavorite = true),
+                    buildAudioCourseItem(markedAsFavorite = true),
+                )
             coEvery { repository.getAllFavoriteAudioCoursesItems() } returns right(items)
 
             val result = useCase()
@@ -38,12 +38,13 @@ class GetFavoritesAudioItemsUseCaseTest {
         }
 
     @Test
-    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() = runTest {
-        val error = Throwable("Database failure")
-        coEvery { repository.getAllFavoriteAudioCoursesItems() } returns left(error)
+    fun `GIVEN repository returns Left WHEN invoked THEN returns error`() =
+        runTest {
+            val error = Throwable("Database failure")
+            coEvery { repository.getAllFavoriteAudioCoursesItems() } returns left(error)
 
-        val result = useCase()
+            val result = useCase()
 
-        result shouldBeEqualTo left(error)
-    }
+            result shouldBeEqualTo left(error)
+        }
 }

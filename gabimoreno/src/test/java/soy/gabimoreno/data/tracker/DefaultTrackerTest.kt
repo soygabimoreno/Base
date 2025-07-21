@@ -11,17 +11,17 @@ import soy.gabimoreno.domain.usecase.GetTrackingEventNameUseCase
 
 @RunWith(RobolectricTestRunner::class)
 class DefaultTrackerTest {
-
     private val firebaseAnalytics: FirebaseAnalytics = relaxedMockk()
     private val getTrackingEventNameUseCase: GetTrackingEventNameUseCase = relaxedMockk()
     private lateinit var defaultTracker: DefaultTracker
 
     @Before
     fun setUp() {
-        defaultTracker = DefaultTracker(
-            firebaseAnalytics,
-            getTrackingEventNameUseCase
-        )
+        defaultTracker =
+            DefaultTracker(
+                firebaseAnalytics,
+                getTrackingEventNameUseCase,
+            )
     }
 
     @Test

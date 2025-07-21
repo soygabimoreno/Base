@@ -39,8 +39,9 @@ fun WebViewScreen(
 
     Surface {
         Column(
-            modifier = Modifier
-                .statusBarsPadding()
+            modifier =
+                Modifier
+                    .statusBarsPadding(),
         ) {
             Row {
                 BackButton {
@@ -53,35 +54,38 @@ fun WebViewScreen(
                 }
             }
             Row(
-                modifier = Modifier.padding(top = Spacing.s8)
+                modifier = Modifier.padding(top = Spacing.s8),
             ) {
                 AndroidView(
                     factory = {
                         WebView(it).apply {
-                            layoutParams = ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT
-                            )
-                            webViewClient = object : WebViewClient() {
-                                override fun onPageStarted(
-                                    webView: WebView,
-                                    url: String?,
-                                    favicon: Bitmap?,
-                                ) {
-                                    url?.let {
-                                        webViewViewModel.onPageStarted(url)
+                            layoutParams =
+                                ViewGroup.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                )
+                            webViewClient =
+                                object : WebViewClient() {
+                                    override fun onPageStarted(
+                                        webView: WebView,
+                                        url: String?,
+                                        favicon: Bitmap?,
+                                    ) {
+                                        url?.let {
+                                            webViewViewModel.onPageStarted(url)
+                                        }
+                                        webViewBackEnabled = webView.canGoBack()
                                     }
-                                    webViewBackEnabled = webView.canGoBack()
                                 }
-                            }
 
                             settings.javaScriptEnabled = true
                             loadUrl(url)
                             webView = this
                         }
-                    }, update = {
+                    },
+                    update = {
                         webView = it
-                    }
+                    },
                 )
             }
         }

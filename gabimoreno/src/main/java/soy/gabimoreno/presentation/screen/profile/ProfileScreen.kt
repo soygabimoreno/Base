@@ -52,13 +52,14 @@ import soy.gabimoreno.presentation.ui.dialog.CustomDialog
 @Composable
 fun ProfileScreenRoot(
     onPlaylistClicked: () -> Unit,
-    onToggleBottomSheet: () -> Unit
+    onToggleBottomSheet: () -> Unit,
 ) {
     val context = LocalContext.current
     val profileViewModel = ViewModelProvider.profileViewModel
     LaunchedEffect(Unit) {
         launch {
-            context.getEmail()
+            context
+                .getEmail()
                 .distinctUntilChanged()
                 .collect { email ->
                     profileViewModel.onAction(ProfileAction.OnEmailChanged(email))
@@ -72,10 +73,12 @@ fun ProfileScreenRoot(
                     }
 
                     is ProfileEvent.ResetSuccess -> {
-                        val message = when (event.type) {
-                            TypeDialog.PREMIUM -> R.string.profile_reset_success_premium
-                            TypeDialog.AUDIOCOURSES -> R.string.profile_reset_success_audiocurses
-                        }
+                        val message =
+                            when (event.type) {
+                                TypeDialog.PREMIUM -> R.string.profile_reset_success_premium
+                                TypeDialog.AUDIOCOURSES ->
+                                    R.string.profile_reset_success_audiocurses
+                            }
                         context.toast(context.getString(message))
                     }
                 }
@@ -92,7 +95,7 @@ fun ProfileScreenRoot(
                 else -> Unit
             }
             profileViewModel.onAction(action)
-        }
+        },
     )
 }
 
@@ -102,40 +105,44 @@ fun ProfileScreen(
     onAction: (ProfileAction) -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier =
+            Modifier
+                .fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
-                .padding(Spacing.s16),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+                    .padding(Spacing.s16),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 painter = painterResource(R.drawable.ic_stat_name),
                 contentDescription = stringResource(R.string.app_name),
                 contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .width(120.dp)
+                modifier =
+                    Modifier
+                        .width(120.dp),
             )
             Spacer(modifier = Modifier.padding(vertical = Spacing.s32))
             if (state.email.isBlank()) {
                 Text(
                     stringResource(R.string.profile_no_session),
                     modifier = Modifier.fillMaxWidth(),
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
             } else {
-                val annotatedLoginString = buildAnnotatedString {
-                    append(stringResource(R.string.profile_info_email))
-                    append(" ")
-                    withStyle(
-                        SpanStyle(color = Orange, fontWeight = FontWeight.Bold)
-                    ) {
-                        append(stringResource(R.string.premium_email))
+                val annotatedLoginString =
+                    buildAnnotatedString {
+                        append(stringResource(R.string.profile_info_email))
+                        append(" ")
+                        withStyle(
+                            SpanStyle(color = Orange, fontWeight = FontWeight.Bold),
+                        ) {
+                            append(stringResource(R.string.premium_email))
+                        }
                     }
-                }
 
                 Text(annotatedLoginString, modifier = Modifier.fillMaxWidth())
             }
@@ -151,40 +158,45 @@ fun ProfileScreen(
                     text = stringResource(R.string.profile_reset_premium),
                     onItemClicked = {
                         onAction(ProfileAction.OnResetPremiumAudioClicked)
-                    }
+                    },
                 )
             }
             ProfileItem(
                 text = stringResource(R.string.profile_reset_audiocourses),
                 onItemClicked = {
                     onAction(ProfileAction.OnResetAudioCoursesClicked)
-                }
+                },
             )
             Box(modifier = Modifier.weight(0.10f))
             FlatIconButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(Spacing.s48)
-                    .background(Orange)
-                    .padding(horizontal = Spacing.s16),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(Spacing.s48)
+                        .background(Orange)
+                        .padding(horizontal = Spacing.s16),
                 text = stringResource(R.string.playlists_title),
                 icon = Icons.AutoMirrored.Filled.PlaylistAdd,
-                onItemClicked = { onAction(ProfileAction.OnPlaylistClicked) }
+                onItemClicked = { onAction(ProfileAction.OnPlaylistClicked) },
             )
             Box(modifier = Modifier.weight(0.50f))
             PrimaryButton(
-                text = stringResource(
-                    if (state.email.isBlank())
-                        R.string.login_title else R.string.logout_title
-                ),
+                text =
+                    stringResource(
+                        if (state.email.isBlank()) {
+                            R.string.login_title
+                        } else {
+                            R.string.logout_title
+                        },
+                    ),
                 height = Spacing.s48,
                 onClick = { onAction(ProfileAction.OnToggleBottomSheet) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
             Box(modifier = Modifier.weight(0.25f))
         }
     }
-    if (state.showResetDialog)
+    if (state.showResetDialog) {
         CustomDialog(
             title = stringResource(R.string.profile_reset_dialog_title),
             text = stringResource(R.string.profile_reset_dialog_text),
@@ -192,8 +204,9 @@ fun ProfileScreen(
             dismissText = stringResource(R.string.close),
             onConfirm = { onAction(ProfileAction.OnConfirmDialog) },
             onDismiss = { onAction(ProfileAction.OnDismissDialog) },
-            typeDialog = soy.gabimoreno.presentation.ui.dialog.TypeDialog.CONFIRMATION
+            typeDialog = soy.gabimoreno.presentation.ui.dialog.TypeDialog.CONFIRMATION,
         )
+    }
 }
 
 @Composable
@@ -204,15 +217,16 @@ private fun ProfileItem(
     onItemClicked: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = Spacing.s16),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(top = Spacing.s16),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(text)
         IconButton(
-            onClick = { onItemClicked() }
+            onClick = { onItemClicked() },
         ) {
             Icon(
                 imageVector = icon,
@@ -227,9 +241,10 @@ private fun ProfileItem(
 @Composable
 private fun OrangeSeparator() {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Orange)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Orange),
     )
 }
