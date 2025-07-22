@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.theme.Orange
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
@@ -82,21 +83,21 @@ fun CustomDialog(
                                 style = MaterialTheme.typography.h6,
                                 color = White,
                             )
-                            Spacer(modifier = Modifier.weight(0.3f))
+                            Spacer(modifier = Modifier.weight(Percent.THIRTY))
                             Text(
                                 text,
                                 style = MaterialTheme.typography.subtitle2,
                                 color = White,
                             )
-                            Spacer(modifier = Modifier.weight(0.7f))
+                            Spacer(modifier = Modifier.weight(Percent.SEVENTY))
                         } else {
-                            Spacer(modifier = Modifier.weight(0.3f))
+                            Spacer(modifier = Modifier.weight(Percent.THIRTY))
                             Text(
                                 title.uppercase(),
                                 style = MaterialTheme.typography.h6,
                                 color = White,
                             )
-                            Spacer(modifier = Modifier.weight(0.3f))
+                            Spacer(modifier = Modifier.weight(Percent.THIRTY))
                         }
                         when (typeDialog) {
                             TypeDialog.CONFIRMATION, TypeDialog.CONFIRMATION_ERROR -> {
@@ -107,14 +108,14 @@ fun CustomDialog(
                                     SecondaryButton(
                                         text = dismissText,
                                         height = Spacing.s48,
-                                        modifier = Modifier.weight(0.45f),
+                                        modifier = Modifier.weight(Percent.FORTY_FIVE),
                                         onClick = onDismiss,
                                     )
-                                    Spacer(modifier = Modifier.weight(0.06f))
+                                    Spacer(modifier = Modifier.weight(Percent.SIX))
                                     PrimaryButton(
                                         text = confirmText,
                                         height = Spacing.s48,
-                                        modifier = Modifier.weight(0.45f),
+                                        modifier = Modifier.weight(Percent.FORTY_FIVE),
                                         onClick = onConfirm,
                                     )
                                 }
@@ -125,7 +126,7 @@ fun CustomDialog(
                                     modifier =
                                         Modifier
                                             .fillMaxWidth()
-                                            .padding(top = 8.dp),
+                                            .padding(top = Spacing.s8),
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Checkbox(
@@ -150,14 +151,14 @@ fun CustomDialog(
                                     SecondaryButton(
                                         text = dismissText,
                                         height = Spacing.s48,
-                                        modifier = Modifier.weight(0.45f),
+                                        modifier = Modifier.weight(Percent.FORTY_FIVE),
                                         onClick = onDismiss,
                                     )
-                                    Spacer(modifier = Modifier.weight(0.06f))
+                                    Spacer(modifier = Modifier.weight(Percent.SIX))
                                     PrimaryButton(
                                         text = confirmText,
                                         height = Spacing.s48,
-                                        modifier = Modifier.weight(0.45f),
+                                        modifier = Modifier.weight(Percent.FORTY_FIVE),
                                         onClick = onConfirm,
                                     )
                                 }

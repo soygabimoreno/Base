@@ -168,7 +168,6 @@ class MainViewModel
         }
     }
 
-private const val DEVICE_NAME = "BIKE"
 private const val DEVICE_MAC = "C8:C9:A3:E6:77:02"
 private const val DEVICE_UUID_SERVICE = "19b10000-e8f2-537e-4f6c-d104768a1214"
 private const val DEVICE_UUID_READ = "19b10002-e8f2-537e-4f6c-d104768a1214"

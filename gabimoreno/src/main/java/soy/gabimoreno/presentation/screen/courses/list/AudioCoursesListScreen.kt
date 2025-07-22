@@ -39,6 +39,7 @@ import soy.gabimoreno.R
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.courses.list.view.ItemListCourse
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
@@ -110,7 +111,7 @@ private fun CoursesListScreenScreen(
                 style = MaterialTheme.typography.h5,
                 modifier =
                     Modifier
-                        .weight(0.8f),
+                        .weight(Percent.EIGHTY),
             )
             Icon(
                 imageVector = Icons.Default.LibraryMusic,

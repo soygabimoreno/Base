@@ -44,6 +44,7 @@ import soy.gabimoreno.framework.datastore.getEmail
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Orange
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.button.FlatIconButton
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
@@ -167,7 +168,7 @@ fun ProfileScreen(
                     onAction(ProfileAction.OnResetAudioCoursesClicked)
                 },
             )
-            Box(modifier = Modifier.weight(0.10f))
+            Box(modifier = Modifier.weight(Percent.TEN))
             FlatIconButton(
                 modifier =
                     Modifier
@@ -179,7 +180,7 @@ fun ProfileScreen(
                 icon = Icons.AutoMirrored.Filled.PlaylistAdd,
                 onItemClicked = { onAction(ProfileAction.OnPlaylistClicked) },
             )
-            Box(modifier = Modifier.weight(0.50f))
+            Box(modifier = Modifier.weight(Percent.FIFTY))
             PrimaryButton(
                 text =
                     stringResource(
@@ -193,7 +194,7 @@ fun ProfileScreen(
                 onClick = { onAction(ProfileAction.OnToggleBottomSheet) },
                 modifier = Modifier.fillMaxWidth(),
             )
-            Box(modifier = Modifier.weight(0.25f))
+            Box(modifier = Modifier.weight(Percent.TWENTY_FIVE))
         }
     }
     if (state.showResetDialog) {
@@ -244,7 +245,7 @@ private fun OrangeSeparator() {
         modifier =
             Modifier
                 .fillMaxWidth()
-                .height(1.dp)
+                .height(Spacing.s1)
                 .background(Orange),
     )
 }

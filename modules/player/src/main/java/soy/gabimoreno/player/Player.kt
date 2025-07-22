@@ -13,11 +13,11 @@ import com.google.android.exoplayer2.ui.StyledPlayerView
 class Player(
     private val context: Context,
 ) {
-    private var player: SimpleExoPlayer? = null
+    private var exoPlayer: SimpleExoPlayer? = null
     private var playing = false
     private lateinit var onStop: () -> Unit
 
-    fun getExoPlayer(): SimpleExoPlayer? = player
+    fun getExoPlayer(): SimpleExoPlayer? = exoPlayer
 
     fun init(
         exoplayerView: StyledPlayerView,
@@ -26,19 +26,19 @@ class Player(
     ) {
         this.onStop = onStop
         val trackSelector = DefaultTrackSelector(context)
-        player?.stop()
-        player?.release()
-        player =
+        exoPlayer?.stop()
+        exoPlayer?.release()
+        exoPlayer =
             SimpleExoPlayer
                 .Builder(context)
                 .setTrackSelector(trackSelector)
                 .build()
-        exoplayerView.player = player
+        exoplayerView.player = exoPlayer
 
         uriStrings.forEach {
-            player?.addMediaItem(MediaItem.fromUri(Uri.parse(it)))
+            exoPlayer?.addMediaItem(MediaItem.fromUri(Uri.parse(it)))
         }
-        player?.prepare()
+        exoPlayer?.prepare()
 
         val componentName = ComponentName(context, "Exo")
         val mediaSession =
@@ -64,17 +64,17 @@ class Player(
 
     fun play() {
         if (playing) {
-            player?.playWhenReady = true
+            exoPlayer?.playWhenReady = true
         }
     }
 
     fun pause() {
-        player?.playWhenReady = false
+        exoPlayer?.playWhenReady = false
     }
 
     fun stop() {
-        player?.stop()
-        player?.release()
+        exoPlayer?.stop()
+        exoPlayer?.release()
         onStop()
     }
 }

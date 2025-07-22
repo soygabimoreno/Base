@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import soy.gabimoreno.R
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
@@ -83,14 +84,14 @@ fun PlaylistDialog(
                 SecondaryButton(
                     text = stringResource(id = R.string.close),
                     height = Spacing.s48,
-                    modifier = Modifier.weight(0.45f),
+                    modifier = Modifier.weight(Percent.FORTY_FIVE),
                     onClick = onDismiss,
                 )
-                Spacer(modifier = Modifier.weight(0.06f))
+                Spacer(modifier = Modifier.weight(Percent.SIX))
                 PrimaryButton(
                     text = stringResource(id = R.string.playlists_create),
                     height = Spacing.s48,
-                    modifier = Modifier.weight(0.45f),
+                    modifier = Modifier.weight(Percent.FORTY_FIVE),
                     onClick = onConfirm,
                 )
             }

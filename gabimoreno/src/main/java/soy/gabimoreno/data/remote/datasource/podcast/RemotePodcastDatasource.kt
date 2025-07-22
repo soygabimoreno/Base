@@ -19,14 +19,14 @@ class RemotePodcastDatasource(
                 val channel = rssParser.getChannel(podcastUrl)
                 val episodes = channel.toDomain().episodes
 
-                val chunkSize = 15
+                val chunkSize = CHUNK_SIZE
                 val totalChunks = (episodes.size + chunkSize - 1) / chunkSize
 
                 for (chunkIndex in 0 until totalChunks) {
                     val fromIndex = chunkIndex * chunkSize
                     val toIndex = minOf(fromIndex + chunkSize, episodes.size)
                     emit(episodes.subList(0, toIndex))
-                    delay(500L)
+                    delay(DELAY_TIME_MILLIS)
                 }
             }
         }
@@ -37,3 +37,6 @@ class RemotePodcastDatasource(
             channel.toDomain()
         }
 }
+
+private const val CHUNK_SIZE = 15
+private const val DELAY_TIME_MILLIS = 500L

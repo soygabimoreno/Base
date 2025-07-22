@@ -54,13 +54,13 @@ class MediaPlayerServiceConnection
 
         fun rewind(seconds: Int = 10) {
             playbackState.value?.currentPosition?.let { currentPosition ->
-                transportControls.seekTo(currentPosition - seconds * 1000)
+                transportControls.seekTo(currentPosition - seconds * MILLIS_IN_SECOND)
             }
         }
 
         fun fastForward(seconds: Int = 10) {
             playbackState.value?.currentPosition?.let { currentPosition ->
-                transportControls.seekTo(currentPosition + seconds * 1000)
+                transportControls.seekTo(currentPosition + seconds * MILLIS_IN_SECOND)
             }
         }
 
@@ -139,3 +139,5 @@ class MediaPlayerServiceConnection
             }
         }
     }
+
+private const val MILLIS_IN_SECOND = 1_000

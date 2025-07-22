@@ -46,19 +46,44 @@ fun AnimatedIconButton(
     transitionTint: Color = Orange,
     onClick: () -> Unit,
 ) {
+    val animations =
+        rememberPulseAnimations(showAnimation, tint, transitionTint, contentDescription)
+
+    Box(contentAlignment = Alignment.Center) {
+        AnimatedCircleBorder(
+            modifier,
+            animations.animatedSize,
+            animations.animatedCircleColor,
+            animations.animatedAlpha,
+        )
+        PulsingIconButton(
+            imageVector = imageVector,
+            contentDescription = contentDescription,
+            padding = padding,
+            modifier = modifier,
+            scale = animations.animatedScale,
+            tint = animations.animatedTint,
+            onClick = onClick,
+        )
+    }
+}
+
+@Composable
+private fun rememberPulseAnimations(
+    showAnimation: Boolean,
+    tint: Color,
+    transitionTint: Color,
+    label: String,
+): PulseAnimations {
     val baseSize = 32.dp
-    val infiniteTransition = rememberInfiniteTransition(label = "${contentDescription}Pulse")
+    val infiniteTransition = rememberInfiniteTransition(label = "${label}Pulse")
 
     val animatedScale by infiniteTransition.animateFloat(
         initialValue = 1.1f,
         targetValue = if (showAnimation) 1.4f else 1.1f,
         animationSpec =
             infiniteRepeatable(
-                animation =
-                    tween(
-                        durationMillis = ANIMATION_DURATION,
-                        easing = FastOutSlowInEasing,
-                    ),
+                animation = tween(ANIMATION_DURATION, easing = FastOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse,
             ),
         label = "scaleAnim",
@@ -69,11 +94,7 @@ fun AnimatedIconButton(
         targetValue = if (showAnimation) 1f else 0.05f,
         animationSpec =
             infiniteRepeatable(
-                animation =
-                    tween(
-                        durationMillis = ANIMATION_DURATION_COLOR_CIRCLE,
-                        easing = FastOutSlowInEasing,
-                    ),
+                animation = tween(ANIMATION_DURATION_COLOR_CIRCLE, easing = FastOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse,
             ),
         label = "circleAlpha",
@@ -85,11 +106,7 @@ fun AnimatedIconButton(
         typeConverter = Dp.VectorConverter,
         animationSpec =
             infiniteRepeatable(
-                animation =
-                    tween(
-                        durationMillis = ANIMATION_DURATION,
-                        easing = FastOutLinearInEasing,
-                    ),
+                animation = tween(ANIMATION_DURATION, easing = FastOutLinearInEasing),
                 repeatMode = RepeatMode.Reverse,
             ),
         label = "pulsingSize",
@@ -117,34 +134,64 @@ fun AnimatedIconButton(
         label = "circleColor",
     )
 
-    Box(contentAlignment = Alignment.Center) {
-        Box(
-            modifier =
-                modifier
-                    .size(animatedSize)
-                    .clip(CircleShape)
-                    .border(
-                        width = 2.dp,
-                        color = animatedCircleColor.copy(alpha = animatedAlpha),
-                        shape = CircleShape,
-                    ),
-        )
-        IconButton(
-            imageVector = imageVector,
-            contentDescription = contentDescription,
-            padding = padding,
-            modifier =
-                modifier
-                    .padding(end = Spacing.s4)
-                    .graphicsLayer {
-                        scaleX = animatedScale
-                        scaleY = animatedScale
-                    },
-            tint = animatedTint,
-            onClick = onClick,
-        )
-    }
+    return PulseAnimations(
+        animatedScale,
+        animatedAlpha,
+        animatedSize,
+        animatedTint,
+        animatedCircleColor,
+    )
 }
+
+@Composable
+private fun AnimatedCircleBorder(
+    modifier: Modifier,
+    size: Dp,
+    color: Color,
+    alpha: Float,
+) {
+    Box(
+        modifier =
+            modifier
+                .size(size)
+                .clip(CircleShape)
+                .border(2.dp, color.copy(alpha = alpha), CircleShape),
+    )
+}
+
+@Composable
+private fun PulsingIconButton(
+    imageVector: ImageVector,
+    contentDescription: String,
+    padding: Dp,
+    modifier: Modifier,
+    scale: Float,
+    tint: Color,
+    onClick: () -> Unit,
+) {
+    IconButton(
+        imageVector = imageVector,
+        contentDescription = contentDescription,
+        padding = padding,
+        modifier =
+            modifier
+                .padding(end = Spacing.s4)
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                },
+        tint = tint,
+        onClick = onClick,
+    )
+}
+
+private data class PulseAnimations(
+    val animatedScale: Float,
+    val animatedAlpha: Float,
+    val animatedSize: Dp,
+    val animatedTint: Color,
+    val animatedCircleColor: Color,
+)
 
 private const val ANIMATION_DURATION = 900
 private const val ANIMATION_DURATION_COLOR_CIRCLE = 700

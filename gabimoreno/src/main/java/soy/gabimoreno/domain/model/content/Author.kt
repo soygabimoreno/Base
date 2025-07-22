@@ -4,7 +4,7 @@ enum class Author(
     val id: Int,
     val displayName: String,
 ) {
-    GABI_MORENO(1001, "Gabi Moreno"),
+    GABI_MORENO(DEFAULT_AUTHOR_ID, DEFAULT_AUTHOR_DISPLAY_NAME),
 }
 
 fun findAuthorDisplayNameById(id: Int): String? {
@@ -15,3 +15,6 @@ fun findAuthorDisplayNameById(id: Int): String? {
     }
     return null
 }
+
+private const val DEFAULT_AUTHOR_DISPLAY_NAME = "Gabi Moreno"
+private const val DEFAULT_AUTHOR_ID = 1001

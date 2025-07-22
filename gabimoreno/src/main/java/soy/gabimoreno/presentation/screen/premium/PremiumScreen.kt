@@ -83,6 +83,7 @@ import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.theme.Orange
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.PinkBright
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
@@ -169,7 +170,7 @@ fun PremiumScreen(
                 style = MaterialTheme.typography.h5,
                 modifier =
                     Modifier
-                        .weight(0.8f),
+                        .weight(Percent.EIGHTY),
             )
             Icon(
                 imageVector = Icons.Default.LibraryMusic,
@@ -263,13 +264,13 @@ fun NonPremiumContent() {
             text = annotatedLoginString,
             style = MaterialTheme.typography.h5,
         )
-        Box(modifier = Modifier.weight(0.60f))
+        Box(modifier = Modifier.weight(Percent.SIXTY))
         Text(
             stringResource(R.string.non_premium_text),
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Justify,
         )
-        Box(modifier = Modifier.weight(0.05f))
+        Box(modifier = Modifier.weight(Percent.FIVE))
         TextButton(
             onClick = {
                 uriHandler.openUri(URL_ANDROIDES_PREMIUM)
@@ -281,7 +282,7 @@ fun NonPremiumContent() {
                 textDecoration = TextDecoration.Underline,
             )
         }
-        Box(modifier = Modifier.weight(0.25f))
+        Box(modifier = Modifier.weight(Percent.TWENTY_FIVE))
     }
 }
 
@@ -354,12 +355,22 @@ fun PremiumItem(
     onFavoriteStatusChanged: (premiumAudio: PremiumAudio) -> Unit,
 ) {
     val iconColor by animateColorAsState(
-        targetValue = if (premiumAudio.hasBeenListened) Orange else Black.copy(alpha = 0.2f),
+        targetValue =
+            if (premiumAudio.hasBeenListened) {
+                Orange
+            } else {
+                Black.copy(alpha = Percent.TWENTY)
+            },
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
         label = "checkIconColorAnimation",
     )
     val iconFavoriteColor by animateColorAsState(
-        targetValue = if (premiumAudio.markedAsFavorite) PinkBright else White.copy(alpha = 0.2f),
+        targetValue =
+            if (premiumAudio.markedAsFavorite) {
+                PinkBright
+            } else {
+                White.copy(alpha = Percent.TWENTY)
+            },
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
         label = "favoriteIconColorAnimation",
     )
@@ -389,7 +400,7 @@ fun PremiumItem(
         Icon(
             imageVector = premiumAudio.category.icon,
             contentDescription = premiumAudio.category.title,
-            modifier = Modifier.weight(0.08f),
+            modifier = Modifier.weight(Percent.EIGHT),
         )
         Spacer(modifier = Modifier.width(Spacing.s16))
         Text(
@@ -399,10 +410,10 @@ fun PremiumItem(
             modifier =
                 Modifier
                     .padding(end = Spacing.s16)
-                    .weight(0.65f),
+                    .weight(Percent.SIXTY_FIVE),
         )
         IconButton(
-            modifier = Modifier.weight(0.10f),
+            modifier = Modifier.weight(Percent.EIGHT),
             onClick = { onListenedToggled(premiumAudio) },
         ) {
             Icon(
@@ -416,7 +427,7 @@ fun PremiumItem(
         }
         Spacer(modifier = Modifier.width(Spacing.s16))
         IconButton(
-            modifier = Modifier.weight(0.08f),
+            modifier = Modifier.weight(Percent.EIGHT),
             onClick = { onFavoriteStatusChanged(premiumAudio) },
         ) {
             Icon(
@@ -435,7 +446,7 @@ fun PremiumItem(
         }
         Spacer(modifier = Modifier.width(Spacing.s16))
         IconButton(
-            modifier = Modifier.weight(0.08f),
+            modifier = Modifier.weight(Percent.EIGHT),
             onClick = { onAddToPlaylistClicked(premiumAudio.id) },
         ) {
             Icon(
@@ -457,7 +468,7 @@ private fun ShowLoading(showLoading: Boolean) {
             contentAlignment = Alignment.Center,
             modifier =
                 Modifier
-                    .background(brush = SolidColor(Black), alpha = 0.2f)
+                    .background(brush = SolidColor(Black), alpha = Percent.TWENTY)
                     .fillMaxSize()
                     .clickable(false) {},
         ) {
@@ -501,6 +512,6 @@ private fun PremiumItemPreview() {
     }
 }
 
-private const val REFRESH_DELAY = 1_500L
 private const val CHANGE_COLOR_ANIMATION_DURATION = 300
 private const val URL_ANDROIDES_PREMIUM = "https://gabimoreno.soy/los-androides-premium"
+private const val REFRESH_DELAY = 1_500L

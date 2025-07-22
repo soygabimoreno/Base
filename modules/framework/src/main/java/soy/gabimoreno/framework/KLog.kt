@@ -1,3 +1,5 @@
+@file:Suppress("UtilityClassWithPublicConstructor")
+
 package soy.gabimoreno.framework
 
 import android.util.Log

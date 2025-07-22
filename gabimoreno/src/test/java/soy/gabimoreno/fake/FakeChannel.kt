@@ -17,7 +17,7 @@ fun buildChannel(url: String): Channel =
         image =
             Image(
                 "title",
-                "url",
+                url,
                 "link",
                 "description",
             ),

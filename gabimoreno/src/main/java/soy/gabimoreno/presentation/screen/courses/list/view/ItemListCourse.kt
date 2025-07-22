@@ -37,6 +37,7 @@ import soy.gabimoreno.R
 import soy.gabimoreno.core.removeHtmlTags
 import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.presentation.theme.Orange
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.PurpleDark
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
@@ -125,7 +126,7 @@ fun ItemListCourse(
                     Modifier
                         .padding(Spacing.s4)
                         .size(40.dp)
-                        .rotate(90f),
+                        .rotate(Percent.NINETY),
             )
         }
     }
