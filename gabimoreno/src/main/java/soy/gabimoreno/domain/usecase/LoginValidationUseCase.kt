@@ -27,4 +27,6 @@ class LoginValidationUseCase
         }
     }
 
-private fun String.isAValidPassword(): Boolean = length >= 4
+private fun String.isAValidPassword(): Boolean = length >= MINIMAL_PASSWORD_LENGTH
+
+private const val MINIMAL_PASSWORD_LENGTH = 4

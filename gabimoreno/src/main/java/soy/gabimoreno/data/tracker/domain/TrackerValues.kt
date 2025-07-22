@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package soy.gabimoreno.data.tracker.domain
 
 enum class PlayPause {

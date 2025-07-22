@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package soy.gabimoreno.data.remote.model
 
 import androidx.compose.material.icons.Icons

@@ -12,7 +12,9 @@ fun ByteArray?.toDecimal(): String {
             true,
         )
     println("toDecimal, hex: $hex")
-    println("toDecimal, toInt: ${parseInt(hex, 16)}")
+    println("toDecimal, toInt: ${parseInt(hex, RADIX)}")
 
-    return parseInt(hex, 16).toString()
+    return parseInt(hex, RADIX).toString()
 }
+
+private const val RADIX = 16

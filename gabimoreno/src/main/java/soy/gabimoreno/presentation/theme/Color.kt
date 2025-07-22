@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package soy.gabimoreno.presentation.theme
 
 import androidx.compose.ui.graphics.Color

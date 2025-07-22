@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 
@@ -19,7 +20,7 @@ fun LoadingPlaceholder() {
         spacing = Spacing.s16,
         modifier = Modifier.padding(horizontal = Spacing.s16),
     ) {
-        (1..10).map {
+        (FROM..TO).map {
             Column(
                 modifier =
                     Modifier
@@ -29,16 +30,21 @@ fun LoadingPlaceholder() {
                 Box(
                     Modifier
                         .clip(MaterialTheme.shapes.medium)
-                        .aspectRatio(1f)
-                        .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f)),
+                        .aspectRatio(Percent.ONE_HUNDRED)
+                        .background(MaterialTheme.colors.onBackground.copy(alpha = Percent.EIGHT)),
                 )
                 Box(
                     modifier =
                         Modifier
                             .padding(Spacing.s8)
-                            .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f)),
+                            .background(
+                                MaterialTheme.colors.onBackground.copy(alpha = Percent.EIGHT),
+                            ),
                 )
             }
         }
     }
 }
+
+private const val FROM = 1
+private const val TO = 10

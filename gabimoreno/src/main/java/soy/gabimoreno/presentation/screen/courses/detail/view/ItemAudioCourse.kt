@@ -37,6 +37,7 @@ import soy.gabimoreno.R
 import soy.gabimoreno.domain.model.content.AudioCourseItem
 import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.PinkBright
 import soy.gabimoreno.presentation.theme.PurpleDark
 import soy.gabimoreno.presentation.theme.PurpleLight
@@ -53,7 +54,12 @@ fun ItemAudioCourse(
     onFavoriteStatusChanged: (audioCourseItem: AudioCourseItem) -> Unit,
 ) {
     val iconColor by animateColorAsState(
-        targetValue = if (audioCourseItem.hasBeenListened) PurpleDark else Black.copy(alpha = 0.1f),
+        targetValue =
+            if (audioCourseItem.hasBeenListened) {
+                PurpleDark
+            } else {
+                Black.copy(alpha = Percent.TEN)
+            },
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
         label = "checkIconColorAnimation",
     )
@@ -63,7 +69,7 @@ fun ItemAudioCourse(
                 PinkBright
             } else {
                 Black.copy(
-                    alpha = 0.2f,
+                    alpha = Percent.TWENTY,
                 )
             },
         animationSpec = tween(durationMillis = CHANGE_COLOR_ANIMATION_DURATION),
@@ -82,14 +88,14 @@ fun ItemAudioCourse(
             modifier =
                 Modifier
                     .clickable { onItemClicked(audioCourseItem) }
-                    .weight(0.80f),
+                    .weight(Percent.EIGHTY),
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             Text(audioCourseItem.title, color = Black, fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.height(Spacing.s4))
             Text(
                 audioCourseTitle,
-                color = Black.copy(alpha = 0.70f),
+                color = Black.copy(alpha = Percent.SEVENTY),
                 fontWeight = FontWeight.Light,
             )
         }
@@ -100,7 +106,7 @@ fun ItemAudioCourse(
             Icon(
                 modifier =
                     Modifier
-                        .weight(0.10f)
+                        .weight(Percent.TEN)
                         .size(Spacing.s32),
                 imageVector = Icons.Default.Check,
                 contentDescription = stringResource(R.string.course_listened),
@@ -109,7 +115,7 @@ fun ItemAudioCourse(
         }
         Spacer(modifier = Modifier.width(Spacing.s8))
         IconButton(
-            modifier = Modifier.weight(0.10f),
+            modifier = Modifier.weight(Percent.TEN),
             onClick = { onFavoriteStatusChanged(audioCourseItem) },
         ) {
             Icon(
@@ -128,7 +134,7 @@ fun ItemAudioCourse(
         }
         Spacer(modifier = Modifier.width(Spacing.s8))
         IconButton(
-            modifier = Modifier.weight(0.10f),
+            modifier = Modifier.weight(Percent.TEN),
             onClick = { onAddToPlaylistClicked(audioCourseItem.id) },
         ) {
             Icon(
@@ -155,7 +161,7 @@ fun ItemAudioCoursePreview() {
                 Modifier
                     .fillMaxSize()
                     .background(White)
-                    .border(1.dp, Gray),
+                    .border(Spacing.s1, Gray),
             verticalArrangement = Arrangement.Center,
         ) {
             ItemAudioCourse(

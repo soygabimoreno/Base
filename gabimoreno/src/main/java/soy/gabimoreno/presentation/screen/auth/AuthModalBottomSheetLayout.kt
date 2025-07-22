@@ -44,6 +44,7 @@ import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.premium.view.LoginOutlinedTextField
 import soy.gabimoreno.presentation.theme.Orange
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.PurpleDark
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
@@ -102,7 +103,7 @@ fun AuthModalBottomSheetLayout(
 
     ModalBottomSheetLayout(
         sheetState = modalBottomSheetState,
-        scrimColor = PurpleDark.copy(alpha = 0.5f),
+        scrimColor = PurpleDark.copy(alpha = Percent.FIFTY),
         sheetBackgroundColor = PurpleLight,
         sheetElevation = Spacing.s4,
         sheetShape =
@@ -125,7 +126,7 @@ fun AuthModalBottomSheetLayout(
                 Box(
                     modifier =
                         Modifier
-                            .fillMaxWidth(0.5f)
+                            .fillMaxWidth(Percent.FIFTY)
                             .height(Spacing.s4)
                             .clip(RoundedCornerShape(Spacing.s16))
                             .background(Orange),

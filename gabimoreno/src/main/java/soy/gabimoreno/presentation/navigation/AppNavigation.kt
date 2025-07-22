@@ -52,9 +52,6 @@ private fun NavGraphBuilder.podcastNav(
                 onItemClicked = { episodeId ->
                     navController.navigateToDetailFromPodcast(episodeId)
                 },
-                onDeepLinkReceived = { episodeId ->
-                    navController.navigateToDetailFromPodcast(episodeId)
-                },
                 onGoToWebClicked = { encodedUrl ->
                     navController.navigateToWebView(encodedUrl)
                 },

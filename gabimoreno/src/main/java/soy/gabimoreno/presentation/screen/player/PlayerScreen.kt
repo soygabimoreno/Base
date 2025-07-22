@@ -1,8 +1,11 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package soy.gabimoreno.presentation.screen.player
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -12,6 +15,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -33,6 +37,7 @@ import androidx.compose.material.ProgressIndicatorDefaults.IndicatorBackgroundOp
 import androidx.compose.material.Slider
 import androidx.compose.material.SliderDefaults
 import androidx.compose.material.Surface
+import androidx.compose.material.SwipeableState
 import androidx.compose.material.Text
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
@@ -69,6 +74,7 @@ import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.presentation.screen.ViewModelProvider
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.ArrowDownButton
 import soy.gabimoreno.presentation.ui.EmphasisText
@@ -112,105 +118,115 @@ fun PodcastPlayerBody(
 ) {
     val playerViewModel = ViewModelProvider.playerViewModel
     val swipeableState = rememberSwipeableState(0)
-    val endAnchor = LocalConfiguration.current.screenHeightDp * LocalDensity.current.density
-    val anchors =
-        mapOf(
-            0f to 0,
-            endAnchor to 1,
-        )
-
-    val backCallback =
-        remember {
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    playerViewModel.showPlayerFullScreen = false
-                }
-            }
-        }
-
-    val backgroundColor = MaterialTheme.colors.background
-    val gradientColor by remember {
-        mutableStateOf(backgroundColor)
-    }
-
-    val isPlaying = playerViewModel.podcastIsPlaying
-    val iconResId =
-        if (isPlaying) R.drawable.ic_baseline_pause_24 else R.drawable.ic_baseline_play_arrow_24
+    val anchors = rememberSwipeAnchors()
+    val backCallback = rememberBackCallback(playerViewModel)
 
     var sliderIsChanging by remember { mutableStateOf(false) }
-
     var localSliderValue by remember { mutableFloatStateOf(0f) }
-
     val sliderProgress =
         if (sliderIsChanging) localSliderValue else playerViewModel.currentAudioProgress
 
+    HandleSwipeDismiss(swipeableState) {
+        playerViewModel.showPlayerFullScreen = false
+    }
+
+    PodcastPlayerStatelessContent(
+        audio = audio,
+        gradientColor = MaterialTheme.colors.background,
+        yOffset = swipeableState.offset.value.roundToInt(),
+        playPauseIcon = playerViewModel.podcastIsPlaying.toIcon(),
+        playbackProgress = sliderProgress,
+        currentTime = playerViewModel.getCurrentPlaybackFormattedPosition(),
+        totalTime = playerViewModel.currentAudioFormattedDuration,
+        onRewind = { playerViewModel.onRewindClicked() },
+        onForward = { playerViewModel.onForwardClicked() },
+        onSkipToPrevious = { playerViewModel.onSkipToPrevious() },
+        onSkipToNext = { playerViewModel.onSkipToNext() },
+        onTooglePlayback = {
+            playerViewModel.onPlayPauseClickedFromPlayer(
+                audio,
+                playerViewModel.podcastIsPlaying.toPlayPause(),
+            )
+            playerViewModel.togglePlaybackState()
+        },
+        onSliderChange = {
+            localSliderValue = it
+            sliderIsChanging = true
+        },
+        onSliderChangeFinished = {
+            playerViewModel.onSliderChangeFinished(localSliderValue)
+            sliderIsChanging = false
+        },
+    ) { playerViewModel.showPlayerFullScreen = false }
+
+    HandleSideEffects(backDispatcher, backCallback, playerViewModel)
+}
+
+@Composable
+private fun rememberSwipeAnchors(): Map<Float, Int> {
+    val endAnchor = LocalConfiguration.current.screenHeightDp * LocalDensity.current.density
+    return remember(endAnchor) {
+        mapOf(0f to 0, endAnchor to 1)
+    }
+}
+
+@Composable
+private fun rememberBackCallback(viewModel: PlayerViewModel): OnBackPressedCallback =
+    remember {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.showPlayerFullScreen = false
+            }
+        }
+    }
+
+@Composable
+private fun HandleSwipeDismiss(
+    swipeableState: SwipeableState<Int>,
+    onDismiss: () -> Unit,
+) {
     Box(
         modifier =
             Modifier
                 .fillMaxSize()
                 .swipeable(
                     state = swipeableState,
-                    anchors = anchors,
-                    thresholds = { _, _ -> FractionalThreshold(0.34f) },
+                    anchors = rememberSwipeAnchors(),
+                    thresholds = { _, _ -> FractionalThreshold(Percent.THIRTY_FIVE) },
                     orientation = Orientation.Vertical,
                 ),
     ) {
         if (swipeableState.currentValue >= 1) {
-            LaunchedEffect("key") {
-                playerViewModel.showPlayerFullScreen = false
-            }
-        }
-
-        PodcastPlayerStatelessContent(
-            audio = audio,
-            gradientColor = gradientColor,
-            yOffset = swipeableState.offset.value.roundToInt(),
-            playPauseIcon = iconResId,
-            playbackProgress = sliderProgress,
-            currentTime = playerViewModel.getCurrentPlaybackFormattedPosition(),
-            totalTime = playerViewModel.currentAudioFormattedDuration,
-            onRewind = {
-                playerViewModel.onRewindClicked()
-            },
-            onForward = {
-                playerViewModel.onForwardClicked()
-            },
-            onSkipToPrevious = {
-                playerViewModel.onSkipToPrevious()
-            },
-            onSkipToNext = {
-                playerViewModel.onSkipToNext()
-            },
-            onTooglePlayback = {
-                playerViewModel.onPlayPauseClickedFromPlayer(audio, isPlaying.toPlayPause())
-                playerViewModel.togglePlaybackState()
-            },
-            onSliderChange = { newPosition ->
-                localSliderValue = newPosition
-                sliderIsChanging = true
-            },
-            onSliderChangeFinished = {
-                playerViewModel.onSliderChangeFinished(localSliderValue)
-                sliderIsChanging = false
-            },
-        ) {
-            playerViewModel.showPlayerFullScreen = false
+            LaunchedEffect(Unit) { onDismiss() }
         }
     }
+}
 
+@Composable
+private fun HandleSideEffects(
+    backDispatcher: OnBackPressedDispatcher,
+    backCallback: OnBackPressedCallback,
+    viewModel: PlayerViewModel,
+) {
     LaunchedEffect("playbackPosition") {
-        playerViewModel.updateCurrentPlaybackPosition()
+        viewModel.updateCurrentPlaybackPosition()
     }
 
     DisposableEffect(backDispatcher) {
         backDispatcher.addCallback(backCallback)
-
         onDispose {
             backCallback.remove()
-            playerViewModel.showPlayerFullScreen = false
+            viewModel.showPlayerFullScreen = false
         }
     }
 }
+
+private fun Boolean.toIcon(): Int =
+    if (this) {
+        R.drawable.ic_baseline_pause_24
+    } else {
+        R.drawable.ic_baseline_play_arrow_24
+    }
 
 @Composable
 fun PodcastPlayerStatelessContent(
@@ -230,17 +246,45 @@ fun PodcastPlayerStatelessContent(
     onSliderChangeFinished: () -> Unit,
     onClose: () -> Unit,
 ) {
-    val gradientColors = listOf(gradientColor, MaterialTheme.colors.background)
+    PodcastPlayerBackground(gradientColor, yOffset) {
+        PodcastPlayerHeader(onClose)
+        Column(modifier = Modifier.padding(horizontal = Spacing.s24)) {
+            PodcastPlayerImage(
+                audio = audio,
+                modifier =
+                    Modifier
+                        .weight(1f, fill = false)
+                        .align(Alignment.CenterHorizontally),
+            )
+            PodcastPlayerTitle(audio)
+            PodcastPlayerSlider(
+                playbackProgress,
+                currentTime,
+                totalTime,
+                onSliderChange,
+                onSliderChangeFinished,
+            )
+            PodcastPlayerControls(
+                playPauseIcon,
+                onRewind,
+                onForward,
+                onSkipToPrevious,
+                onSkipToNext,
+                onTooglePlayback,
+            )
+        }
+    }
+}
 
-    val sliderColors =
-        SliderDefaults.colors(
-            thumbColor = MaterialTheme.colors.onBackground,
-            activeTrackColor = MaterialTheme.colors.onBackground,
-            inactiveTrackColor =
-                MaterialTheme.colors.onBackground.copy(
-                    alpha = IndicatorBackgroundOpacity,
-                ),
-        )
+@Composable
+private fun PodcastPlayerBackground(
+    gradientColor: Color,
+    yOffset: Int,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val gradientColors = listOf(gradientColor, MaterialTheme.colors.background)
+    val endY =
+        LocalConfiguration.current.screenHeightDp.toFloat() * LocalDensity.current.density / 2
 
     Box(
         modifier =
@@ -252,15 +296,8 @@ fun PodcastPlayerStatelessContent(
             Box(
                 modifier =
                     Modifier
-                        .background(
-                            Brush.verticalGradient(
-                                colors = gradientColors,
-                                endY =
-                                    LocalConfiguration.current.screenHeightDp.toFloat() *
-                                        LocalDensity.current.density /
-                                        2,
-                            ),
-                        ).fillMaxSize()
+                        .background(Brush.verticalGradient(gradientColors, endY = endY))
+                        .fillMaxSize()
                         .systemBarsPadding(),
             ) {
                 Column(
@@ -269,151 +306,167 @@ fun PodcastPlayerStatelessContent(
                             .windowInsetsPadding(
                                 WindowInsets.safeDrawing.only(WindowInsetsSides.Top),
                             ),
-                ) {
-                    ArrowDownButton(onClick = onClose)
-                    Column(
-                        modifier = Modifier.padding(horizontal = Spacing.s24),
-                    ) {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .padding(vertical = Spacing.s32)
-                                    .clip(MaterialTheme.shapes.medium)
-                                    .weight(1f, fill = false)
-                                    .align(Alignment.CenterHorizontally)
-                                    .aspectRatio(1f)
-                                    .background(
-                                        MaterialTheme.colors.onBackground.copy(alpha = 0.08f),
-                                    ),
-                        ) {
-                            AsyncImage(
-                                model =
-                                    ImageRequest
-                                        .Builder(LocalContext.current)
-                                        .data(audio.imageUrl)
-                                        .crossfade(true)
-                                        .diskCachePolicy(CachePolicy.ENABLED)
-                                        .memoryCachePolicy(CachePolicy.ENABLED)
-                                        .build(),
-                                contentDescription = stringResource(R.string.podcast_thumbnail),
-                                contentScale = ContentScale.Crop,
-                                error = painterResource(R.drawable.ic_baseline_mic_24),
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        }
-
-                        Text(
-                            audio.title,
-                            style = MaterialTheme.typography.h5,
-                            color = MaterialTheme.colors.onBackground,
-                            maxLines = 3,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-
-                        Text(
-                            audio.saga.title,
-                            style = MaterialTheme.typography.subtitle1,
-                            color = MaterialTheme.colors.onBackground,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier =
-                                Modifier.graphicsLayer {
-                                    alpha = 0.60f
-                                },
-                        )
-
-                        Column(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = Spacing.s24),
-                        ) {
-                            Slider(
-                                value = playbackProgress,
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth(),
-                                colors = sliderColors,
-                                onValueChange = onSliderChange,
-                                onValueChangeFinished = onSliderChangeFinished,
-                            )
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                EmphasisText(text = currentTime)
-                                EmphasisText(text = totalTime)
-                            }
-                        }
-
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceAround,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = Spacing.s8, bottom = Spacing.s32),
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_baseline_skip_previous_24),
-                                contentDescription = stringResource(R.string.skip_to_previous),
-                                modifier =
-                                    Modifier
-                                        .clip(CircleShape)
-                                        .clickable(onClick = onSkipToPrevious)
-                                        .padding(Spacing.oddSpacing12)
-                                        .size(Spacing.s32),
-                            )
-                            Icon(
-                                painter = painterResource(R.drawable.ic_baseline_replay_10_24),
-                                contentDescription = stringResource(R.string.replay_10_seconds),
-                                modifier =
-                                    Modifier
-                                        .clip(CircleShape)
-                                        .clickable(onClick = onRewind)
-                                        .padding(Spacing.oddSpacing12)
-                                        .size(Spacing.s32),
-                            )
-                            Icon(
-                                painter = painterResource(playPauseIcon),
-                                contentDescription = stringResource(R.string.play),
-                                tint = MaterialTheme.colors.background,
-                                modifier =
-                                    Modifier
-                                        .clip(CircleShape)
-                                        .background(MaterialTheme.colors.onBackground)
-                                        .clickable(onClick = onTooglePlayback)
-                                        .size(Spacing.s64)
-                                        .padding(Spacing.s8),
-                            )
-                            Icon(
-                                painter = painterResource(R.drawable.ic_baseline_forward_10_24),
-                                contentDescription = stringResource(R.string.forward_10_seconds),
-                                modifier =
-                                    Modifier
-                                        .clip(CircleShape)
-                                        .clickable(onClick = onForward)
-                                        .padding(Spacing.oddSpacing12)
-                                        .size(Spacing.s32),
-                            )
-                            Icon(
-                                painter = painterResource(R.drawable.ic_baseline_skip_next_24),
-                                contentDescription = stringResource(R.string.skip_to_next),
-                                modifier =
-                                    Modifier
-                                        .clip(CircleShape)
-                                        .clickable(onClick = onSkipToNext)
-                                        .padding(Spacing.oddSpacing12)
-                                        .size(Spacing.s32),
-                            )
-                        }
-                    }
-                }
+                    content = content,
+                )
             }
         }
     }
+}
+
+@Composable
+private fun PodcastPlayerHeader(onClose: () -> Unit) {
+    ArrowDownButton(onClick = onClose)
+}
+
+@Composable
+private fun PodcastPlayerImage(
+    audio: Audio,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier =
+            modifier
+                .padding(vertical = Spacing.s32)
+                .clip(MaterialTheme.shapes.medium)
+                .aspectRatio(1f)
+                .background(MaterialTheme.colors.onBackground.copy(alpha = 0.08f)),
+    ) {
+        AsyncImage(
+            model =
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(audio.imageUrl)
+                    .crossfade(true)
+                    .diskCachePolicy(CachePolicy.ENABLED)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .build(),
+            contentDescription = stringResource(R.string.podcast_thumbnail),
+            contentScale = ContentScale.Crop,
+            error = painterResource(R.drawable.ic_baseline_mic_24),
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}
+
+@Composable
+private fun PodcastPlayerTitle(audio: Audio) {
+    Text(
+        audio.title,
+        style = MaterialTheme.typography.h5,
+        color = MaterialTheme.colors.onBackground,
+        maxLines = 3,
+        overflow = TextOverflow.Ellipsis,
+    )
+
+    Text(
+        audio.saga.title,
+        style = MaterialTheme.typography.subtitle1,
+        color = MaterialTheme.colors.onBackground,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.graphicsLayer { alpha = Percent.SIXTY },
+    )
+}
+
+@Composable
+private fun PodcastPlayerSlider(
+    playbackProgress: Float,
+    currentTime: String,
+    totalTime: String,
+    onSliderChange: (Float) -> Unit,
+    onSliderChangeFinished: () -> Unit,
+) {
+    val sliderColors =
+        SliderDefaults.colors(
+            thumbColor = MaterialTheme.colors.onBackground,
+            activeTrackColor = MaterialTheme.colors.onBackground,
+            inactiveTrackColor =
+                MaterialTheme.colors.onBackground.copy(
+                    alpha = IndicatorBackgroundOpacity,
+                ),
+        )
+
+    Column(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = Spacing.s24),
+    ) {
+        Slider(
+            value = playbackProgress,
+            onValueChange = onSliderChange,
+            onValueChangeFinished = onSliderChangeFinished,
+            modifier = Modifier.fillMaxWidth(),
+            colors = sliderColors,
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            EmphasisText(text = currentTime)
+            EmphasisText(text = totalTime)
+        }
+    }
+}
+
+@Composable
+private fun PodcastPlayerControls(
+    @DrawableRes playPauseIcon: Int,
+    onRewind: () -> Unit,
+    onForward: () -> Unit,
+    onSkipToPrevious: () -> Unit,
+    onSkipToNext: () -> Unit,
+    onTooglePlayback: () -> Unit,
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(top = Spacing.s8, bottom = Spacing.s32),
+    ) {
+        ControlIcon(
+            R.drawable.ic_baseline_skip_previous_24,
+            R.string.skip_to_previous,
+            onSkipToPrevious,
+        )
+        ControlIcon(R.drawable.ic_baseline_replay_10_24, R.string.replay_10_seconds, onRewind)
+        Icon(
+            painter = painterResource(playPauseIcon),
+            contentDescription = stringResource(R.string.play),
+            tint = MaterialTheme.colors.background,
+            modifier =
+                Modifier
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colors.onBackground)
+                    .clickable(onClick = onTooglePlayback)
+                    .size(Spacing.s64)
+                    .padding(Spacing.s8),
+        )
+        ControlIcon(R.drawable.ic_baseline_forward_10_24, R.string.forward_10_seconds, onForward)
+        ControlIcon(R.drawable.ic_baseline_skip_next_24, R.string.skip_to_next, onSkipToNext)
+    }
+}
+
+@Composable
+private fun ControlIcon(
+    @DrawableRes iconRes: Int,
+    @StringRes contentDescription: Int,
+    onClick: () -> Unit,
+) {
+    Icon(
+        painter = painterResource(iconRes),
+        contentDescription = stringResource(contentDescription),
+        modifier =
+            Modifier
+                .clip(CircleShape)
+                .clickable(onClick = onClick)
+                .padding(Spacing.oddSpacing12)
+                .size(Spacing.s32),
+    )
 }
 
 @Preview(name = "Player")

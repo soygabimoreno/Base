@@ -52,6 +52,7 @@ import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.view.EpisodeView
 import soy.gabimoreno.presentation.screen.home.view.ErrorView
 import soy.gabimoreno.presentation.screen.home.view.LoadingPlaceholder
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 
@@ -59,7 +60,6 @@ import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 @Composable
 fun HomeScreen(
     onItemClicked: (episodeId: String) -> Unit,
-    onDeepLinkReceived: (episodeId: String) -> Unit,
     onGoToWebClicked: (encodedUrl: String) -> Unit,
 ) {
     val scrollState = rememberLazyListState()
@@ -105,7 +105,7 @@ fun HomeScreen(
                     modifier =
                         Modifier
                             .padding(start = Spacing.s16, bottom = Spacing.s16, end = Spacing.s16)
-                            .weight(0.95f),
+                            .weight(Percent.NINETY_FIVE),
                 )
                 IconButton(
                     onClick = { homeViewModel.toggleShouldIReversePodcastOrder() },
@@ -116,7 +116,14 @@ fun HomeScreen(
                     AnimatedContent(
                         targetState = homeViewModel.shouldIReversePodcastOrder,
                         transitionSpec = {
-                            scaleIn(tween(300)) togetherWith scaleOut(tween(500))
+                            scaleIn(
+                                tween(SCALE_IN_ANIMATION_DURATION),
+                            ) togetherWith
+                                scaleOut(
+                                    tween(
+                                        SCALE_OUT_ANIMATION_DURATION,
+                                    ),
+                                )
                         },
                         label = "IconTransition",
                     ) { reversed ->
@@ -126,7 +133,7 @@ fun HomeScreen(
                                 contentDescription = stringResource(R.string.podcast_sort_desc),
                                 modifier =
                                     Modifier
-                                        .rotate(180f)
+                                        .rotate(Percent.ONE_HUNDRED_EIGHTY)
                                         .size(Spacing.s48),
                             )
                         } else {
@@ -234,3 +241,6 @@ fun HomeScreen(
         }
     }
 }
+
+private const val SCALE_IN_ANIMATION_DURATION = 300
+private const val SCALE_OUT_ANIMATION_DURATION = 500

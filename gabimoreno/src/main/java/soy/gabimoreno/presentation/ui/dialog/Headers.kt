@@ -25,7 +25,7 @@ internal fun HeaderDialog(
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(150L)
+        delay(EFFECT_DELAY_MILLIS)
         visible = true
     }
     AnimatedVisibility(
@@ -82,3 +82,5 @@ fun ConfirmationHeader(modifier: Modifier = Modifier) {
         modifier = modifier,
     )
 }
+
+private const val EFFECT_DELAY_MILLIS = 150L

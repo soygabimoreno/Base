@@ -22,7 +22,6 @@ import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.audio.Audio
-import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.CheckShouldIShowInAppReviewUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
@@ -33,7 +32,6 @@ import soy.gabimoreno.player.extension.isPlaying
 import soy.gabimoreno.player.service.MEDIA_ROOT_ID
 import soy.gabimoreno.player.service.MediaPlayerService
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
-import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -45,8 +43,6 @@ class PlayerViewModel
     constructor(
         private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
         private val tracker: Tracker,
-        private val memberSession: MemberSession,
-        private val remoteConfigProvider: RemoteConfigProvider,
         private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
         private val markAudioCourseAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
         private val checkShouldIShowInAppReviewUseCase: CheckShouldIShowInAppReviewUseCase,
@@ -85,7 +81,7 @@ class PlayerViewModel
                         previousAudioId = newId
                     }
                 }.launchIn(viewModelScope)
-            viewModelScope.launch {
+            viewModelScope.launch(dispatcher) {
                 mediaPlayerServiceConnection.progressFlow.collect { progress ->
                     if (progress >= SET_AUDIO_AS_LISTENED) {
                         markAudioAsListened(currentPlayingAudio.value?.id.orEmpty())
@@ -109,9 +105,11 @@ class PlayerViewModel
             get() =
                 run {
                     KLog.d(
-                        "currentAudioDuration: $currentAudioDuration, ${formatLong(
-                            currentAudioDuration,
-                        )}",
+                        "currentAudioDuration: $currentAudioDuration, ${
+                            formatLong(
+                                currentAudioDuration,
+                            )
+                        }",
                     )
                     formatLong(currentAudioDuration)
                 }
@@ -164,6 +162,7 @@ class PlayerViewModel
                     tracker.trackEvent(
                         PlayerTrackerEvent.ClickPlayFromPlayer(parameters),
                     )
+
                 PlayPause.PAUSE ->
                     tracker.trackEvent(
                         PlayerTrackerEvent.ClickPauseFromPlayer(parameters),
@@ -250,7 +249,7 @@ class PlayerViewModel
             hasTriggeredEightyPercent = true
             lastAudioIdListened = audioId
 
-            viewModelScope.launch {
+            viewModelScope.launch(dispatcher) {
                 checkShouldIShowInAppReviewUseCase()
                 if (audioId.contains("-")) {
                     markAudioCourseAsListenedUseCase(audioId, true)

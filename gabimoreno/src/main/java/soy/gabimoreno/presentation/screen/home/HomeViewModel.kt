@@ -34,7 +34,7 @@ class HomeViewModel
         private val encodeUrlUseCase: EncodeUrlUseCase,
         private val getShouldIReversePodcastOrderUseCase: GetShouldIReversePodcastOrderUseCase,
         private val setShouldIReversePodcastOrderUseCase: SetShouldIReversePodcastOrderUseCase,
-        @Main private val dispatcher: CoroutineDispatcher,
+        @param:Main private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var viewState by mutableStateOf<ViewState>(ViewState.Loading)
             private set
@@ -139,6 +139,7 @@ class HomeViewModel
                     (viewState as ViewState.Success).episodes.find {
                         it.id == id
                     }
+
                 else -> null
             }
 
@@ -163,6 +164,7 @@ class HomeViewModel
             data class Error(
                 val throwable: Throwable,
             ) : ViewState()
+
             data class Success(
                 val episodes: List<Episode>,
             ) : ViewState()

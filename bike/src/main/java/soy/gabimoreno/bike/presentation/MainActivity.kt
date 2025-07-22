@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                 MainViewModel.ViewEvent.Error.ShowDisconnected -> showDisconnected()
                 MainViewModel.ViewEvent.Error.ShowReadFailure -> showReadFailure()
                 MainViewModel.ViewEvent.Error.ShowNotLoadedDevice -> showNotLoadedDevice()
-                MainViewModel.ViewEvent.Foo -> foo()
+                MainViewModel.ViewEvent.Foo -> Unit
                 is MainViewModel.ViewEvent.CheckPermissionsAndInitBle ->
                     checkPermissionsAndInitBle(
                         viewEvent.bleManager,
@@ -99,10 +99,6 @@ class MainActivity : ComponentActivity() {
                 is MainViewModel.ViewEvent.ShowDeviceName -> showDeviceName(viewEvent.deviceName)
             }
         }
-    }
-
-    private fun foo() {
-        // Do nothing
     }
 
     private fun checkPermissionsAndInitBle(bleManager: BleManager) {
@@ -172,7 +168,7 @@ class MainActivity : ComponentActivity() {
         toast("Connected to $deviceName")
         // TODO: Change CountDownTimer by a Timer
         object : CountDownTimer(
-            60 * 60 * 1000,
+            COUNTDOWN_DURATION_MINUTES * SECONDS_PER_MINUTE * ONE_SECOND_IN_MILLIS,
             COUNTDOWN_INTERVAL_IN_MILLIS,
         ) {
             override fun onTick(millisUntilFinished: Long) {
@@ -186,9 +182,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+private const val CONNECT_OVER_TIME_IN_MILLIS = 10_000L
+private const val COUNTDOWN_DURATION_MINUTES = 60
+private const val COUNTDOWN_INTERVAL_IN_MILLIS = 200L
+private const val ONE_SECOND_IN_MILLIS = 1_000L
+private const val OPERATE_TIME_OUT = 5_000
 private const val RECONNECT_COUNT = 1
 private const val RECONNECT_INTERVAL_IN_MILLIS = 5_000L
+private const val SECONDS_PER_MINUTE = 60
 private const val SPLIT_WRITE_NUM = 20
-private const val CONNECT_OVER_TIME_IN_MILLIS = 10_000L
-private const val OPERATE_TIME_OUT = 5_000
-private const val COUNTDOWN_INTERVAL_IN_MILLIS = 200L

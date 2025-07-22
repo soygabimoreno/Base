@@ -17,21 +17,17 @@ import soy.gabimoreno.data.tracker.domain.PlayPause
 import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.audio.Audio
-import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.CheckShouldIShowInAppReviewUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
 import soy.gabimoreno.fake.buildAudio
 import soy.gabimoreno.fake.buildAudios
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
-import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 
 @ExperimentalCoroutinesApi
 class PlayerViewModelTest {
     private val tracker: Tracker = relaxedMockk()
     private val mediaPlayerServiceConnection: MediaPlayerServiceConnection = relaxedMockk()
-    private val memberSession: MemberSession = relaxedMockk()
-    private val remoteConfigProvider: RemoteConfigProvider = relaxedMockk()
     private val markAudioCourseItemAsListenedUseCase =
         relaxedMockk<MarkAudioCourseItemAsListenedUseCase>()
     private val markPremiumAudioAsListenedUseCase =
@@ -48,8 +44,6 @@ class PlayerViewModelTest {
             PlayerViewModel(
                 mediaPlayerServiceConnection,
                 tracker,
-                memberSession,
-                remoteConfigProvider,
                 markPremiumAudioAsListenedUseCase,
                 markAudioCourseItemAsListenedUseCase,
                 checkShouldIShowInAppReviewUseCase,

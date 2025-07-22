@@ -50,6 +50,7 @@ import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.presentation.screen.ViewModelProvider
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
 import kotlin.math.roundToInt
@@ -71,7 +72,7 @@ fun AudioBottomBar(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AudioBottomBarContent(audio: Audio) {
-    val swipeableState = rememberSwipeableState(0)
+    val swipeableState = rememberSwipeableState(INITIAL_VALUE)
     val playerViewModel = ViewModelProvider.playerViewModel
 
     val endAnchor = LocalConfiguration.current.screenWidthDp * LocalDensity.current.density
@@ -92,7 +93,7 @@ fun AudioBottomBarContent(audio: Audio) {
                 .swipeable(
                     state = swipeableState,
                     anchors = anchors,
-                    thresholds = { _, _ -> FractionalThreshold(0.54f) },
+                    thresholds = { _, _ -> FractionalThreshold(Percent.FIFTY_FIVE) },
                     orientation = Orientation.Horizontal,
                 ),
     ) {
@@ -163,7 +164,7 @@ fun AudioBottomBarStatelessContent(
                 verticalArrangement = Arrangement.Center,
                 modifier =
                     Modifier
-                        .weight(1f)
+                        .weight(Percent.ONE_HUNDRED)
                         .fillMaxHeight()
                         .padding(Spacing.s8),
             ) {
@@ -183,7 +184,7 @@ fun AudioBottomBarStatelessContent(
                     overflow = TextOverflow.Ellipsis,
                     modifier =
                         Modifier.graphicsLayer {
-                            alpha = 0.60f
+                            alpha = Percent.SIXTY_FIVE
                         },
                 )
             }
@@ -231,3 +232,5 @@ fun AudioBottomBarPreview() {
         )
     }
 }
+
+private const val INITIAL_VALUE = 0
