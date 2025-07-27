@@ -64,6 +64,7 @@ fun AudioCoursesDetailScreenRoot(
     onAddToPlaylistClicked: (audioCourseId: String) -> Unit,
 ) {
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
     val coursesDetailViewModel = ViewModelProvider.audioCourseDetailViewModel
     val playerViewModel = ViewModelProvider.playerViewModel
     LaunchedEffect(Unit) {
@@ -81,6 +82,10 @@ fun AudioCoursesDetailScreenRoot(
                             coursesDetailViewModel.state.audio as Episode,
                         )
                     }
+                }
+
+                AudioCourseDetailEvent.OpenAudioCourseOnWeb -> {
+                    uriHandler.openUri(coursesDetailViewModel.state.audioCourse?.url ?: BASE_URL)
                 }
             }
         }
@@ -107,7 +112,6 @@ fun AudioCourseDetailScreen(
     state: AudioCourseDetailState,
     onAction: (AudioCourseDetailAction) -> Unit,
 ) {
-    val uriHandler = LocalUriHandler.current
     Column(
         modifier =
             Modifier
@@ -235,7 +239,11 @@ fun AudioCourseDetailScreen(
                                     .height(IntrinsicSize.Min)
                                     .background(Orange),
                             onClick = {
-                                uriHandler.openUri(state.audioCourse.url)
+                                onAction(
+                                    AudioCourseDetailAction.OpenAudioCourseOnWeb(
+                                        state.audioCourse.id,
+                                    ),
+                                )
                             },
                         ) {
                             Text(
@@ -292,4 +300,5 @@ private fun AudioCourseDetailPreview() {
     }
 }
 
+private const val BASE_URL = "https://gabimoreno.soy/"
 private const val FREE_AUDIO_SIZE = 8

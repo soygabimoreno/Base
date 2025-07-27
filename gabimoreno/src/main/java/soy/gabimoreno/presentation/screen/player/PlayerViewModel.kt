@@ -46,7 +46,7 @@ class PlayerViewModel
         private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
         private val markAudioCourseAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
         private val checkShouldIShowInAppReviewUseCase: CheckShouldIShowInAppReviewUseCase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         private val playbackState = mediaPlayerServiceConnection.playbackState
 
@@ -201,22 +201,18 @@ class PlayerViewModel
         }
 
         fun onRewindClicked() {
-            tracker.trackEvent(PlayerTrackerEvent.ClickRewind(getParameters()))
             mediaPlayerServiceConnection.rewind()
         }
 
         fun onForwardClicked() {
-            tracker.trackEvent(PlayerTrackerEvent.ClickForward(getParameters()))
             mediaPlayerServiceConnection.fastForward()
         }
 
         fun onSkipToPrevious() {
-            tracker.trackEvent(PlayerTrackerEvent.ClickSkipToPrevious(getParameters()))
             mediaPlayerServiceConnection.skipToPrevious()
         }
 
         fun onSkipToNext() {
-            tracker.trackEvent(PlayerTrackerEvent.ClickSkipToNext(getParameters()))
             mediaPlayerServiceConnection.skipToNext()
         }
 
@@ -246,6 +242,7 @@ class PlayerViewModel
         private fun markAudioAsListened(audioId: String) {
             if (hasTriggeredEightyPercent || lastAudioIdListened == audioId) return
 
+            tracker.trackEvent(PlayerTrackerEvent.AudioListened(getParameters()))
             hasTriggeredEightyPercent = true
             lastAudioIdListened = audioId
 
@@ -271,7 +268,6 @@ class PlayerViewModel
         }
 
         private fun onPause() {
-            tracker.trackEvent(PlayerTrackerEvent.Pause(getParameters()))
             mediaPlayerServiceConnection.transportControls.pause()
         }
 

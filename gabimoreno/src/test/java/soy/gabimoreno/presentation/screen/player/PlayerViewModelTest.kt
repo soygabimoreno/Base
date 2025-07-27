@@ -161,10 +161,8 @@ class PlayerViewModelTest {
 
         viewModel.onRewindClicked()
 
-        val parameters = currentPlayingAudio.toMap()
         verifyOnce {
             mediaPlayerServiceConnection.rewind()
-            tracker.trackEvent(PlayerTrackerEvent.ClickRewind(parameters))
         }
     }
 
@@ -175,10 +173,8 @@ class PlayerViewModelTest {
 
         viewModel.onForwardClicked()
 
-        val parameters = currentPlayingAudio.toMap()
         verifyOnce {
             mediaPlayerServiceConnection.fastForward()
-            tracker.trackEvent(PlayerTrackerEvent.ClickForward(parameters))
         }
     }
 
@@ -189,10 +185,8 @@ class PlayerViewModelTest {
 
         viewModel.onSkipToPrevious()
 
-        val parameters = currentPlayingAudio.toMap()
         verifyOnce {
             mediaPlayerServiceConnection.skipToPrevious()
-            tracker.trackEvent(PlayerTrackerEvent.ClickSkipToPrevious(parameters))
         }
     }
 
@@ -203,10 +197,8 @@ class PlayerViewModelTest {
 
         viewModel.onSkipToNext()
 
-        val parameters = currentPlayingAudio.toMap()
         verifyOnce {
             mediaPlayerServiceConnection.skipToNext()
-            tracker.trackEvent(PlayerTrackerEvent.ClickSkipToNext(parameters))
         }
     }
 

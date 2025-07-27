@@ -20,6 +20,10 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
+import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_PLAYLIST_ID
+import soy.gabimoreno.data.tracker.main.PlaylistDetailTrackerEvent
 import soy.gabimoreno.domain.usecase.DeletePlaylistItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPlaylistByIdUseCase
 import soy.gabimoreno.domain.usecase.UpdatePlaylistItemsUseCase
@@ -33,6 +37,7 @@ class PlaylistDetailScreenKtTest {
     private val updatePlaylistItemsUseCase = mockk<UpdatePlaylistItemsUseCase>()
     private val deletePlaylistItemByIdUseCase = mockk<DeletePlaylistItemByIdUseCase>()
     private val upsertPlaylistsUseCase = mockk<UpsertPlaylistsUseCase>()
+    private val tracker: Tracker = relaxedMockk()
     private val testDispatcher = StandardTestDispatcher()
 
     private lateinit var viewModel: PlaylistDetailViewModel
@@ -46,6 +51,7 @@ class PlaylistDetailScreenKtTest {
                 updatePlaylistItemsUseCase = updatePlaylistItemsUseCase,
                 deletePlaylistItemByIdUseCase = deletePlaylistItemByIdUseCase,
                 upsertPlaylistsUseCase = upsertPlaylistsUseCase,
+                tracker = tracker,
                 dispatcher = testDispatcher,
             )
     }
@@ -56,7 +62,7 @@ class PlaylistDetailScreenKtTest {
     }
 
     @Test
-    fun `GIVEN playlist WHEN onScreenView THEN state is updated with playlist`() =
+    fun `GIVEN playlist WHEN onScreenView THEN state is updated with playlist and tracker is called`() =
         runTest {
             val playlist = buildPlaylist()
             coEvery {
@@ -70,6 +76,11 @@ class PlaylistDetailScreenKtTest {
             viewModel.state.isLoading shouldBe false
             coVerifyOnce {
                 getPlaylistByIdUseCase(playlist.id)
+                tracker.trackEvent(
+                    PlaylistDetailTrackerEvent.ViewScreen(
+                        parameters = mapOf(TRACKER_KEY_PLAYLIST_ID to playlist.id),
+                    ),
+                )
             }
         }
 

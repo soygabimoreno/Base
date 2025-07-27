@@ -21,6 +21,10 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.core.testing.verifyOnce
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_COURSE_ID
+import soy.gabimoreno.data.tracker.main.AudioCoursesDetailTrackerEvent
 import soy.gabimoreno.domain.usecase.GetAudioCourseByIdUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
 import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
@@ -32,6 +36,7 @@ class AudioCourseDetailViewModelTest {
         relaxedMockk<MarkAudioCourseItemAsListenedUseCase>()
     private val updateAudioItemFavoriteStateUseCase =
         relaxedMockk<UpdateAudioItemFavoriteStateUseCase>()
+    private val tracker: Tracker = relaxedMockk()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: AudioCourseDetailViewModel
 
@@ -43,6 +48,7 @@ class AudioCourseDetailViewModelTest {
                 getAudioCourseByIdUseCase,
                 markAudioCourseItemAsListenedUseCase,
                 updateAudioItemFavoriteStateUseCase,
+                tracker,
             )
     }
 
@@ -50,6 +56,49 @@ class AudioCourseDetailViewModelTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
+
+    @Test
+    fun `WHEN onViewScreen THEN track event`() =
+        runTest {
+            val audioCourseId = "audioCourseId"
+            viewModel.onViewScreen(audioCourseId)
+            advanceUntilIdle()
+
+            verifyOnce {
+                tracker.trackEvent(
+                    AudioCoursesDetailTrackerEvent.ViewScreen(
+                        parameters = mapOf(TRACKER_KEY_AUDIO_COURSE_ID to audioCourseId),
+                    ),
+                )
+            }
+        }
+
+    @Test
+    fun `WHEN OnShowAudioCourseOnWebClicked THEN track event and emit ShowAudioCourseOnWeb event`() =
+        runTest {
+            val audioCourse = buildAudioCourse()
+            val action = AudioCourseDetailAction.OpenAudioCourseOnWeb(audioCourseId = audioCourse.id)
+            val eventChannel = Channel<AudioCourseDetailEvent>(Channel.UNLIMITED)
+            val job =
+                launch {
+                    viewModel.events.collect {
+                        eventChannel.trySend(it)
+                    }
+                }
+
+            viewModel.onAction(action)
+            advanceUntilIdle()
+
+            eventChannel.receive() shouldBeEqualTo AudioCourseDetailEvent.OpenAudioCourseOnWeb
+            verifyOnce {
+                tracker.trackEvent(
+                    AudioCoursesDetailTrackerEvent.ViewOnWebScreen(
+                        parameters = mapOf(TRACKER_KEY_AUDIO_COURSE_ID to audioCourse.id),
+                    ),
+                )
+            }
+            job.cancel()
+        }
 
     @Test
     fun `GIVEN success WHEN onViewScreen THEN state is updated`() =

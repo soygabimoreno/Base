@@ -21,6 +21,10 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
+import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_PLAYLIST_AUDIO_ID
+import soy.gabimoreno.data.tracker.main.PlaylistAudioTrackerEvent
 import soy.gabimoreno.domain.usecase.DeletePlaylistItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
 import soy.gabimoreno.domain.usecase.GetAudioCourseItemByIdUseCase
@@ -38,6 +42,7 @@ class PlaylistAudioItemViewModelTest {
     private val getPlaylistByPlaylistItemIdUseCase = mockk<GetPlaylistByPlaylistItemIdUseCase>()
     private val setPlaylistItemsUseCase = mockk<SetPlaylistItemsUseCase>()
     private val deletePlaylistItemUseCase = mockk<DeletePlaylistItemByIdUseCase>()
+    private val tracker: Tracker = relaxedMockk()
     private val testDispatcher = StandardTestDispatcher()
 
     private lateinit var viewModel: PlaylistAudioItemViewModel
@@ -53,6 +58,7 @@ class PlaylistAudioItemViewModelTest {
                 getPlaylistByPlaylistItemIdUseCase = getPlaylistByPlaylistItemIdUseCase,
                 setPlaylistItemsUseCase = setPlaylistItemsUseCase,
                 deletePlaylistItemUseCase = deletePlaylistItemUseCase,
+                tracker = tracker,
                 dispatcher = testDispatcher,
             )
     }
@@ -61,6 +67,29 @@ class PlaylistAudioItemViewModelTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
+
+    @Test
+    fun `WHEN onViewScreen THEN track event`() =
+        runTest {
+            val playlist = buildPlaylist()
+            val premiumAudio = buildPremiumAudio()
+            val playlistIds = emptyList<Int>()
+            coEvery { getPremiumAudioByIdUseCase(premiumAudio.id) } returns right(premiumAudio)
+            coEvery { getAllPlaylistUseCase() } returns right(listOf(playlist))
+            coEvery {
+                getPlaylistByPlaylistItemIdUseCase(premiumAudio.id)
+            } returns right(playlistIds)
+            viewModel.onViewScreen(premiumAudio.id)
+            advanceUntilIdle()
+
+            coVerifyOnce {
+                tracker.trackEvent(
+                    PlaylistAudioTrackerEvent.ViewScreen(
+                        parameters = mapOf(TRACKER_KEY_PLAYLIST_AUDIO_ID to premiumAudio.id),
+                    ),
+                )
+            }
+        }
 
     @Test
     fun `GIVEN playlists loaded WHEN toggle one THEN its selection changes`() =

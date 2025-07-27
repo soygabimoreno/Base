@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.main.PlaylistTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.usecase.DeletePlaylistByIdUseCase
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
@@ -27,7 +29,8 @@ class PlaylistViewModel
         private val insertPlaylistUseCase: InsertPlaylistUseCase,
         private val upsertPlaylistsUseCase: UpsertPlaylistsUseCase,
         private val deletePlaylistByIdUseCase: DeletePlaylistByIdUseCase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        private val tracker: Tracker,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         private var hasLoadedInitialData = false
 
@@ -49,6 +52,7 @@ class PlaylistViewModel
         val events = eventChannel.asSharedFlow()
 
         private fun onScreenView() {
+            tracker.trackEvent(PlaylistTrackerEvent.ViewScreen)
             _state.update { currentState ->
                 currentState.copy(isLoading = true)
             }

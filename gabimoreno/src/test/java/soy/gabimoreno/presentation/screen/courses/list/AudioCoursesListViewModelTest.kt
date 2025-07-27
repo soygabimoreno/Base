@@ -23,7 +23,10 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.remote.model.Category
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.main.AudioCoursesListTrackerEvent
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReloadAudioCoursesUseCase
@@ -38,6 +41,7 @@ class AudioCoursesListViewModelTest {
     private val setShouldIReloadAudioCoursesUseCase =
         relaxedMockk<SetShouldIReloadAudioCoursesUseCase>()
     private val refreshBearerTokenUseCase = relaxedMockk<RefreshBearerTokenUseCase>()
+    private val tracker: Tracker = relaxedMockk()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: AudioCoursesListViewModel
 
@@ -51,6 +55,7 @@ class AudioCoursesListViewModelTest {
                 getShouldIReloadAudioCoursesUseCase,
                 setShouldIReloadAudioCoursesUseCase,
                 refreshBearerTokenUseCase,
+                tracker,
                 testDispatcher,
             )
     }
@@ -59,6 +64,21 @@ class AudioCoursesListViewModelTest {
     fun tearDown() {
         Dispatchers.resetMain()
     }
+
+    @Test
+    fun `WHEN onViewScreen THEN track event`() =
+        runTest {
+            val job =
+                launch {
+                    viewModel.state.collect { }
+                }
+            advanceUntilIdle()
+
+            verifyOnce {
+                tracker.trackEvent(AudioCoursesListTrackerEvent.ViewScreen)
+            }
+            job.cancel()
+        }
 
     @Test
     fun `GIVEN valid courses WHEN onViewScreen THEN state contains courses and isLoading is false`() =

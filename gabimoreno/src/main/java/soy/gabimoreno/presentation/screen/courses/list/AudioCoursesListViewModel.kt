@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import soy.gabimoreno.data.remote.model.Category
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.main.AudioCoursesListTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.exception.TokenExpiredException
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
@@ -32,7 +34,8 @@ class AudioCoursesListViewModel
         private val getShouldIReloadAudioCoursesUseCase: GetShouldIReloadAudioCoursesUseCase,
         private val setShouldIReloadAudioCoursesUseCase: SetShouldIReloadAudioCoursesUseCase,
         private val refreshBearerTokenUseCase: RefreshBearerTokenUseCase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        private val tracker: Tracker,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         private var hasLoadedInitialData = false
 
@@ -54,6 +57,7 @@ class AudioCoursesListViewModel
         val events = eventChannel.asSharedFlow()
 
         private fun onScreenView() {
+            tracker.trackEvent(AudioCoursesListTrackerEvent.ViewScreen)
             viewModelScope.launch(dispatcher) {
                 getShouldIReloadAudioCoursesUseCase()
                     .distinctUntilChanged()

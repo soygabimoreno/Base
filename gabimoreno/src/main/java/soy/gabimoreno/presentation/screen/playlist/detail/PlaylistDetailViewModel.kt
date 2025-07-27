@@ -10,6 +10,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_PLAYLIST_ID
+import soy.gabimoreno.data.tracker.main.PlaylistDetailTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.usecase.DeletePlaylistItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPlaylistByIdUseCase
@@ -25,7 +28,8 @@ class PlaylistDetailViewModel
         private val updatePlaylistItemsUseCase: UpdatePlaylistItemsUseCase,
         private val deletePlaylistItemByIdUseCase: DeletePlaylistItemByIdUseCase,
         private val upsertPlaylistsUseCase: UpsertPlaylistsUseCase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        private val tracker: Tracker,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var state by mutableStateOf(PlaylistDetailState())
             private set
@@ -34,6 +38,11 @@ class PlaylistDetailViewModel
         val events = eventChannel.asSharedFlow()
 
         fun onScreenView(playlistId: Int) {
+            tracker.trackEvent(
+                PlaylistDetailTrackerEvent.ViewScreen(
+                    parameters = mapOf(TRACKER_KEY_PLAYLIST_ID to playlistId),
+                ),
+            )
             updateState { copy(isLoading = true) }
 
             viewModelScope.launch(dispatcher) {
