@@ -16,4 +16,7 @@ sealed interface AudioCourseDetailAction {
     data class OnFavoriteStatusChanged(
         val audioCourseItem: AudioCourseItem,
     ) : AudioCourseDetailAction
+    data class OpenAudioCourseOnWeb(
+        val audioCourseId: String,
+    ) : AudioCourseDetailAction
 }

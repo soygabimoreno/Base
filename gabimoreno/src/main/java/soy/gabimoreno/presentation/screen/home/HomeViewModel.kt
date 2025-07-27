@@ -110,19 +110,19 @@ class HomeViewModel
             )
         }
 
-        fun onDeepLinkReceived(
-            episodeId: String,
-            episodeTitle: String,
-        ) {
-            tracker.trackEvent(
-                HomeTrackerEvent.ReceiveDeepLink(
-                    mapOf(
-                        TRACKER_KEY_EPISODE_ID to episodeId,
-                        TRACKER_KEY_EPISODE_TITLE to episodeTitle,
-                    ),
-                ),
-            )
-        }
+//        fun onDeepLinkReceived(
+//            episodeId: String,
+//            episodeTitle: String,
+//        ) {
+//            tracker.trackEvent(
+//                HomeTrackerEvent.ReceiveDeepLink(
+//                    mapOf(
+//                        TRACKER_KEY_EPISODE_ID to episodeId,
+//                        TRACKER_KEY_EPISODE_TITLE to episodeTitle,
+//                    ),
+//                ),
+//            )
+//        }
 
         fun pullToRefresh() {
             viewModelScope.launch(dispatcher) {

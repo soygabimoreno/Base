@@ -18,7 +18,7 @@ import soy.gabimoreno.domain.model.GABI_MORENO_WEB_BASE_URL
 enum class NavItem(
     val navCommand: NavCommand,
     val icon: ImageVector,
-    @StringRes val titleResId: Int,
+    @param:StringRes val titleResId: Int,
 ) {
     PODCAST(
         navCommand = NavCommand.ContentType(Feature.PODCAST),

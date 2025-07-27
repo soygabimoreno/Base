@@ -2,14 +2,14 @@ package soy.gabimoreno.data.tracker.main
 
 import soy.gabimoreno.data.tracker.TrackerEvent
 
-sealed class PremiumTrackerEvent(
+sealed class AudioCoursesDetailTrackerEvent(
     override val parameters: Map<String, Any> = mapOf(),
 ) : TrackerEvent {
-    object ViewScreen : PremiumTrackerEvent()
-    data class ClickLogin(
+    data class ViewScreen(
         override val parameters: Map<String, Any>,
-    ) : PremiumTrackerEvent()
-    data class TokenExpired(
+    ) : AudioCoursesDetailTrackerEvent()
+
+    data class ViewOnWebScreen(
         override val parameters: Map<String, Any>,
-    ) : PremiumTrackerEvent()
+    ) : AudioCoursesDetailTrackerEvent()
 }

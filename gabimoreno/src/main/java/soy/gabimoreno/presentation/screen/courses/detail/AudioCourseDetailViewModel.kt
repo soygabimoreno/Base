@@ -9,6 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_AUDIO_COURSE_ID
+import soy.gabimoreno.data.tracker.main.AudioCoursesDetailTrackerEvent
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.domain.usecase.GetAudioCourseByIdUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
@@ -22,6 +25,7 @@ class AudioCourseDetailViewModel
         private val getAudioCourseByIdUseCase: GetAudioCourseByIdUseCase,
         private val markAudioAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
         private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
+        private val tracker: Tracker,
     ) : ViewModel() {
         var state by mutableStateOf(AudioCourseDetailState())
             private set
@@ -30,6 +34,11 @@ class AudioCourseDetailViewModel
         val events = eventChannel.asSharedFlow()
 
         fun onViewScreen(audioCourseId: String) {
+            tracker.trackEvent(
+                AudioCoursesDetailTrackerEvent.ViewScreen(
+                    parameters = mapOf(TRACKER_KEY_AUDIO_COURSE_ID to audioCourseId),
+                ),
+            )
             state = state.copy(isLoading = true)
             viewModelScope.launch {
                 getAudioCourseByIdUseCase(audioCourseId)
@@ -102,6 +111,20 @@ class AudioCourseDetailViewModel
                                         audios = audioCourseItems ?: emptyList(),
                                     ),
                             )
+                    }
+                }
+
+                is AudioCourseDetailAction.OpenAudioCourseOnWeb -> {
+                    tracker.trackEvent(
+                        AudioCoursesDetailTrackerEvent.ViewOnWebScreen(
+                            parameters =
+                                mapOf(
+                                    (TRACKER_KEY_AUDIO_COURSE_ID to action.audioCourseId),
+                                ),
+                        ),
+                    )
+                    viewModelScope.launch {
+                        eventChannel.emit(AudioCourseDetailEvent.OpenAudioCourseOnWeb)
                     }
                 }
 

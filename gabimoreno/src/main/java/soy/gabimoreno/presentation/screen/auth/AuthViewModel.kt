@@ -182,6 +182,8 @@ class AuthViewModel
         }
 
         private fun showTokenExpiredError() {
+            val parameters = mapOf(TRACKER_KEY_EMAIL to state.email)
+            tracker.trackEvent(PremiumTrackerEvent.TokenExpired(parameters))
             state =
                 state.copy(
                     shouldShowAccess = true,

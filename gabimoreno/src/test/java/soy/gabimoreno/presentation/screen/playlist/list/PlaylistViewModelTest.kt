@@ -26,6 +26,10 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
+import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.core.testing.verifyOnce
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.main.PlaylistTrackerEvent
 import soy.gabimoreno.domain.usecase.DeletePlaylistByIdUseCase
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
 import soy.gabimoreno.domain.usecase.InsertPlaylistUseCase
@@ -39,6 +43,7 @@ class PlaylistViewModelTest {
     private val insertPlaylistUseCase = mockk<InsertPlaylistUseCase>()
     private val upsertPlaylistsUseCase = mockk<UpsertPlaylistsUseCase>()
     private val deletePlaylistByIdUseCase = mockk<DeletePlaylistByIdUseCase>()
+    private val tracker: Tracker = relaxedMockk()
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: PlaylistViewModel
 
@@ -52,6 +57,7 @@ class PlaylistViewModelTest {
                 insertPlaylistUseCase = insertPlaylistUseCase,
                 upsertPlaylistsUseCase = upsertPlaylistsUseCase,
                 deletePlaylistByIdUseCase = deletePlaylistByIdUseCase,
+                tracker = tracker,
                 dispatcher = testDispatcher,
             )
     }
@@ -62,13 +68,21 @@ class PlaylistViewModelTest {
     }
 
     @Test
-    fun `GIVEN initialization WHEN state is collected THEN initial state is correct`() =
+    fun `GIVEN initialization WHEN state is collected THEN initial state is correct and tracker is called`() =
         runTest {
             val expectedState = PlaylistState()
-
+            val job =
+                launch {
+                    viewModel.state.collect { }
+                }
             val initialState = viewModel.state.first()
+            advanceUntilIdle()
 
             initialState shouldBeEqualTo expectedState
+            verifyOnce {
+                tracker.trackEvent(PlaylistTrackerEvent.ViewScreen)
+            }
+            job.cancel()
         }
 
     @Test

@@ -72,6 +72,19 @@ class DetailViewModel
                         )
                     audioState = newState
                     updateAudioItemFavoriteStateUseCase(newState.id, newState.markedAsFavorite)
+                    if (newState.markedAsFavorite) {
+                        tracker.trackEvent(
+                            DetailTrackerEvent.AddAudioToFavorite(
+                                currentState.toMap(),
+                            ),
+                        )
+                    } else {
+                        tracker.trackEvent(
+                            DetailTrackerEvent.RemoveAudioFromFavorite(
+                                currentState.toMap(),
+                            ),
+                        )
+                    }
                 }
             }
         }

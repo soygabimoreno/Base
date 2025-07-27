@@ -10,6 +10,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import soy.gabimoreno.data.tracker.Tracker
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_PLAYLIST_AUDIO_ID
+import soy.gabimoreno.data.tracker.main.PlaylistAudioTrackerEvent
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.usecase.DeletePlaylistItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
@@ -29,7 +32,8 @@ class PlaylistAudioItemViewModel
         private val getPlaylistByPlaylistItemIdUseCase: GetPlaylistByPlaylistItemIdUseCase,
         private val setPlaylistItemsUseCase: SetPlaylistItemsUseCase,
         private val deletePlaylistItemUseCase: DeletePlaylistItemByIdUseCase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        private val tracker: Tracker,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var state by mutableStateOf(PlaylistAudioItemState())
             private set
@@ -38,6 +42,11 @@ class PlaylistAudioItemViewModel
         val events = eventChannel.asSharedFlow()
 
         fun onViewScreen(audioItemId: String) {
+            tracker.trackEvent(
+                PlaylistAudioTrackerEvent.ViewScreen(
+                    parameters = mapOf(TRACKER_KEY_PLAYLIST_AUDIO_ID to audioItemId),
+                ),
+            )
             state = state.copy(isLoading = true)
             viewModelScope.launch(dispatcher) {
                 val selectedAudioTitle =
