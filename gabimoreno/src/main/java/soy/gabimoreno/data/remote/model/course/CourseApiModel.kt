@@ -1,3 +1,5 @@
+@file:Suppress("LongParameterList")
+
 package soy.gabimoreno.data.remote.model.course
 
 import com.squareup.moshi.Json
@@ -8,22 +10,22 @@ import soy.gabimoreno.data.remote.model.post.TitleApiModel
 
 @JsonClass(generateAdapter = true)
 class CourseApiModel(
-    @Json(name = "id")
+    @param:Json(name = "id")
     val id: Long,
-    @Json(name = "title")
+    @param:Json(name = "title")
     val titleApiModel: TitleApiModel,
-    @Json(name = "content")
+    @param:Json(name = "content")
     val contentApiModel: ContentApiModel,
-    @Json(name = "excerpt")
+    @param:Json(name = "excerpt")
     val excerptApiModel: ExcerptApiModel,
-    @Json(name = "author")
+    @param:Json(name = "author")
     val authorId: Int,
-    @Json(name = "categories")
+    @param:Json(name = "categories")
     val categoryIds: List<Int>,
-    @Json(name = "link")
+    @param:Json(name = "link")
     val url: String,
-    @Json(name = "date")
+    @param:Json(name = "date")
     val dateString: String,
-    @Json(name = "yoast_head_json")
+    @param:Json(name = "yoast_head_json")
     val yoastHeadJsonApiModel: YoastHeadJsonApiModel,
 )

@@ -16,9 +16,14 @@ class LoginValidationUseCase
             val isAValidEmail = email.isAValidEmail()
             val isAValidPassword = password.isAValidPassword()
 
-            if (!isAValidEmail) return Error.InvalidEmailFormat.left()
-            if (!isAValidPassword) return Error.InvalidPassword.left()
-            return Unit.right()
+            val error =
+                when {
+                    !isAValidEmail -> Error.InvalidEmailFormat
+                    !isAValidPassword -> Error.InvalidPassword
+                    else -> null
+                }
+
+            return error?.left() ?: Unit.right()
         }
 
         sealed class Error {

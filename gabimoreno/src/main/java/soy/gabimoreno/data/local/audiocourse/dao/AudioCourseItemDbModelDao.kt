@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package soy.gabimoreno.data.local.audiocourse.dao
 
 import androidx.room.Dao

@@ -26,6 +26,7 @@ import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReversePodcastOrderUseCase
+import soy.gabimoreno.domain.usecase.HomeUseCases
 import soy.gabimoreno.domain.usecase.SetShouldIReversePodcastOrderUseCase
 
 @ExperimentalCoroutinesApi
@@ -42,14 +43,18 @@ class HomeViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+        val homeUseCases =
+            HomeUseCases(
+                getAppVersionName = getAppVersionNameUseCase,
+                encodeUrl = encodeUrlUseCase,
+                getShouldIReversePodcastOrder = getShouldIReversePodcastOrderUseCase,
+                setShouldIReversePodcastOrder = setShouldIReversePodcastOrderUseCase,
+            )
         viewModel =
             HomeViewModel(
                 podcastDatasource,
                 tracker,
-                getAppVersionNameUseCase,
-                encodeUrlUseCase,
-                getShouldIReversePodcastOrderUseCase,
-                setShouldIReversePodcastOrderUseCase,
+                homeUseCases,
                 testDispatcher,
             )
     }

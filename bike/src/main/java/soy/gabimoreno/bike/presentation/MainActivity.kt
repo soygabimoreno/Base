@@ -3,7 +3,6 @@ package soy.gabimoreno.bike.presentation
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.activity.ComponentActivity
@@ -79,17 +78,33 @@ class MainActivity : ComponentActivity() {
         viewModel.viewEvents.collect { viewEvent ->
             when (viewEvent) {
                 MainViewModel.ViewEvent.Error.ShowDeviceDoesNotSupportBluetooth ->
-                    showDeviceDoesNotSupportBluetooth()
+                    toast(
+                        R.string.device_does_not_support_bluetooth,
+                    )
 
                 MainViewModel.ViewEvent.Error.ShowDeviceDoesNotSupportBle ->
-                    showDeviceDoesNotSupportBle()
+                    toast(
+                        R.string.device_does_not_support_ble,
+                    )
 
-                MainViewModel.ViewEvent.Error.ShowTurnOnBluetooth -> showTurnOnBluetooth()
-                MainViewModel.ViewEvent.Error.ShowConnectionFailed -> showConnectionFailed()
-                MainViewModel.ViewEvent.Error.ShowNullDeviceConnected -> showNullDeviceConnected()
-                MainViewModel.ViewEvent.Error.ShowDisconnected -> showDisconnected()
-                MainViewModel.ViewEvent.Error.ShowReadFailure -> showReadFailure()
-                MainViewModel.ViewEvent.Error.ShowNotLoadedDevice -> showNotLoadedDevice()
+                MainViewModel.ViewEvent.Error.ShowTurnOnBluetooth ->
+                    toast(
+                        R.string.turn_on_bluetooth,
+                    )
+                MainViewModel.ViewEvent.Error.ShowConnectionFailed ->
+                    toast(
+                        R.string.connection_failed,
+                    )
+                MainViewModel.ViewEvent.Error.ShowNullDeviceConnected ->
+                    toast(
+                        R.string.problem_with_connected_device,
+                    )
+                MainViewModel.ViewEvent.Error.ShowDisconnected -> toast(R.string.disconnected)
+                MainViewModel.ViewEvent.Error.ShowReadFailure -> toast(R.string.read_failure)
+                MainViewModel.ViewEvent.Error.ShowNotLoadedDevice ->
+                    toast(
+                        R.string.not_loaded_device,
+                    )
                 MainViewModel.ViewEvent.Foo -> Unit
                 is MainViewModel.ViewEvent.CheckPermissionsAndInitBle ->
                     checkPermissionsAndInitBle(
@@ -102,14 +117,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkPermissionsAndInitBle(bleManager: BleManager) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            bluetoothScanPermission.runWithPermission {
-                bluetoothConnectPermission.runWithPermission {
-                    initBle(bleManager)
-                }
+        bluetoothScanPermission.runWithPermission {
+            bluetoothConnectPermission.runWithPermission {
+                initBle(bleManager)
             }
-        } else {
-            initBle(bleManager)
         }
     }
 
@@ -130,38 +141,6 @@ class MainActivity : ComponentActivity() {
             .setConnectOverTime(CONNECT_OVER_TIME_IN_MILLIS)
             .operateTimeout = OPERATE_TIME_OUT
         viewModel.startConnection()
-    }
-
-    private fun showDeviceDoesNotSupportBluetooth() {
-        toast(R.string.device_does_not_support_bluetooth)
-    }
-
-    private fun showDeviceDoesNotSupportBle() {
-        toast(R.string.device_does_not_support_ble)
-    }
-
-    private fun showConnectionFailed() {
-        toast(R.string.connection_failed)
-    }
-
-    private fun showNullDeviceConnected() {
-        toast(R.string.problem_with_connected_device)
-    }
-
-    private fun showDisconnected() {
-        toast(R.string.disconnected)
-    }
-
-    private fun showReadFailure() {
-        toast(R.string.read_failure)
-    }
-
-    private fun showNotLoadedDevice() {
-        toast(R.string.not_loaded_device)
-    }
-
-    private fun showTurnOnBluetooth() {
-        toast(R.string.turn_on_bluetooth)
     }
 
     private fun showDeviceName(deviceName: String) {

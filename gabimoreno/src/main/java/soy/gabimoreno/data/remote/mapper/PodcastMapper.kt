@@ -78,22 +78,20 @@ private fun Article.getEpisodeNumber(): String {
 }
 
 private fun ItunesArticleData?.getAudioLengthInSeconds(): Int {
-    if (this == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
-    val duration = this.duration
-    val durationInteger = duration?.toIntOrNull()
-    if (durationInteger != null) {
-        return durationInteger
-    } else {
-        if (duration == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
-        val dateFormat = SimpleDateFormat(HOURS_MINUTES_SECONDS_PATTERN, Locale.ROOT)
-        val date = dateFormat.parse(duration)
-        val calendar = Calendar.getInstance()
-        if (date == null) return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
-        calendar.time = date
+    val duration = this?.duration ?: return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
+
+    return duration.toIntOrNull() ?: parseTimeFormatDuration(duration)
+}
+
+private fun parseTimeFormatDuration(duration: String): Int {
+    val dateFormat = SimpleDateFormat(HOURS_MINUTES_SECONDS_PATTERN, Locale.ROOT)
+    val date = dateFormat.parse(duration) ?: return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
+
+    return Calendar.getInstance().apply { time = date }.let { calendar ->
         val hours = calendar.get(Calendar.HOUR_OF_DAY)
         val minutes = calendar.get(Calendar.MINUTE)
         val seconds = calendar.get(Calendar.SECOND)
-        return hours * ONE_HOUR_IN_SECONDS + minutes * ONE_MINUTE_IN_SECONDS + seconds
+        hours * ONE_HOUR_IN_SECONDS + minutes * ONE_MINUTE_IN_SECONDS + seconds
     }
 }
 

@@ -1,3 +1,4 @@
+@file:Suppress("TooManyFunctions")
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
 package soy.gabimoreno.data.local.playlist
@@ -27,7 +28,7 @@ class LocalPlaylistDataSource
     @Inject
     constructor(
         gabiMorenoDatabase: ApplicationDatabase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) {
         @VisibleForTesting
         val playlistDbModelDao = gabiMorenoDatabase.playlistDbModelDao()
@@ -213,7 +214,11 @@ class LocalPlaylistDataSource
                     .getAudioCourseItemsByIds(ids)
                     .associateBy { it.id }
 
-            return AudioResources(premiumAudioMap, audioCoursesMap, audioCourseItemsMap)
+            return AudioResources(
+                premiumAudioMap,
+                audioCoursesMap,
+                audioCourseItemsMap,
+            )
         }
 
         private fun PlaylistWithItems.mapToPlaylist(resources: AudioResources): Playlist {
