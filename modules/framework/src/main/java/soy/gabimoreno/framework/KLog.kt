@@ -19,7 +19,7 @@ class KLog {
 
         fun v(s: String) {
             if (debug) {
-                Throwable().stackTrace[1].apply {
+                Thread.currentThread().stackTrace[CALLER_STACK_INDEX].apply {
                     Log.v(
                         generateTag(),
                         generateMessage(s),
@@ -30,7 +30,7 @@ class KLog {
 
         fun d(s: String) {
             if (debug) {
-                Throwable().stackTrace[1].apply {
+                Thread.currentThread().stackTrace[CALLER_STACK_INDEX].apply {
                     Log.d(
                         generateTag(),
                         generateMessage(s),
@@ -41,7 +41,7 @@ class KLog {
 
         fun i(s: String) {
             if (debug) {
-                Throwable().stackTrace[1].apply {
+                Thread.currentThread().stackTrace[CALLER_STACK_INDEX].apply {
                     Log.i(
                         generateTag(),
                         generateMessage(s),
@@ -52,7 +52,7 @@ class KLog {
 
         fun w(s: String) {
             if (debug) {
-                Throwable().stackTrace[1].apply {
+                Thread.currentThread().stackTrace[CALLER_STACK_INDEX].apply {
                     Log.w(
                         generateTag(),
                         generateMessage(s),
@@ -63,7 +63,7 @@ class KLog {
 
         fun e(s: String) {
             if (debug) {
-                Throwable().stackTrace[1].apply {
+                Thread.currentThread().stackTrace[CALLER_STACK_INDEX].apply {
                     Log.e(
                         generateTag(),
                         generateMessage(s),
@@ -76,3 +76,4 @@ class KLog {
 
 private fun StackTraceElement.generateTag() = className.substringAfterLast(".")
 private fun StackTraceElement.generateMessage(msg: Any) = "$methodName() $msg"
+private const val CALLER_STACK_INDEX = 4

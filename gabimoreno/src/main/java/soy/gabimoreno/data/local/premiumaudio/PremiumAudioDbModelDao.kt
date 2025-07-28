@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package soy.gabimoreno.data.local.premiumaudio
 
 import androidx.paging.PagingSource

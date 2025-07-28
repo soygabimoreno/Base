@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package soy.gabimoreno.data.local.audiocourse
 
 import com.google.common.annotations.VisibleForTesting
@@ -17,7 +19,7 @@ class LocalAudioCoursesDataSource
     @Inject
     constructor(
         gabiMorenoDatabase: ApplicationDatabase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) {
         @VisibleForTesting
         val audioCourseDbModelDao = gabiMorenoDatabase.audioCourseDbModelDao()

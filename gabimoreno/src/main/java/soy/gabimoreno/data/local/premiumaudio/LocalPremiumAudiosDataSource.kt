@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package soy.gabimoreno.data.local.premiumaudio
 
 import androidx.paging.PagingSource
@@ -15,7 +17,7 @@ class LocalPremiumAudiosDataSource
     @Inject
     constructor(
         gabiMorenoDatabase: ApplicationDatabase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) {
         @VisibleForTesting
         val premiumAudioDbModelDao = gabiMorenoDatabase.premiumAudioDbModelDao()

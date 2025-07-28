@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package soy.gabimoreno.domain.repository.playlist
 
 import arrow.core.Either

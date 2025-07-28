@@ -18,10 +18,7 @@ import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.di.Main
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
-import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
-import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
-import soy.gabimoreno.domain.usecase.GetShouldIReversePodcastOrderUseCase
-import soy.gabimoreno.domain.usecase.SetShouldIReversePodcastOrderUseCase
+import soy.gabimoreno.domain.usecase.HomeUseCases
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,10 +27,7 @@ class HomeViewModel
     constructor(
         private val podcastDatasource: PodcastRepository,
         private val tracker: Tracker,
-        getAppVersionNameUseCase: GetAppVersionNameUseCase,
-        private val encodeUrlUseCase: EncodeUrlUseCase,
-        private val getShouldIReversePodcastOrderUseCase: GetShouldIReversePodcastOrderUseCase,
-        private val setShouldIReversePodcastOrderUseCase: SetShouldIReversePodcastOrderUseCase,
+        private val homeUseCases: HomeUseCases,
         @param:Main private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var viewState by mutableStateOf<ViewState>(ViewState.Loading)
@@ -52,10 +46,10 @@ class HomeViewModel
         val viewEventFlow = _viewEventFlow.asSharedFlow()
 
         init {
-            appVersionName = getAppVersionNameUseCase()
+            appVersionName = homeUseCases.getAppVersionName()
             searchPodcasts()
             viewModelScope.launch(dispatcher) {
-                shouldIReversePodcastOrder = getShouldIReversePodcastOrderUseCase()
+                shouldIReversePodcastOrder = homeUseCases.getShouldIReversePodcastOrder()
             }
         }
 
@@ -92,7 +86,9 @@ class HomeViewModel
 
         fun onShowWebViewClicked(url: String) {
             viewModelScope.launch(dispatcher) {
-                _viewEventFlow.emit(ViewEvent.ShowWebView(encodeUrlUseCase(url)))
+                _viewEventFlow.emit(
+                    ViewEvent.ShowWebView(homeUseCases.encodeUrl(url)),
+                )
             }
         }
 
@@ -109,20 +105,6 @@ class HomeViewModel
                 ),
             )
         }
-
-//        fun onDeepLinkReceived(
-//            episodeId: String,
-//            episodeTitle: String,
-//        ) {
-//            tracker.trackEvent(
-//                HomeTrackerEvent.ReceiveDeepLink(
-//                    mapOf(
-//                        TRACKER_KEY_EPISODE_ID to episodeId,
-//                        TRACKER_KEY_EPISODE_TITLE to episodeTitle,
-//                    ),
-//                ),
-//            )
-//        }
 
         fun pullToRefresh() {
             viewModelScope.launch(dispatcher) {
@@ -147,7 +129,7 @@ class HomeViewModel
             shouldIReversePodcastOrder = !shouldIReversePodcastOrder
             viewState = ViewState.Loading
             viewModelScope.launch(dispatcher) {
-                setShouldIReversePodcastOrderUseCase(shouldIReversePodcastOrder)
+                homeUseCases.setShouldIReversePodcastOrder(shouldIReversePodcastOrder)
             }
             episodes.reverse()
             viewState = ViewState.Success(episodes.toList())
@@ -168,7 +150,6 @@ class HomeViewModel
             data class Success(
                 val episodes: List<Episode>,
             ) : ViewState()
-//        data class Content(val episodesWrapper: EpisodesWrapper) : ViewState()
         }
     }
 

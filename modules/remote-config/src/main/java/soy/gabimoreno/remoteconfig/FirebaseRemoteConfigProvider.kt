@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.internal.ConfigFetchHandler
+import java.security.GeneralSecurityException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -60,13 +61,19 @@ class FirebaseRemoteConfigProvider
                 val password = secureEncryptor.decrypt(passwordEncrypted)
 
                 return TokenCredentials(username, password)
-            } catch (e: Exception) {
-                Log.e(
-                    "FirebaseRemoteConfigProvider",
-                    "Failed to decrypt token credentials ${e.message}",
-                )
-                return TokenCredentials(TOKEN_CREDENTIAL_USERNAME, TOKEN_CREDENTIAL_PASSWORD)
+            } catch (e: GeneralSecurityException) {
+                handleException(e)
+            } catch (e: IllegalArgumentException) {
+                handleException(e)
             }
+            return TokenCredentials(TOKEN_CREDENTIAL_USERNAME, TOKEN_CREDENTIAL_PASSWORD)
+        }
+
+        private fun handleException(e: Exception) {
+            Log.e(
+                "FirebaseRemoteConfigProvider",
+                "Failed to decrypt token credentials ${e.message}",
+            )
         }
     }
 
