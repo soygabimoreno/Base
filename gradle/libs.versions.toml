@@ -35,7 +35,7 @@ secrets-gradle-plugin = "2.0.1"
 compose-plugin = "1.8.2"
 ktlint = "13.0.0"
 
-firebaseBom = "33.16.0"
+firebaseBom = "34.0.0"
 
 junit = "4.13.2"
 kluent-android = "1.73"
@@ -116,11 +116,11 @@ paging-runtime = { group = "androidx.paging", name = "paging-runtime-ktx", versi
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "pagingCompose" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-firebase-config = { module = "com.google.firebase:firebase-config-ktx" }
-firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
-firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
+firebase-config = { module = "com.google.firebase:firebase-config"  }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 
 playinapp-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "play-review" }
 playinapp-review = { module = "com.google.android.play:review", version.ref = "play-review" }
