@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedDispatcher
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -14,21 +15,26 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
@@ -61,6 +67,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -75,7 +82,9 @@ import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Percent
+import soy.gabimoreno.presentation.theme.PurpleDark
 import soy.gabimoreno.presentation.theme.Spacing
+import soy.gabimoreno.presentation.theme.White
 import soy.gabimoreno.presentation.ui.ArrowDownButton
 import soy.gabimoreno.presentation.ui.EmphasisText
 import soy.gabimoreno.presentation.ui.PreviewContent
@@ -157,6 +166,10 @@ fun PodcastPlayerBody(
             playerViewModel.onSliderChangeFinished(localSliderValue)
             sliderIsChanging = false
         },
+        shouldIShowSpeedControls = playerViewModel.shouldIShowSpeedControls,
+        selectedPlaybackSpeed = playerViewModel.selectedPlaybackSpeed,
+        onSpeedControlClicked = { playerViewModel.onSpeedControlClicked() },
+        onSetPlaybackSpeed = { playerViewModel.onSetPlaybackSpeed(it) },
     ) { playerViewModel.showPlayerFullScreen = false }
 
     HandleSideEffects(backDispatcher, backCallback, playerViewModel)
@@ -244,6 +257,10 @@ fun PodcastPlayerStatelessContent(
     onTooglePlayback: () -> Unit,
     onSliderChange: (Float) -> Unit,
     onSliderChangeFinished: () -> Unit,
+    shouldIShowSpeedControls: Boolean,
+    selectedPlaybackSpeed: PlaybackSpeed,
+    onSpeedControlClicked: () -> Unit,
+    onSetPlaybackSpeed: (PlaybackSpeed) -> Unit,
     onClose: () -> Unit,
 ) {
     PodcastPlayerBackground(gradientColor, yOffset) {
@@ -255,6 +272,10 @@ fun PodcastPlayerStatelessContent(
                     Modifier
                         .weight(1f, fill = false)
                         .align(Alignment.CenterHorizontally),
+                shouldIShowSpeedControls = shouldIShowSpeedControls,
+                selectedPlaybackSpeed = selectedPlaybackSpeed,
+                onSpeedControlClicked = onSpeedControlClicked,
+                onSetPlaybackSpeed = onSetPlaybackSpeed,
             )
             PodcastPlayerTitle(audio)
             PodcastPlayerSlider(
@@ -322,6 +343,10 @@ private fun PodcastPlayerHeader(onClose: () -> Unit) {
 private fun PodcastPlayerImage(
     audio: Audio,
     modifier: Modifier = Modifier,
+    shouldIShowSpeedControls: Boolean,
+    selectedPlaybackSpeed: PlaybackSpeed,
+    onSpeedControlClicked: () -> Unit,
+    onSetPlaybackSpeed: (PlaybackSpeed) -> Unit,
 ) {
     Box(
         modifier =
@@ -345,6 +370,71 @@ private fun PodcastPlayerImage(
             error = painterResource(R.drawable.ic_baseline_mic_24),
             modifier = Modifier.fillMaxSize(),
         )
+        PlaybackSpeedSelector(
+            shouldIShowSpeedControls = shouldIShowSpeedControls,
+            selectedPlaybackSpeed = selectedPlaybackSpeed,
+            onSpeedControlClicked = onSpeedControlClicked,
+            onSetPlaybackSpeed = onSetPlaybackSpeed,
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.PlaybackSpeedSelector(
+    shouldIShowSpeedControls: Boolean,
+    selectedPlaybackSpeed: PlaybackSpeed,
+    onSpeedControlClicked: () -> Unit,
+    onSetPlaybackSpeed: (PlaybackSpeed) -> Unit,
+) {
+    Box(
+        modifier =
+            Modifier
+                .width(IntrinsicSize.Max)
+                .background(
+                    White,
+                    shape = RoundedCornerShape(topStart = Spacing.s8, bottomEnd = Spacing.s8),
+                ).animateContentSize()
+                .align(Alignment.BottomEnd)
+                .clickable {
+                    onSpeedControlClicked()
+                },
+    ) {
+        if (!shouldIShowSpeedControls) {
+            Text(
+                selectedPlaybackSpeed.label,
+                fontWeight = FontWeight.Black,
+                color = PurpleDark,
+                modifier =
+                    Modifier
+                        .padding(Spacing.s8)
+                        .clickable {
+                            onSpeedControlClicked()
+                        },
+            )
+        } else {
+            Column {
+                PlaybackSpeed.entries.reversed().forEach { speed ->
+                    Text(
+                        speed.label,
+                        fontWeight = FontWeight.Black,
+                        color = PurpleDark,
+                        modifier =
+                            Modifier
+                                .padding(Spacing.s8)
+                                .clickable {
+                                    onSetPlaybackSpeed(speed)
+                                },
+                    )
+                    Box(
+                        modifier =
+                            Modifier
+                                .height(Spacing.s1)
+                                .fillMaxWidth()
+                                .background(PurpleDark),
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -446,7 +536,11 @@ private fun PodcastPlayerControls(
                     .size(Spacing.s64)
                     .padding(Spacing.s8),
         )
-        ControlIcon(R.drawable.ic_baseline_forward_10_24, R.string.forward_10_seconds, onForward)
+        ControlIcon(
+            R.drawable.ic_baseline_forward_10_24,
+            R.string.forward_10_seconds,
+            onForward,
+        )
         ControlIcon(R.drawable.ic_baseline_skip_next_24, R.string.skip_to_next, onSkipToNext)
     }
 }
@@ -503,6 +597,10 @@ fun PodcastPlayerPreview() {
             onTooglePlayback = { },
             onSliderChange = { },
             onSliderChangeFinished = { },
+            shouldIShowSpeedControls = true,
+            selectedPlaybackSpeed = PlaybackSpeed.SPEED_1X,
+            onSpeedControlClicked = { },
+            onSetPlaybackSpeed = { },
         )
     }
 }

@@ -2,6 +2,7 @@ package soy.gabimoreno.player.service
 
 import android.content.ComponentName
 import android.content.Context
+import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
@@ -70,6 +71,14 @@ class MediaPlayerServiceConnection
 
         fun skipToNext() {
             transportControls.skipToNext()
+        }
+
+        fun setPlaybackSpeed(speed: Float) {
+            val extras =
+                Bundle().apply {
+                    putFloat(PLAYBACK_SPEED_EXTRA, speed)
+                }
+            mediaBrowser.sendCustomAction(SET_PLAYBACK_SPEED, extras, null)
         }
 
         fun subscribe(
