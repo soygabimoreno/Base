@@ -60,6 +60,12 @@ class PlayerViewModel
 
         internal var lastAudioIdListened by mutableStateOf("")
 
+        internal var shouldIShowSpeedControls by mutableStateOf(false)
+            private set
+
+        internal var selectedPlaybackSpeed by mutableStateOf(PlaybackSpeed.SPEED_1X)
+            private set
+
         val podcastIsPlaying: Boolean
             get() = playbackState.value?.isPlaying == true
 
@@ -126,7 +132,9 @@ class PlayerViewModel
         }
 
         fun onViewScreen(audio: Audio) {
-            tracker.trackEvent(PlayerTrackerEvent.ViewScreen(audio.toMap()))
+            tracker.trackEvent(
+                PlayerTrackerEvent.ViewScreen(audio.toMap()),
+            )
         }
 
         fun playPauseAudio(
@@ -216,6 +224,16 @@ class PlayerViewModel
             mediaPlayerServiceConnection.skipToNext()
         }
 
+        fun onSpeedControlClicked() {
+            shouldIShowSpeedControls = !shouldIShowSpeedControls
+        }
+
+        fun onSetPlaybackSpeed(speed: PlaybackSpeed) {
+            selectedPlaybackSpeed = speed
+            mediaPlayerServiceConnection.setPlaybackSpeed(speed.speed)
+            onSpeedControlClicked()
+        }
+
         /**
          * @param value from 0.0 to 1.0
          */
@@ -242,16 +260,24 @@ class PlayerViewModel
         private fun markAudioAsListened(audioId: String) {
             if (hasTriggeredEightyPercent || lastAudioIdListened == audioId) return
 
-            tracker.trackEvent(PlayerTrackerEvent.AudioListened(getParameters()))
+            tracker.trackEvent(
+                PlayerTrackerEvent.AudioListened(getParameters()),
+            )
             hasTriggeredEightyPercent = true
             lastAudioIdListened = audioId
 
             viewModelScope.launch(dispatcher) {
                 checkShouldIShowInAppReviewUseCase()
                 if (audioId.contains("-")) {
-                    markAudioCourseAsListenedUseCase(audioId, true)
+                    markAudioCourseAsListenedUseCase(
+                        idAudioCourseItem = audioId,
+                        hasBeenListened = true,
+                    )
                 } else {
-                    markPremiumAudioAsListenedUseCase(audioId, true)
+                    markPremiumAudioAsListenedUseCase(
+                        premiumAudioId = audioId,
+                        hasBeenListened = true,
+                    )
                 }
             }
         }
@@ -273,8 +299,12 @@ class PlayerViewModel
 
         private fun onPlayFromMediaId(currentAudio: Audio) {
             val parameters = currentAudio.toMap()
-            tracker.trackEvent(PlayerTrackerEvent.PlayFromMediaId(parameters))
-            mediaPlayerServiceConnection.transportControls.playFromMediaId(currentAudio.id, null)
+            tracker.trackEvent(
+                PlayerTrackerEvent.PlayFromMediaId(parameters),
+            )
+            mediaPlayerServiceConnection
+                .transportControls
+                .playFromMediaId(currentAudio.id, null)
         }
 
         private fun getParameters(): Map<String, String> =

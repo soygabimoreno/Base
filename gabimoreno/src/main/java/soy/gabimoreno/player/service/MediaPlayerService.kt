@@ -9,6 +9,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.media.MediaBrowserServiceCompat
+import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -176,6 +177,11 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
                 notifyChildrenChanged(MEDIA_ROOT_ID)
             }
 
+            SET_PLAYBACK_SPEED -> {
+                val speed = extras?.getFloat(PLAYBACK_SPEED_EXTRA, 1.0f) ?: 1.0f
+                exoPlayer.playbackParameters = PlaybackParameters(speed)
+            }
+
             else -> Unit
         }
     }
@@ -237,7 +243,9 @@ class MediaPlayerService : MediaBrowserServiceCompat() {
 }
 
 const val MEDIA_ROOT_ID = "TUVESUFfUk9PVF9JRA" // TODO: change it
-const val START_MEDIA_PLAYBACK_ACTION = "START_MEDIA_PLAYBACK_ACTION"
-const val REFRESH_MEDIA_BROWSER_CHILDREN = "REFRESH_MEDIA_BROWSER_CHILDREN"
+const val PLAYBACK_SPEED_EXTRA = "PLAYBACK_SPEED_EXTRA"
 const val PROGRESS_EXTRA = "PROGRESS"
+const val REFRESH_MEDIA_BROWSER_CHILDREN = "REFRESH_MEDIA_BROWSER_CHILDREN"
+const val SET_PLAYBACK_SPEED = "SET_PLAYBACK_SPEED"
+const val START_MEDIA_PLAYBACK_ACTION = "START_MEDIA_PLAYBACK_ACTION"
 private const val POSITION_UPDATE_INTERVAL = 1_000L

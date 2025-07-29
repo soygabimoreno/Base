@@ -7,6 +7,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import org.amshove.kluent.shouldBe
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -218,5 +219,34 @@ class PlayerViewModelTest {
 //            AUDIO_PLAYBACK_POSITION to "0"
 //        )
 //        verifyOnce { tracker.trackEvent(PlayerTrackerEvent.SeekTo(parameters)) }
+    }
+
+    @Test
+    fun `GIVEN speed controls hidden WHEN onSpeedControlClicked THEN speed controls are shown`() {
+        viewModel.onSpeedControlClicked()
+
+        viewModel.shouldIShowSpeedControls shouldBe true
+    }
+
+    @Test
+    fun `GIVEN speed controls shown WHEN onSpeedControlClicked THEN speed controls are hidden`() {
+        viewModel.onSpeedControlClicked()
+        viewModel.onSpeedControlClicked()
+
+        viewModel.shouldIShowSpeedControls shouldBe false
+    }
+
+    @Test
+    fun `GIVEN speed controls are shown WHEN onSetPlaybackSpeed THEN playback speed is updated and speed controls are hidden`() {
+        val speed = PlaybackSpeed.SPEED_1_5X
+
+        viewModel.onSpeedControlClicked()
+        viewModel.onSetPlaybackSpeed(speed)
+
+        viewModel.selectedPlaybackSpeed shouldBe speed
+        viewModel.shouldIShowSpeedControls shouldBe false
+        verifyOnce {
+            mediaPlayerServiceConnection.setPlaybackSpeed(speed.speed)
+        }
     }
 }
