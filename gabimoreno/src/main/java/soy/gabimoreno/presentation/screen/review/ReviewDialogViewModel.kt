@@ -26,7 +26,7 @@ class ReviewDialogViewModel
         private val inAppReviewManager: InAppReviewManager,
         private val getInAppReviewCounterUseCase: GetInAppReviewCounterUseCase,
         private val setShouldIShowInAppReviewUseCase: SetShouldIShowInAppReviewUseCase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var state by mutableStateOf(ReviewDialogState())
             private set
