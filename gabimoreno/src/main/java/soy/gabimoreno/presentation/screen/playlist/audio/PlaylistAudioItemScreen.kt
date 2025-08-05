@@ -91,40 +91,9 @@ fun PlaylistAudioItem(
                 .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
                 .fillMaxSize(),
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(Spacing.s64),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                IconButton(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.back),
-                    padding = Spacing.s16,
-                    onClick = { onAction(PlaylistAudioItemAction.OnBackClicked) },
-                )
-                Text(
-                    text =
-                        stringResource(
-                            id = R.string.playlists_add_audio_to_playlist,
-                        ).uppercase(),
-                    style = MaterialTheme.typography.h5,
-                    modifier =
-                        Modifier
-                            .padding(start = Spacing.s16),
-                )
-            }
-            Text(
-                state.selectedAudioTitle,
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.padding(horizontal = Spacing.s8),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Header(onBackClick = { onAction(PlaylistAudioItemAction.OnBackClicked) })
+            AudioTitle(state.selectedAudioTitle)
             Spacer(modifier = Modifier.padding(vertical = Spacing.s8))
             SecondaryButton(
                 text = stringResource(R.string.playlists_create_title),
@@ -132,75 +101,134 @@ fun PlaylistAudioItem(
                 onClick = { onAction(PlaylistAudioItemAction.OnNewPlaylistClicked) },
             )
             Spacer(modifier = Modifier.padding(vertical = Spacing.s8))
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                when {
-                    state.isLoading -> {
-                        CircularProgressIndicator()
-                    }
+            PlaylistContent(
+                state = state,
+                onAction = onAction,
+            )
+        }
+    }
+}
 
-                    state.playlists.isEmpty() -> {
-                        val annotatedLoginString =
-                            buildAnnotatedString {
-                                append(stringResource(R.string.playlists_empty))
-                                append(" ")
-                                withStyle(
-                                    SpanStyle(
-                                        color = Orange,
-                                        fontWeight = FontWeight.Bold,
-                                        textDecoration = TextDecoration.Underline,
-                                    ),
-                                ) {
-                                    append(stringResource(R.string.playlists_name))
-                                }
-                            }
-                        Text(
-                            text = annotatedLoginString,
-                            style = MaterialTheme.typography.h6,
-                        )
-                    }
+@Composable
+private fun Header(onBackClick: () -> Unit) {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(Spacing.s64),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconButton(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(R.string.back),
+            padding = Spacing.s16,
+            onClick = onBackClick,
+        )
+        Text(
+            text = stringResource(R.string.playlists_add_audio_to_playlist).uppercase(),
+            style = MaterialTheme.typography.h5,
+            modifier = Modifier.padding(start = Spacing.s16),
+        )
+    }
+}
 
-                    else -> {
-                        LazyColumn(
-                            modifier =
-                                Modifier
-                                    .fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(Spacing.s16),
-                        ) {
-                            items(
-                                count = state.playlists.size,
-                                key = { state.playlists[it].playlist.id },
-                            ) { index ->
-                                PlaylistItem(
-                                    playlist = state.playlists[index].playlist,
-                                    selectable = true,
-                                    isPlaylistSelected = state.playlists[index].isSelected,
-                                    onToggleClick = {
-                                        onAction(
-                                            PlaylistAudioItemAction.OnTogglePlaylist(
-                                                state.playlists[index].playlist.id,
-                                            ),
-                                        )
-                                    },
-                                )
-                            }
-                        }
-                    }
-                }
-                PrimaryButton(
-                    text = stringResource(R.string.playlists_save),
-                    height = Spacing.s48,
-                    modifier =
-                        Modifier
-                            .padding(bottom = Spacing.s64)
-                            .align(Alignment.BottomCenter),
-                    onClick = { onAction(PlaylistAudioItemAction.OnSaveClicked) },
+@Composable
+private fun AudioTitle(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.h6,
+        modifier = Modifier.padding(horizontal = Spacing.s8),
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+    )
+}
+
+@Composable
+private fun PlaylistContent(
+    state: PlaylistAudioItemState,
+    onAction: (PlaylistAudioItemAction) -> Unit,
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        when {
+            state.isLoading -> {
+                CircularProgressIndicator()
+            }
+
+            state.playlists.isEmpty() -> {
+                EmptyPlaylistsMessage()
+            }
+
+            else -> {
+                PlaylistsList(
+                    playlists = state.playlists,
+                    onToggle = { playlistId ->
+                        onAction(PlaylistAudioItemAction.OnTogglePlaylist(playlistId))
+                    },
                 )
             }
+        }
+
+        PrimaryButton(
+            text = stringResource(R.string.playlists_save),
+            height = Spacing.s48,
+            modifier =
+                Modifier
+                    .padding(bottom = Spacing.s64)
+                    .align(Alignment.BottomCenter),
+            onClick = { onAction(PlaylistAudioItemAction.OnSaveClicked) },
+        )
+    }
+}
+
+@Composable
+private fun EmptyPlaylistsMessage() {
+    val annotatedText =
+        buildAnnotatedString {
+            append(stringResource(R.string.playlists_empty))
+            append(" ")
+            withStyle(
+                SpanStyle(
+                    color = Orange,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline,
+                ),
+            ) {
+                append(stringResource(R.string.playlists_name))
+            }
+        }
+
+    Text(
+        text = annotatedText,
+        style = MaterialTheme.typography.h6,
+    )
+}
+
+@Composable
+private fun PlaylistsList(
+    playlists: List<PlaylistAudioItemState.PlaylistItem>,
+    onToggle: (Int) -> Unit,
+) {
+    LazyColumn(
+        modifier =
+            Modifier
+                .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(Spacing.s16),
+    ) {
+        items(
+            count = playlists.size,
+            key = { playlists[it].playlist.id },
+        ) { index ->
+            PlaylistItem(
+                playlist = playlists[index].playlist,
+                selectable = true,
+                isPlaylistSelected = playlists[index].isSelected,
+                onToggleClick = {
+                    onToggle(playlists[index].playlist.id)
+                },
+            )
         }
     }
 }

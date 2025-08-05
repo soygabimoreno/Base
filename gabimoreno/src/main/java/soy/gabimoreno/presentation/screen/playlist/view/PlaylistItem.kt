@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,12 +64,7 @@ fun PlaylistItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Icon(
-            imageVector = playlist.category.icon,
-            contentDescription = "Playlist",
-            modifier = Modifier.size(Spacing.s64),
-            tint = playlist.category.color,
-        )
+        PlaylistItemIcon(playlist)
         Spacer(modifier = Modifier.width(Spacing.s16))
         Column(
             modifier = Modifier.weight(1f),
@@ -94,31 +90,54 @@ fun PlaylistItem(
             )
         }
         if (selectable) {
-            Box(
+            SelectablePlaylistItem(
+                iconColor = iconColor,
+                playlist = playlist,
+                onToggleClick = onToggleClick,
+            )
+        }
+    }
+}
+
+@Composable
+private fun PlaylistItemIcon(playlist: Playlist) {
+    Icon(
+        imageVector = playlist.category.icon,
+        contentDescription = "Playlist",
+        modifier = Modifier.size(Spacing.s64),
+        tint = playlist.category.color,
+    )
+}
+
+@Composable
+private fun SelectablePlaylistItem(
+    iconColor: Color,
+    playlist: Playlist,
+    onToggleClick: (playlistId: Int) -> Unit = {},
+) {
+    Box(
+        modifier =
+            Modifier
+                .size(Spacing.s32)
+                .border(
+                    1.dp,
+                    playlist.category.color,
+                    shape = CircleShape,
+                ).padding(Spacing.s4),
+    ) {
+        IconButton(
+            onClick = { onToggleClick(playlist.id) },
+        ) {
+            Icon(
                 modifier =
                     Modifier
-                        .size(Spacing.s32)
-                        .border(
-                            1.dp,
-                            playlist.category.color,
-                            shape = CircleShape,
-                        ).padding(Spacing.s4),
-            ) {
-                IconButton(
-                    onClick = { onToggleClick(playlist.id) },
-                ) {
-                    Icon(
-                        modifier =
-                            Modifier
-                                .size(Spacing.s32),
-                        imageVector = Icons.Default.Check,
-                        contentDescription =
-                            stringResource(R.string.playlists_add_audio_to_playlist) + " " +
-                                playlist.title,
-                        tint = iconColor,
-                    )
-                }
-            }
+                        .size(Spacing.s32),
+                imageVector = Icons.Default.Check,
+                contentDescription =
+                    stringResource(R.string.playlists_add_audio_to_playlist) + " " +
+                        playlist.title,
+                tint = iconColor,
+            )
         }
     }
 }

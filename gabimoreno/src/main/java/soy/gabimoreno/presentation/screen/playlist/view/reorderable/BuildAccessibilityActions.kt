@@ -1,3 +1,5 @@
+@file:Suppress("LongParameterList")
+
 package soy.gabimoreno.presentation.screen.playlist.view.reorderable
 
 import androidx.compose.ui.semantics.CustomAccessibilityAction

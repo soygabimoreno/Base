@@ -39,7 +39,7 @@ class AuthViewModel
         private val setShouldIReloadAudioCoursesUseCase: SetShouldIReloadAudioCoursesUseCase,
         private val resetJwtAuthTokenUseCase: ResetJwtAuthTokenUseCase,
         private val refreshAudioCoursesUseCase: RefreshAudioCoursesUseCase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var state by mutableStateOf(AuthState())
             private set

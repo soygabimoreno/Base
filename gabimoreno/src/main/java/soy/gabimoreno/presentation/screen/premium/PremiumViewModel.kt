@@ -30,7 +30,7 @@ class PremiumViewModel
         private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
         private val refreshBearerTokenUseCase: RefreshBearerTokenUseCase,
         private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var state by mutableStateOf(PremiumState())
             private set

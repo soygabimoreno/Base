@@ -67,31 +67,7 @@ fun ItemListCourse(
                     ).border(1.dp, Orange, RoundedCornerShape(Spacing.s16))
                     .clickable { onItemClick(audioCourse.id) },
         ) {
-            AsyncImage(
-                model =
-                    ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(audioCourse.thumbnailUrl)
-                        .crossfade(true)
-                        .diskCachePolicy(CachePolicy.ENABLED)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .build(),
-                contentDescription = stringResource(R.string.course_thumbnail),
-                contentScale = ContentScale.Crop,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = Spacing.s96, max = Spacing.s144)
-                        .clip(
-                            RoundedCornerShape(
-                                topStart = Spacing.s16,
-                                topEnd = Spacing.s16,
-                            ),
-                        ),
-                error = painterResource(R.drawable.ic_course_default),
-                placeholder = painterResource(R.drawable.ic_course_default),
-                alignment = Alignment.BottomStart,
-            )
+            ItemImage(audioCourse.thumbnailUrl)
             Text(
                 text = audioCourse.title,
                 style = MaterialTheme.typography.h6,
@@ -118,16 +94,50 @@ fun ItemListCourse(
             )
         }
         if (audioCourse.isPurchased) {
-            Icon(
-                imageVector = Icons.Default.Sell,
-                contentDescription = stringResource(R.string.course_active),
-                tint = White,
-                modifier =
-                    Modifier
-                        .padding(Spacing.s4)
-                        .size(40.dp)
-                        .rotate(Percent.NINETY),
-            )
+            ActiveCourseIcon()
         }
     }
+}
+
+@Composable
+private fun ActiveCourseIcon() {
+    Icon(
+        imageVector = Icons.Default.Sell,
+        contentDescription = stringResource(R.string.course_active),
+        tint = White,
+        modifier =
+            Modifier
+                .padding(Spacing.s4)
+                .size(40.dp)
+                .rotate(Percent.NINETY),
+    )
+}
+
+@Composable
+private fun ItemImage(audioCourseThumbnailUrl: String) {
+    AsyncImage(
+        model =
+            ImageRequest
+                .Builder(LocalContext.current)
+                .data(audioCourseThumbnailUrl)
+                .crossfade(true)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .build(),
+        contentDescription = stringResource(R.string.course_thumbnail),
+        contentScale = ContentScale.Crop,
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .heightIn(min = Spacing.s96, max = Spacing.s144)
+                .clip(
+                    RoundedCornerShape(
+                        topStart = Spacing.s16,
+                        topEnd = Spacing.s16,
+                    ),
+                ),
+        error = painterResource(R.drawable.ic_course_default),
+        placeholder = painterResource(R.drawable.ic_course_default),
+        alignment = Alignment.BottomStart,
+    )
 }

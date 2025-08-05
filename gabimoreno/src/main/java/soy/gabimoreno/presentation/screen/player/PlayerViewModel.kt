@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package soy.gabimoreno.presentation.screen.player
 
 import android.support.v4.media.MediaBrowserCompat

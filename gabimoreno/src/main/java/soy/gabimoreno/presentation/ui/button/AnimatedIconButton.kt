@@ -77,7 +77,6 @@ private fun rememberPulseAnimations(
 ): PulseAnimations {
     val baseSize = 32.dp
     val infiniteTransition = rememberInfiniteTransition(label = "${label}Pulse")
-
     val animatedScale by infiniteTransition.animateFloat(
         initialValue = 1.1f,
         targetValue = if (showAnimation) 1.4f else 1.1f,
@@ -88,7 +87,6 @@ private fun rememberPulseAnimations(
             ),
         label = "scaleAnim",
     )
-
     val animatedAlpha by infiniteTransition.animateFloat(
         initialValue = 0.05f,
         targetValue = if (showAnimation) 1f else 0.05f,
@@ -99,7 +97,6 @@ private fun rememberPulseAnimations(
             ),
         label = "circleAlpha",
     )
-
     val animatedSize by infiniteTransition.animateValue(
         initialValue = baseSize * 1.1f,
         targetValue = if (showAnimation) baseSize * 1.5f else baseSize * 1.1f,
@@ -111,7 +108,6 @@ private fun rememberPulseAnimations(
             ),
         label = "pulsingSize",
     )
-
     val animatedTint by infiniteTransition.animateColor(
         initialValue = tint,
         targetValue = if (showAnimation) transitionTint else tint,
@@ -122,7 +118,6 @@ private fun rememberPulseAnimations(
             ),
         label = "tint",
     )
-
     val animatedCircleColor by infiniteTransition.animateColor(
         initialValue = tint,
         targetValue = if (showAnimation) transitionTint else tint,
