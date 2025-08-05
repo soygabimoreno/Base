@@ -21,7 +21,7 @@ class ProfileViewModel
     constructor(
         private val setAllPremiumAudiosAsUnlistenedUseCase: SetAllPremiumAudiosAsUnlistenedUseCase,
         private val setAllAudiocoursesAsUnlistenedUseCase: SetAllAudiocoursesAsUnlistenedUseCase,
-        @IO private val dispatcher: CoroutineDispatcher,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var state by mutableStateOf(ProfileState())
             private set

@@ -38,7 +38,7 @@ class LoginUseCase
             if (authCookie.isStatusOK()) {
                 Unit.right()
             } else {
-                Throwable().left()
+                Throwable("Invalid auth cookie").left()
             }
 
         private suspend fun obtainAndSetToken(): Either<Throwable, Unit> {
@@ -62,8 +62,12 @@ class LoginUseCase
             credentials: TokenCredentials,
         ): Either<Throwable, Unit> =
             when {
-                credentials.username.isBlank() -> Throwable().left()
-                credentials.password.isBlank() -> Throwable().left()
+                credentials.username.isBlank() ->
+                    Throwable("Username cannot be blank").left()
+
+                credentials.password.isBlank() ->
+                    Throwable("Password cannot be blank").left()
+
                 else -> Unit.right()
             }
 

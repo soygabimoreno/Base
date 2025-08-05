@@ -23,7 +23,7 @@ class MainViewModel
     @Inject
     constructor(
         private val bleManager: BleManager,
-        @IO private val dispatcher: CoroutineDispatcher,
+        @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         private val _viewEvents =
             MutableStateFlow<ViewEvent>(ViewEvent.CheckPermissionsAndInitBle(bleManager))

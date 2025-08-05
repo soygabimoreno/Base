@@ -108,7 +108,7 @@ fun AudioBottomBarContent(audio: Audio) {
             audio = audio,
             xOffset = swipeableState.offset.value.roundToInt(),
             icon = iconResId,
-            onTooglePlaybackState = {
+            onTogglePlaybackState = {
                 playerViewModel.onPlayPauseClickedFromAudioBottomBar(
                     audio,
                     isPlaying.toPlayPause(),
@@ -126,7 +126,7 @@ fun AudioBottomBarStatelessContent(
     audio: Audio,
     xOffset: Int,
     @DrawableRes icon: Int,
-    onTooglePlaybackState: () -> Unit,
+    onTogglePlaybackState: () -> Unit,
     onTap: (Offset) -> Unit,
 ) {
     Box(
@@ -145,21 +145,7 @@ fun AudioBottomBarStatelessContent(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            AsyncImage(
-                model =
-                    ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(audio.thumbnailUrl)
-                        .crossfade(true)
-                        .diskCachePolicy(CachePolicy.ENABLED)
-                        .memoryCachePolicy(CachePolicy.ENABLED)
-                        .build(),
-                contentDescription = stringResource(R.string.podcast_thumbnail),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.size(Spacing.s64),
-                error = painterResource(R.drawable.ic_baseline_mic_24),
-            )
-
+            AudioImage(audioThumbnailUrl = audio.thumbnailUrl)
             Column(
                 verticalArrangement = Arrangement.Center,
                 modifier =
@@ -188,21 +174,49 @@ fun AudioBottomBarStatelessContent(
                         },
                 )
             }
-
-            Icon(
-                painter = painterResource(icon),
-                contentDescription = stringResource(R.string.play),
-                tint = MaterialTheme.colors.onBackground,
-                modifier =
-                    Modifier
-                        .padding(end = Spacing.s8)
-                        .size(Spacing.s40)
-                        .clip(CircleShape)
-                        .clickable(onClick = onTooglePlaybackState)
-                        .padding(Spacing.oddSpacing6),
+            PlayIcon(
+                icon = icon,
+                onTogglePlaybackState = onTogglePlaybackState,
             )
         }
     }
+}
+
+@Composable
+private fun AudioImage(audioThumbnailUrl: String) {
+    AsyncImage(
+        model =
+            ImageRequest
+                .Builder(LocalContext.current)
+                .data(audioThumbnailUrl)
+                .crossfade(true)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .build(),
+        contentDescription = stringResource(R.string.podcast_thumbnail),
+        contentScale = ContentScale.Crop,
+        modifier = Modifier.size(Spacing.s64),
+        error = painterResource(R.drawable.ic_baseline_mic_24),
+    )
+}
+
+@Composable
+private fun PlayIcon(
+    @DrawableRes icon: Int,
+    onTogglePlaybackState: () -> Unit,
+) {
+    Icon(
+        painter = painterResource(icon),
+        contentDescription = stringResource(R.string.play),
+        tint = MaterialTheme.colors.onBackground,
+        modifier =
+            Modifier
+                .padding(end = Spacing.s8)
+                .size(Spacing.s40)
+                .clip(CircleShape)
+                .clickable(onClick = onTogglePlaybackState)
+                .padding(Spacing.oddSpacing6),
+    )
 }
 
 @Preview(name = "Bottom Bar")
@@ -227,7 +241,7 @@ fun AudioBottomBarPreview() {
                 ),
             xOffset = 0,
             icon = R.drawable.ic_baseline_play_arrow_24,
-            onTooglePlaybackState = { },
+            onTogglePlaybackState = { },
             onTap = { },
         )
     }

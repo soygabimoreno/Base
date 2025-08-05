@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
@@ -31,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
@@ -48,6 +51,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.google.accompanist.insets.navigationBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.core.normalizeText
+import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.view.EpisodeView
 import soy.gabimoreno.presentation.screen.home.view.ErrorView
@@ -69,178 +73,234 @@ fun HomeScreen(
     var searchTextState by remember { mutableStateOf(TextFieldValue("")) }
     val pullRefreshState =
         rememberPullRefreshState(homeViewModel.isRefreshing, { homeViewModel.pullToRefresh() })
+
     LaunchedEffect(Unit) {
         homeViewModel.onViewScreen()
     }
 
     Surface {
         Column {
-            Text(
-                homeViewModel.appVersionName,
-                modifier =
-                    Modifier
-                        .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
-                        .padding(start = Spacing.s16, bottom = Spacing.s4),
+            Header(homeViewModel.appVersionName)
+            SearchRow(
+                searchText = searchTextState,
+                onSearchTextChanged = { searchTextState = it },
+                onToggleOrder = { homeViewModel.toggleShouldIReversePodcastOrder() },
+                reversed = homeViewModel.shouldIReversePodcastOrder,
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                OutlinedTextField(
-                    value = searchTextState,
-                    onValueChange = { value ->
-                        searchTextState = value
-                    },
-                    keyboardOptions =
-                        KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Sentences,
-                        ),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = stringResource(id = R.string.search),
-                        )
-                    },
-                    modifier =
-                        Modifier
-                            .padding(start = Spacing.s16, bottom = Spacing.s16, end = Spacing.s16)
-                            .weight(Percent.NINETY_FIVE),
-                )
-                IconButton(
-                    onClick = { homeViewModel.toggleShouldIReversePodcastOrder() },
-                    modifier =
-                        Modifier
-                            .padding(bottom = Spacing.s16, end = Spacing.s16),
-                ) {
-                    AnimatedContent(
-                        targetState = homeViewModel.shouldIReversePodcastOrder,
-                        transitionSpec = {
-                            scaleIn(
-                                tween(SCALE_IN_ANIMATION_DURATION),
-                            ) togetherWith
-                                scaleOut(
-                                    tween(
-                                        SCALE_OUT_ANIMATION_DURATION,
-                                    ),
-                                )
-                        },
-                        label = "IconTransition",
-                    ) { reversed ->
-                        if (reversed) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Sort,
-                                contentDescription = stringResource(R.string.podcast_sort_desc),
-                                modifier =
-                                    Modifier
-                                        .rotate(Percent.ONE_HUNDRED_EIGHTY)
-                                        .size(Spacing.s48),
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Sort,
-                                contentDescription = stringResource(R.string.podcast_sort_asc),
-                                modifier = Modifier.size(Spacing.s48),
-                            )
-                        }
-                    }
-                }
-            }
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .pullRefresh(pullRefreshState),
-            ) {
-                LazyColumn(state = scrollState) {
-                    when (viewState) {
-                        is HomeViewModel.ViewState.Error -> {
-                            item {
-                                ErrorView(text = stringResource(R.string.unexpected_error)) {
-                                    homeViewModel.searchPodcasts()
-                                }
-                            }
-                        }
-
-                        HomeViewModel.ViewState.Loading -> {
-                            item {
-                                LoadingPlaceholder()
-                            }
-                        }
-
-                        is HomeViewModel.ViewState.Success -> {
-                            item {
-                                StaggeredVerticalGrid(
-                                    crossAxisCount = 2,
-                                    spacing = Spacing.s16,
-                                    modifier = Modifier.padding(horizontal = Spacing.s16),
-                                ) {
-                                    val searchText = searchTextState.text
-
-                                    val episodes = viewState.episodes
-                                    val filteredEpisodes =
-                                        if (searchText.isBlank()) {
-                                            episodes
-                                        } else {
-                                            episodes.filter { episode ->
-                                                val lowerCaseTitle = episode.title.normalizeText()
-                                                val lowerSearchText = searchText.normalizeText()
-                                                lowerCaseTitle.contains(lowerSearchText)
-                                            }
-                                        }
-                                    filteredEpisodes.forEach { episode ->
-                                        EpisodeView(
-                                            episode = episode,
-                                            modifier = Modifier.padding(bottom = Spacing.s16),
-                                        ) {
-                                            val episodeId = episode.id
-                                            homeViewModel.onEpisodeClicked(episodeId, episode.title)
-                                            onItemClicked(episodeId)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    item {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .navigationBarsPadding()
-                                    .padding(bottom = Spacing.s32)
-                                    .padding(
-                                        bottom =
-                                            if (playerViewModel.currentPlayingAudio.value != null) {
-                                                Spacing.s64
-                                            } else {
-                                                Spacing.s0
-                                            },
-                                    ),
-                        )
-                    }
-                }
-                PullRefreshIndicator(
-                    refreshing = homeViewModel.isRefreshing,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                )
-            }
+            EpisodeListContent(
+                viewState = viewState,
+                scrollState = scrollState,
+                searchText = searchTextState.text,
+                isRefreshing = homeViewModel.isRefreshing,
+                pullRefreshState = pullRefreshState,
+                playerHasAudio = playerViewModel.currentPlayingAudio.value != null,
+                onEpisodeClicked = { episode ->
+                    homeViewModel.onEpisodeClicked(episode.id, episode.title)
+                    onItemClicked(episode.id)
+                },
+                onRetry = { homeViewModel.searchPodcasts() },
+            )
         }
     }
 
     LaunchedEffect(Unit) {
         homeViewModel.viewEventFlow.collect { viewEvent ->
-            when (viewEvent) {
-                is HomeViewModel.ViewEvent.ShowWebView -> {
-                    val encodedUrl = viewEvent.encodedUrl
-                    if (encodedUrl.isNotBlank()) {
-                        onGoToWebClicked(encodedUrl)
-                    }
+            if (viewEvent is HomeViewModel.ViewEvent.ShowWebView) {
+                val encodedUrl = viewEvent.encodedUrl
+                if (encodedUrl.isNotBlank()) {
+                    onGoToWebClicked(encodedUrl)
                 }
             }
         }
     }
 }
 
+@Composable
+private fun SearchRow(
+    searchText: TextFieldValue,
+    onSearchTextChanged: (TextFieldValue) -> Unit,
+    onToggleOrder: () -> Unit,
+    reversed: Boolean,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        SearchTextField(
+            searchTextState = searchText,
+            onValueChange = onSearchTextChanged,
+        )
+        IconButton(
+            onClick = onToggleOrder,
+            modifier = Modifier.padding(bottom = Spacing.s16, end = Spacing.s16),
+        ) {
+            AnimatedContent(
+                targetState = reversed,
+                transitionSpec = {
+                    scaleIn(tween(SCALE_IN_ANIMATION_DURATION)) togetherWith
+                        scaleOut(tween(SCALE_OUT_ANIMATION_DURATION))
+                },
+                label = "IconTransition",
+            ) { isReversed ->
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Sort,
+                    contentDescription =
+                        if (isReversed) {
+                            stringResource(R.string.podcast_sort_desc)
+                        } else {
+                            stringResource(R.string.podcast_sort_asc)
+                        },
+                    modifier =
+                        Modifier
+                            .rotate(if (isReversed) ROTATE_ANIMATION else 0f)
+                            .size(Spacing.s48),
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun EpisodeListContent(
+    viewState: HomeViewModel.ViewState,
+    scrollState: LazyListState,
+    searchText: String,
+    isRefreshing: Boolean,
+    pullRefreshState: PullRefreshState,
+    playerHasAudio: Boolean,
+    onEpisodeClicked: (Episode) -> Unit,
+    onRetry: () -> Unit,
+) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState),
+    ) {
+        LazyColumn(state = scrollState) {
+            when (viewState) {
+                is HomeViewModel.ViewState.Error -> {
+                    item {
+                        ErrorView(text = stringResource(R.string.unexpected_error)) {
+                            onRetry()
+                        }
+                    }
+                }
+
+                HomeViewModel.ViewState.Loading -> {
+                    item {
+                        LoadingPlaceholder()
+                    }
+                }
+
+                is HomeViewModel.ViewState.Success -> {
+                    item {
+                        EpisodeGrid(
+                            episodes = viewState.episodes,
+                            searchText = searchText,
+                            onClick = onEpisodeClicked,
+                        )
+                    }
+                }
+            }
+
+            item {
+                SpacerWithBottomPadding(playerHasAudio)
+            }
+        }
+
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+        )
+    }
+}
+
+@Composable
+private fun EpisodeGrid(
+    episodes: List<Episode>,
+    searchText: String,
+    onClick: (Episode) -> Unit,
+) {
+    val filteredEpisodes =
+        if (searchText.isBlank()) {
+            episodes
+        } else {
+            val lowerSearch = searchText.normalizeText()
+            episodes.filter { it.title.normalizeText().contains(lowerSearch) }
+        }
+
+    StaggeredVerticalGrid(
+        crossAxisCount = 2,
+        spacing = Spacing.s16,
+        modifier = Modifier.padding(horizontal = Spacing.s16),
+    ) {
+        filteredEpisodes.forEach { episode ->
+            EpisodeView(
+                episode = episode,
+                modifier = Modifier.padding(bottom = Spacing.s16),
+                onClick = { onClick(episode) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun SpacerWithBottomPadding(playerHasAudio: Boolean) {
+    Box(
+        modifier =
+            Modifier
+                .navigationBarsPadding()
+                .padding(bottom = Spacing.s32)
+                .padding(
+                    bottom =
+                        if (playerHasAudio) {
+                            Spacing.s64
+                        } else {
+                            Spacing.s0
+                        },
+                ),
+    )
+}
+
+@Composable
+private fun Header(appVersionName: String) {
+    Text(
+        appVersionName,
+        modifier =
+            Modifier
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+                .padding(start = Spacing.s16, bottom = Spacing.s4),
+    )
+}
+
+@Composable
+private fun RowScope.SearchTextField(
+    searchTextState: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+) {
+    OutlinedTextField(
+        value = searchTextState,
+        onValueChange = { onValueChange(it) },
+        keyboardOptions =
+            KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences,
+            ),
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = stringResource(id = R.string.search),
+            )
+        },
+        modifier =
+            Modifier
+                .padding(start = Spacing.s16, bottom = Spacing.s16, end = Spacing.s16)
+                .weight(Percent.NINETY_FIVE),
+    )
+}
+
+private const val ROTATE_ANIMATION = 180f
 private const val SCALE_IN_ANIMATION_DURATION = 300
 private const val SCALE_OUT_ANIMATION_DURATION = 500

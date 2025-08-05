@@ -90,113 +90,14 @@ fun PlaylistScreen(
                 .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
                 .fillMaxSize(),
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(Spacing.s96),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                IconButton(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.back),
-                    padding = Spacing.s16,
-                    onClick = { onAction(PlaylistAction.OnBackClicked) },
-                )
-                Text(
-                    text = stringResource(id = R.string.playlists_title).uppercase(),
-                    style = MaterialTheme.typography.h5,
-                    modifier =
-                        Modifier
-                            .padding(start = Spacing.s16),
-                )
-            }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            PlaylistToolbar { onAction(PlaylistAction.OnBackClicked) }
 
             Spacer(modifier = Modifier.padding(vertical = Spacing.s8))
-            when {
-                state.isLoading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
 
-                state.shouldIShowAddPlaylistDialog -> {
-                    PlaylistDialog(
-                        titleDialog = stringResource(id = R.string.playlists_create_title),
-                        title = state.dialogTitle,
-                        titleError = state.dialogTitleError,
-                        description = state.dialogDescription,
-                        onTitleChange = { onAction(PlaylistAction.OnDialogTitleChange(it)) },
-                        onDescriptionChange = {
-                            onAction(
-                                PlaylistAction.OnDialogDescriptionChange(it),
-                            )
-                        },
-                        onConfirm = { onAction(PlaylistAction.OnAddPlaylistConfirmDialog) },
-                        onDismiss = { onAction(PlaylistAction.OnAddPlaylistDismissDialog) },
-                    )
-                }
-
-                state.playlists.isEmpty() -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        val annotatedLoginString =
-                            buildAnnotatedString {
-                                append(stringResource(R.string.playlists_empty))
-                                append(" ")
-                                withStyle(
-                                    SpanStyle(
-                                        color = Orange,
-                                        fontWeight = FontWeight.Bold,
-                                        textDecoration = TextDecoration.Underline,
-                                    ),
-                                ) {
-                                    append(stringResource(R.string.playlists_name).uppercase())
-                                }
-                            }
-                        Text(
-                            text = annotatedLoginString,
-                            style = MaterialTheme.typography.h6,
-                        )
-                    }
-                }
-
-                state.shouldIShowConfirmDialog -> {
-                    CustomDialog(
-                        title = stringResource(R.string.profile_reset_dialog_title),
-                        text = stringResource(R.string.playlist_delete_playlist_confirmation),
-                        confirmText = stringResource(R.string.playlists_remove),
-                        dismissText = stringResource(R.string.close),
-                        onConfirm = { onAction(PlaylistAction.OnConfirmDeleteDialog) },
-                        onDismiss = { onAction(PlaylistAction.OnDismissDeleteDialog) },
-                        typeDialog = TypeDialog.CONFIRMATION,
-                    )
-                }
-
-                else -> {
-                    ReorderablePlaylistColumn(
-                        playlists = state.playlists,
-                        onItemClick = { playlistId ->
-                            onAction(PlaylistAction.OnItemClicked(playlistId))
-                        },
-                        onDragFinish = { playlists ->
-                            onAction(PlaylistAction.OnItemDragFinish(playlists))
-                        },
-                        onRemovePlaylistClicked = { playlistId ->
-                            onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
-                        },
-                    )
-                }
-            }
+            PlaylistScreenContent(state, onAction)
         }
+
         FloatingActionButton(
             onClick = { onAction(PlaylistAction.OnAddNewPlaylistClicked) },
             modifier =
@@ -212,6 +113,134 @@ fun PlaylistScreen(
                 tint = White,
             )
         }
+    }
+}
+
+@Composable
+private fun PlaylistToolbar(onBackClick: () -> Unit) {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(Spacing.s96),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconButton(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(R.string.back),
+            padding = Spacing.s16,
+            onClick = onBackClick,
+        )
+        Text(
+            text = stringResource(id = R.string.playlists_title).uppercase(),
+            style = MaterialTheme.typography.h5,
+            modifier = Modifier.padding(start = Spacing.s16),
+        )
+    }
+}
+
+@Composable
+private fun PlaylistScreenContent(
+    state: PlaylistState,
+    onAction: (PlaylistAction) -> Unit,
+) {
+    when {
+        state.isLoading -> PlaylistLoading()
+
+        state.shouldIShowAddPlaylistDialog -> PlaylistAddDialog(state, onAction)
+
+        state.playlists.isEmpty() -> PlaylistEmptyContent()
+
+        state.shouldIShowConfirmDialog -> PlaylistConfirmDialog(onAction)
+
+        else -> PlaylistContentList(state, onAction)
+    }
+}
+
+@Composable
+private fun PlaylistAddDialog(
+    state: PlaylistState,
+    onAction: (PlaylistAction) -> Unit,
+) {
+    PlaylistDialog(
+        titleDialog = stringResource(id = R.string.playlists_create_title),
+        title = state.dialogTitle,
+        titleError = state.dialogTitleError,
+        description = state.dialogDescription,
+        onTitleChange = { onAction(PlaylistAction.OnDialogTitleChange(it)) },
+        onDescriptionChange = { onAction(PlaylistAction.OnDialogDescriptionChange(it)) },
+        onConfirm = { onAction(PlaylistAction.OnAddPlaylistConfirmDialog) },
+        onDismiss = { onAction(PlaylistAction.OnAddPlaylistDismissDialog) },
+    )
+}
+
+@Composable
+private fun PlaylistEmptyContent() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        val annotatedLoginString =
+            buildAnnotatedString {
+                append(stringResource(R.string.playlists_empty))
+                append(" ")
+                withStyle(
+                    SpanStyle(
+                        color = Orange,
+                        fontWeight = FontWeight.Bold,
+                        textDecoration = TextDecoration.Underline,
+                    ),
+                ) {
+                    append(stringResource(R.string.playlists_name).uppercase())
+                }
+            }
+
+        Text(
+            text = annotatedLoginString,
+            style = MaterialTheme.typography.h6,
+        )
+    }
+}
+
+@Composable
+private fun PlaylistConfirmDialog(onAction: (PlaylistAction) -> Unit) {
+    CustomDialog(
+        title = stringResource(R.string.profile_reset_dialog_title),
+        text = stringResource(R.string.playlist_delete_playlist_confirmation),
+        confirmText = stringResource(R.string.playlists_remove),
+        dismissText = stringResource(R.string.close),
+        onConfirm = { onAction(PlaylistAction.OnConfirmDeleteDialog) },
+        onDismiss = { onAction(PlaylistAction.OnDismissDeleteDialog) },
+        typeDialog = TypeDialog.CONFIRMATION,
+    )
+}
+
+@Composable
+private fun PlaylistContentList(
+    state: PlaylistState,
+    onAction: (PlaylistAction) -> Unit,
+) {
+    ReorderablePlaylistColumn(
+        playlists = state.playlists,
+        onItemClick = { playlistId ->
+            onAction(PlaylistAction.OnItemClicked(playlistId))
+        },
+        onDragFinish = { playlists ->
+            onAction(PlaylistAction.OnItemDragFinish(playlists))
+        },
+        onRemovePlaylistClicked = { playlistId ->
+            onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
+        },
+    )
+}
+
+@Composable
+private fun PlaylistLoading() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        CircularProgressIndicator()
     }
 }
 

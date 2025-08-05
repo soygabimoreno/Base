@@ -21,6 +21,6 @@ class GetActiveSurveyUseCase
                         return Either.Right(survey)
                     }
                 }
-            return Either.Left(Throwable())
+            return Either.Left(Throwable("No active survey found"))
         }
     }
