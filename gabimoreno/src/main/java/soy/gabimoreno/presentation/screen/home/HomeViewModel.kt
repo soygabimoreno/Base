@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
@@ -61,20 +62,26 @@ class HomeViewModel
                         viewState = ViewState.Error(failure)
                     },
                     { episodesFlow ->
-                        episodesFlow.collect { incomingEpisodes ->
-                            if (episodes.size != incomingEpisodes.size) {
-                                episodes.clear()
-                                episodes.addAll(incomingEpisodes)
+                        episodesFlow
+                            .distinctUntilChanged()
+                            .collect { incomingEpisodes ->
+                                if (episodes.size != incomingEpisodes.size) {
+                                    episodes.clear()
+                                    episodes.addAll(incomingEpisodes)
+                                }
+
+                                if (incomingEpisodes.isNotEmpty()) {
+                                    val lastTitle = incomingEpisodes.last().title
+                                    val isFirstPodcast = Regex("^1\\..*")
+                                    if (isFirstPodcast.matches(lastTitle) &&
+                                        shouldIReversePodcastOrder
+                                    ) {
+                                        episodes.reverse()
+                                    }
+                                }
+
                                 viewState = ViewState.Success(episodes.toList())
                             }
-                            val isFirstPodcast = Regex("^1\\..*")
-                            if (isFirstPodcast.matches(incomingEpisodes.last().title) &&
-                                shouldIReversePodcastOrder
-                            ) {
-                                episodes.reverse()
-                                viewState = ViewState.Success(episodes.toList())
-                            }
-                        }
                     },
                 )
             }

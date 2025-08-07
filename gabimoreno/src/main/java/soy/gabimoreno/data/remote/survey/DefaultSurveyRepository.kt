@@ -6,7 +6,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.tasks.await
 import soy.gabimoreno.data.remote.ext.runCatchingEither
-import soy.gabimoreno.data.remote.mapper.toDomain
 import soy.gabimoreno.data.remote.survey.mapper.toDomain
 import soy.gabimoreno.data.remote.survey.model.SurveyApiModel
 import soy.gabimoreno.domain.model.survey.Survey
