@@ -13,6 +13,8 @@ import soy.gabimoreno.data.local.playlist.dao.PlaylistItemDbModelDao
 import soy.gabimoreno.data.local.playlist.dao.PlaylistTransactionDao
 import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
+import soy.gabimoreno.data.local.podcast.dao.PodcastDbModelDao
+import soy.gabimoreno.data.local.podcast.model.PodcastDbModel
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
 
@@ -23,8 +25,9 @@ import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
         AudioCourseItemDbModel::class,
         PlaylistDbModel::class,
         PlaylistItemsDbModel::class,
+        PodcastDbModel::class,
     ],
-    version = 6,
+    version = 7,
 )
 @TypeConverters(Converters::class)
 abstract class ApplicationDatabase : RoomDatabase() {
@@ -35,4 +38,5 @@ abstract class ApplicationDatabase : RoomDatabase() {
     abstract fun playlistDbModelDao(): PlaylistDbModelDao
     abstract fun playlistItemDbModelDao(): PlaylistItemDbModelDao
     abstract fun playlistTransactionDao(): PlaylistTransactionDao
+    abstract fun podcastDbModelDao(): PodcastDbModelDao
 }
