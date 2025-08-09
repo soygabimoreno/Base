@@ -66,4 +66,9 @@ class LocalPodcastDataSource
         ) = withContext(dispatcher) {
             podcastDbModelDao.updateMarkedAsFavorite(id, markedAsFavorite)
         }
+
+        suspend fun markAllPodcastAsUnlistened() =
+            withContext(dispatcher) {
+                podcastDbModelDao.markAllPodcastAsUnlistened()
+            }
     }

@@ -76,9 +76,10 @@ fun ProfileScreenRoot(
                     is ProfileEvent.ResetSuccess -> {
                         val message =
                             when (event.type) {
-                                TypeDialog.PREMIUM -> R.string.profile_reset_success_premium
                                 TypeDialog.AUDIOCOURSES ->
                                     R.string.profile_reset_success_audiocurses
+                                TypeDialog.PODCAST -> R.string.profile_reset_success_podcast
+                                TypeDialog.PREMIUM -> R.string.profile_reset_success_premium
                             }
                         context.toast(context.getString(message))
                     }
@@ -166,6 +167,12 @@ fun ProfileScreen(
                 text = stringResource(R.string.profile_reset_audiocourses),
                 onItemClicked = {
                     onAction(ProfileAction.OnResetAudioCoursesClicked)
+                },
+            )
+            ProfileItem(
+                text = stringResource(R.string.profile_reset_podcast),
+                onItemClicked = {
+                    onAction(ProfileAction.OnResetPodcastClicked)
                 },
             )
             Box(modifier = Modifier.weight(Percent.TEN))

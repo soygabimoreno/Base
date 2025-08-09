@@ -54,8 +54,8 @@ object PremiumAudiosModule {
     @Provides
     @Singleton
     fun provideGetPremiumAudiosManagedUseCase(
-        @ApplicationContext context: Context,
         premiumAudiosRepository: PremiumAudiosRepository,
+        @ApplicationContext context: Context,
     ): GetPremiumAudiosManagedUseCase =
         GetPremiumAudiosManagedUseCase(
             context = context,

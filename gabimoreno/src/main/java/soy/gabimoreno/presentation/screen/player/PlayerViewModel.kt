@@ -26,7 +26,10 @@ import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.usecase.CheckShouldIShowInAppReviewUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
+import soy.gabimoreno.domain.usecase.MarkPodcastAsListenedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
+import soy.gabimoreno.domain.util.AudioItemType
+import soy.gabimoreno.domain.util.audioItemTypeDetector
 import soy.gabimoreno.framework.KLog
 import soy.gabimoreno.player.extension.currentPosition
 import soy.gabimoreno.player.extension.isPlayEnabled
@@ -45,8 +48,9 @@ class PlayerViewModel
     constructor(
         private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
         private val tracker: Tracker,
-        private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
         private val markAudioCourseAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
+        private val markPodcastAsListenedUseCase: MarkPodcastAsListenedUseCase,
+        private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
         private val checkShouldIShowInAppReviewUseCase: CheckShouldIShowInAppReviewUseCase,
         @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
@@ -270,16 +274,27 @@ class PlayerViewModel
 
             viewModelScope.launch(dispatcher) {
                 checkShouldIShowInAppReviewUseCase()
-                if (audioId.contains("-")) {
-                    markAudioCourseAsListenedUseCase(
-                        idAudioCourseItem = audioId,
-                        hasBeenListened = true,
-                    )
-                } else {
-                    markPremiumAudioAsListenedUseCase(
-                        premiumAudioId = audioId,
-                        hasBeenListened = true,
-                    )
+                when (audioItemTypeDetector(audioId)) {
+                    AudioItemType.AUDIO_COURSE -> {
+                        markAudioCourseAsListenedUseCase(
+                            idAudioCourseItem = audioId,
+                            hasBeenListened = true,
+                        )
+                    }
+
+                    AudioItemType.PREMIUM_AUDIO -> {
+                        markPremiumAudioAsListenedUseCase(
+                            premiumAudioId = audioId,
+                            hasBeenListened = true,
+                        )
+                    }
+
+                    AudioItemType.PODCAST -> {
+                        markPodcastAsListenedUseCase(
+                            podcastId = audioId,
+                            hasBeenListened = true,
+                        )
+                    }
                 }
             }
         }

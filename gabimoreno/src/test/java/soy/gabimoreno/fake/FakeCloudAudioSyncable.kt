@@ -1,6 +1,7 @@
 package soy.gabimoreno.fake
 
 import soy.gabimoreno.data.cloud.audiosync.response.SyncableAudiocourseResponse
+import soy.gabimoreno.data.cloud.audiosync.response.SyncablePodcastResponse
 import soy.gabimoreno.data.cloud.audiosync.response.SyncablePremiumAudioResponse
 import soy.gabimoreno.domain.model.content.AudioCourse
 
@@ -42,6 +43,15 @@ fun buildCloudPremiumAudiosResponse(
     id: String,
     hasBeenListened: Boolean,
 ) = SyncablePremiumAudioResponse(
+    id = id,
+    hasBeenListened = hasBeenListened,
+    markedAsFavorite = false,
+)
+
+fun buildCloudPodcastResponse(
+    id: String,
+    hasBeenListened: Boolean,
+) = SyncablePodcastResponse(
     id = id,
     hasBeenListened = hasBeenListened,
     markedAsFavorite = false,

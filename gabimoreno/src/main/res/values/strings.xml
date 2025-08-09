@@ -15,6 +15,8 @@
     <string name="podcast_thumbnail">Carátula del episodio</string>
     <string name="podcast_sort_desc">Mostrar podcast en orden descendente</string>
     <string name="podcast_sort_asc">Mostrar podcast en orden ascendente </string>
+    <string name="podcast_audio_listened">Podcast audio escuchado</string>
+    <string name="podcast_favorite">Podcast favorito</string>
     <string name="back">Atrás</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
@@ -58,9 +60,11 @@
     <string name="profile_info_email">Sesión iniciada con el</string>
     <string name="profile_no_session">No se ha iniciado sesión</string>
     <string name="profile_reset_audiocourses">Resetear audiocursos escuchados</string>
+    <string name="profile_reset_podcast">Resetear podcast escuchados</string>
     <string name="profile_reset_premium">Resetear audios premium escuchados</string>
     <string name="profile_reset_success_premium">Reseteados audios premium escuchados.</string>
     <string name="profile_reset_success_audiocurses">Reseteados audios cursos escuchados.</string>
+    <string name="profile_reset_success_podcast">Reseteados podcast escuchados.</string>
     <string name="profile_reset_dialog_title">¿Estás seguro?</string>
     <string name="profile_reset_dialog_text">Se resetearan todos las marcas de los audios escuchados.</string>
     <string name="profile_reset_dialog_confirm">Resetear</string>

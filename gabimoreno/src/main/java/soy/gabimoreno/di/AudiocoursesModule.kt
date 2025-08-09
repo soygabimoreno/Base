@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReloadAudioCoursesUseCase
@@ -44,12 +45,14 @@ object AudiocoursesModule {
     fun provideUpdateAudioItemFavoriteStateUseCase(
         audioCoursesRepository: AudioCoursesRepository,
         premiumAudiosRepository: PremiumAudiosRepository,
+        podcastRepository: PodcastRepository,
         @ApplicationContext context: Context,
     ): UpdateAudioItemFavoriteStateUseCase =
         UpdateAudioItemFavoriteStateUseCase(
             audioCoursesRepository = audioCoursesRepository,
             context = context,
             premiumAudioCoursesRepository = premiumAudiosRepository,
+            podcastRepository = podcastRepository,
         )
 
     @Provides

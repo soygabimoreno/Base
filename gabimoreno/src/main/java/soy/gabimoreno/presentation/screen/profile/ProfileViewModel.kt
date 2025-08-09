@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.usecase.SetAllAudiocoursesAsUnlistenedUseCase
+import soy.gabimoreno.domain.usecase.SetAllPodcastAsUnlistenedUseCase
 import soy.gabimoreno.domain.usecase.SetAllPremiumAudiosAsUnlistenedUseCase
 import javax.inject.Inject
 
@@ -19,8 +20,9 @@ import javax.inject.Inject
 class ProfileViewModel
     @Inject
     constructor(
-        private val setAllPremiumAudiosAsUnlistenedUseCase: SetAllPremiumAudiosAsUnlistenedUseCase,
         private val setAllAudiocoursesAsUnlistenedUseCase: SetAllAudiocoursesAsUnlistenedUseCase,
+        private val setAllPodcastAsUnlistenedUseCase: SetAllPodcastAsUnlistenedUseCase,
+        private val setAllPremiumAudiosAsUnlistenedUseCase: SetAllPremiumAudiosAsUnlistenedUseCase,
         @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var state by mutableStateOf(ProfileState())
@@ -51,21 +53,34 @@ class ProfileViewModel
                         )
                 }
 
+                ProfileAction.OnResetPodcastClicked -> {
+                    state =
+                        state.copy(
+                            showResetDialog = true,
+                            selectedTypeDialog = TypeDialog.PODCAST,
+                        )
+                }
+
                 is ProfileAction.OnConfirmDialog -> {
                     when (state.selectedTypeDialog) {
-                        TypeDialog.PREMIUM -> {
-                            viewModelScope.launch(dispatcher) {
-                                setAllPremiumAudiosAsUnlistenedUseCase()
-                                eventChannel.emit(ProfileEvent.ResetSuccess(TypeDialog.PREMIUM))
-                            }
-                        }
-
                         TypeDialog.AUDIOCOURSES -> {
                             viewModelScope.launch(dispatcher) {
                                 setAllAudiocoursesAsUnlistenedUseCase()
                                 eventChannel.emit(
                                     ProfileEvent.ResetSuccess(TypeDialog.AUDIOCOURSES),
                                 )
+                            }
+                        }
+                        TypeDialog.PODCAST -> {
+                            viewModelScope.launch(dispatcher) {
+                                setAllPodcastAsUnlistenedUseCase()
+                                eventChannel.emit(ProfileEvent.ResetSuccess(TypeDialog.PODCAST))
+                            }
+                        }
+                        TypeDialog.PREMIUM -> {
+                            viewModelScope.launch(dispatcher) {
+                                setAllPremiumAudiosAsUnlistenedUseCase()
+                                eventChannel.emit(ProfileEvent.ResetSuccess(TypeDialog.PREMIUM))
                             }
                         }
 

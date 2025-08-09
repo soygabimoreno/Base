@@ -2,6 +2,7 @@ package soy.gabimoreno.presentation.screen.home
 
 import app.cash.turbine.test
 import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -22,21 +23,25 @@ import soy.gabimoreno.data.tracker.Tracker
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
-import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
+import soy.gabimoreno.domain.usecase.GetPodcastStreamUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReversePodcastOrderUseCase
 import soy.gabimoreno.domain.usecase.HomeUseCases
+import soy.gabimoreno.domain.usecase.MarkPodcastAsListenedUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIReversePodcastOrderUseCase
+import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 
 @ExperimentalCoroutinesApi
 class HomeViewModelTest {
-    private val podcastDatasource: PodcastRepository = relaxedMockk()
-    private val tracker: Tracker = relaxedMockk()
+    private val getPodcastStreamUseCase: GetPodcastStreamUseCase = relaxedMockk()
+    private val markPodcastAsListenedUseCase: MarkPodcastAsListenedUseCase = mockk()
+    private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase = mockk()
     private val getAppVersionNameUseCase: GetAppVersionNameUseCase = relaxedMockk()
     private val encodeUrlUseCase: EncodeUrlUseCase = relaxedMockk()
     private val getShouldIReversePodcastOrderUseCase: GetShouldIReversePodcastOrderUseCase = relaxedMockk()
     private val setShouldIReversePodcastOrderUseCase: SetShouldIReversePodcastOrderUseCase = relaxedMockk()
+    private val tracker: Tracker = relaxedMockk()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: HomeViewModel
 
@@ -45,6 +50,9 @@ class HomeViewModelTest {
         Dispatchers.setMain(testDispatcher)
         val homeUseCases =
             HomeUseCases(
+                getPodcastStreamUseCase = getPodcastStreamUseCase,
+                markPodcastAsListenedUseCase = markPodcastAsListenedUseCase,
+                updateAudioItemFavoriteStateUseCase = updateAudioItemFavoriteStateUseCase,
                 getAppVersionName = getAppVersionNameUseCase,
                 encodeUrl = encodeUrlUseCase,
                 getShouldIReversePodcastOrder = getShouldIReversePodcastOrderUseCase,
@@ -52,9 +60,8 @@ class HomeViewModelTest {
             )
         viewModel =
             HomeViewModel(
-                podcastDatasource,
-                tracker,
                 homeUseCases,
+                tracker,
                 testDispatcher,
             )
     }
@@ -75,7 +82,7 @@ class HomeViewModelTest {
     fun `WHEN init THEN getEpisodes`() =
         runTest(testDispatcher) {
             viewModel.viewState shouldBe HomeViewModel.ViewState.Loading
-            coVerifyOnce { podcastDatasource.getEpisodes() }
+            coVerifyOnce { getPodcastStreamUseCase() }
         }
 
     @Test

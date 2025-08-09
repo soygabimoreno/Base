@@ -8,6 +8,7 @@ data class ProfileState(
 )
 
 enum class TypeDialog {
-    PREMIUM,
     AUDIOCOURSES,
+    PODCAST,
+    PREMIUM,
 }

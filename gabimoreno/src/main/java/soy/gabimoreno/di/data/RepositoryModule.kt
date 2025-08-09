@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import soy.gabimoreno.data.cloud.audiosync.datasource.AudioCoursesCloudDataSource
+import soy.gabimoreno.data.cloud.audiosync.datasource.PodcastCloudDataSource
 import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
 import soy.gabimoreno.data.cloud.playlist.datasource.CloudPlaylistDataSource
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
@@ -59,12 +60,14 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideDefaultPodcastRepository(
+        cloudDataSource: PodcastCloudDataSource,
         localPodcastDatasource: LocalPodcastDataSource,
         podcastUrl: String,
         remotePodcastRepository: PodcastDatasource,
         scope: CoroutineScope,
     ): PodcastRepository =
         DefaultPodcastRepository(
+            cloudDataSource,
             localPodcastDatasource,
             podcastUrl,
             remotePodcastRepository,
