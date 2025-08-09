@@ -3,15 +3,15 @@ package soy.gabimoreno.fake
 import soy.gabimoreno.data.local.podcast.model.PodcastDbModel
 import soy.gabimoreno.domain.model.audio.Saga
 
-fun buildPodcasts() =
+fun buildPodcastDbModels() =
     listOf<PodcastDbModel>(
-        buildPodcast("1"),
-        buildPodcast("2"),
-        buildPodcast("3"),
+        buildPodcastDbModel("d332a4c2-4282-45c0-9ccc-2aeaab8df48d"),
+        buildPodcastDbModel("d332a4c2-4282-45c0-9ccc-2aeaab8df48e"),
+        buildPodcastDbModel("d332a4c2-4282-45c0-9ccc-2aeaab8df48f"),
     )
 
-fun buildPodcast(
-    id: String,
+fun buildPodcastDbModel(
+    id: String = "d332a4c2-4282-45c0-9ccc-2aeaab8df48x",
     hasBeenListened: Boolean = false,
     markedAsFavorite: Boolean = false,
 ) = PodcastDbModel(

@@ -6,9 +6,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
+import soy.gabimoreno.domain.usecase.GetPodcastStreamUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReversePodcastOrderUseCase
 import soy.gabimoreno.domain.usecase.HomeUseCases
+import soy.gabimoreno.domain.usecase.MarkPodcastAsListenedUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIReversePodcastOrderUseCase
+import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 import javax.inject.Singleton
 
 @Module
@@ -17,13 +20,19 @@ class HomeModule {
     @Provides
     @Singleton
     fun provideHomeUseCases(
-        getAppVersionNameUseCase: GetAppVersionNameUseCase,
+        getPodcastStreamUseCase: GetPodcastStreamUseCase,
+        markPodcastAsListenedUseCase: MarkPodcastAsListenedUseCase,
+        updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
         encodeUrlUseCase: EncodeUrlUseCase,
+        getAppVersionNameUseCase: GetAppVersionNameUseCase,
         getShouldIReversePodcastOrderUseCase: GetShouldIReversePodcastOrderUseCase,
         setShouldIReversePodcastOrderUseCase: SetShouldIReversePodcastOrderUseCase,
     ) = HomeUseCases(
-        getAppVersionName = getAppVersionNameUseCase,
+        getPodcastStreamUseCase = getPodcastStreamUseCase,
+        markPodcastAsListenedUseCase = markPodcastAsListenedUseCase,
+        updateAudioItemFavoriteStateUseCase = updateAudioItemFavoriteStateUseCase,
         encodeUrl = encodeUrlUseCase,
+        getAppVersionName = getAppVersionNameUseCase,
         getShouldIReversePodcastOrder = getShouldIReversePodcastOrderUseCase,
         setShouldIReversePodcastOrder = setShouldIReversePodcastOrderUseCase,
     )

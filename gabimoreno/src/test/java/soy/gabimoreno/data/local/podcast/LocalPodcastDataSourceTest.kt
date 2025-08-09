@@ -27,7 +27,7 @@ import soy.gabimoreno.data.local.ApplicationDatabase
 import soy.gabimoreno.data.local.mapper.toPodcastDbModel
 import soy.gabimoreno.data.local.podcast.dao.PodcastDbModelDao
 import soy.gabimoreno.fake.buildEpisodes
-import soy.gabimoreno.fake.buildPodcasts
+import soy.gabimoreno.fake.buildPodcastDbModels
 
 class LocalPodcastDataSourceTest {
     private val podcastDbModelDao: PodcastDbModelDao = mockk()
@@ -95,7 +95,7 @@ class LocalPodcastDataSourceTest {
     @Test
     fun `GIVEN dbModels WHEN getPodcasts THEN returns MappedEpisodes`() =
         runTest {
-            val podcastDbModels = buildPodcasts()
+            val podcastDbModels = buildPodcastDbModels()
             every { podcastDbModelDao.getPodcastDbModels() } returns flowOf(podcastDbModels)
 
             val result = datasource.getPodcasts().first()
@@ -109,7 +109,7 @@ class LocalPodcastDataSourceTest {
     @Test
     fun `GIVEN matchingId WHEN getPodcastById THEN returnsMappedEpisode`() =
         runTest {
-            val podcastDbModels = buildPodcasts()
+            val podcastDbModels = buildPodcastDbModels()
             val podcastDbModel = podcastDbModels.first()
             coEvery { podcastDbModelDao.getPodcastDbModelById(podcastDbModel.id) } returns podcastDbModel
 

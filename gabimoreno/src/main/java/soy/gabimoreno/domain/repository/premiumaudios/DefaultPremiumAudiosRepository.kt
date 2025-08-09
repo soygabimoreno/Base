@@ -82,8 +82,8 @@ class DefaultPremiumAudiosRepository
                     email,
                     premiumAudioId,
                     mapOf(
-                        "id" to premiumAudioId,
-                        "hasBeenListened" to hasBeenListened,
+                        AUDIO_ID to premiumAudioId,
+                        HAS_BEEN_LISTENED to hasBeenListened,
                     ),
                 )
             }
@@ -100,7 +100,7 @@ class DefaultPremiumAudiosRepository
             if (email.isNotEmpty()) {
                 cloudDataSource.batchUpdateFieldsForAllPremiumAudioItems(
                     email,
-                    mapOf("hasBeenListened" to false),
+                    mapOf(HAS_BEEN_LISTENED to false),
                 )
             }
             return localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
@@ -121,8 +121,8 @@ class DefaultPremiumAudiosRepository
                     email,
                     premiumAudioId,
                     mapOf(
-                        "id" to premiumAudioId,
-                        "markedAsFavorite" to isFavorite,
+                        AUDIO_ID to premiumAudioId,
+                        MARKED_AS_FAVORITE to isFavorite,
                     ),
                 )
             }
@@ -134,6 +134,9 @@ class DefaultPremiumAudiosRepository
         }
     }
 
+internal const val TWELVE_HOURS_IN_MILLIS = 12 * 60 * 60 * 1000L
+private const val AUDIO_ID = "id"
+private const val HAS_BEEN_LISTENED = "hasBeenListened"
+private const val MARKED_AS_FAVORITE = "markedAsFavorite"
 private const val MAX_ITEMS = 10
 private const val PREFETCH_ITEMS = 20
-internal const val TWELVE_HOURS_IN_MILLIS = 12 * 60 * 60 * 1000L

@@ -99,6 +99,12 @@ fun HomeScreen(
                     onItemClicked(episode.id)
                 },
                 onRetry = { homeViewModel.searchPodcasts() },
+                onFavoriteStatusChanged = { episode ->
+                    homeViewModel.onFavoriteStatusChanged(episode)
+                },
+                onListenedToggled = { episode ->
+                    homeViewModel.onListenedToggled(episode)
+                },
             )
         }
     }
@@ -172,6 +178,8 @@ private fun EpisodeListContent(
     playerHasAudio: Boolean,
     onEpisodeClicked: (Episode) -> Unit,
     onRetry: () -> Unit,
+    onFavoriteStatusChanged: (Episode) -> Unit,
+    onListenedToggled: (Episode) -> Unit,
 ) {
     Box(
         Modifier
@@ -200,6 +208,8 @@ private fun EpisodeListContent(
                             episodes = viewState.episodes,
                             searchText = searchText,
                             onClick = onEpisodeClicked,
+                            onFavoriteStatusChanged = onFavoriteStatusChanged,
+                            onListenedToggled = onListenedToggled,
                         )
                     }
                 }
@@ -223,6 +233,8 @@ private fun EpisodeGrid(
     episodes: List<Episode>,
     searchText: String,
     onClick: (Episode) -> Unit,
+    onFavoriteStatusChanged: (Episode) -> Unit,
+    onListenedToggled: (Episode) -> Unit,
 ) {
     val filteredEpisodes =
         if (searchText.isBlank()) {
@@ -242,6 +254,8 @@ private fun EpisodeGrid(
                 episode = episode,
                 modifier = Modifier.padding(bottom = Spacing.s16),
                 onClick = { onClick(episode) },
+                onFavoriteStatusChanged = { onFavoriteStatusChanged(episode) },
+                onListenedToggled = { onListenedToggled(episode) },
             )
         }
     }

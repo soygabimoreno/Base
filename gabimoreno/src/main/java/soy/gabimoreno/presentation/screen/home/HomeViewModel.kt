@@ -18,7 +18,6 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.di.Main
 import soy.gabimoreno.domain.model.podcast.Episode
-import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.usecase.HomeUseCases
 import javax.inject.Inject
 
@@ -26,9 +25,8 @@ import javax.inject.Inject
 class HomeViewModel
     @Inject
     constructor(
-        private val podcastDatasource: PodcastRepository,
-        private val tracker: Tracker,
         private val homeUseCases: HomeUseCases,
+        private val tracker: Tracker,
         @param:Main private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var viewState by mutableStateOf<ViewState>(ViewState.Loading)
@@ -57,7 +55,7 @@ class HomeViewModel
         fun searchPodcasts() {
             viewModelScope.launch(dispatcher) {
                 viewState = ViewState.Loading
-                podcastDatasource.getEpisodesStream().fold(
+                homeUseCases.getPodcastStreamUseCase().fold(
                     { failure ->
                         viewState = ViewState.Error(failure)
                     },
@@ -65,10 +63,8 @@ class HomeViewModel
                         episodesFlow
                             .distinctUntilChanged()
                             .collect { incomingEpisodes ->
-                                if (episodes.size != incomingEpisodes.size) {
-                                    episodes.clear()
-                                    episodes.addAll(incomingEpisodes)
-                                }
+                                episodes.clear()
+                                episodes.addAll(incomingEpisodes)
 
                                 if (incomingEpisodes.isNotEmpty()) {
                                     val lastTitle = incomingEpisodes.last().title
@@ -140,6 +136,40 @@ class HomeViewModel
             }
             episodes.reverse()
             viewState = ViewState.Success(episodes.toList())
+        }
+
+        fun onFavoriteStatusChanged(episode: Episode) {
+            viewModelScope.launch(dispatcher) {
+                homeUseCases
+                    .updateAudioItemFavoriteStateUseCase(episode.id, !episode.markedAsFavorite)
+            }
+            val episodeUpdated =
+                episodes.map {
+                    if (it.id == episode.id) {
+                        it.copy(markedAsFavorite = !episode.markedAsFavorite)
+                    } else {
+                        it
+                    }
+                }
+            episodes.clear()
+            episodes.addAll(episodeUpdated)
+        }
+
+        fun onListenedToggled(episode: Episode) {
+            viewModelScope.launch(dispatcher) {
+                homeUseCases
+                    .markPodcastAsListenedUseCase(episode.id, !episode.hasBeenListened)
+            }
+            val episodeUpdated =
+                episodes.map {
+                    if (it.id == episode.id) {
+                        it.copy(hasBeenListened = !episode.hasBeenListened)
+                    } else {
+                        it
+                    }
+                }
+            episodes.clear()
+            episodes.addAll(episodeUpdated)
         }
 
         sealed class ViewEvent {

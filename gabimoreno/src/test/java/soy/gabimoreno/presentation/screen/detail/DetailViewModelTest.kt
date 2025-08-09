@@ -157,16 +157,4 @@ class DetailViewModelTest {
             coVerifyNever { updateAudioItemFavoriteStateUseCase(any(), any()) }
             verifyNever { tracker.trackEvent(any()) }
         }
-
-    @Test
-    fun `GIVEN audioState is not PremiumAudio WHEN onFavoriteStatusChanged THEN nothing happens`() =
-        runTest {
-            viewModel.audioState = buildAudio()
-
-            viewModel.onFavoriteStatusChanged()
-            advanceUntilIdle()
-
-            coVerifyNever { updateAudioItemFavoriteStateUseCase(any(), any()) }
-            verifyNever { tracker.trackEvent(any()) }
-        }
 }

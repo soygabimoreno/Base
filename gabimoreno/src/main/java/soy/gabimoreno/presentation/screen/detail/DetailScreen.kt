@@ -42,6 +42,7 @@ import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.data.tracker.domain.toPlayPause
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.content.PremiumAudio
+import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.framework.parseFromHtmlFormat
 import soy.gabimoreno.presentation.navigation.Feature
 import soy.gabimoreno.presentation.screen.ViewModelProvider
@@ -125,9 +126,7 @@ fun DetailScreen(
                     if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play)
                 val iconFavoriteColor by animateColorAsState(
                     targetValue =
-                        if (detailViewModel.audioState is PremiumAudio &&
-                            (detailViewModel.audioState as PremiumAudio).markedAsFavorite
-                        ) {
+                        if (detailViewModel.audioState?.markedAsFavorite ?: false) {
                             PinkBright
                         } else {
                             White.copy(alpha = 0.2f)
@@ -173,9 +172,11 @@ fun DetailScreen(
 
                     val dateAndDurationText =
                         if (audio.audioLengthInSeconds != EMPTY_AUDIO_LENGTH_IN_SECONDS) {
-                            "${audio.pubDateMillis.formatMillisecondsAsDate(
-                                "MMM dd",
-                            )} • ${audio.audioLengthInSeconds.toDurationMinutes()}"
+                            "${
+                                audio.pubDateMillis.formatMillisecondsAsDate(
+                                    "MMM dd",
+                                )
+                            } • ${audio.audioLengthInSeconds.toDurationMinutes()}"
                         } else {
                             audio.pubDateMillis.formatMillisecondsAsDate("MMM dd")
                         }
@@ -200,7 +201,9 @@ fun DetailScreen(
 
                         Spacer(modifier = Modifier.weight(1f))
 
-                        if (detailViewModel.audioState is PremiumAudio) {
+                        if (detailViewModel.audioState is PremiumAudio ||
+                            detailViewModel.audioState is Episode
+                        ) {
                             IconButton(
                                 modifier = Modifier.size(Spacing.s32),
                                 onClick = { detailViewModel.onFavoriteStatusChanged() },
@@ -210,9 +213,7 @@ fun DetailScreen(
                                         Modifier
                                             .size(Spacing.s32),
                                     imageVector =
-                                        if ((detailViewModel.audioState as PremiumAudio)
-                                                .markedAsFavorite
-                                        ) {
+                                        if (detailViewModel.audioState!!.markedAsFavorite) {
                                             Icons.Default.Favorite
                                         } else {
                                             Icons.Default.FavoriteBorder

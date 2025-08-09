@@ -15,6 +15,7 @@ import soy.gabimoreno.data.tracker.main.DetailTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.model.content.PremiumAudio
+import soy.gabimoreno.domain.model.podcast.Episode
 import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 import soy.gabimoreno.framework.intent.StartChooser
 import javax.inject.Inject
@@ -65,11 +66,20 @@ class DetailViewModel
         fun onFavoriteStatusChanged() {
             viewModelScope.launch {
                 val currentState = audioState
-                if (currentState != null && currentState is PremiumAudio) {
+                if (currentState != null) {
                     val newState =
-                        currentState.copy(
-                            markedAsFavorite = !currentState.markedAsFavorite,
-                        )
+                        when (currentState) {
+                            is PremiumAudio ->
+                                currentState.copy(
+                                    markedAsFavorite = !currentState.markedAsFavorite,
+                                )
+                            is Episode ->
+                                currentState.copy(
+                                    markedAsFavorite = !currentState.markedAsFavorite,
+                                )
+                            else -> currentState
+                        }
+
                     audioState = newState
                     updateAudioItemFavoriteStateUseCase(newState.id, newState.markedAsFavorite)
                     if (newState.markedAsFavorite) {

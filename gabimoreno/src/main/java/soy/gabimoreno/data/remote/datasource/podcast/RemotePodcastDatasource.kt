@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.flow
 import soy.gabimoreno.data.remote.mapper.toDomain
 import soy.gabimoreno.di.data.PodcastUrl
 import soy.gabimoreno.domain.model.podcast.Episode
-import soy.gabimoreno.domain.model.podcast.EpisodesWrapper
 
 class RemotePodcastDatasource(
     private val rssParser: Parser,
@@ -29,12 +28,6 @@ class RemotePodcastDatasource(
                     delay(DELAY_TIME_MILLIS)
                 }
             }
-        }
-
-    override suspend fun getEpisodes(podcastUrl: PodcastUrl): Either<Throwable, EpisodesWrapper> =
-        Either.catch {
-            val channel = rssParser.getChannel(podcastUrl)
-            channel.toDomain()
         }
 }
 

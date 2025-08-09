@@ -34,4 +34,7 @@ interface PodcastDbModelDao {
         id: String,
         markedAsFavorite: Boolean,
     )
+
+    @Query("UPDATE PodcastDbModel SET hasBeenListened = 0")
+    fun markAllPodcastAsUnlistened()
 }

@@ -8,6 +8,7 @@ sealed interface ProfileAction {
     data object OnToggleBottomSheet : ProfileAction
     data object OnResetAudioCoursesClicked : ProfileAction
     data object OnResetPremiumAudioClicked : ProfileAction
+    data object OnResetPodcastClicked : ProfileAction
     data object OnDismissDialog : ProfileAction
     data object OnConfirmDialog : ProfileAction
 }

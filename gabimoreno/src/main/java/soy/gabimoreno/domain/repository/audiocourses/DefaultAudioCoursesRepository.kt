@@ -86,8 +86,8 @@ class DefaultAudioCoursesRepository
                     email,
                     audioCourseId,
                     mapOf(
-                        "id" to audioCourseId,
-                        "hasBeenListened" to hasBeenListened,
+                        AUDIO_ID to audioCourseId,
+                        HAS_BEEN_LISTENED to hasBeenListened,
                     ),
                 )
             }
@@ -98,7 +98,7 @@ class DefaultAudioCoursesRepository
             if (email.isNotEmpty()) {
                 cloudDataSource.batchUpdateFieldsForAllAudioCoursesItems(
                     email,
-                    mapOf("hasBeenListened" to false),
+                    mapOf(HAS_BEEN_LISTENED to false),
                 )
             }
             localAudioCoursesDataSource.markAllAudioCourseItemsAsUnlistened()
@@ -130,8 +130,8 @@ class DefaultAudioCoursesRepository
                     email,
                     audioCourseId,
                     mapOf(
-                        "id" to audioCourseId,
-                        "markedAsFavorite" to isFavorite,
+                        AUDIO_ID to audioCourseId,
+                        MARKED_AS_FAVORITE to isFavorite,
                     ),
                 )
             }
@@ -183,3 +183,7 @@ class DefaultAudioCoursesRepository
             }
         }
     }
+
+private const val AUDIO_ID = "id"
+private const val HAS_BEEN_LISTENED = "hasBeenListened"
+private const val MARKED_AS_FAVORITE = "markedAsFavorite"

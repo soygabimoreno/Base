@@ -88,5 +88,6 @@ class CloudDataSource<T : SyncableAudio>
     }
 
 const val AUDIOCOURSES_PATH = "audiocourses"
+const val PODCAST_PATH = "podcast"
 const val PREMIUM_AUDIOS_PATH = "premium_audios"
 const val USERS_PATH = "base_users"
