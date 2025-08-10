@@ -35,38 +35,40 @@ import soy.gabimoreno.data.local.playlist.dao.PlaylistTransactionDao
 import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistWithItems
+import soy.gabimoreno.data.local.podcast.LocalPodcastDataSource
+import soy.gabimoreno.data.local.podcast.dao.PodcastDbModelDao
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
 import soy.gabimoreno.fake.buildPlaylist
 import soy.gabimoreno.fake.buildPlaylistDbModel
 import soy.gabimoreno.fake.buildPlaylistItemsDbModel
+import soy.gabimoreno.fake.buildPodcastDbModel
 
 class LocalPlaylistDataSourceTest {
-    private val premiumAudioDbModelDao: PremiumAudioDbModelDao =
-        relaxedMockk<PremiumAudioDbModelDao>()
     private val audioCourseDbModelDao: AudioCourseDbModelDao = relaxedMockk<AudioCourseDbModelDao>()
-    private val audioCourseItemDbModelDao: AudioCourseItemDbModelDao =
-        relaxedMockk<AudioCourseItemDbModelDao>()
-    private val audioCourseTransactionDao: AudioCourseTransactionDao =
-        relaxedMockk<AudioCourseTransactionDao>()
+    private val audioCourseItemDbModelDao: AudioCourseItemDbModelDao = relaxedMockk<AudioCourseItemDbModelDao>()
+    private val audioCourseTransactionDao: AudioCourseTransactionDao = relaxedMockk<AudioCourseTransactionDao>()
     private val playlistDbModelDao: PlaylistDbModelDao = relaxedMockk<PlaylistDbModelDao>()
-    private val playlistItemDbModelDao: PlaylistItemDbModelDao =
-        relaxedMockk<PlaylistItemDbModelDao>()
-    private val playlistTransactionDao: PlaylistTransactionDao =
-        relaxedMockk<PlaylistTransactionDao>()
-    private val gabiMorenoDatabase: ApplicationDatabase = createMockedDatabase()
+    private val playlistItemDbModelDao: PlaylistItemDbModelDao = relaxedMockk<PlaylistItemDbModelDao>()
+    private val playlistTransactionDao: PlaylistTransactionDao = relaxedMockk<PlaylistTransactionDao>()
+    private val podcastDbModelDao: PodcastDbModelDao = relaxedMockk<PodcastDbModelDao>()
+    private val premiumAudioDbModelDao: PremiumAudioDbModelDao = relaxedMockk<PremiumAudioDbModelDao>()
 
-    private lateinit var premiumAudiosDataSource: LocalPremiumAudiosDataSource
     private lateinit var audioCoursesDataSource: LocalAudioCoursesDataSource
     private lateinit var playlistDataSource: LocalPlaylistDataSource
+    private lateinit var podcastDataSource: LocalPodcastDataSource
+    private lateinit var premiumAudiosDataSource: LocalPremiumAudiosDataSource
+
+    private val gabiMorenoDatabase: ApplicationDatabase = createMockedDatabase()
     private val dispatcher: TestDispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        premiumAudiosDataSource = LocalPremiumAudiosDataSource(gabiMorenoDatabase, dispatcher)
         audioCoursesDataSource = LocalAudioCoursesDataSource(gabiMorenoDatabase, dispatcher)
         playlistDataSource = LocalPlaylistDataSource(gabiMorenoDatabase, dispatcher)
+        podcastDataSource = LocalPodcastDataSource(gabiMorenoDatabase, dispatcher)
+        premiumAudiosDataSource = LocalPremiumAudiosDataSource(gabiMorenoDatabase, dispatcher)
     }
 
     @After
@@ -77,6 +79,7 @@ class LocalPlaylistDataSourceTest {
     @Test
     fun `GIVEN valid data WHEN getAllPlaylists THEN mapped playlists are returned`() =
         runTest {
+            val podcastItem = buildPodcastDbModel("123e4567-e89b-12d3-a456-426614174000")
             val playlist = buildPlaylist()
             val playlistDbModel =
                 PlaylistDbModel(
@@ -102,6 +105,7 @@ class LocalPlaylistDataSourceTest {
             coEvery {
                 premiumAudioDbModelDao.getPremiumAudiosByIds(any())
             } returns premiumAudiosDbModel
+            coEvery { podcastDbModelDao.getPodcastDbModelByIds(setOf(podcastItem.id)) } returns listOf(podcastItem)
 
             val result = playlistDataSource.getAllPlaylists()
 
@@ -287,6 +291,7 @@ class LocalPlaylistDataSourceTest {
             every { audioCourseDbModelDao() } returns audioCourseDbModelDao
             every { audioCourseItemDbModelDao() } returns audioCourseItemDbModelDao
             every { audioCourseTransactionDao() } returns audioCourseTransactionDao
+            every { podcastDbModelDao() } returns podcastDbModelDao
             every { playlistDbModelDao() } returns playlistDbModelDao
             every { playlistItemDbModelDao() } returns playlistItemDbModelDao
             every { playlistTransactionDao() } returns playlistTransactionDao

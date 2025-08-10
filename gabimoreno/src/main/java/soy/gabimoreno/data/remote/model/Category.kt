@@ -20,6 +20,12 @@ enum class Category(
     val icon: ImageVector,
     val coverUrl: String,
 ) {
+    PODCAST(
+        261,
+        "Podcast",
+        Icons.Default.AutoStories,
+        "${COVER_URL_PREFIX}podcast$COVER_URL_SUFFIX",
+    ),
     PREMIUM(
         262,
         "Premium",
@@ -84,6 +90,7 @@ enum class Category(
 
 fun getPremiumCategories(): List<Category> =
     listOf(
+        Category.PODCAST,
         Category.PREMIUM,
         Category.PREMIUM_ALGORITHMS,
         Category.PREMIUM_ANDROID_STORIES,

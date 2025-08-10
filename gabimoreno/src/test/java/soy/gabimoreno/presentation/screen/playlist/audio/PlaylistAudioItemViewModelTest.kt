@@ -29,6 +29,7 @@ import soy.gabimoreno.domain.usecase.DeletePlaylistItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
 import soy.gabimoreno.domain.usecase.GetAudioCourseItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPlaylistByPlaylistItemIdUseCase
+import soy.gabimoreno.domain.usecase.GetPodcastByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
 import soy.gabimoreno.domain.usecase.SetPlaylistItemsUseCase
 import soy.gabimoreno.ext.right
@@ -36,12 +37,13 @@ import soy.gabimoreno.fake.buildPlaylist
 import soy.gabimoreno.fake.buildPremiumAudio
 
 class PlaylistAudioItemViewModelTest {
-    private val getPremiumAudioByIdUseCase = mockk<GetPremiumAudioByIdUseCase>()
-    private val getAudioCourseItemByIdUseCase = mockk<GetAudioCourseItemByIdUseCase>()
-    private val getAllPlaylistUseCase = mockk<GetAllPlaylistUseCase>()
-    private val getPlaylistByPlaylistItemIdUseCase = mockk<GetPlaylistByPlaylistItemIdUseCase>()
-    private val setPlaylistItemsUseCase = mockk<SetPlaylistItemsUseCase>()
     private val deletePlaylistItemUseCase = mockk<DeletePlaylistItemByIdUseCase>()
+    private val getAllPlaylistUseCase = mockk<GetAllPlaylistUseCase>()
+    private val getAudioCourseItemByIdUseCase = mockk<GetAudioCourseItemByIdUseCase>()
+    private val getPlaylistByPlaylistItemIdUseCase = mockk<GetPlaylistByPlaylistItemIdUseCase>()
+    private val getPodcastByIdUseCase = mockk<GetPodcastByIdUseCase>()
+    private val getPremiumAudioByIdUseCase = mockk<GetPremiumAudioByIdUseCase>()
+    private val setPlaylistItemsUseCase = mockk<SetPlaylistItemsUseCase>()
     private val tracker: Tracker = relaxedMockk()
     private val testDispatcher = StandardTestDispatcher()
 
@@ -52,12 +54,13 @@ class PlaylistAudioItemViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel =
             PlaylistAudioItemViewModel(
-                getPremiumAudioByIdUseCase = getPremiumAudioByIdUseCase,
-                getAudioCourseItemByIdUseCase = getAudioCourseItemByIdUseCase,
-                getAllPlaylistUseCase = getAllPlaylistUseCase,
-                getPlaylistByPlaylistItemIdUseCase = getPlaylistByPlaylistItemIdUseCase,
-                setPlaylistItemsUseCase = setPlaylistItemsUseCase,
                 deletePlaylistItemUseCase = deletePlaylistItemUseCase,
+                getAllPlaylistUseCase = getAllPlaylistUseCase,
+                getAudioCourseItemByIdUseCase = getAudioCourseItemByIdUseCase,
+                getPlaylistByPlaylistItemIdUseCase = getPlaylistByPlaylistItemIdUseCase,
+                getPodcastByIdUseCase = getPodcastByIdUseCase,
+                getPremiumAudioByIdUseCase = getPremiumAudioByIdUseCase,
+                setPlaylistItemsUseCase = setPlaylistItemsUseCase,
                 tracker = tracker,
                 dispatcher = testDispatcher,
             )

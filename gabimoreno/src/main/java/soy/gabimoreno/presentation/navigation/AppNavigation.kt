@@ -55,6 +55,9 @@ private fun NavGraphBuilder.podcastNav(
                 onGoToWebClicked = { encodedUrl ->
                     navController.navigateToWebView(encodedUrl)
                 },
+                onAddToPlaylistClicked = { audioItemId ->
+                    navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
+                },
             )
         }
 

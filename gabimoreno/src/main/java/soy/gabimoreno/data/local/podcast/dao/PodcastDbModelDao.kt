@@ -14,6 +14,9 @@ interface PodcastDbModelDao {
     @Query("SELECT * FROM PodcastDbModel WHERE id = :id")
     fun getPodcastDbModelById(id: String): PodcastDbModel?
 
+    @Query("SELECT * FROM PodcastDbModel WHERE id IN (:ids)")
+    suspend fun getPodcastDbModelByIds(ids: Set<String>): List<PodcastDbModel>
+
     @Query("SELECT COUNT(id) FROM PodcastDbModel")
     fun count(): Int
 
