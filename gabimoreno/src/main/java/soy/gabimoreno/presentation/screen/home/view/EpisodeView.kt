@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,6 +44,7 @@ fun EpisodeView(
     onClick: () -> Unit,
     onFavoriteStatusChanged: (episode: Episode) -> Unit,
     onListenedToggled: (episode: Episode) -> Unit,
+    onAddToPlaylistClicked: (episodeId: String) -> Unit,
 ) {
     Column(
         modifier =
@@ -70,11 +72,34 @@ fun EpisodeView(
                 episode = episode,
                 onFavoriteStatusChanged = { onFavoriteStatusChanged(episode) },
             )
+            PlaylistIcon(
+                episodeId = episode.id,
+                onAddToPlaylistClicked = { onAddToPlaylistClicked(episode.id) },
+            )
         }
         Text(
             episode.title,
             style = MaterialTheme.typography.body1,
             modifier = Modifier.padding(horizontal = Spacing.s8),
+        )
+    }
+}
+
+@Composable
+fun PlaylistIcon(
+    episodeId: String,
+    onAddToPlaylistClicked: (episodeId: String) -> Unit,
+) {
+    IconButton(
+        onClick = { onAddToPlaylistClicked(episodeId) },
+    ) {
+        Icon(
+            modifier =
+                Modifier
+                    .size(Spacing.s32),
+            imageVector = Icons.Default.LibraryMusic,
+            contentDescription = stringResource(R.string.playlists_add_audio_to_playlist),
+            tint = White,
         )
     }
 }
@@ -165,6 +190,7 @@ fun EpisodeViewPreview() {
             onClick = {},
             onFavoriteStatusChanged = {},
             onListenedToggled = {},
+            onAddToPlaylistClicked = {},
         )
     }
 }

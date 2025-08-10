@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
+import soy.gabimoreno.domain.usecase.GetPodcastByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPodcastStreamUseCase
 import soy.gabimoreno.domain.usecase.MarkPodcastAsListenedUseCase
 import soy.gabimoreno.domain.usecase.SetAllPodcastAsUnlistenedUseCase
@@ -44,4 +45,11 @@ object PodcastModule {
         context = context,
         podcastRepository = podcastRepository,
     )
+
+    @Provides
+    @Singleton
+    fun provideGetPodcastByIdUseCase(podcastRepository: PodcastRepository) =
+        GetPodcastByIdUseCase(
+            podcastRepository = podcastRepository,
+        )
 }

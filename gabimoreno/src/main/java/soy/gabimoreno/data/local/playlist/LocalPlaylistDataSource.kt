@@ -19,9 +19,12 @@ import soy.gabimoreno.data.local.mapper.toPlaylistMapper
 import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistWithItems
+import soy.gabimoreno.data.local.podcast.model.PodcastDbModel
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.content.Playlist
+import soy.gabimoreno.domain.util.AudioItemType
+import soy.gabimoreno.domain.util.audioItemTypeDetector
 import javax.inject.Inject
 
 class LocalPlaylistDataSource
@@ -44,6 +47,9 @@ class LocalPlaylistDataSource
 
         @VisibleForTesting
         val audioCourseItemDbModelDao = gabiMorenoDatabase.audioCourseItemDbModelDao()
+
+        @VisibleForTesting
+        val podcastDbModelDao = gabiMorenoDatabase.podcastDbModelDao()
 
         @VisibleForTesting
         val premiumAudioDbModelDao = gabiMorenoDatabase.premiumAudioDbModelDao()
@@ -201,8 +207,8 @@ class LocalPlaylistDataSource
 
             val audioCoursesIds =
                 ids
-                    .filter { it.contains("-") }
-                    .map { id -> id.substringBefore("-") }
+                    .filter { it.contains(AUDIO_COURSE_DELIMITER) }
+                    .map { id -> id.substringBefore(AUDIO_COURSE_DELIMITER) }
                     .toSet()
             val audioCoursesMap =
                 audioCourseDbModelDao
@@ -214,10 +220,13 @@ class LocalPlaylistDataSource
                     .getAudioCourseItemsByIds(ids)
                     .associateBy { it.id }
 
+            val podcastsMap = podcastDbModelDao.getPodcastDbModelByIds(ids).associateBy { it.id }
+
             return AudioResources(
                 premiumAudioMap,
                 audioCoursesMap,
                 audioCourseItemsMap,
+                podcastsMap,
             )
         }
 
@@ -229,21 +238,30 @@ class LocalPlaylistDataSource
                         val position = item.position
                         val playlistItemId = item.id
                         val audioItem =
-                            if (item.audioItemId.contains("-")) {
-                                val course =
-                                    resources.audioCourses[
-                                        item.audioItemId
-                                            .substringBefore(
-                                                "-",
-                                            ),
-                                    ]
-                                val courseItem = resources.audioCourseItems[item.audioItemId]
-                                if (course == null || courseItem == null) return@mapNotNull null
-                                courseItem.toPlaylistAudioItem(course, position)
-                            } else {
-                                resources.premiumAudios[item.audioItemId]?.toPlaylistAudioItem(
-                                    position,
-                                )
+                            when (audioItemTypeDetector(item.audioItemId)) {
+                                AudioItemType.AUDIO_COURSE -> {
+                                    val course =
+                                        resources.audioCourses[
+                                            item.audioItemId
+                                                .substringBefore(AUDIO_COURSE_DELIMITER),
+                                        ]
+                                    val courseItem = resources.audioCourseItems[item.audioItemId]
+                                    if (course == null || courseItem == null) return@mapNotNull null
+                                    courseItem
+                                        .toPlaylistAudioItem(course, position)
+                                }
+
+                                AudioItemType.PREMIUM_AUDIO -> {
+                                    resources.premiumAudios[item.audioItemId]?.toPlaylistAudioItem(
+                                        position,
+                                    )
+                                }
+
+                                AudioItemType.PODCAST -> {
+                                    resources.podcasts[item.audioItemId]?.toPlaylistAudioItem(
+                                        position,
+                                    )
+                                }
                             }
                         audioItem?.copy(playlistItemId = playlistItemId)
                     }
@@ -255,5 +273,8 @@ class LocalPlaylistDataSource
             val premiumAudios: Map<String, PremiumAudioDbModel>,
             val audioCourses: Map<String, AudioCourseDbModel>,
             val audioCourseItems: Map<String, AudioCourseItemDbModel>,
+            val podcasts: Map<String, PodcastDbModel>,
         )
     }
+
+private const val AUDIO_COURSE_DELIMITER = "-"

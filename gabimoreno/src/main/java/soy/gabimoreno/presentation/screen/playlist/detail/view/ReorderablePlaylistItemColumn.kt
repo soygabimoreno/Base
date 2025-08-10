@@ -34,7 +34,6 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import soy.gabimoreno.R
@@ -43,6 +42,7 @@ import soy.gabimoreno.presentation.screen.playlist.view.reorderable.ReorderHapti
 import soy.gabimoreno.presentation.screen.playlist.view.reorderable.buildAccessibilityActions
 import soy.gabimoreno.presentation.screen.playlist.view.reorderable.rememberReorderHapticFeedback
 import soy.gabimoreno.presentation.theme.Black
+import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.Pink
 import soy.gabimoreno.presentation.theme.PurpleDark
 import soy.gabimoreno.presentation.theme.Spacing
@@ -74,7 +74,7 @@ fun ReorderablePlaylistItemColumn(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = lazyListState,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(Spacing.s8),
     ) {
         itemsIndexed(reorderedAudioItems, key = { _, item -> item.id }) { index, item ->
             ReorderableItem(reorderableLazyColumnState, item.id) {
@@ -105,7 +105,7 @@ fun ReorderablePlaylistItemColumn(
                             Modifier
                                 .fillMaxWidth()
                                 .clickable { onItemClicked(reorderedAudioItems[index]) }
-                                .background(White.copy(alpha = 0.95f))
+                                .background(White.copy(alpha = Percent.NINETY_FIVE))
                                 .padding(
                                     start = Spacing.s8,
                                     top = Spacing.s16,
@@ -121,7 +121,7 @@ fun ReorderablePlaylistItemColumn(
                         )
                         Spacer(modifier = Modifier.height(Spacing.s8))
                         Text(
-                            if (reorderedAudioItems[index].id.contains("-")) {
+                            if (reorderedAudioItems[index].id.contains(AUDIO_COURSE_DELIMITER)) {
                                 reorderedAudioItems[index].description
                             } else {
                                 reorderedAudioItems[index].category.title
@@ -180,3 +180,5 @@ private fun List<PlaylistAudioItem>.updatePositions(): List<PlaylistAudioItem> =
     mapIndexed { index, playlistAudioItem ->
         playlistAudioItem.copy(position = index)
     }
+
+private const val AUDIO_COURSE_DELIMITER = "-"

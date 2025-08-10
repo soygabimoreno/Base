@@ -63,8 +63,9 @@ import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
-    onItemClicked: (episodeId: String) -> Unit,
+    onAddToPlaylistClicked: (podcastId: String) -> Unit,
     onGoToWebClicked: (encodedUrl: String) -> Unit,
+    onItemClicked: (episodeId: String) -> Unit,
 ) {
     val scrollState = rememberLazyListState()
     val homeViewModel = ViewModelProvider.homeViewModel
@@ -104,6 +105,9 @@ fun HomeScreen(
                 },
                 onListenedToggled = { episode ->
                     homeViewModel.onListenedToggled(episode)
+                },
+                onAddToPlaylistClicked = { podcastId ->
+                    onAddToPlaylistClicked(podcastId)
                 },
             )
         }
@@ -180,6 +184,7 @@ private fun EpisodeListContent(
     onRetry: () -> Unit,
     onFavoriteStatusChanged: (Episode) -> Unit,
     onListenedToggled: (Episode) -> Unit,
+    onAddToPlaylistClicked: (episodeId: String) -> Unit,
 ) {
     Box(
         Modifier
@@ -210,6 +215,7 @@ private fun EpisodeListContent(
                             onClick = onEpisodeClicked,
                             onFavoriteStatusChanged = onFavoriteStatusChanged,
                             onListenedToggled = onListenedToggled,
+                            onAddToPlaylistClicked = onAddToPlaylistClicked,
                         )
                     }
                 }
@@ -235,6 +241,7 @@ private fun EpisodeGrid(
     onClick: (Episode) -> Unit,
     onFavoriteStatusChanged: (Episode) -> Unit,
     onListenedToggled: (Episode) -> Unit,
+    onAddToPlaylistClicked: (episodeId: String) -> Unit,
 ) {
     val filteredEpisodes =
         if (searchText.isBlank()) {
@@ -256,6 +263,7 @@ private fun EpisodeGrid(
                 onClick = { onClick(episode) },
                 onFavoriteStatusChanged = { onFavoriteStatusChanged(episode) },
                 onListenedToggled = { onListenedToggled(episode) },
+                onAddToPlaylistClicked = { onAddToPlaylistClicked(episode.id) },
             )
         }
     }

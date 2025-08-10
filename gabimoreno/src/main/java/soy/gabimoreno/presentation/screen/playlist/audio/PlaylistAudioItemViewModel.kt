@@ -18,20 +18,24 @@ import soy.gabimoreno.domain.usecase.DeletePlaylistItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetAllPlaylistUseCase
 import soy.gabimoreno.domain.usecase.GetAudioCourseItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPlaylistByPlaylistItemIdUseCase
+import soy.gabimoreno.domain.usecase.GetPodcastByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
 import soy.gabimoreno.domain.usecase.SetPlaylistItemsUseCase
+import soy.gabimoreno.domain.util.AudioItemType
+import soy.gabimoreno.domain.util.audioItemTypeDetector
 import javax.inject.Inject
 
 @HiltViewModel
 class PlaylistAudioItemViewModel
     @Inject
     constructor(
-        private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase,
-        private val getAudioCourseItemByIdUseCase: GetAudioCourseItemByIdUseCase,
-        private val getAllPlaylistUseCase: GetAllPlaylistUseCase,
-        private val getPlaylistByPlaylistItemIdUseCase: GetPlaylistByPlaylistItemIdUseCase,
-        private val setPlaylistItemsUseCase: SetPlaylistItemsUseCase,
         private val deletePlaylistItemUseCase: DeletePlaylistItemByIdUseCase,
+        private val getAllPlaylistUseCase: GetAllPlaylistUseCase,
+        private val getAudioCourseItemByIdUseCase: GetAudioCourseItemByIdUseCase,
+        private val getPlaylistByPlaylistItemIdUseCase: GetPlaylistByPlaylistItemIdUseCase,
+        private val getPodcastByIdUseCase: GetPodcastByIdUseCase,
+        private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase,
+        private val setPlaylistItemsUseCase: SetPlaylistItemsUseCase,
         private val tracker: Tracker,
         @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
@@ -50,12 +54,22 @@ class PlaylistAudioItemViewModel
             state = state.copy(isLoading = true)
             viewModelScope.launch(dispatcher) {
                 val selectedAudioTitle =
-                    if (audioItemId.contains("-")) {
-                        val audioCourseItem = getAudioCourseItemByIdUseCase(audioItemId).getOrNull()
-                        audioCourseItem?.title.orEmpty()
-                    } else {
-                        val premiumAudio = getPremiumAudioByIdUseCase(audioItemId)
-                        premiumAudio.getOrNull()?.title.orEmpty()
+                    when (audioItemTypeDetector(audioItemId)) {
+                        AudioItemType.AUDIO_COURSE -> {
+                            val audioCourseItem =
+                                getAudioCourseItemByIdUseCase(
+                                    audioItemId,
+                                ).getOrNull()
+                            audioCourseItem?.title.orEmpty()
+                        }
+                        AudioItemType.PREMIUM_AUDIO -> {
+                            val premiumAudio = getPremiumAudioByIdUseCase(audioItemId)
+                            premiumAudio.getOrNull()?.title.orEmpty()
+                        }
+                        AudioItemType.PODCAST -> {
+                            val podcast = getPodcastByIdUseCase(audioItemId)
+                            podcast.getOrNull()?.title.orEmpty()
+                        }
                     }
 
                 val selectedPlaylists = getPlaylistByPlaylistItemIdUseCase(audioItemId).getOrNull()
