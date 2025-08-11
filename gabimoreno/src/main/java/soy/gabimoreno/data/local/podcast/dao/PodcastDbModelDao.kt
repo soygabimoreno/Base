@@ -8,7 +8,7 @@ import soy.gabimoreno.data.local.podcast.model.PodcastDbModel
 
 @Dao
 interface PodcastDbModelDao {
-    @Query("SELECT * FROM PodcastDbModel")
+    @Query("SELECT * FROM PodcastDbModel ORDER BY pubDateMillis DESC")
     fun getPodcastDbModels(): Flow<List<PodcastDbModel>>
 
     @Query("SELECT * FROM PodcastDbModel WHERE id = :id")
