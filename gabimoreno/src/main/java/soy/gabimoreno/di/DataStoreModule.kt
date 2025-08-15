@@ -9,11 +9,13 @@ import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.domain.session.MemberSession
 import soy.gabimoreno.domain.usecase.CheckShouldIShowInAppReviewUseCase
 import soy.gabimoreno.domain.usecase.GetInAppReviewCounterUseCase
+import soy.gabimoreno.domain.usecase.GetLastAudioListenedIdUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReversePodcastOrderUseCase
 import soy.gabimoreno.domain.usecase.IsBearerTokenValid
 import soy.gabimoreno.domain.usecase.ResetJwtAuthTokenUseCase
 import soy.gabimoreno.domain.usecase.SaveCredentialsInDataStoreUseCase
 import soy.gabimoreno.domain.usecase.SetJwtAuthTokenUseCase
+import soy.gabimoreno.domain.usecase.SetLastAudioListenedIdUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIReversePodcastOrderUseCase
 import soy.gabimoreno.domain.usecase.SetShouldIShowInAppReviewUseCase
 import soy.gabimoreno.framework.datastore.DataStoreMemberSession
@@ -81,4 +83,16 @@ object DataStoreModule {
     fun provideSetShouldIShowInAppReviewUseCase(
         @ApplicationContext context: Context,
     ) = SetShouldIShowInAppReviewUseCase(context)
+
+    @Provides
+    @Singleton
+    fun provideGetLastAudioListenedIdUseCase(
+        @ApplicationContext context: Context,
+    ) = GetLastAudioListenedIdUseCase(context)
+
+    @Provides
+    @Singleton
+    fun provideSetLastAudioListenedIdUseCase(
+        @ApplicationContext context: Context,
+    ) = SetLastAudioListenedIdUseCase(context)
 }

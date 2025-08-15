@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.domain.model.content.AudioCourseItem
+import soy.gabimoreno.domain.model.content.PlaylistAudioItem
 
 interface AudioCoursesRepository {
     suspend fun getCourses(
@@ -14,6 +15,9 @@ interface AudioCoursesRepository {
     ): Either<Throwable, List<AudioCourse>>
     suspend fun getCourseById(idCourse: String): Either<Throwable, Flow<AudioCourse>>
     suspend fun getAudioCourseItem(audioCourseItemId: String): Either<Throwable, AudioCourseItem>
+    suspend fun getAudioCourseItemById(
+        audioCourseItemId: String,
+    ): Either<Throwable, PlaylistAudioItem>
     suspend fun getAllFavoriteAudioCoursesItems(): Either<Throwable, List<AudioCourseItem>>
     suspend fun markAudioCourseItemAsListened(
         audioCourseId: String,

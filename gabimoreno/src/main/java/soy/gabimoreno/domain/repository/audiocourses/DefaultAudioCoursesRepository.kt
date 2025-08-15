@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.first
 import soy.gabimoreno.data.cloud.audiosync.datasource.AudioCoursesCloudDataSource
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
 import soy.gabimoreno.data.local.mapper.toAudioCourseItem
+import soy.gabimoreno.data.local.mapper.toPlaylistAudioItem
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.domain.model.content.AudioCourseItem
+import soy.gabimoreno.domain.model.content.PlaylistAudioItem
 import soy.gabimoreno.domain.repository.premiumaudios.TWELVE_HOURS_IN_MILLIS
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import javax.inject.Inject
@@ -75,6 +77,24 @@ class DefaultAudioCoursesRepository
                 ?.toAudioCourseItem()
                 ?.right()
                 ?: Throwable("AudioCourseItem not found").left()
+
+        override suspend fun getAudioCourseItemById(
+            audioCourseItemId: String,
+        ): Either<Throwable, PlaylistAudioItem> {
+            val audioCourseId = audioCourseItemId.split(AUDIO_COURSE_DELIMITER)[0]
+            val position = audioCourseItemId.split(AUDIO_COURSE_DELIMITER)[1].toInt()
+            val audioCourse = localAudioCoursesDataSource.getAudioCourseById(audioCourseId).first()
+
+            val audio =
+                audioCourse
+                    ?.audios
+                    ?.firstOrNull { it.id == audioCourseItemId }
+
+            return audio
+                ?.toPlaylistAudioItem(audioCourse, position)
+                ?.right()
+                ?: Throwable("AudioCourse not found").left()
+        }
 
         override suspend fun markAudioCourseItemAsListened(
             audioCourseId: String,
@@ -185,5 +205,6 @@ class DefaultAudioCoursesRepository
     }
 
 private const val AUDIO_ID = "id"
+private const val AUDIO_COURSE_DELIMITER = "-"
 private const val HAS_BEEN_LISTENED = "hasBeenListened"
 private const val MARKED_AS_FAVORITE = "markedAsFavorite"
