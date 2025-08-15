@@ -1,5 +1,6 @@
 package soy.gabimoreno.data.remote.repository
 
+import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import io.mockk.Runs
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
@@ -20,12 +22,15 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.cloud.audiosync.datasource.AudioCoursesCloudDataSource
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
 import soy.gabimoreno.data.local.mapper.toAudioCourseItem
+import soy.gabimoreno.data.local.mapper.toPlaylistAudioItem
 import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCoursesRepository
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
+import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildAudioCourse
+import soy.gabimoreno.fake.buildAudioCourseItem
 import soy.gabimoreno.fake.buildAudioCourseItemDbModel
 import soy.gabimoreno.fake.buildAudioCourses
 import soy.gabimoreno.fake.buildCloudAudioCourseResponses
@@ -337,6 +342,38 @@ class DefaultAudioCoursesRepositoryTest {
             result.isLeft() shouldBe true
             coVerifyOnce {
                 localAudioCoursesDataSource.getAudioCourseItem(audioCourseItemId)
+            }
+        }
+
+    @Test
+    fun `GIVEN existing audioCourseId WHEN getAudioCourseItemById THEN returns PlaylistAudioItem`() =
+        runTest {
+            val audioCourse = buildAudioCourse()
+            val audioCourseItem = buildAudioCourseItem()
+            val position = 1
+            val playlistAudioItem = audioCourseItem.toPlaylistAudioItem(audioCourse, position)
+            coEvery { localAudioCoursesDataSource.getAudioCourseById(audioCourse.id) } returns flowOf(audioCourse)
+
+            val result = repository.getAudioCourseItemById(audioCourseItem.id)
+
+            result shouldBeEqualTo right(playlistAudioItem)
+            coVerifyOnce {
+                localAudioCoursesDataSource.getAudioCourseById(audioCourse.id)
+            }
+        }
+
+    @Test
+    fun `GIVEN nonExisting audioCourseId WHEN getAudioCourseItemById THEN returns error`() =
+        runTest {
+            val audioCourseId = "1"
+            val audioCourseItemId = "1-1"
+            coEvery { localAudioCoursesDataSource.getAudioCourseById(audioCourseId) } returns flowOf(null)
+
+            val result = repository.getAudioCourseItemById(audioCourseItemId)
+
+            result shouldBeInstanceOf Either.Left::class.java
+            coVerifyOnce {
+                localAudioCoursesDataSource.getAudioCourseById(audioCourseId)
             }
         }
 

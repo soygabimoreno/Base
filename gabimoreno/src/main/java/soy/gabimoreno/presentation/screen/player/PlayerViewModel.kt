@@ -25,9 +25,12 @@ import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.usecase.CheckShouldIShowInAppReviewUseCase
+import soy.gabimoreno.domain.usecase.GetAudioByIdUseCase
+import soy.gabimoreno.domain.usecase.GetLastAudioListenedIdUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
 import soy.gabimoreno.domain.usecase.MarkPodcastAsListenedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
+import soy.gabimoreno.domain.usecase.SetLastAudioListenedIdUseCase
 import soy.gabimoreno.domain.util.AudioItemType
 import soy.gabimoreno.domain.util.audioItemTypeDetector
 import soy.gabimoreno.framework.KLog
@@ -46,12 +49,15 @@ import javax.inject.Inject
 class PlayerViewModel
     @Inject
     constructor(
-        private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
-        private val tracker: Tracker,
+        private val checkShouldIShowInAppReviewUseCase: CheckShouldIShowInAppReviewUseCase,
+        private val getAudioByIdUseCase: GetAudioByIdUseCase,
+        private val getLastAudioListenedIdUseCase: GetLastAudioListenedIdUseCase,
         private val markAudioCourseAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
         private val markPodcastAsListenedUseCase: MarkPodcastAsListenedUseCase,
         private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
-        private val checkShouldIShowInAppReviewUseCase: CheckShouldIShowInAppReviewUseCase,
+        private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
+        private val setLastAudioListenedIdUseCase: SetLastAudioListenedIdUseCase,
+        private val tracker: Tracker,
         @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         private val playbackState = mediaPlayerServiceConnection.playbackState
@@ -84,11 +90,24 @@ class PlayerViewModel
             }
 
         init {
+            viewModelScope.launch(dispatcher) {
+                val lastAudioListenedId = getLastAudioListenedIdUseCase()
+                if (lastAudioListenedId.isNotEmpty() ||
+                    lastAudioListenedId != DEFAULT_LAST_AUDIO_LISTENED_ID
+                ) {
+                    viewModelScope.launch(dispatcher) {
+                        getAudioByIdUseCase(lastAudioListenedId).onRight { audio ->
+                            currentPlayingAudio.value = audio
+                        }
+                    }
+                }
+            }
             var previousAudioId: String? = null
             snapshotFlow { currentPlayingAudio.value?.id }
                 .distinctUntilChanged()
                 .onEach { newId ->
-                    if (previousAudioId != newId) {
+                    if (previousAudioId != newId && newId != null) {
+                        setLastAudioListenedIdUseCase(newId)
                         hasTriggeredEightyPercent = false
                         previousAudioId = newId
                     }
@@ -328,5 +347,6 @@ class PlayerViewModel
             currentPlayingAudio.value?.toMap() ?: mapOf()
     }
 
+private const val DEFAULT_LAST_AUDIO_LISTENED_ID = "0"
 private const val PLAYBACK_POSITION_UPDATE_INTERVAL = 1_000L
 private const val SET_AUDIO_AS_LISTENED = 0.8

@@ -1,6 +1,7 @@
 package soy.gabimoreno.presentation.screen.player
 
 import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -19,9 +20,12 @@ import soy.gabimoreno.data.tracker.main.PlayerTrackerEvent
 import soy.gabimoreno.data.tracker.toMap
 import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.usecase.CheckShouldIShowInAppReviewUseCase
+import soy.gabimoreno.domain.usecase.GetAudioByIdUseCase
+import soy.gabimoreno.domain.usecase.GetLastAudioListenedIdUseCase
 import soy.gabimoreno.domain.usecase.MarkAudioCourseItemAsListenedUseCase
 import soy.gabimoreno.domain.usecase.MarkPodcastAsListenedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase
+import soy.gabimoreno.domain.usecase.SetLastAudioListenedIdUseCase
 import soy.gabimoreno.fake.buildAudio
 import soy.gabimoreno.fake.buildAudios
 import soy.gabimoreno.player.service.MediaPlayerServiceConnection
@@ -30,13 +34,16 @@ import soy.gabimoreno.player.service.MediaPlayerServiceConnection
 class PlayerViewModelTest {
     private val tracker: Tracker = relaxedMockk()
     private val mediaPlayerServiceConnection: MediaPlayerServiceConnection = relaxedMockk()
-    private val markAudioCourseItemAsListenedUseCase =
+    private val markAudioCourseAsListenedUseCase =
         relaxedMockk<MarkAudioCourseItemAsListenedUseCase>()
     private val markPremiumAudioAsListenedUseCase =
         relaxedMockk<MarkPremiumAudioAsListenedUseCase>()
     private val markPodcastAsListenedUseCase = relaxedMockk<MarkPodcastAsListenedUseCase>()
     private val checkShouldIShowInAppReviewUseCase =
         relaxedMockk<CheckShouldIShowInAppReviewUseCase>()
+    private val setLastAudioListenedIdUseCase: SetLastAudioListenedIdUseCase = mockk()
+    private val getLastAudioListenedIdUseCase: GetLastAudioListenedIdUseCase = mockk()
+    private val getAudioByIdUseCase: GetAudioByIdUseCase = mockk()
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: PlayerViewModel
 
@@ -45,13 +52,16 @@ class PlayerViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel =
             PlayerViewModel(
-                mediaPlayerServiceConnection,
-                tracker,
-                markAudioCourseItemAsListenedUseCase,
-                markPodcastAsListenedUseCase,
-                markPremiumAudioAsListenedUseCase,
-                checkShouldIShowInAppReviewUseCase,
-                testDispatcher,
+                checkShouldIShowInAppReviewUseCase = checkShouldIShowInAppReviewUseCase,
+                getAudioByIdUseCase = getAudioByIdUseCase,
+                getLastAudioListenedIdUseCase = getLastAudioListenedIdUseCase,
+                markAudioCourseAsListenedUseCase = markAudioCourseAsListenedUseCase,
+                markPodcastAsListenedUseCase = markPodcastAsListenedUseCase,
+                markPremiumAudioAsListenedUseCase = markPremiumAudioAsListenedUseCase,
+                mediaPlayerServiceConnection = mediaPlayerServiceConnection,
+                setLastAudioListenedIdUseCase = setLastAudioListenedIdUseCase,
+                tracker = tracker,
+                dispatcher = testDispatcher,
             )
     }
 

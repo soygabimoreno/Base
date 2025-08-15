@@ -71,3 +71,26 @@ fun AudioCourseItemDbModel.toPlaylistAudioItem(
         playlistItemId = null,
         markedAsFavorite = markedAsFavorite,
     )
+
+fun AudioCourseItem.toPlaylistAudioItem(
+    audioCourse: AudioCourse,
+    position: Int,
+): PlaylistAudioItem =
+    PlaylistAudioItem(
+        id = id,
+        title = title,
+        description = audioCourse.title,
+        saga = audioCourse.saga,
+        url = url,
+        audioUrl = url,
+        imageUrl = audioCourse.thumbnailUrl,
+        thumbnailUrl = audioCourse.thumbnailUrl,
+        pubDateMillis = audioCourse.pubDateMillis,
+        audioLengthInSeconds = audioCourse.audioLengthInSeconds,
+        hasBeenListened = hasBeenListened,
+        category = audioCourse.category,
+        excerpt = audioCourse.excerpt,
+        position = position,
+        playlistItemId = null,
+        markedAsFavorite = markedAsFavorite,
+    )
