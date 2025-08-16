@@ -22,7 +22,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.runtime.Composable
@@ -36,7 +35,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -54,6 +52,7 @@ import soy.gabimoreno.presentation.theme.PurpleDark
 import soy.gabimoreno.presentation.theme.PurpleLight
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
+import soy.gabimoreno.presentation.ui.BackButton
 import soy.gabimoreno.presentation.ui.dialog.CustomDialog
 import soy.gabimoreno.presentation.ui.dialog.TypeDialog
 
@@ -160,11 +159,13 @@ private fun PlaylistDetailHeader(
                     .height(200.dp),
         )
 
-        IconOverlay(
-            icon = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = stringResource(R.string.back),
+        BackButton(
             onClick = { onAction(PlaylistDetailAction.OnBackClicked) },
-            modifier = Modifier.align(Alignment.TopStart),
+            modifier =
+                Modifier
+                    .windowInsetsPadding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top),
+                    ).align(Alignment.TopStart),
         )
 
         if (state.playlistAudioItems.isNotEmpty()) {
@@ -267,7 +268,6 @@ private fun PlaylistEmptyState() {
             text = stringResource(R.string.playlist_add_items),
             style = MaterialTheme.typography.h6,
             color = Orange,
-            textDecoration = TextDecoration.Underline,
         )
     }
 }
