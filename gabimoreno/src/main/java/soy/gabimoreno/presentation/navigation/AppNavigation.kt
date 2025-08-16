@@ -73,6 +73,9 @@ private fun NavGraphBuilder.podcastNav(
                 onBackClicked = {
                     navController.goBack()
                 },
+                onAddToPlaylistClicked = { audioItemId ->
+                    navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
+                },
             )
         }
 
@@ -125,6 +128,9 @@ private fun NavGraphBuilder.premiumNav(
                 Feature.PREMIUM,
                 onBackClicked = {
                     navController.goBack()
+                },
+                onAddToPlaylistClicked = { audioItemId ->
+                    navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
                 },
             )
         }

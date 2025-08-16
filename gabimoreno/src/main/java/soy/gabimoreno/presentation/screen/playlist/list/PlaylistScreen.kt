@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -31,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -122,7 +120,7 @@ private fun PlaylistToolbar(onBackClick: () -> Unit) {
         modifier =
             Modifier
                 .fillMaxWidth()
-                .height(Spacing.s96),
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top)),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
@@ -188,7 +186,6 @@ private fun PlaylistEmptyContent() {
                     SpanStyle(
                         color = Orange,
                         fontWeight = FontWeight.Bold,
-                        textDecoration = TextDecoration.Underline,
                     ),
                 ) {
                     append(stringResource(R.string.playlists_name).uppercase())

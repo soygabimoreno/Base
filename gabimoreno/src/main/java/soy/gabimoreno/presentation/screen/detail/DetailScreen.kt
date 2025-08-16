@@ -27,6 +27,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,6 +64,7 @@ import soy.gabimoreno.util.toDurationMinutes
 fun DetailScreen(
     audioId: String,
     feature: Feature,
+    onAddToPlaylistClicked: (audioId: String) -> Unit,
     onBackClicked: () -> Unit,
 ) {
     val currentContext = LocalContext.current
@@ -226,6 +228,26 @@ fun DetailScreen(
                                 )
                             }
                             Spacer(modifier = Modifier.width(Spacing.s16))
+                            IconButton(
+                                modifier = Modifier.size(Spacing.s32),
+                                onClick = {
+                                    onAddToPlaylistClicked(
+                                        detailViewModel.audioState?.id ?: "",
+                                    )
+                                },
+                            ) {
+                                Icon(
+                                    modifier =
+                                        Modifier
+                                            .size(Spacing.s32),
+                                    imageVector = Icons.Default.LibraryMusic,
+                                    contentDescription =
+                                        stringResource(
+                                            R.string.playlists_add_audio_to_playlist,
+                                        ),
+                                    tint = White,
+                                )
+                            }
                         }
 
                         AnimatedIconButton(

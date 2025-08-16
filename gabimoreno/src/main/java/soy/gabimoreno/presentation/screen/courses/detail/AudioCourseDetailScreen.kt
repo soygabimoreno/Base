@@ -149,8 +149,6 @@ fun AudioCourseDetailScreen(
                             .background(PurpleDark.copy(alpha = 0.8f)),
                 ) {
                     BackButton(
-                        modifier = Modifier.size(Spacing.s64),
-                        tint = Orange,
                         onClick = { onAction(AudioCourseDetailAction.OnBackClicked) },
                     )
                 }
