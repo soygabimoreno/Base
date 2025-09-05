@@ -74,33 +74,6 @@ class AudioCourseDetailViewModelTest {
         }
 
     @Test
-    fun `WHEN OnShowAudioCourseOnWebClicked THEN track event and emit ShowAudioCourseOnWeb event`() =
-        runTest {
-            val audioCourse = buildAudioCourse()
-            val action = AudioCourseDetailAction.OpenAudioCourseOnWeb(audioCourseId = audioCourse.id)
-            val eventChannel = Channel<AudioCourseDetailEvent>(Channel.UNLIMITED)
-            val job =
-                launch {
-                    viewModel.events.collect {
-                        eventChannel.trySend(it)
-                    }
-                }
-
-            viewModel.onAction(action)
-            advanceUntilIdle()
-
-            eventChannel.receive() shouldBeEqualTo AudioCourseDetailEvent.OpenAudioCourseOnWeb
-            verifyOnce {
-                tracker.trackEvent(
-                    AudioCoursesDetailTrackerEvent.ViewOnWebScreen(
-                        parameters = mapOf(TRACKER_KEY_AUDIO_COURSE_ID to audioCourse.id),
-                    ),
-                )
-            }
-            job.cancel()
-        }
-
-    @Test
     fun `GIVEN success WHEN onViewScreen THEN state is updated`() =
         runTest {
             val audioCourse = buildAudioCourse()

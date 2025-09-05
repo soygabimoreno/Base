@@ -114,20 +114,6 @@ class AudioCourseDetailViewModel
                     }
                 }
 
-                is AudioCourseDetailAction.OpenAudioCourseOnWeb -> {
-                    tracker.trackEvent(
-                        AudioCoursesDetailTrackerEvent.ViewOnWebScreen(
-                            parameters =
-                                mapOf(
-                                    (TRACKER_KEY_AUDIO_COURSE_ID to action.audioCourseId),
-                                ),
-                        ),
-                    )
-                    viewModelScope.launch {
-                        eventChannel.emit(AudioCourseDetailEvent.OpenAudioCourseOnWeb)
-                    }
-                }
-
                 else -> Unit
             }
         }

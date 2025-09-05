@@ -15,11 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -30,13 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -50,7 +46,6 @@ import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.courses.detail.view.ItemAudioCourse
 import soy.gabimoreno.presentation.theme.Black
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
-import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.Pink
 import soy.gabimoreno.presentation.theme.PurpleDark
 import soy.gabimoreno.presentation.theme.Spacing
@@ -64,7 +59,6 @@ fun AudioCoursesDetailScreenRoot(
     onAddToPlaylistClicked: (audioCourseId: String) -> Unit,
 ) {
     val context = LocalContext.current
-    val uriHandler = LocalUriHandler.current
     val coursesDetailViewModel = ViewModelProvider.audioCourseDetailViewModel
     val playerViewModel = ViewModelProvider.playerViewModel
     LaunchedEffect(Unit) {
@@ -82,10 +76,6 @@ fun AudioCoursesDetailScreenRoot(
                             coursesDetailViewModel.state.audio as Episode,
                         )
                     }
-                }
-
-                AudioCourseDetailEvent.OpenAudioCourseOnWeb -> {
-                    uriHandler.openUri(coursesDetailViewModel.state.audioCourse?.url ?: BASE_URL)
                 }
             }
         }
@@ -228,29 +218,6 @@ fun AudioCourseDetailScreen(
                     )
                 }
                 item {
-                    if (state.audioCourse.audios.size < FREE_AUDIO_SIZE) {
-                        Spacer(modifier = Modifier.padding(bottom = Spacing.s32))
-                        Button(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(IntrinsicSize.Min)
-                                    .background(Orange),
-                            onClick = {
-                                onAction(
-                                    AudioCourseDetailAction.OpenAudioCourseOnWeb(
-                                        state.audioCourse.id,
-                                    ),
-                                )
-                            },
-                        ) {
-                            Text(
-                                stringResource(R.string.course_link),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
-                            )
-                        }
-                    }
                     Spacer(modifier = Modifier.padding(bottom = Spacing.s96))
                 }
             }
@@ -297,6 +264,3 @@ private fun AudioCourseDetailPreview() {
         )
     }
 }
-
-private const val BASE_URL = "https://gabimoreno.soy/"
-private const val FREE_AUDIO_SIZE = 8
