@@ -5,5 +5,4 @@ sealed interface AudioCourseDetailEvent {
         val error: Throwable?,
     ) : AudioCourseDetailEvent
     data object PlayAudio : AudioCourseDetailEvent
-    data object OpenAudioCourseOnWeb : AudioCourseDetailEvent
 }
