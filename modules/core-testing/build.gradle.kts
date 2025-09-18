@@ -42,4 +42,5 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.mockk)
     implementation(libs.kotest)
+    implementation(libs.kotest.assertions.table)
 }
