@@ -67,6 +67,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -98,6 +99,7 @@ fun PremiumScreenRoot(
 ) {
     val context = LocalContext.current
     val premiumViewModel = ViewModelProvider.premiumViewModel
+    val state by premiumViewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         launch {
             context
@@ -107,6 +109,8 @@ fun PremiumScreenRoot(
                     premiumViewModel.onViewScreen(isMemberActive)
                 }
         }
+    }
+    LaunchedEffect(Unit) {
         launch {
             premiumViewModel.events.collect { event ->
                 when (event) {
@@ -127,7 +131,7 @@ fun PremiumScreenRoot(
     }
 
     PremiumScreen(
-        state = premiumViewModel.state,
+        state = state,
         onAction = { action ->
             when (action) {
                 is PremiumAction.OnLoginClicked -> onRequireAuth()
