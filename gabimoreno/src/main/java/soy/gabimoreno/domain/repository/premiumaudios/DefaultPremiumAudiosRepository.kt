@@ -45,7 +45,7 @@ class DefaultPremiumAudiosRepository
                             PagingConfig(
                                 pageSize = MAX_ITEMS,
                                 prefetchDistance = PREFETCH_ITEMS,
-                                initialLoadSize = MAX_ITEMS * 2,
+                                initialLoadSize = MAX_ITEMS,
                             ),
                         remoteMediator =
                             PremiumAudiosRemoteMediator(

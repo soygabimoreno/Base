@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.insets.navigationBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.data.remote.mapper.EMPTY_AUDIO_LENGTH_IN_SECONDS
@@ -78,7 +79,7 @@ fun DetailScreen(
     var audio: Audio? = null
     when (feature) {
         Feature.PODCAST -> {
-            val viewState = homeViewModel.viewState
+            val viewState: HomeViewModel.ViewState = homeViewModel.viewState
             if (viewState is HomeViewModel.ViewState.Success) {
                 audios = viewState.episodes
                 audio = homeViewModel.findEpisodeFromId(audioId)
@@ -86,9 +87,9 @@ fun DetailScreen(
         }
 
         Feature.PREMIUM -> {
-            val viewState = premiumViewModel.state
+            val viewState by premiumViewModel.state.collectAsStateWithLifecycle()
             audios = viewState.premiumAudios
-            premiumViewModel.state.selectedPremiumAudio?.let { premiumAudio ->
+            premiumViewModel.state.value.selectedPremiumAudio?.let { premiumAudio ->
                 audio = premiumAudio
             } ?: run {
                 premiumViewModel.loadSelectedPremiumAudio(audioId)

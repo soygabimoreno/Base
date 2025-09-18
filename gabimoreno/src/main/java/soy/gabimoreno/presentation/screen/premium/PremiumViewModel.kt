@@ -1,14 +1,15 @@
 package soy.gabimoreno.presentation.screen.premium
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import soy.gabimoreno.data.remote.model.getPremiumCategories
@@ -32,22 +33,28 @@ class PremiumViewModel
         private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
         @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
-        var state by mutableStateOf(PremiumState())
-            private set
+        private val _state = MutableStateFlow(PremiumState())
+        val state =
+            _state
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+                    initialValue = PremiumState(),
+                )
 
         private val eventChannel = MutableSharedFlow<PremiumEvent>()
         val events = eventChannel.asSharedFlow()
 
         fun onViewScreen(shouldIAccessPremium: Boolean) {
             if (shouldIAccessPremium) {
-                state = state.copy(shouldIAccessPremium = true)
+                _state.update { currentState ->
+                    currentState.copy(shouldIAccessPremium = true)
+                }
                 loadPremiumAudios()
             } else {
-                state =
-                    state.copy(
-                        isLoading = false,
-                        shouldIAccessPremium = false,
-                    )
+                _state.update { currentState ->
+                    currentState.copy(shouldIAccessPremium = false, isLoading = false)
+                }
             }
         }
 
@@ -65,7 +72,7 @@ class PremiumViewModel
                             hasBeenListened = !action.premiumAudio.hasBeenListened,
                         )
                         val premiumAudioList =
-                            state.premiumAudios.map { premiumAudio ->
+                            _state.value.premiumAudios.map { premiumAudio ->
                                 if (premiumAudio.id == action.premiumAudio.id) {
                                     premiumAudio.copy(
                                         hasBeenListened = !action.premiumAudio.hasBeenListened,
@@ -74,15 +81,17 @@ class PremiumViewModel
                                     premiumAudio
                                 }
                             }
-                        state = state.copy(premiumAudios = premiumAudioList)
+                        _state.update { currentState ->
+                            currentState.copy(premiumAudios = premiumAudioList)
+                        }
                     }
                 }
 
                 is PremiumAction.OnFavoriteStatusChanged -> {
-                    state =
-                        state.copy(
+                    _state.update { currentState ->
+                        currentState.copy(
                             premiumAudios =
-                                state.premiumAudios.map { premiumAudio ->
+                                _state.value.premiumAudios.map { premiumAudio ->
                                     if (premiumAudio.id == action.premiumAudio.id) {
                                         premiumAudio.copy(
                                             markedAsFavorite = !premiumAudio.markedAsFavorite,
@@ -92,6 +101,7 @@ class PremiumViewModel
                                     }
                                 },
                         )
+                    }
                     viewModelScope.launch {
                         updateAudioItemFavoriteStateUseCase(
                             action.premiumAudio.id,
@@ -108,8 +118,8 @@ class PremiumViewModel
             viewModelScope.launch(dispatcher) {
                 val selectedAudio =
                     getPremiumAudioByIdUseCase(premiumAudioId).getOrNull()
-                state =
-                    state.copy(
+                _state.update { currentState ->
+                    currentState.copy(
                         selectedPremiumAudio = selectedAudio,
                         premiumAudios =
                             if (selectedAudio == null) {
@@ -118,6 +128,7 @@ class PremiumViewModel
                                 listOf(selectedAudio)
                             },
                     )
+                }
 
                 eventChannel.emit(PremiumEvent.ShowDetail(premiumAudioId))
             }
@@ -125,18 +136,23 @@ class PremiumViewModel
 
         private fun loadPremiumAudios() {
             viewModelScope.launch(dispatcher) {
-                state = state.copy(isLoading = true)
+                _state.update { currentState ->
+                    currentState.copy(isLoading = true)
+                }
                 val categories = getPremiumCategories()
                 getPremiumAudiosMediatorUseCase(categories)
                     .onLeft { throwable: Throwable ->
                         handleThrowable(throwable)
-                        state = state.copy(isLoading = false)
+                        _state.update { currentState ->
+                            currentState.copy(isLoading = false)
+                        }
                     }.onRight { premiumAudioFlow ->
-                        state =
-                            state.copy(
+                        _state.update { currentState ->
+                            currentState.copy(
                                 isLoading = false,
                                 premiumAudioFlow = premiumAudioFlow,
                             )
+                        }
                     }
             }
         }
@@ -152,14 +168,16 @@ class PremiumViewModel
         }
 
         private fun refreshToken() {
-            if (state.hasRefreshTokenBeenCalled) {
+            if (state.value.hasRefreshTokenBeenCalled) {
                 showLoginError()
             } else {
-                state = state.copy(hasRefreshTokenBeenCalled = true)
+                _state.update { currentState ->
+                    currentState.copy(hasRefreshTokenBeenCalled = true)
+                }
                 viewModelScope.launch(dispatcher) {
                     refreshBearerTokenUseCase()
                         .onRight {
-                            onViewScreen(state.shouldIAccessPremium)
+                            onViewScreen(state.value.shouldIAccessPremium)
                         }.onLeft {
                             showLoginError()
                         }
@@ -168,11 +186,13 @@ class PremiumViewModel
         }
 
         private fun showLoginError() {
-            state =
-                state.copy(
+            _state.update { currentState ->
+                currentState.copy(
                     isLoading = false,
                     shouldIAccessPremium = false,
                 )
+            }
+
             viewModelScope.launch {
                 eventChannel.emit(PremiumEvent.ShowTokenExpiredError)
             }
@@ -185,4 +205,5 @@ class PremiumViewModel
         }
     }
 
+private const val STOP_TIMEOUT_MILLIS = 5_000L
 private const val TOKEN_EXPIRED_CODE = 403

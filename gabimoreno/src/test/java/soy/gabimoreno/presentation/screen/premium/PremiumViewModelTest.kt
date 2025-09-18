@@ -2,6 +2,8 @@ package soy.gabimoreno.presentation.screen.premium
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -51,11 +53,13 @@ class PremiumViewModelTest {
                     updateAudioItemFavoriteStateUseCase,
                     testDispatcher,
                 )
-
+            val states = mutableListOf<PremiumState>()
+            val stateJob = launch { viewModel.state.toList(states) }
             viewModel.onViewScreen(true)
             advanceUntilIdle()
 
-            viewModel.state.shouldIAccessPremium shouldBeEqualTo true
+            states.last().shouldIAccessPremium shouldBeEqualTo true
+            stateJob.cancel()
         }
 
     @Test
@@ -70,11 +74,13 @@ class PremiumViewModelTest {
                     updateAudioItemFavoriteStateUseCase,
                     testDispatcher,
                 )
-
+            val states = mutableListOf<PremiumState>()
+            val stateJob = launch { viewModel.state.toList(states) }
             viewModel.onViewScreen(false)
             advanceUntilIdle()
 
-            viewModel.state.shouldIAccessPremium shouldBeEqualTo false
-            viewModel.state.isLoading shouldBeEqualTo false
+            states.last().shouldIAccessPremium shouldBeEqualTo false
+            states.last().isLoading shouldBeEqualTo false
+            stateJob.cancel()
         }
 }
