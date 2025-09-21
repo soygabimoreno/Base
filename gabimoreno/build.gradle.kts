@@ -44,8 +44,8 @@ android {
             libs.versions.sdk.target
                 .get()
                 .toInt()
-        versionCode = 65
-        versionName = "3.7.1"
+        versionCode = 67
+        versionName = "3.9.0"
 
         testInstrumentationRunner = "soy.gabimoreno.di.HiltTestRunner"
         vectorDrawables {
