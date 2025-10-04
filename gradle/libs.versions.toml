@@ -10,14 +10,14 @@ accompanist-insets = "0.30.1"
 androidx-junit = "1.3.0"
 appcompat = "1.7.1"
 arrow-core = "2.1.2"
-clarity = "3.5.0"
+clarity = "3.5.1"
 crashlytics = "2.9.7"
 activity-compose = "1.11.0"
-compose-runtime = "1.9.1"
-compose-ui = "1.9.1"
-compose-ui-test-manifest = "1.9.1"
+compose-runtime = "1.9.2"
+compose-ui = "1.9.2"
+compose-ui-test-manifest = "1.9.2"
 compose-compiler = "1.5.5"
-navigation-compose = "2.9.4"
+navigation-compose = "2.9.5"
 hilt-navigation-compose = "1.3.0"
 converter-moshi = "3.0.0"
 core-ktx = "1.17.0"
@@ -30,12 +30,12 @@ glide = "5.0.5"
 google-material = "1.13.0"
 google-services = "4.4.3"
 gson = "2.13.2"
-hilt-android = "2.57.1"
+hilt-android = "2.57.2"
 secrets-gradle-plugin = "2.0.1"
 compose-plugin = "1.9.0"
 ktlint = "13.1.0"
 
-firebaseBom = "34.2.0"
+firebaseBom = "34.3.0"
 
 junit = "4.13.2"
 kluent-android = "1.73"
@@ -43,16 +43,16 @@ kotlinx-coroutines-test = "1.10.2"
 kotest = "6.0.3"
 lifecycle-runtime-ktx = "2.9.4"
 logging-interceptor = "5.1.0"
-material = "1.9.1"
+material = "1.9.2"
 material-icons-extended = "1.7.8"
-mockk = "1.14.5"
+mockk = "1.14.6"
 mockwebserver = "5.1.0"
 moshi = "1.15.2"
 okhttp3-idling-resource = "1.0.0"
 palette = "1.0.0"
 retrofit = "3.0.0"
 robolectric = "4.16"
-room-runtime = "2.8.0"
+room-runtime = "2.8.1"
 rssparser = "4.0.2"
 turbine = "1.2.1"
 json = "20250517"
@@ -115,6 +115,7 @@ rssparser = { module = "com.prof18.rssparser:rssparser", version.ref = "rssparse
 paging-runtime = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingCompose" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "pagingCompose" }
 
+
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
@@ -124,7 +125,6 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 
 playinapp-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "play-review" }
 playinapp-review = { module = "com.google.android.play:review", version.ref = "play-review" }
-
 
 # Tests
 junit = { module = "junit:junit", version.ref = "junit" }
