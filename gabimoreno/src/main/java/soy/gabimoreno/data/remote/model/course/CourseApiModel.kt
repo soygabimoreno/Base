@@ -27,5 +27,5 @@ class CourseApiModel(
     @param:Json(name = "date")
     val dateString: String,
     @param:Json(name = "yoast_head_json")
-    val yoastHeadJsonApiModel: YoastHeadJsonApiModel,
+    val yoastHeadJsonApiModel: YoastHeadJsonApiModel?,
 )
