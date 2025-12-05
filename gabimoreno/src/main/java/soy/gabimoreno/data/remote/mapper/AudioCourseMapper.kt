@@ -30,8 +30,8 @@ fun CourseApiModel.toDomain(): AudioCourse {
                 categoryIds.toSubcategory()?.title ?: Category.AUDIOCOURSES.title,
             ),
         pubDateMillis = dateString.toMillis() ?: EMPTY_PUB_DATE_MILLIS,
-        videoUrl = content.extractLoomUrl() ?: "",
-        thumbnailUrl = yoastHeadJsonApiModel.ogImage[0].url,
+        videoUrl = content.extractLoomUrl() ?: EMPTY_URL,
+        thumbnailUrl = yoastHeadJsonApiModel?.ogImage[0]?.url ?: EMPTY_URL,
         audioLengthInSeconds = EMPTY_AUDIO_LENGTH_IN_SECONDS,
         audios = content.extractAudioItems(id.toString()),
         isPurchased = !content.isRestrictedByRcp(),
@@ -89,3 +89,5 @@ internal fun String.extractAudioItems(idAudioCourse: String): List<AudioCourseIt
         }.distinctBy { it.url }
         .toList()
 }
+
+private const val EMPTY_URL = ""

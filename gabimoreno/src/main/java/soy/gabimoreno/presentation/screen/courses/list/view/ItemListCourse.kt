@@ -136,7 +136,7 @@ private fun ItemImage(audioCourseThumbnailUrl: String) {
                         topEnd = Spacing.s16,
                     ),
                 ),
-        error = painterResource(R.drawable.ic_course_default),
+        error = painterResource(R.drawable.ic_gabimorenologo),
         placeholder = painterResource(R.drawable.ic_course_default),
         alignment = Alignment.BottomStart,
     )
