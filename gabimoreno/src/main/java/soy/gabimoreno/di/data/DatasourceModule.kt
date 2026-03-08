@@ -11,6 +11,8 @@ import soy.gabimoreno.data.remote.datasource.podcast.PodcastDatasource
 import soy.gabimoreno.data.remote.datasource.podcast.RemotePodcastDatasource
 import soy.gabimoreno.data.remote.datasource.premiumaudios.PremiumAudiosDataSource
 import soy.gabimoreno.data.remote.datasource.premiumaudios.RemotePremiumAudiosDataSource
+import soy.gabimoreno.data.remote.datasource.senior.DefaultRemoteSeniorDatasource
+import soy.gabimoreno.data.remote.datasource.senior.RemoteSeniorDatasource
 import soy.gabimoreno.data.remote.service.LoginService
 import soy.gabimoreno.data.remote.service.PostService
 import javax.inject.Singleton
@@ -36,6 +38,11 @@ object DatasourceModule {
     @Singleton
     fun providePodcastDatasource(rssParser: Parser): PodcastDatasource =
         RemotePodcastDatasource(rssParser)
+
+    @Provides
+    @Singleton
+    fun provideRemoteSeniorDatasource(rssParser: Parser): RemoteSeniorDatasource =
+        DefaultRemoteSeniorDatasource(rssParser)
 }
 
 typealias PodcastUrl = String

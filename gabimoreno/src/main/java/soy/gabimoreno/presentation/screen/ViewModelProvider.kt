@@ -12,12 +12,17 @@ import soy.gabimoreno.presentation.screen.home.HomeViewModel
 import soy.gabimoreno.presentation.screen.player.PlayerViewModel
 import soy.gabimoreno.presentation.screen.premium.PremiumViewModel
 import soy.gabimoreno.presentation.screen.profile.ProfileViewModel
+import soy.gabimoreno.presentation.screen.senior.SeniorViewModel
 import soy.gabimoreno.presentation.screen.webview.WebViewViewModel
 
 object ViewModelProvider {
     val homeViewModel: HomeViewModel
         @Composable
         get() = localHomeViewModel.current
+
+    val seniorViewModel: SeniorViewModel
+        @Composable
+        get() = localSeniorViewModel.current
 
     val detailViewModel: DetailViewModel
         @Composable
@@ -56,6 +61,7 @@ object ViewModelProvider {
 fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     val authViewModel: AuthViewModel = viewModel()
     val homeViewModel: HomeViewModel = viewModel()
+    val seniorViewModel: SeniorViewModel = viewModel()
     val detailViewModel: DetailViewModel = viewModel()
     val playerViewModel: PlayerViewModel = viewModel()
     val webViewViewModel: WebViewViewModel = viewModel()
@@ -67,6 +73,7 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     CompositionLocalProvider(
         localAuthViewModel provides authViewModel,
         localHomeViewModel provides homeViewModel,
+        localSeniorViewModel provides seniorViewModel,
         localWebViewViewModel provides webViewViewModel,
         localPremiumViewModel provides premiumViewModel,
         localAudioCoursesListViewModel provides audioCoursesListViewModel,
@@ -88,6 +95,11 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
 private val localHomeViewModel =
     staticCompositionLocalOf<HomeViewModel> {
         error("No HomeViewModel provided")
+    }
+
+private val localSeniorViewModel =
+    staticCompositionLocalOf<SeniorViewModel> {
+        error("No SeniorViewModel provided")
     }
 
 private val localDetailViewModel =

@@ -38,7 +38,7 @@ fun Article.toDomain(
         val description = description?.removeAnchorMessage() ?: ""
         val imageUrl = getEpisodeCoverUrl()
         Episode(
-            id = guid!!.replace(IVOOX_URL, ""),
+            id = getEpisodeId(),
             url = getEpisodeUrl(),
             audioUrl = audio!!,
             imageUrl = imageUrl,
@@ -58,6 +58,11 @@ fun Article.toDomain(
     }
 
 private fun String.removeAnchorMessage() = replace(ANCHOR_MESSAGE, "")
+
+private fun Article.getEpisodeId(): String =
+    requireNotNull(guid)
+        .removePrefix(SPREAKER_URL)
+        .removePrefix(IVOOX_URL)
 
 private fun Article.getEpisodeUrl(): String = "$GABI_MORENO_WEB_BASE_URL/${getEpisodeNumber()}"
 
@@ -102,6 +107,7 @@ internal const val ANCHOR_MESSAGE =
         "\n" +
         "Send in a voice message: https://anchor.fm/losandroides/message"
 internal const val IVOOX_URL = "https://www.ivoox.com/"
+internal const val SPREAKER_URL = "https://api.spreaker.com/episode/"
 internal const val EPISODE_AUDIO_LENGTH_DEFAULT_DURATION = 0
 
 private const val HOURS_MINUTES_SECONDS_PATTERN = "HH:mm:ss"
