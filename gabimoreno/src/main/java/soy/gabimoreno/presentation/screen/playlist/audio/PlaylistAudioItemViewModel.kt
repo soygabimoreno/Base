@@ -20,6 +20,7 @@ import soy.gabimoreno.domain.usecase.GetAudioCourseItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPlaylistByPlaylistItemIdUseCase
 import soy.gabimoreno.domain.usecase.GetPodcastByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
+import soy.gabimoreno.domain.usecase.GetSeniorByIdUseCase
 import soy.gabimoreno.domain.usecase.SetPlaylistItemsUseCase
 import soy.gabimoreno.domain.util.AudioItemType
 import soy.gabimoreno.domain.util.audioItemTypeDetector
@@ -34,6 +35,7 @@ class PlaylistAudioItemViewModel
         private val getAudioCourseItemByIdUseCase: GetAudioCourseItemByIdUseCase,
         private val getPlaylistByPlaylistItemIdUseCase: GetPlaylistByPlaylistItemIdUseCase,
         private val getPodcastByIdUseCase: GetPodcastByIdUseCase,
+        private val getSeniorByIdUseCase: GetSeniorByIdUseCase,
         private val getPremiumAudioByIdUseCase: GetPremiumAudioByIdUseCase,
         private val setPlaylistItemsUseCase: SetPlaylistItemsUseCase,
         private val tracker: Tracker,
@@ -69,6 +71,11 @@ class PlaylistAudioItemViewModel
                         AudioItemType.PODCAST -> {
                             val podcast = getPodcastByIdUseCase(audioItemId)
                             podcast.getOrNull()?.title.orEmpty()
+                        }
+
+                        AudioItemType.SENIOR -> {
+                            val senior = getSeniorByIdUseCase(audioItemId)
+                            senior.getOrNull()?.title.orEmpty()
                         }
                     }
 

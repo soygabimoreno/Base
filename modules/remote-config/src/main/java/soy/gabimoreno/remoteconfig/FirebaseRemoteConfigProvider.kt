@@ -10,75 +10,80 @@ import javax.inject.Singleton
 
 @Singleton
 class FirebaseRemoteConfigProvider
-    @Inject
-    constructor(
-        private val firebaseRemoteConfig: FirebaseRemoteConfig,
-        private val secureEncryptor: SecureEncryptor,
-    ) : RemoteConfigProvider {
-        init {
-            initRemoteConfig()
-            forceFetchNewData()
-        }
+@Inject
+constructor(
+    private val firebaseRemoteConfig: FirebaseRemoteConfig,
+    private val secureEncryptor: SecureEncryptor,
+) : RemoteConfigProvider {
+    init {
+        initRemoteConfig()
+        forceFetchNewData()
+    }
 
-        private fun initRemoteConfig() {
-            firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-            val minimumFetchIntervalInSeconds =
-                if (BuildConfig.DEBUG) {
-                    0
-                } else {
-                    ConfigFetchHandler.DEFAULT_MINIMUM_FETCH_INTERVAL_IN_SECONDS
-                }
-            val configSettings =
-                FirebaseRemoteConfigSettings
-                    .Builder()
-                    .setMinimumFetchIntervalInSeconds(minimumFetchIntervalInSeconds)
-                    .build()
-            firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
-        }
-
-        private fun forceFetchNewData() {
-            firebaseRemoteConfig.fetch(1L).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    firebaseRemoteConfig.activate()
-                }
+    private fun initRemoteConfig() {
+        firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        val minimumFetchIntervalInSeconds =
+            if (BuildConfig.DEBUG) {
+                0
+            } else {
+                ConfigFetchHandler.DEFAULT_MINIMUM_FETCH_INTERVAL_IN_SECONDS
             }
-        }
+        val configSettings =
+            FirebaseRemoteConfigSettings
+                .Builder()
+                .setMinimumFetchIntervalInSeconds(minimumFetchIntervalInSeconds)
+                .build()
+        firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+    }
 
-        override fun isFeatureEnabled(remoteConfigName: RemoteConfigName): Boolean =
-            firebaseRemoteConfig.getBoolean(remoteConfigName.name.lowercase())
-
-        override fun getTokenCredentials(): TokenCredentials {
-            try {
-                val usernameEncrypted =
-                    firebaseRemoteConfig.getString(
-                        TOKEN_CREDENTIAL_USERNAME_ENCRYPTED,
-                    )
-                val passwordEncrypted =
-                    firebaseRemoteConfig.getString(
-                        TOKEN_CREDENTIAL_PASSWORD_ENCRYPTED,
-                    )
-                val username = secureEncryptor.decrypt(usernameEncrypted)
-                val password = secureEncryptor.decrypt(passwordEncrypted)
-
-                return TokenCredentials(username, password)
-            } catch (e: GeneralSecurityException) {
-                handleException(e)
-            } catch (e: IllegalArgumentException) {
-                handleException(e)
+    private fun forceFetchNewData() {
+        firebaseRemoteConfig.fetch(1L).addOnCompleteListener {
+            if (it.isSuccessful) {
+                firebaseRemoteConfig.activate()
             }
-            return TokenCredentials(TOKEN_CREDENTIAL_USERNAME, TOKEN_CREDENTIAL_PASSWORD)
-        }
-
-        private fun handleException(e: Exception) {
-            Log.e(
-                "FirebaseRemoteConfigProvider",
-                "Failed to decrypt token credentials ${e.message}",
-            )
         }
     }
+
+    override fun isFeatureEnabled(remoteConfigName: RemoteConfigName): Boolean =
+        firebaseRemoteConfig.getBoolean(remoteConfigName.name.lowercase())
+
+    override fun getTokenCredentials(): TokenCredentials {
+        try {
+            val usernameEncrypted =
+                firebaseRemoteConfig.getString(
+                    TOKEN_CREDENTIAL_USERNAME_ENCRYPTED,
+                )
+            val passwordEncrypted =
+                firebaseRemoteConfig.getString(
+                    TOKEN_CREDENTIAL_PASSWORD_ENCRYPTED,
+                )
+            val username = secureEncryptor.decrypt(usernameEncrypted)
+            val password = secureEncryptor.decrypt(passwordEncrypted)
+
+            return TokenCredentials(username, password)
+        } catch (e: GeneralSecurityException) {
+            handleException(e)
+        } catch (e: IllegalArgumentException) {
+            handleException(e)
+        }
+        return TokenCredentials(TOKEN_CREDENTIAL_USERNAME, TOKEN_CREDENTIAL_PASSWORD)
+    }
+
+    override fun getSeniorRssUrl(): String =
+        firebaseRemoteConfig.getString(AUDIOS_SENIOR_RSS_URL)
+
+    private fun handleException(e: Exception) {
+        Log.e(
+            "FirebaseRemoteConfigProvider",
+            "Failed to decrypt token credentials ${e.message}",
+        )
+    }
+}
 
 private const val TOKEN_CREDENTIAL_USERNAME_ENCRYPTED = "TOKEN_CREDENTIAL_USERNAME_ENCRYPTED"
 private const val TOKEN_CREDENTIAL_PASSWORD_ENCRYPTED = "TOKEN_CREDENTIAL_PASSWORD_ENCRYPTED"
 
 private const val TOKEN_CREDENTIAL_USERNAME = "TOKEN_CREDENTIAL_USERNAME"
 private const val TOKEN_CREDENTIAL_PASSWORD = "TOKEN_CREDENTIAL_PASSWORD"
+
+private const val AUDIOS_SENIOR_RSS_URL = "AUDIOS_SENIOR_RSS_URL"

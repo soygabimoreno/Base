@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Los androides</string>
 
+    <string name="nav_item_senior">Senior</string>
     <string name="nav_item_podcast">Podcast</string>
     <string name="nav_item_premium">Premium</string>
     <string name="nav_item_courses">Audiocursos</string>

@@ -18,6 +18,7 @@ import soy.gabimoreno.presentation.screen.playlist.detail.PlaylistDetailScreenRo
 import soy.gabimoreno.presentation.screen.playlist.list.PlaylistScreenRoot
 import soy.gabimoreno.presentation.screen.premium.PremiumScreenRoot
 import soy.gabimoreno.presentation.screen.profile.ProfileScreenRoot
+import soy.gabimoreno.presentation.screen.senior.SeniorScreen
 import soy.gabimoreno.presentation.screen.webview.WebViewScreen
 
 @Composable
@@ -30,11 +31,64 @@ fun AppNavigation(
         navController = navController,
         startDestination = appState.startDestination,
     ) {
+        seniorNav(navController, appState)
         podcastNav(navController, appState)
         premiumNav(navController, appState, onRequireAuth)
         audioCoursesNav(navController, appState)
         profileNav(navController, appState, onRequireAuth)
         playlistNav(navController, appState)
+    }
+}
+
+private fun NavGraphBuilder.seniorNav(
+    navController: NavController,
+    appState: AppState,
+) {
+    navigation(
+        startDestination = NavCommand.ContentType(Feature.SENIOR).route,
+        route = Feature.SENIOR.route,
+    ) {
+        composable(navCommand = NavCommand.ContentType(Feature.SENIOR)) {
+            appState.setStartDestination(Feature.SENIOR)
+            SeniorScreen(
+                onItemClicked = { episodeId ->
+                    navController.navigateToDetailFromSenior(episodeId)
+                },
+                onGoToWebClicked = { encodedUrl ->
+                    navController.navigateToWebView(encodedUrl)
+                },
+                onAddToPlaylistClicked = { audioItemId ->
+                    navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
+                },
+            )
+        }
+
+        val command = NavCommand.ContentDetail(Feature.SENIOR, listOf(NavArg.EpisodeId))
+        composable(
+            route = command.route,
+            arguments = command.arguments,
+            deepLinks = command.deepLinks,
+        ) {
+            DetailScreen(
+                audioId = it.findArg<String>(NavArg.EpisodeId),
+                Feature.SENIOR,
+                onBackClicked = {
+                    navController.goBack()
+                },
+                onAddToPlaylistClicked = { audioItemId ->
+                    navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
+                },
+            )
+        }
+
+        composable(navCommand = NavCommand.ContentWebView(Feature.SENIOR)) {
+            WebViewScreen(
+                url = it.findArg(NavArg.EncodedUrl),
+                onBackClicked = {
+                    navController.goBack()
+                },
+            )
+        }
     }
 }
 

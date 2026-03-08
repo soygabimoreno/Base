@@ -3,6 +3,7 @@ package soy.gabimoreno.presentation.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Diamond
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Podcasts
 import androidx.compose.material.icons.filled.WorkspacePremium
@@ -20,6 +21,11 @@ enum class NavItem(
     val icon: ImageVector,
     @param:StringRes val titleResId: Int,
 ) {
+    SENIOR(
+        navCommand = NavCommand.ContentType(Feature.SENIOR),
+        icon = Icons.Default.Mic,
+        titleResId = R.string.nav_item_senior,
+    ),
     PODCAST(
         navCommand = NavCommand.ContentType(Feature.PODCAST),
         icon = Icons.Default.Podcasts,

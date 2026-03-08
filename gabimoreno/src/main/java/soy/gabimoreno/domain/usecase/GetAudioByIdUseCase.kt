@@ -5,6 +5,7 @@ import soy.gabimoreno.domain.model.audio.Audio
 import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
+import soy.gabimoreno.domain.repository.senior.SeniorRepository
 import soy.gabimoreno.domain.util.AudioItemType
 import soy.gabimoreno.domain.util.audioItemTypeDetector
 import javax.inject.Inject
@@ -14,6 +15,7 @@ class GetAudioByIdUseCase
     constructor(
         private val audioCoursesRepository: AudioCoursesRepository,
         private val podcastRepository: PodcastRepository,
+        private val seniorRepository: SeniorRepository,
         private val premiumAudiosRepository: PremiumAudiosRepository,
     ) {
         suspend operator fun invoke(audioId: String): Either<Throwable, Audio> =
@@ -28,6 +30,10 @@ class GetAudioByIdUseCase
 
                 AudioItemType.PODCAST -> {
                     podcastRepository.getPodcastById(audioId)
+                }
+
+                AudioItemType.SENIOR -> {
+                    seniorRepository.getPodcastById(audioId)
                 }
             }
     }

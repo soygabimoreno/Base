@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
+import soy.gabimoreno.domain.repository.senior.SeniorRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 import soy.gabimoreno.domain.usecase.GetAudioByIdUseCase
@@ -46,10 +47,12 @@ class HomeModule {
     fun provideGetAudioByIdUseCase(
         audioCoursesRepository: AudioCoursesRepository,
         podcastRepository: PodcastRepository,
+        seniorRepository: SeniorRepository,
         premiumAudiosRepository: PremiumAudiosRepository,
     ) = GetAudioByIdUseCase(
         audioCoursesRepository = audioCoursesRepository,
         podcastRepository = podcastRepository,
+        seniorRepository = seniorRepository,
         premiumAudiosRepository = premiumAudiosRepository,
     )
 }

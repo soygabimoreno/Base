@@ -2,6 +2,15 @@ package soy.gabimoreno.presentation.navigation
 
 import androidx.navigation.NavController
 
+internal fun NavController.navigateToDetailFromSenior(episodeId: String) {
+    navigate(
+        route =
+            NavCommand
+                .ContentDetail(Feature.SENIOR, listOf(NavArg.EpisodeId))
+                .createRoute(episodeId),
+    )
+}
+
 internal fun NavController.navigateToDetailFromPodcast(episodeId: String) {
     navigate(
         route =

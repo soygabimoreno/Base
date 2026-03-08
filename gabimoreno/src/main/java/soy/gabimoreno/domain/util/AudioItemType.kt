@@ -4,6 +4,7 @@ enum class AudioItemType {
     AUDIO_COURSE,
     PREMIUM_AUDIO,
     PODCAST,
+    SENIOR,
 }
 
 fun audioItemTypeDetector(id: String): AudioItemType =
