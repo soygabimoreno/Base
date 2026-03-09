@@ -8,6 +8,7 @@ sealed class NotificationTrackerEvent(
     data class OnNewToken(
         override val parameters: Map<String, Any>,
     ) : NotificationTrackerEvent()
+
     data class OnSubscribedToTopic(
         override val parameters: Map<String, Any>,
     ) : NotificationTrackerEvent()

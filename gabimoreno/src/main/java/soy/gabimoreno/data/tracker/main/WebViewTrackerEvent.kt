@@ -8,9 +8,11 @@ sealed class WebViewTrackerEvent(
     data class ViewScreen(
         override val parameters: Map<String, Any>,
     ) : WebViewTrackerEvent()
+
     data class ClickBack(
         override val parameters: Map<String, Any>,
     ) : WebViewTrackerEvent()
+
     data class ViewPage(
         override val parameters: Map<String, Any>,
     ) : WebViewTrackerEvent()

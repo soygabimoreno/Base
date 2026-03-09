@@ -4,6 +4,7 @@ sealed interface AudioCoursesListEvent {
     data class Error(
         val error: Throwable?,
     ) : AudioCoursesListEvent
+
     data object ShowTokenExpiredError : AudioCoursesListEvent
     data class ShowDetail(
         val audioCourseId: String,

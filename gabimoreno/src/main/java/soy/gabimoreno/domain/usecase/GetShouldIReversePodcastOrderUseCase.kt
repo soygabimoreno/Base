@@ -6,10 +6,10 @@ import soy.gabimoreno.framework.datastore.dataStoreShouldIReversePodcastOrder
 import javax.inject.Inject
 
 class GetShouldIReversePodcastOrderUseCase
-    @Inject
-    constructor(
-        private val context: Context,
-    ) {
-        suspend operator fun invoke(): Boolean =
-            context.dataStoreShouldIReversePodcastOrder().first()
-    }
+@Inject
+constructor(
+    private val context: Context,
+) {
+    suspend operator fun invoke(): Boolean =
+        context.dataStoreShouldIReversePodcastOrder().first()
+}

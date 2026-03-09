@@ -123,7 +123,8 @@ private fun SelectablePlaylistItem(
                     1.dp,
                     playlist.category.color,
                     shape = CircleShape,
-                ).padding(Spacing.s4),
+                )
+                .padding(Spacing.s4),
     ) {
         IconButton(
             onClick = { onToggleClick(playlist.id) },

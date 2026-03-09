@@ -6,9 +6,9 @@ import soy.gabimoreno.framework.datastore.dataStoreGetLastAudioListenedId
 import javax.inject.Inject
 
 class GetLastAudioListenedIdUseCase
-    @Inject
-    constructor(
-        private val context: Context,
-    ) {
-        suspend operator fun invoke(): String = context.dataStoreGetLastAudioListenedId().first()
-    }
+@Inject
+constructor(
+    private val context: Context,
+) {
+    suspend operator fun invoke(): String = context.dataStoreGetLastAudioListenedId().first()
+}

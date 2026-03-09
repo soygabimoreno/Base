@@ -144,7 +144,8 @@ fun ReorderablePlaylistItemColumn(
                                         onDragFinish(reorderedAudioItems.updatePositions())
                                     },
                                     interactionSource = interactionSource,
-                                ).align(Alignment.TopEnd)
+                                )
+                                .align(Alignment.TopEnd)
                                 .clearAndSetSemantics { },
                         onClick = {},
                     ) {

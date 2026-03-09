@@ -6,10 +6,10 @@ import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 import javax.inject.Inject
 
 class GetFavoritesAudioItemsUseCase
-    @Inject
-    constructor(
-        private val audioCoursesRepository: AudioCoursesRepository,
-    ) {
-        suspend operator fun invoke(): Either<Throwable, List<AudioCourseItem>> =
-            audioCoursesRepository.getAllFavoriteAudioCoursesItems()
-    }
+@Inject
+constructor(
+    private val audioCoursesRepository: AudioCoursesRepository,
+) {
+    suspend operator fun invoke(): Either<Throwable, List<AudioCourseItem>> =
+        audioCoursesRepository.getAllFavoriteAudioCoursesItems()
+}

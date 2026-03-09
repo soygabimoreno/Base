@@ -4,6 +4,7 @@ sealed interface ProfileAction {
     data class OnEmailChanged(
         val email: String,
     ) : ProfileAction
+
     data object OnPlaylistClicked : ProfileAction
     data object OnToggleBottomSheet : ProfileAction
     data object OnResetAudioCoursesClicked : ProfileAction

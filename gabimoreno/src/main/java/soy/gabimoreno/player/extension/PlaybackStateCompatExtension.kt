@@ -20,7 +20,7 @@ inline val PlaybackStateCompat.isPlayEnabled: Boolean
             (
                 actions and PlaybackStateCompat.ACTION_PLAY_PAUSE != 0L &&
                     state == PlaybackStateCompat.STATE_PAUSED
-            )
+                )
 
 inline val PlaybackStateCompat.isStopped: Boolean
     get() =

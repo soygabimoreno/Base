@@ -36,11 +36,13 @@ class PodcastMapperKtTest {
                     episode.thumbnailUrl shouldBeEqualTo EPISODE_IMAGE_URL
                     episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_IN_SECONDS
                 }
+
                 1 -> {
                     episode.imageUrl shouldBeEqualTo EPISODE_IMAGE_URL
                     episode.thumbnailUrl shouldBeEqualTo EPISODE_IMAGE_URL
                     episode.audioLengthInSeconds shouldBeEqualTo EPISODE_AUDIO_LENGTH_IN_TIME_FORMATTED_IN_SECONDS
                 }
+
                 2 -> {
                     episode.imageUrl shouldBeEqualTo EPISODE_IMAGE_URL
                     episode.thumbnailUrl shouldBeEqualTo EPISODE_IMAGE_URL

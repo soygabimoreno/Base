@@ -393,7 +393,8 @@ private fun BoxScope.PlaybackSpeedSelector(
                 .background(
                     White,
                     shape = RoundedCornerShape(topStart = Spacing.s8, bottomEnd = Spacing.s8),
-                ).animateContentSize()
+                )
+                .animateContentSize()
                 .align(Alignment.BottomEnd)
                 .clickable {
                     onSpeedControlClicked()

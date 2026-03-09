@@ -314,6 +314,7 @@ constructor(
                         hasBeenListened = true,
                     )
                 }
+
                 AudioItemType.SENIOR -> {
                     // Do nothing (at least for now)
                 }

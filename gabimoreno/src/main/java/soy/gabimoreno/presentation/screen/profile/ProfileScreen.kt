@@ -78,6 +78,7 @@ fun ProfileScreenRoot(
                             when (event.type) {
                                 TypeDialog.AUDIOCOURSES ->
                                     R.string.profile_reset_success_audiocurses
+
                                 TypeDialog.PODCAST -> R.string.profile_reset_success_podcast
                                 TypeDialog.PREMIUM -> R.string.profile_reset_success_premium
                             }

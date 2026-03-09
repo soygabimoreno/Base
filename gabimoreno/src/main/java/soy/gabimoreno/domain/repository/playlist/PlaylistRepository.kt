@@ -18,6 +18,7 @@ interface PlaylistRepository {
         playlist: Playlist,
         email: String,
     ): Either<Throwable, Unit>
+
     suspend fun getAllPlaylists(email: String): Either<Throwable, List<Playlist>>
     suspend fun getPlaylistById(idPlaylist: Int): Either<Throwable, Playlist?>
     suspend fun getPlaylistIdsByItemId(audioItemId: String): Either<Throwable, List<Int>>
@@ -25,6 +26,7 @@ interface PlaylistRepository {
         playlists: List<Playlist>,
         email: String,
     ): Either<Throwable, Unit>
+
     suspend fun upsertPlaylistItems(
         audioId: String,
         playlistIds: List<Int>,
@@ -41,6 +43,7 @@ interface PlaylistRepository {
         idPlaylist: Int,
         email: String,
     ): Either<Throwable, Unit>
+
     suspend fun deletePlaylistItemById(
         audioItemId: String,
         playlistId: Int,
@@ -51,5 +54,6 @@ interface PlaylistRepository {
         playlistId: Int,
         email: String,
     ): Either<Throwable, Unit>
+
     suspend fun deleteAllPlaylists(email: String): Either<Throwable, Unit>
 }

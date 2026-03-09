@@ -52,7 +52,7 @@ object RepositoryModule {
         remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
         refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
         saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
-            SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+        SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
     ): PremiumAudiosRepository =
         DefaultPremiumAudiosRepository(
             cloudDataSource,

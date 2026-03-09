@@ -87,6 +87,7 @@ fun DetailScreen(
                 audio = homeViewModel.findEpisodeFromId(audioId)
             }
         }
+
         Feature.SENIOR -> {
             val viewState = seniorViewModel.viewState
             if (viewState is SeniorViewModel.ViewState.Success) {
@@ -264,7 +265,7 @@ fun DetailScreen(
                             showAnimation = (
                                 playerViewModel.currentPlayingAudio.value?.id == audio.id &&
                                     playerViewModel.hasTriggeredEightyPercent
-                            ),
+                                ),
                             imageVector = Icons.Default.Share,
                             contentDescription = stringResource(R.string.share),
                             tint = White,

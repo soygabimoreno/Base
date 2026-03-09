@@ -23,7 +23,7 @@ class PremiumAudiosRemoteMediator(
     private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
     private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
-        SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+    SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
 ) : RemoteMediator<Int, PremiumAudioDbModel>() {
     override suspend fun initialize(): InitializeAction =
         if (refreshPremiumAudiosFromRemoteUseCase(
@@ -63,26 +63,29 @@ class PremiumAudiosRemoteMediator(
                     page = currentPage,
                 )
 
-            return response.fold({
-                MediatorResult.Error(it)
-            }, { premiumAudios ->
-                val finalPremiumAudios =
-                    if (loadType == LoadType.REFRESH) {
-                        val mergedPremiumAudios = mergeWithCloudData(premiumAudios, email)
-                        localPremiumAudiosDataSource.reset()
-                        saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
-                            System.currentTimeMillis(),
-                        )
-                        mergedPremiumAudios
-                    } else {
-                        mergeWithCloudData(premiumAudios, email)
-                    }
+            return response.fold(
+                {
+                    MediatorResult.Error(it)
+                },
+                { premiumAudios ->
+                    val finalPremiumAudios =
+                        if (loadType == LoadType.REFRESH) {
+                            val mergedPremiumAudios = mergeWithCloudData(premiumAudios, email)
+                            localPremiumAudiosDataSource.reset()
+                            saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
+                                System.currentTimeMillis(),
+                            )
+                            mergedPremiumAudios
+                        } else {
+                            mergeWithCloudData(premiumAudios, email)
+                        }
 
-                localPremiumAudiosDataSource.savePremiumAudios(finalPremiumAudios)
-                MediatorResult.Success(
-                    endOfPaginationReached = premiumAudios.isEmpty(),
-                )
-            })
+                    localPremiumAudiosDataSource.savePremiumAudios(finalPremiumAudios)
+                    MediatorResult.Success(
+                        endOfPaginationReached = premiumAudios.isEmpty(),
+                    )
+                },
+            )
         } catch (e: IOException) {
             MediatorResult.Error(e)
         }

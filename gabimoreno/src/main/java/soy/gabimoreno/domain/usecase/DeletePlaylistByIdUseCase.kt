@@ -8,13 +8,13 @@ import soy.gabimoreno.framework.datastore.getEmail
 import javax.inject.Inject
 
 class DeletePlaylistByIdUseCase
-    @Inject
-    constructor(
-        private val context: Context,
-        private val playlistRepository: PlaylistRepository,
-    ) {
-        suspend operator fun invoke(playlistId: Int): Either<Throwable, Unit> {
-            val email = context.getEmail().first()
-            return playlistRepository.deletePlaylistById(playlistId, email)
-        }
+@Inject
+constructor(
+    private val context: Context,
+    private val playlistRepository: PlaylistRepository,
+) {
+    suspend operator fun invoke(playlistId: Int): Either<Throwable, Unit> {
+        val email = context.getEmail().first()
+        return playlistRepository.deletePlaylistById(playlistId, email)
     }
+}

@@ -13,17 +13,20 @@ interface AudioCoursesRepository {
         email: String,
         forceRefresh: Boolean = false,
     ): Either<Throwable, List<AudioCourse>>
+
     suspend fun getCourseById(idCourse: String): Either<Throwable, Flow<AudioCourse>>
     suspend fun getAudioCourseItem(audioCourseItemId: String): Either<Throwable, AudioCourseItem>
     suspend fun getAudioCourseItemById(
         audioCourseItemId: String,
     ): Either<Throwable, PlaylistAudioItem>
+
     suspend fun getAllFavoriteAudioCoursesItems(): Either<Throwable, List<AudioCourseItem>>
     suspend fun markAudioCourseItemAsListened(
         audioCourseId: String,
         email: String,
         hasBeenListened: Boolean,
     )
+
     suspend fun markAllAudioCourseItemsAsUnlistened(email: String)
     suspend fun reset()
     suspend fun updateMarkedAsFavorite(

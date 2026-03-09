@@ -4,6 +4,7 @@ sealed interface PremiumEvent {
     data class Error(
         val error: Throwable?,
     ) : PremiumEvent
+
     data object ShowTokenExpiredError : PremiumEvent
     data class ShowDetail(
         val premiumAudioId: String,

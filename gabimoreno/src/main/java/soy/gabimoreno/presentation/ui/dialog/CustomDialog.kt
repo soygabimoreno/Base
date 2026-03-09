@@ -108,7 +108,8 @@ private fun DialogContent(
                         Spacing.s1,
                         White,
                         RoundedCornerShape(Spacing.s16),
-                    ).background(PurpleLight, RoundedCornerShape(Spacing.s16)),
+                    )
+                    .background(PurpleLight, RoundedCornerShape(Spacing.s16)),
         ) {
             Column(
                 modifier =

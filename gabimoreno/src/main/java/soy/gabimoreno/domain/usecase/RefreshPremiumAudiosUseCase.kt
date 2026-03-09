@@ -4,9 +4,9 @@ import soy.gabimoreno.domain.repository.premiumaudios.DefaultPremiumAudiosReposi
 import javax.inject.Inject
 
 class RefreshPremiumAudiosUseCase
-    @Inject
-    constructor(
-        private val remoteContentRepository: DefaultPremiumAudiosRepository,
-    ) {
-        suspend operator fun invoke() = remoteContentRepository.reset()
-    }
+@Inject
+constructor(
+    private val remoteContentRepository: DefaultPremiumAudiosRepository,
+) {
+    suspend operator fun invoke() = remoteContentRepository.reset()
+}

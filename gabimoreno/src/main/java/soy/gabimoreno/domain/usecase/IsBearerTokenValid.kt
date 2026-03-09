@@ -8,14 +8,14 @@ import soy.gabimoreno.framework.datastore.getBearerToken
 import javax.inject.Inject
 
 class IsBearerTokenValid
-    @Inject
-    constructor(
-        private val context: Context,
-    ) {
-        suspend operator fun invoke(): Boolean {
-            if (APIClient.bearerToken != EMPTY_BEARER_TOKEN) return true
-            val bearerToken = context.getBearerToken().first()
-            APIClient.bearerToken = bearerToken
-            return bearerToken != EMPTY_BEARER_TOKEN
-        }
+@Inject
+constructor(
+    private val context: Context,
+) {
+    suspend operator fun invoke(): Boolean {
+        if (APIClient.bearerToken != EMPTY_BEARER_TOKEN) return true
+        val bearerToken = context.getBearerToken().first()
+        APIClient.bearerToken = bearerToken
+        return bearerToken != EMPTY_BEARER_TOKEN
     }
+}

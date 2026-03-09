@@ -26,7 +26,8 @@ It's using:
 
 ## Special Thanks
 
-This module was initially based on the [Podcast App](https://github.com/fabirt/podcast-app) by [Fabián](https://github.com/fabirt). Thank you so much for such an amazing job.
+This module was initially based on the [Podcast App](https://github.com/fabirt/podcast-app)
+by [Fabián](https://github.com/fabirt). Thank you so much for such an amazing job.
 
 ## Collaborate
 

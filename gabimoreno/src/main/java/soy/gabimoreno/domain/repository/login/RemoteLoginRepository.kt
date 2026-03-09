@@ -10,20 +10,20 @@ import javax.inject.Singleton
 
 @Singleton
 class RemoteLoginRepository
-    @Inject
-    constructor(
-        private val loginDatasource: LoginDatasource,
-    ) : LoginRepository {
-        override suspend fun generateAuthCookie(
-            email: String,
-            password: String,
-        ): Either<Throwable, AuthCookie> = loginDatasource.generateAuthCookie(email, password)
+@Inject
+constructor(
+    private val loginDatasource: LoginDatasource,
+) : LoginRepository {
+    override suspend fun generateAuthCookie(
+        email: String,
+        password: String,
+    ): Either<Throwable, AuthCookie> = loginDatasource.generateAuthCookie(email, password)
 
-        override suspend fun obtainToken(
-            username: String,
-            password: String,
-        ): Either<Throwable, JwtAuth> = loginDatasource.obtainToken(username, password)
+    override suspend fun obtainToken(
+        username: String,
+        password: String,
+    ): Either<Throwable, JwtAuth> = loginDatasource.obtainToken(username, password)
 
-        override suspend fun getMember(email: String): Either<Throwable, Member> =
-            loginDatasource.getMember(email = email)
-    }
+    override suspend fun getMember(email: String): Either<Throwable, Member> =
+        loginDatasource.getMember(email = email)
+}

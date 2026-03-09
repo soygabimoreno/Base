@@ -165,7 +165,8 @@ private fun PlaylistDetailHeader(
                 Modifier
                     .windowInsetsPadding(
                         WindowInsets.safeDrawing.only(WindowInsetsSides.Top),
-                    ).align(Alignment.TopStart),
+                    )
+                    .align(Alignment.TopStart),
         )
 
         if (state.playlistAudioItems.isNotEmpty()) {

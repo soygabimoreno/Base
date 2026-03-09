@@ -4,6 +4,7 @@ sealed interface AudioCoursesListAction {
     data class OnItemClicked(
         val courseId: String,
     ) : AudioCoursesListAction
+
     data object OnRefreshContent : AudioCoursesListAction
     data object OnPlaylistClicked : AudioCoursesListAction
 }

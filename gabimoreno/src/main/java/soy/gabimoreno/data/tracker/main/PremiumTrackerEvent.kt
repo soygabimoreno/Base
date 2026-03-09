@@ -9,6 +9,7 @@ sealed class PremiumTrackerEvent(
     data class ClickLogin(
         override val parameters: Map<String, Any>,
     ) : PremiumTrackerEvent()
+
     data class TokenExpired(
         override val parameters: Map<String, Any>,
     ) : PremiumTrackerEvent()
