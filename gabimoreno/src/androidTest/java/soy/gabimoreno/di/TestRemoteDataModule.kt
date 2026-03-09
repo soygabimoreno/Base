@@ -1,10 +1,9 @@
 package soy.gabimoreno.di
 
-import android.content.Context
-import com.prof.rssparser.Parser
+import com.prof18.rssparser.RssParser
+import com.prof18.rssparser.RssParserBuilder
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import okhttp3.OkHttpClient
@@ -13,7 +12,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import soy.gabimoreno.data.remote.client.APIClient
 import soy.gabimoreno.data.remote.service.LoginService
 import soy.gabimoreno.data.remote.service.PostService
-import soy.gabimoreno.di.data.ONE_DAY_IN_MILLIS
 import soy.gabimoreno.di.data.RemoteDataModule
 import javax.inject.Singleton
 
@@ -55,13 +53,11 @@ object TestRemoteDataModule {
 
     @Provides
     fun provideRSSParser(
-        @ApplicationContext context: Context,
-    ): Parser =
-        Parser
-            .Builder()
-            .context(context)
-            .cacheExpirationMillis(ONE_DAY_IN_MILLIS)
-            .build()
+        okHttpClient: OkHttpClient,
+    ): RssParser =
+        RssParserBuilder(
+            callFactory = okHttpClient,
+        ).build()
 }
 
 private const val TEST_BASE_URL = "http://localhost:8080/"

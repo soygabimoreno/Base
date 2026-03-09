@@ -57,9 +57,6 @@ private fun NavGraphBuilder.seniorNav(
                 onGoToWebClicked = { encodedUrl ->
                     navController.navigateToWebView(encodedUrl)
                 },
-                onAddToPlaylistClicked = { audioItemId ->
-                    navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
-                },
             )
         }
 

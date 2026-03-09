@@ -1,6 +1,6 @@
 package soy.gabimoreno.di.data
 
-import com.prof.rssparser.Parser
+import com.prof18.rssparser.RssParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,13 +36,25 @@ object DatasourceModule {
 
     @Provides
     @Singleton
-    fun providePodcastDatasource(rssParser: Parser): PodcastDatasource =
-        RemotePodcastDatasource(rssParser)
+    fun providePodcastDatasource(
+        rssParser: RssParser,
+        okkHttpClient: okhttp3.OkHttpClient,
+    ): PodcastDatasource =
+        RemotePodcastDatasource(
+            rssParser,
+            okkHttpClient,
+        )
 
     @Provides
     @Singleton
-    fun provideRemoteSeniorDatasource(rssParser: Parser): RemoteSeniorDatasource =
-        DefaultRemoteSeniorDatasource(rssParser)
+    fun provideRemoteSeniorDatasource(
+        rssParser: RssParser,
+        okkHttpClient: okhttp3.OkHttpClient,
+    ): RemoteSeniorDatasource =
+        DefaultRemoteSeniorDatasource(
+            rssParser,
+            okkHttpClient,
+        )
 }
 
 typealias PodcastUrl = String

@@ -1,22 +1,26 @@
 package soy.gabimoreno.data.remote.datasource.senior
 
 import arrow.core.Either
-import com.prof.rssparser.Parser
+import com.prof18.rssparser.RssParser
+import com.prof18.rssparser.model.RssChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import soy.gabimoreno.data.remote.mapper.toDomain
 import soy.gabimoreno.di.data.PodcastUrl
 import soy.gabimoreno.domain.model.podcast.Episode
 
 class DefaultRemoteSeniorDatasource(
-    private val rssParser: Parser,
+    private val rssParser: RssParser,
+    private val okHttpClient: OkHttpClient,
 ) : RemoteSeniorDatasource {
     override fun getEpisodesStream(podcastUrl: PodcastUrl): Either<Throwable, Flow<List<Episode>>> =
         Either.catch {
             flow {
-                val channel = rssParser.getChannel(podcastUrl)
-                val episodes = channel.toDomain().episodes
+                val feed = parseFeedSafely(podcastUrl)
+                val episodes = feed.toDomain().episodes
 
                 val chunkSize = CHUNK_SIZE
                 val totalChunks = (episodes.size + chunkSize - 1) / chunkSize
@@ -29,7 +33,23 @@ class DefaultRemoteSeniorDatasource(
                 }
             }
         }
+
+    private suspend fun parseFeedSafely(
+        podcastUrl: PodcastUrl,
+    ): RssChannel =
+        okHttpClient.newCall(
+            Request.Builder()
+                .url(podcastUrl)
+                .build(),
+        ).execute().use { response ->
+            val xml = requireNotNull(response.body).string().sanitizeFeedXml()
+            rssParser.parse(xml)
+        }
 }
+
+private fun String.sanitizeFeedXml(): String =
+    replace("&amp;gt;", "&gt;")
+        .replace("&amp;lt;", "&lt;")
 
 private const val CHUNK_SIZE = 15
 private const val DELAY_TIME_MILLIS = 500L

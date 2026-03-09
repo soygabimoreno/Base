@@ -1,11 +1,10 @@
 package soy.gabimoreno.di.data
 
-import android.content.Context
-import com.prof.rssparser.Parser
+import com.prof18.rssparser.RssParser
+import com.prof18.rssparser.RssParserBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -51,14 +50,11 @@ object RemoteDataModule {
 
     @Provides
     fun provideRSSParser(
-        @ApplicationContext context: Context,
-    ): Parser =
-        Parser
-            .Builder()
-            .context(context)
-            .cacheExpirationMillis(ONE_DAY_IN_MILLIS)
-            .build()
+        okHttpClient: OkHttpClient,
+    ): RssParser =
+        RssParserBuilder(
+            callFactory = okHttpClient,
+        ).build()
 }
 
-internal const val ONE_DAY_IN_MILLIS = 24 * 60 * 60 * 1000L
 private const val BASE_URL = "https://gabimoreno.soy/"
