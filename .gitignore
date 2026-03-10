@@ -91,3 +91,4 @@ lint/tmp/
 **/.DS_Store
 
 gabimoreno/google-services.json
+app/google-services.json

@@ -25,7 +25,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Base"
-include(":gabimoreno")
+include(":app")
 
 include(":modules:core")
 include(":modules:core-testing")
