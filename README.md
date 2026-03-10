@@ -26,9 +26,11 @@ It's using:
 ### Collaborate
 I am [Gabi Moreno](https://gabimoreno.soy).
 
-This is an open source project. Feel free to request **[issues](https://github.com/soygabimoreno/Base/issues)**.
+This is an open source project. Feel free to request *
+*[issues](https://github.com/soygabimoreno/Los-ANDROIDES/issues)**.
 
-And for sure, **[Pull Requests](https://github.com/soygabimoreno/Base/pulls)** are opened and super-well received.
+And for sure, **[Pull Requests](https://github.com/soygabimoreno/Los-ANDROIDES/pulls)** are opened
+and super-well received.
 
 #### Configuration
 Take into account you should add something like this in your `local.properties` to build the
