@@ -8,7 +8,6 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.google.firebase.crashlytics")
     alias(libs.plugins.secrets.gradle.plugin)
-    alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
@@ -27,13 +26,11 @@ android {
             }
         }
     }
-
     namespace = "soy.gabimoreno"
     compileSdk =
         libs.versions.sdk.compile
             .get()
             .toInt()
-
     defaultConfig {
         applicationId = "soy.gabimoreno"
         minSdk =
@@ -46,19 +43,16 @@ android {
                 .toInt()
         versionCode = 70
         versionName = "4.0.1"
-
         testInstrumentationRunner = "soy.gabimoreno.di.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
     }
-
     bundle {
         density { enableSplit = true }
         abi { enableSplit = true }
         language { enableSplit = false }
     }
-
     buildTypes {
         debug {
             versionNameSuffix = "-DEBUG"
@@ -96,7 +90,6 @@ android {
             }
         }
     }
-
     applicationVariants.forEach { variant ->
         if (variant.buildType.name == "debug") {
             variant.mergedFlavor.resourceConfigurations.clear()
@@ -104,7 +97,6 @@ android {
             variant.mergedFlavor.resourceConfigurations.add("xhdpi")
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
@@ -116,11 +108,9 @@ android {
         buildConfig = true
         compose = true
     }
-
     room {
         schemaDirectory("$projectDir/schemas")
     }
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}"
@@ -129,13 +119,11 @@ android {
 }
 
 dependencies {
-//    implementation(project(":modules:player")) // TODO: Add when moved all player files to this module
     implementation(project(":modules:core"))
     implementation(project(":modules:core-testing"))
     implementation(project(":modules:core-view"))
     implementation(project(":modules:framework"))
     implementation(project(":modules:remote-config"))
-    implementation(project(":shared"))
 
     implementation(libs.core.ktx)
     implementation(libs.google.material)
