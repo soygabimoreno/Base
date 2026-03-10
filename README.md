@@ -1,8 +1,6 @@
-# Base
-This is the base of the multi-module repo.
+# Los ANDROIDES
 
-## App Los androides by Gabi Moreno
-This is the module corresponding to the app Los androides by Gabi Moreno.
+App for listening audios.
 
 Download it from [Google Play](https://gabimoreno.soy/app).
 
@@ -45,4 +43,4 @@ keystore.storePassword=foo
 keystore.keyPassword=foo
 ```
 
-Thank you very much for being part of this project! 🤗
+Thank you very much for collaborating to this project.
