@@ -17,136 +17,136 @@ import soy.gabimoreno.player.extension.currentPosition
 import javax.inject.Inject
 
 class MediaPlayerServiceConnection
-@Inject
-constructor(
-    context: Context,
-    private val mediaSource: AudioMediaSource,
-) {
-    var playbackState = mutableStateOf<PlaybackStateCompat?>(null)
-    var currentPlayingAudio = mutableStateOf<Audio?>(null)
-    var onAudioChanged: (() -> Unit)? = null
+    @Inject
+    constructor(
+        context: Context,
+        private val mediaSource: AudioMediaSource,
+    ) {
+        var playbackState = mutableStateOf<PlaybackStateCompat?>(null)
+        var currentPlayingAudio = mutableStateOf<Audio?>(null)
+        var onAudioChanged: (() -> Unit)? = null
 
-    lateinit var mediaController: MediaControllerCompat
+        lateinit var mediaController: MediaControllerCompat
 
-    private var isConnected: Boolean = false
+        private var isConnected: Boolean = false
 
-    val transportControls: MediaControllerCompat.TransportControls
-        get() = mediaController.transportControls
+        val transportControls: MediaControllerCompat.TransportControls
+            get() = mediaController.transportControls
 
-    private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
+        private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback(context)
 
-    private val mediaBrowser =
-        MediaBrowserCompat(
-            context,
-            ComponentName(context, MediaPlayerService::class.java),
-            mediaBrowserConnectionCallback,
-            null,
-        ).apply {
-            connect()
-        }
-
-    private val _progressFlow = MutableStateFlow(0f)
-    val progressFlow: StateFlow<Float> = _progressFlow.asStateFlow()
-
-    fun playAudios(audios: List<Audio>) {
-        mediaSource.setAudios(audios)
-        mediaBrowser.sendCustomAction(START_MEDIA_PLAYBACK_ACTION, null, null)
-    }
-
-    fun rewind(seconds: Int = 10) {
-        playbackState.value?.currentPosition?.let { currentPosition ->
-            transportControls.seekTo(currentPosition - seconds * MILLIS_IN_SECOND)
-        }
-    }
-
-    fun fastForward(seconds: Int = 10) {
-        playbackState.value?.currentPosition?.let { currentPosition ->
-            transportControls.seekTo(currentPosition + seconds * MILLIS_IN_SECOND)
-        }
-    }
-
-    fun skipToPrevious() {
-        transportControls.skipToPrevious()
-    }
-
-    fun skipToNext() {
-        transportControls.skipToNext()
-    }
-
-    fun setPlaybackSpeed(speed: Float) {
-        val extras =
-            Bundle().apply {
-                putFloat(PLAYBACK_SPEED_EXTRA, speed)
+        private val mediaBrowser =
+            MediaBrowserCompat(
+                context,
+                ComponentName(context, MediaPlayerService::class.java),
+                mediaBrowserConnectionCallback,
+                null,
+            ).apply {
+                connect()
             }
-        mediaBrowser.sendCustomAction(SET_PLAYBACK_SPEED, extras, null)
-    }
 
-    fun subscribe(
-        parentId: String,
-        callback: MediaBrowserCompat.SubscriptionCallback,
-    ) {
-        mediaBrowser.subscribe(parentId, callback)
-    }
+        private val _progressFlow = MutableStateFlow(0f)
+        val progressFlow: StateFlow<Float> = _progressFlow.asStateFlow()
 
-    fun unsubscribe(
-        parentId: String,
-        callback: MediaBrowserCompat.SubscriptionCallback,
-    ) {
-        mediaBrowser.unsubscribe(parentId, callback)
-    }
+        fun playAudios(audios: List<Audio>) {
+            mediaSource.setAudios(audios)
+            mediaBrowser.sendCustomAction(START_MEDIA_PLAYBACK_ACTION, null, null)
+        }
 
-    fun refreshMediaBrowserChildren() {
-        mediaBrowser.sendCustomAction(REFRESH_MEDIA_BROWSER_CHILDREN, null, null)
-    }
+        fun rewind(seconds: Int = 10) {
+            playbackState.value?.currentPosition?.let { currentPosition ->
+                transportControls.seekTo(currentPosition - seconds * MILLIS_IN_SECOND)
+            }
+        }
 
-    private inner class MediaBrowserConnectionCallback(
-        private val context: Context,
-    ) : MediaBrowserCompat.ConnectionCallback() {
-        override fun onConnected() {
-            super.onConnected()
-            isConnected = true
-            mediaController =
-                MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
-                    registerCallback(MediaControllerCallback())
+        fun fastForward(seconds: Int = 10) {
+            playbackState.value?.currentPosition?.let { currentPosition ->
+                transportControls.seekTo(currentPosition + seconds * MILLIS_IN_SECOND)
+            }
+        }
+
+        fun skipToPrevious() {
+            transportControls.skipToPrevious()
+        }
+
+        fun skipToNext() {
+            transportControls.skipToNext()
+        }
+
+        fun setPlaybackSpeed(speed: Float) {
+            val extras =
+                Bundle().apply {
+                    putFloat(PLAYBACK_SPEED_EXTRA, speed)
                 }
+            mediaBrowser.sendCustomAction(SET_PLAYBACK_SPEED, extras, null)
         }
 
-        override fun onConnectionSuspended() {
-            super.onConnectionSuspended()
-            isConnected = false
+        fun subscribe(
+            parentId: String,
+            callback: MediaBrowserCompat.SubscriptionCallback,
+        ) {
+            mediaBrowser.subscribe(parentId, callback)
         }
 
-        override fun onConnectionFailed() {
-            super.onConnectionFailed()
-            isConnected = false
-        }
-    }
-
-    private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
-        override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-            super.onPlaybackStateChanged(state)
-            playbackState.value = state
-
-            val progress = state?.extras?.getFloat(PROGRESS_EXTRA, 0f) ?: 0f
-            _progressFlow.value = progress
+        fun unsubscribe(
+            parentId: String,
+            callback: MediaBrowserCompat.SubscriptionCallback,
+        ) {
+            mediaBrowser.unsubscribe(parentId, callback)
         }
 
-        override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-            super.onMetadataChanged(metadata)
-            currentPlayingAudio.value =
-                metadata?.let {
-                    mediaSource.audios.find {
-                        it.id == metadata.description?.mediaId
+        fun refreshMediaBrowserChildren() {
+            mediaBrowser.sendCustomAction(REFRESH_MEDIA_BROWSER_CHILDREN, null, null)
+        }
+
+        private inner class MediaBrowserConnectionCallback(
+            private val context: Context,
+        ) : MediaBrowserCompat.ConnectionCallback() {
+            override fun onConnected() {
+                super.onConnected()
+                isConnected = true
+                mediaController =
+                    MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
+                        registerCallback(MediaControllerCallback())
                     }
-                }
-            onAudioChanged?.invoke()
+            }
+
+            override fun onConnectionSuspended() {
+                super.onConnectionSuspended()
+                isConnected = false
+            }
+
+            override fun onConnectionFailed() {
+                super.onConnectionFailed()
+                isConnected = false
+            }
         }
 
-        override fun onSessionDestroyed() {
-            super.onSessionDestroyed()
-            mediaBrowserConnectionCallback.onConnectionSuspended()
+        private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
+            override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
+                super.onPlaybackStateChanged(state)
+                playbackState.value = state
+
+                val progress = state?.extras?.getFloat(PROGRESS_EXTRA, 0f) ?: 0f
+                _progressFlow.value = progress
+            }
+
+            override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+                super.onMetadataChanged(metadata)
+                currentPlayingAudio.value =
+                    metadata?.let {
+                        mediaSource.audios.find {
+                            it.id == metadata.description?.mediaId
+                        }
+                    }
+                onAudioChanged?.invoke()
+            }
+
+            override fun onSessionDestroyed() {
+                super.onSessionDestroyed()
+                mediaBrowserConnectionCallback.onConnectionSuspended()
+            }
         }
     }
-}
 
 private const val MILLIS_IN_SECOND = 1_000

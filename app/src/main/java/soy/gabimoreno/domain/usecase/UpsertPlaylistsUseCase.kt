@@ -9,13 +9,13 @@ import soy.gabimoreno.framework.datastore.getEmail
 import javax.inject.Inject
 
 class UpsertPlaylistsUseCase
-@Inject
-constructor(
-    private val context: Context,
-    private val repository: PlaylistRepository,
-) {
-    suspend operator fun invoke(playlists: List<Playlist>): Either<Throwable, Unit> {
-        val email = context.getEmail().first()
-        return repository.upsertPlaylists(playlists, email)
+    @Inject
+    constructor(
+        private val context: Context,
+        private val repository: PlaylistRepository,
+    ) {
+        suspend operator fun invoke(playlists: List<Playlist>): Either<Throwable, Unit> {
+            val email = context.getEmail().first()
+            return repository.upsertPlaylists(playlists, email)
+        }
     }
-}

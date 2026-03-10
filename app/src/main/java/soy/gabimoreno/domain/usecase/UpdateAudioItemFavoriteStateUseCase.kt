@@ -11,43 +11,43 @@ import soy.gabimoreno.framework.datastore.getEmail
 import javax.inject.Inject
 
 class UpdateAudioItemFavoriteStateUseCase
-@Inject
-constructor(
-    private val audioCoursesRepository: AudioCoursesRepository,
-    private val context: Context,
-    private val podcastRepository: PodcastRepository,
-    private val premiumAudioCoursesRepository: PremiumAudiosRepository,
-) {
-    suspend operator fun invoke(
-        idAudioItem: String,
-        markedAsFavorite: Boolean,
+    @Inject
+    constructor(
+        private val audioCoursesRepository: AudioCoursesRepository,
+        private val context: Context,
+        private val podcastRepository: PodcastRepository,
+        private val premiumAudioCoursesRepository: PremiumAudiosRepository,
     ) {
-        val email = context.getEmail().first()
-        when (audioItemTypeDetector(idAudioItem)) {
-            AudioItemType.AUDIO_COURSE ->
-                audioCoursesRepository.updateMarkedAsFavorite(
-                    audioCourseId = idAudioItem,
-                    email = email,
-                    isFavorite = markedAsFavorite,
-                )
+        suspend operator fun invoke(
+            idAudioItem: String,
+            markedAsFavorite: Boolean,
+        ) {
+            val email = context.getEmail().first()
+            when (audioItemTypeDetector(idAudioItem)) {
+                AudioItemType.AUDIO_COURSE ->
+                    audioCoursesRepository.updateMarkedAsFavorite(
+                        audioCourseId = idAudioItem,
+                        email = email,
+                        isFavorite = markedAsFavorite,
+                    )
 
-            AudioItemType.PREMIUM_AUDIO ->
-                premiumAudioCoursesRepository.markPremiumAudioAsFavorite(
-                    email = email,
-                    premiumAudioId = idAudioItem,
-                    isFavorite = markedAsFavorite,
-                )
+                AudioItemType.PREMIUM_AUDIO ->
+                    premiumAudioCoursesRepository.markPremiumAudioAsFavorite(
+                        email = email,
+                        premiumAudioId = idAudioItem,
+                        isFavorite = markedAsFavorite,
+                    )
 
-            AudioItemType.PODCAST ->
-                podcastRepository.updateMarkedAsFavorite(
-                    podcastId = idAudioItem,
-                    email = email,
-                    isFavorite = markedAsFavorite,
-                )
+                AudioItemType.PODCAST ->
+                    podcastRepository.updateMarkedAsFavorite(
+                        podcastId = idAudioItem,
+                        email = email,
+                        isFavorite = markedAsFavorite,
+                    )
 
-            AudioItemType.SENIOR -> {
-                // Do nothing (at least for now)
+                AudioItemType.SENIOR -> {
+                    // Do nothing (at least for now)
+                }
             }
         }
     }
-}

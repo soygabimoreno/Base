@@ -265,7 +265,7 @@ fun DetailScreen(
                             showAnimation = (
                                 playerViewModel.currentPlayingAudio.value?.id == audio.id &&
                                     playerViewModel.hasTriggeredEightyPercent
-                                ),
+                            ),
                             imageVector = Icons.Default.Share,
                             contentDescription = stringResource(R.string.share),
                             tint = White,

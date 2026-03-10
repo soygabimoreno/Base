@@ -23,7 +23,7 @@ class PremiumAudiosRemoteMediator(
     private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
     private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
-    SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
+        SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
 ) : RemoteMediator<Int, PremiumAudioDbModel>() {
     override suspend fun initialize(): InitializeAction =
         if (refreshPremiumAudiosFromRemoteUseCase(

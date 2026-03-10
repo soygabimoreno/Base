@@ -13,23 +13,23 @@ import soy.gabimoreno.domain.repository.survey.SurveyRepository
 import javax.inject.Inject
 
 class DefaultSurveyRepository
-@Inject
-constructor(
-    private val firestore: FirebaseFirestore,
-) : SurveyRepository {
-    override suspend fun getLastedSurvey(): Either<Throwable, Survey?> =
-        runCatchingEither {
-            firestore
-                .collection(COLLECTION_NAME)
-                .orderBy(ORDER_BY_FIELD, Query.Direction.DESCENDING)
-                .limit(DOCUMENTS_LIMIT)
-                .get()
-                .await()
-                .toObjects<SurveyApiModel>()
-                .first()
-                .toDomain()
-        }
-}
+    @Inject
+    constructor(
+        private val firestore: FirebaseFirestore,
+    ) : SurveyRepository {
+        override suspend fun getLastedSurvey(): Either<Throwable, Survey?> =
+            runCatchingEither {
+                firestore
+                    .collection(COLLECTION_NAME)
+                    .orderBy(ORDER_BY_FIELD, Query.Direction.DESCENDING)
+                    .limit(DOCUMENTS_LIMIT)
+                    .get()
+                    .await()
+                    .toObjects<SurveyApiModel>()
+                    .first()
+                    .toDomain()
+            }
+    }
 
 private const val COLLECTION_NAME = "surveys"
 private const val DOCUMENTS_LIMIT = 1L

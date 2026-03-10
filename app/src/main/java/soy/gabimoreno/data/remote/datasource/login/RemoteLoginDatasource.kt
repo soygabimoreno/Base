@@ -9,28 +9,28 @@ import soy.gabimoreno.domain.model.login.Member
 import javax.inject.Inject
 
 class RemoteLoginDatasource
-@Inject
-constructor(
-    private val loginService: LoginService,
-) : LoginDatasource {
-    override suspend fun generateAuthCookie(
-        email: String,
-        password: String,
-    ): Either<Throwable, AuthCookie> =
-        Either.catch {
-            loginService.generateAuthCookie(email, password).toDomain()
-        }
+    @Inject
+    constructor(
+        private val loginService: LoginService,
+    ) : LoginDatasource {
+        override suspend fun generateAuthCookie(
+            email: String,
+            password: String,
+        ): Either<Throwable, AuthCookie> =
+            Either.catch {
+                loginService.generateAuthCookie(email, password).toDomain()
+            }
 
-    override suspend fun obtainToken(
-        username: String,
-        password: String,
-    ): Either<Throwable, JwtAuth> =
-        Either.catch {
-            loginService.obtainToken(username, password).toDomain()
-        }
+        override suspend fun obtainToken(
+            username: String,
+            password: String,
+        ): Either<Throwable, JwtAuth> =
+            Either.catch {
+                loginService.obtainToken(username, password).toDomain()
+            }
 
-    override suspend fun getMember(email: String): Either<Throwable, Member> =
-        Either.catch {
-            loginService.getMembers(email = email).toDomain()
-        }
-}
+        override suspend fun getMember(email: String): Either<Throwable, Member> =
+            Either.catch {
+                loginService.getMembers(email = email).toDomain()
+            }
+    }

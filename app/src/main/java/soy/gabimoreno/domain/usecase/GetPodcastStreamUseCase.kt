@@ -10,15 +10,15 @@ import soy.gabimoreno.framework.datastore.getEmail
 import javax.inject.Inject
 
 class GetPodcastStreamUseCase
-@Inject
-constructor(
-    private val context: Context,
-    private val podcastRepository: PodcastRepository,
-) {
-    suspend operator fun invoke(): Either<Throwable, Flow<List<Episode>>> {
-        val email = context.getEmail().first()
-        return podcastRepository.getEpisodesStream(
-            email = email,
-        )
+    @Inject
+    constructor(
+        private val context: Context,
+        private val podcastRepository: PodcastRepository,
+    ) {
+        suspend operator fun invoke(): Either<Throwable, Flow<List<Episode>>> {
+            val email = context.getEmail().first()
+            return podcastRepository.getEpisodesStream(
+                email = email,
+            )
+        }
     }
-}

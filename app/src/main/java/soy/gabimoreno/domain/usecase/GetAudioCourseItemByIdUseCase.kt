@@ -6,10 +6,10 @@ import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
 import javax.inject.Inject
 
 class GetAudioCourseItemByIdUseCase
-@Inject
-constructor(
-    private val audioCoursesRepository: AudioCoursesRepository,
-) {
-    suspend operator fun invoke(audioCourseItemId: String): Either<Throwable, AudioCourseItem> =
-        audioCoursesRepository.getAudioCourseItem(audioCourseItemId)
-}
+    @Inject
+    constructor(
+        private val audioCoursesRepository: AudioCoursesRepository,
+    ) {
+        suspend operator fun invoke(audioCourseItemId: String): Either<Throwable, AudioCourseItem> =
+            audioCoursesRepository.getAudioCourseItem(audioCourseItemId)
+    }

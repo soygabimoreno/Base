@@ -10,22 +10,22 @@ import soy.gabimoreno.domain.model.content.PremiumAudio
 import javax.inject.Inject
 
 class RemotePremiumAudiosDataSource
-@Inject
-constructor(
-    private val postService: PostService,
-) : PremiumAudiosDataSource {
-    override suspend fun getPremiumAudios(
-        categories: List<Category>,
-        postsPerPage: Int,
-        page: Int,
-    ): Either<Throwable, List<PremiumAudio>> =
-        Either.catch {
-            postService
-                .getPosts(
-                    categories.toQueryValue(),
-                    postsPerPage = postsPerPage,
-                    page = page,
-                ).toDomain()
-                .toPremiumAudios()
-        }
-}
+    @Inject
+    constructor(
+        private val postService: PostService,
+    ) : PremiumAudiosDataSource {
+        override suspend fun getPremiumAudios(
+            categories: List<Category>,
+            postsPerPage: Int,
+            page: Int,
+        ): Either<Throwable, List<PremiumAudio>> =
+            Either.catch {
+                postService
+                    .getPosts(
+                        categories.toQueryValue(),
+                        postsPerPage = postsPerPage,
+                        page = page,
+                    ).toDomain()
+                    .toPremiumAudios()
+            }
+    }

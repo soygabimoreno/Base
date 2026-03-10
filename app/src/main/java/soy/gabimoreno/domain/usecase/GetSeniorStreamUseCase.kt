@@ -10,15 +10,15 @@ import soy.gabimoreno.framework.datastore.getEmail
 import javax.inject.Inject
 
 class GetSeniorStreamUseCase
-@Inject
-constructor(
-    private val context: Context,
-    private val seniorRepository: SeniorRepository,
-) {
-    suspend operator fun invoke(): Either<Throwable, Flow<List<Episode>>> {
-        val email = context.getEmail().first()
-        return seniorRepository.getEpisodesStream(
-            email = email,
-        )
+    @Inject
+    constructor(
+        private val context: Context,
+        private val seniorRepository: SeniorRepository,
+    ) {
+        suspend operator fun invoke(): Either<Throwable, Flow<List<Episode>>> {
+            val email = context.getEmail().first()
+            return seniorRepository.getEpisodesStream(
+                email = email,
+            )
+        }
     }
-}

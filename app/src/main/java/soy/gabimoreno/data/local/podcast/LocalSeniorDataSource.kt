@@ -13,43 +13,43 @@ import soy.gabimoreno.domain.model.podcast.Episode
 import javax.inject.Inject
 
 class LocalSeniorDataSource
-@Inject
-constructor(
-    gabiMorenoDatabase: ApplicationDatabase,
-    @param:IO private val dispatcher: CoroutineDispatcher,
-) {
-    @VisibleForTesting
-    val seniorDbModelDao = gabiMorenoDatabase.seniorDbModelDao()
+    @Inject
+    constructor(
+        gabiMorenoDatabase: ApplicationDatabase,
+        @param:IO private val dispatcher: CoroutineDispatcher,
+    ) {
+        @VisibleForTesting
+        val seniorDbModelDao = gabiMorenoDatabase.seniorDbModelDao()
 
-    suspend fun isEmpty(): Boolean =
-        withContext(dispatcher) {
-            seniorDbModelDao.count() <= 0
-        }
-
-    suspend fun getTotalPodcasts(): Int =
-        withContext(dispatcher) {
-            seniorDbModelDao.count()
-        }
-
-    fun getPodcasts(): Flow<List<Episode>> =
-        seniorDbModelDao.getSeniorDbModels().map { podcastDbModels ->
-            podcastDbModels.map { podcastDbModel ->
-                podcastDbModel.toEpisode()
+        suspend fun isEmpty(): Boolean =
+            withContext(dispatcher) {
+                seniorDbModelDao.count() <= 0
             }
-        }
 
-    suspend fun getPodcastById(id: String): Episode? =
-        withContext(dispatcher) {
-            seniorDbModelDao.getSeniorDbModelById(id)?.toEpisode()
-        }
+        suspend fun getTotalPodcasts(): Int =
+            withContext(dispatcher) {
+                seniorDbModelDao.count()
+            }
 
-    suspend fun upsertPodcasts(podcasts: List<Episode>) =
-        withContext(dispatcher) {
-            seniorDbModelDao.upsertSeniorDbModels(podcasts.map { it.toSeniorDbModel() })
-        }
+        fun getPodcasts(): Flow<List<Episode>> =
+            seniorDbModelDao.getSeniorDbModels().map { podcastDbModels ->
+                podcastDbModels.map { podcastDbModel ->
+                    podcastDbModel.toEpisode()
+                }
+            }
 
-    suspend fun reset() =
-        withContext(dispatcher) {
-            seniorDbModelDao.deleteAllSeniorDbModels()
-        }
-}
+        suspend fun getPodcastById(id: String): Episode? =
+            withContext(dispatcher) {
+                seniorDbModelDao.getSeniorDbModelById(id)?.toEpisode()
+            }
+
+        suspend fun upsertPodcasts(podcasts: List<Episode>) =
+            withContext(dispatcher) {
+                seniorDbModelDao.upsertSeniorDbModels(podcasts.map { it.toSeniorDbModel() })
+            }
+
+        suspend fun reset() =
+            withContext(dispatcher) {
+                seniorDbModelDao.deleteAllSeniorDbModels()
+            }
+    }

@@ -82,10 +82,10 @@ sealed class NavCommand(
         feature: Feature,
         navArgs: List<NavArg>,
     ) : NavCommand(
-        feature,
-        "detail",
-        navArgs,
-    ) {
+            feature,
+            "detail",
+            navArgs,
+        ) {
         fun createRoute(audioId: String) = "${feature.route}/$subRoute/$audioId"
     }
 
@@ -93,10 +93,10 @@ sealed class NavCommand(
         feature: Feature,
         navArgs: List<NavArg>,
     ) : NavCommand(
-        feature,
-        "audiocoursedetail",
-        navArgs,
-    ) {
+            feature,
+            "audiocoursedetail",
+            navArgs,
+        ) {
         fun createRoute(audioId: String) = "${feature.route}/$subRoute/$audioId"
     }
 
@@ -104,10 +104,10 @@ sealed class NavCommand(
         feature: Feature,
         navArgs: List<NavArg>,
     ) : NavCommand(
-        feature,
-        "playlistdetail",
-        navArgs,
-    ) {
+            feature,
+            "playlistdetail",
+            navArgs,
+        ) {
         fun createRoute(playlistId: String) = "${feature.route}/$subRoute/$playlistId"
     }
 
@@ -115,20 +115,20 @@ sealed class NavCommand(
         feature: Feature,
         navArgs: List<NavArg>,
     ) : NavCommand(
-        feature,
-        "audioItemDetail",
-        navArgs,
-    ) {
+            feature,
+            "audioItemDetail",
+            navArgs,
+        ) {
         fun createRoute(audioItemId: String) = "${feature.route}/$subRoute/$audioItemId"
     }
 
     class ContentWebView(
         feature: Feature,
     ) : NavCommand(
-        feature,
-        "webView",
-        listOf(NavArg.EncodedUrl),
-    ) {
+            feature,
+            "webView",
+            listOf(NavArg.EncodedUrl),
+        ) {
         fun createRoute(encodedUrl: String) = "${feature.route}/$subRoute/$encodedUrl"
     }
 

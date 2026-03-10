@@ -4,9 +4,9 @@ import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCoursesReposito
 import javax.inject.Inject
 
 class RefreshAudioCoursesUseCase
-@Inject
-constructor(
-    private val audioCoursesRepository: DefaultAudioCoursesRepository,
-) {
-    suspend operator fun invoke() = audioCoursesRepository.reset()
-}
+    @Inject
+    constructor(
+        private val audioCoursesRepository: DefaultAudioCoursesRepository,
+    ) {
+        suspend operator fun invoke() = audioCoursesRepository.reset()
+    }

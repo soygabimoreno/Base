@@ -22,82 +22,82 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel
-@Inject
-constructor(
-    private val tracker: Tracker,
-    private val startChooser: StartChooser,
-    private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
-) : ViewModel() {
-    var audioState by mutableStateOf<Audio?>(null)
+    @Inject
+    constructor(
+        private val tracker: Tracker,
+        private val startChooser: StartChooser,
+        private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
+    ) : ViewModel() {
+        var audioState by mutableStateOf<Audio?>(null)
 
-    fun onViewScreen(audio: Audio) {
-        audioState = audio
-        tracker.trackEvent(DetailTrackerEvent.ViewScreen(audio.toMap()))
-    }
-
-    fun onBackClicked(audio: Audio) {
-        tracker.trackEvent(DetailTrackerEvent.ClickBack(audio.toMap()))
-    }
-
-    fun onPlayPauseClicked(
-        audio: Audio,
-        playPause: PlayPause,
-    ) {
-        val parameters = audio.toMap()
-        when (playPause) {
-            PlayPause.PLAY -> tracker.trackEvent(DetailTrackerEvent.ClickPlay(parameters))
-            PlayPause.PAUSE -> tracker.trackEvent(DetailTrackerEvent.ClickPause(parameters))
+        fun onViewScreen(audio: Audio) {
+            audioState = audio
+            tracker.trackEvent(DetailTrackerEvent.ViewScreen(audio.toMap()))
         }
-    }
 
-    fun onShareClicked(
-        context: Context,
-        audio: Audio,
-    ) {
-        tracker.trackEvent(DetailTrackerEvent.ClickShare(audio.toMap()))
-        startChooser(
-            context,
-            chooserTitleResId = R.string.share_podcast_content,
-            title = audio.title,
-            url = audio.url,
-        )
-    }
+        fun onBackClicked(audio: Audio) {
+            tracker.trackEvent(DetailTrackerEvent.ClickBack(audio.toMap()))
+        }
 
-    fun onFavoriteStatusChanged() {
-        viewModelScope.launch {
-            val currentState = audioState
-            if (currentState != null) {
-                val newState =
-                    when (currentState) {
-                        is PremiumAudio ->
-                            currentState.copy(
-                                markedAsFavorite = !currentState.markedAsFavorite,
-                            )
+        fun onPlayPauseClicked(
+            audio: Audio,
+            playPause: PlayPause,
+        ) {
+            val parameters = audio.toMap()
+            when (playPause) {
+                PlayPause.PLAY -> tracker.trackEvent(DetailTrackerEvent.ClickPlay(parameters))
+                PlayPause.PAUSE -> tracker.trackEvent(DetailTrackerEvent.ClickPause(parameters))
+            }
+        }
 
-                        is Episode ->
-                            currentState.copy(
-                                markedAsFavorite = !currentState.markedAsFavorite,
-                            )
+        fun onShareClicked(
+            context: Context,
+            audio: Audio,
+        ) {
+            tracker.trackEvent(DetailTrackerEvent.ClickShare(audio.toMap()))
+            startChooser(
+                context,
+                chooserTitleResId = R.string.share_podcast_content,
+                title = audio.title,
+                url = audio.url,
+            )
+        }
 
-                        else -> currentState
+        fun onFavoriteStatusChanged() {
+            viewModelScope.launch {
+                val currentState = audioState
+                if (currentState != null) {
+                    val newState =
+                        when (currentState) {
+                            is PremiumAudio ->
+                                currentState.copy(
+                                    markedAsFavorite = !currentState.markedAsFavorite,
+                                )
+
+                            is Episode ->
+                                currentState.copy(
+                                    markedAsFavorite = !currentState.markedAsFavorite,
+                                )
+
+                            else -> currentState
+                        }
+
+                    audioState = newState
+                    updateAudioItemFavoriteStateUseCase(newState.id, newState.markedAsFavorite)
+                    if (newState.markedAsFavorite) {
+                        tracker.trackEvent(
+                            DetailTrackerEvent.AddAudioToFavorite(
+                                currentState.toMap(),
+                            ),
+                        )
+                    } else {
+                        tracker.trackEvent(
+                            DetailTrackerEvent.RemoveAudioFromFavorite(
+                                currentState.toMap(),
+                            ),
+                        )
                     }
-
-                audioState = newState
-                updateAudioItemFavoriteStateUseCase(newState.id, newState.markedAsFavorite)
-                if (newState.markedAsFavorite) {
-                    tracker.trackEvent(
-                        DetailTrackerEvent.AddAudioToFavorite(
-                            currentState.toMap(),
-                        ),
-                    )
-                } else {
-                    tracker.trackEvent(
-                        DetailTrackerEvent.RemoveAudioFromFavorite(
-                            currentState.toMap(),
-                        ),
-                    )
                 }
             }
         }
     }
-}

@@ -111,8 +111,7 @@ fun ReorderablePlaylistColumn(
                                         onDragFinish(reorderedPlaylists.updatePositions())
                                     },
                                     interactionSource = interactionSource,
-                                )
-                                .align(Alignment.TopEnd)
+                                ).align(Alignment.TopEnd)
                                 .clearAndSetSemantics { },
                         onClick = {},
                     ) {

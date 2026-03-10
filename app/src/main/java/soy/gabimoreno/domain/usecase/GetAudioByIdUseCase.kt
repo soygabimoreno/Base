@@ -11,29 +11,29 @@ import soy.gabimoreno.domain.util.audioItemTypeDetector
 import javax.inject.Inject
 
 class GetAudioByIdUseCase
-@Inject
-constructor(
-    private val audioCoursesRepository: AudioCoursesRepository,
-    private val podcastRepository: PodcastRepository,
-    private val seniorRepository: SeniorRepository,
-    private val premiumAudiosRepository: PremiumAudiosRepository,
-) {
-    suspend operator fun invoke(audioId: String): Either<Throwable, Audio> =
-        when (audioItemTypeDetector(audioId)) {
-            AudioItemType.AUDIO_COURSE -> {
-                audioCoursesRepository.getAudioCourseItemById(audioId)
-            }
+    @Inject
+    constructor(
+        private val audioCoursesRepository: AudioCoursesRepository,
+        private val podcastRepository: PodcastRepository,
+        private val seniorRepository: SeniorRepository,
+        private val premiumAudiosRepository: PremiumAudiosRepository,
+    ) {
+        suspend operator fun invoke(audioId: String): Either<Throwable, Audio> =
+            when (audioItemTypeDetector(audioId)) {
+                AudioItemType.AUDIO_COURSE -> {
+                    audioCoursesRepository.getAudioCourseItemById(audioId)
+                }
 
-            AudioItemType.PREMIUM_AUDIO -> {
-                premiumAudiosRepository.getPremiumAudioById(audioId)
-            }
+                AudioItemType.PREMIUM_AUDIO -> {
+                    premiumAudiosRepository.getPremiumAudioById(audioId)
+                }
 
-            AudioItemType.PODCAST -> {
-                podcastRepository.getPodcastById(audioId)
-            }
+                AudioItemType.PODCAST -> {
+                    podcastRepository.getPodcastById(audioId)
+                }
 
-            AudioItemType.SENIOR -> {
-                seniorRepository.getPodcastById(audioId)
+                AudioItemType.SENIOR -> {
+                    seniorRepository.getPodcastById(audioId)
+                }
             }
-        }
-}
+    }

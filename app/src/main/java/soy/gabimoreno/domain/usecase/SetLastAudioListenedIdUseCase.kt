@@ -5,10 +5,10 @@ import soy.gabimoreno.framework.datastore.setDataStoreLastAudioListenedId
 import javax.inject.Inject
 
 class SetLastAudioListenedIdUseCase
-@Inject
-constructor(
-    private val context: Context,
-) {
-    suspend operator fun invoke(audioId: String) =
-        context.setDataStoreLastAudioListenedId(audioId)
-}
+    @Inject
+    constructor(
+        private val context: Context,
+    ) {
+        suspend operator fun invoke(audioId: String) =
+            context.setDataStoreLastAudioListenedId(audioId)
+    }

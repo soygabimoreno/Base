@@ -7,13 +7,13 @@ import soy.gabimoreno.framework.datastore.getEmail
 import javax.inject.Inject
 
 class SetAllPremiumAudiosAsUnlistenedUseCase
-@Inject
-constructor(
-    private val context: Context,
-    private val premiumAudiosRepository: PremiumAudiosRepository,
-) {
-    suspend operator fun invoke() {
-        val email = context.getEmail().first()
-        premiumAudiosRepository.markAllPremiumAudiosAsUnlistened(email = email)
+    @Inject
+    constructor(
+        private val context: Context,
+        private val premiumAudiosRepository: PremiumAudiosRepository,
+    ) {
+        suspend operator fun invoke() {
+            val email = context.getEmail().first()
+            premiumAudiosRepository.markAllPremiumAudiosAsUnlistened(email = email)
+        }
     }
-}

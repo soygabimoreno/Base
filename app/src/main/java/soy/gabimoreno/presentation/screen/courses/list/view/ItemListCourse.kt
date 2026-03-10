@@ -64,8 +64,7 @@ fun ItemListCourse(
                                     ),
                             ),
                         shape = RoundedCornerShape(Spacing.s16),
-                    )
-                    .border(1.dp, Orange, RoundedCornerShape(Spacing.s16))
+                    ).border(1.dp, Orange, RoundedCornerShape(Spacing.s16))
                     .clickable { onItemClick(audioCourse.id) },
         ) {
             ItemImage(audioCourse.thumbnailUrl)

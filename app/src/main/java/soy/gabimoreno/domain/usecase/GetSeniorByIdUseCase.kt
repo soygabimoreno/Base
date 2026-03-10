@@ -6,10 +6,10 @@ import soy.gabimoreno.domain.repository.senior.SeniorRepository
 import javax.inject.Inject
 
 class GetSeniorByIdUseCase
-@Inject
-constructor(
-    private val seniorRepository: SeniorRepository,
-) {
-    suspend operator fun invoke(podcastId: String): Either<Throwable, Episode> =
-        seniorRepository.getPodcastById(podcastId)
-}
+    @Inject
+    constructor(
+        private val seniorRepository: SeniorRepository,
+    ) {
+        suspend operator fun invoke(podcastId: String): Either<Throwable, Episode> =
+            seniorRepository.getPodcastById(podcastId)
+    }

@@ -47,309 +47,309 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel
-@Inject
-constructor(
-    private val checkShouldIShowInAppReviewUseCase: CheckShouldIShowInAppReviewUseCase,
-    private val getAudioByIdUseCase: GetAudioByIdUseCase,
-    private val getLastAudioListenedIdUseCase: GetLastAudioListenedIdUseCase,
-    private val markAudioCourseAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
-    private val markPodcastAsListenedUseCase: MarkPodcastAsListenedUseCase,
-    private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
-    private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
-    private val setLastAudioListenedIdUseCase: SetLastAudioListenedIdUseCase,
-    private val tracker: Tracker,
-    @param:IO private val dispatcher: CoroutineDispatcher,
-) : ViewModel() {
-    private val playbackState = mediaPlayerServiceConnection.playbackState
+    @Inject
+    constructor(
+        private val checkShouldIShowInAppReviewUseCase: CheckShouldIShowInAppReviewUseCase,
+        private val getAudioByIdUseCase: GetAudioByIdUseCase,
+        private val getLastAudioListenedIdUseCase: GetLastAudioListenedIdUseCase,
+        private val markAudioCourseAsListenedUseCase: MarkAudioCourseItemAsListenedUseCase,
+        private val markPodcastAsListenedUseCase: MarkPodcastAsListenedUseCase,
+        private val markPremiumAudioAsListenedUseCase: MarkPremiumAudioAsListenedUseCase,
+        private val mediaPlayerServiceConnection: MediaPlayerServiceConnection,
+        private val setLastAudioListenedIdUseCase: SetLastAudioListenedIdUseCase,
+        private val tracker: Tracker,
+        @param:IO private val dispatcher: CoroutineDispatcher,
+    ) : ViewModel() {
+        private val playbackState = mediaPlayerServiceConnection.playbackState
 
-    val currentPlayingAudio = mediaPlayerServiceConnection.currentPlayingAudio
+        val currentPlayingAudio = mediaPlayerServiceConnection.currentPlayingAudio
 
-    var showPlayerFullScreen by mutableStateOf(false)
+        var showPlayerFullScreen by mutableStateOf(false)
 
-    private var currentPlaybackPosition by mutableLongStateOf(0L)
+        private var currentPlaybackPosition by mutableLongStateOf(0L)
 
-    internal var hasTriggeredEightyPercent by mutableStateOf(false)
+        internal var hasTriggeredEightyPercent by mutableStateOf(false)
 
-    internal var lastAudioIdListened by mutableStateOf("")
+        internal var lastAudioIdListened by mutableStateOf("")
 
-    internal var shouldIShowSpeedControls by mutableStateOf(false)
-        private set
+        internal var shouldIShowSpeedControls by mutableStateOf(false)
+            private set
 
-    internal var selectedPlaybackSpeed by mutableStateOf(PlaybackSpeed.SPEED_1X)
-        private set
+        internal var selectedPlaybackSpeed by mutableStateOf(PlaybackSpeed.SPEED_1X)
+            private set
 
-    val podcastIsPlaying: Boolean
-        get() = playbackState.value?.isPlaying == true
+        val podcastIsPlaying: Boolean
+            get() = playbackState.value?.isPlaying == true
 
-    val currentAudioProgress: Float
-        get() {
-            if (currentAudioDuration > 0) {
-                return currentPlaybackPosition.toFloat() / currentAudioDuration
+        val currentAudioProgress: Float
+            get() {
+                if (currentAudioDuration > 0) {
+                    return currentPlaybackPosition.toFloat() / currentAudioDuration
+                }
+                return 0f
             }
-            return 0f
-        }
 
-    init {
-        viewModelScope.launch(dispatcher) {
-            val lastAudioListenedId = getLastAudioListenedIdUseCase()
-            if (lastAudioListenedId.isNotEmpty() ||
-                lastAudioListenedId != DEFAULT_LAST_AUDIO_LISTENED_ID
-            ) {
-                viewModelScope.launch(dispatcher) {
-                    getAudioByIdUseCase(lastAudioListenedId).onRight { audio ->
-                        currentPlayingAudio.value = audio
+        init {
+            viewModelScope.launch(dispatcher) {
+                val lastAudioListenedId = getLastAudioListenedIdUseCase()
+                if (lastAudioListenedId.isNotEmpty() ||
+                    lastAudioListenedId != DEFAULT_LAST_AUDIO_LISTENED_ID
+                ) {
+                    viewModelScope.launch(dispatcher) {
+                        getAudioByIdUseCase(lastAudioListenedId).onRight { audio ->
+                            currentPlayingAudio.value = audio
+                        }
+                    }
+                }
+            }
+            var previousAudioId: String? = null
+            snapshotFlow { currentPlayingAudio.value?.id }
+                .distinctUntilChanged()
+                .onEach { newId ->
+                    if (previousAudioId != newId && newId != null) {
+                        setLastAudioListenedIdUseCase(newId)
+                        hasTriggeredEightyPercent = false
+                        previousAudioId = newId
+                    }
+                }.launchIn(viewModelScope)
+            viewModelScope.launch(dispatcher) {
+                mediaPlayerServiceConnection.progressFlow.collect { progress ->
+                    if (progress >= SET_AUDIO_AS_LISTENED) {
+                        markAudioAsListened(currentPlayingAudio.value?.id.orEmpty())
                     }
                 }
             }
         }
-        var previousAudioId: String? = null
-        snapshotFlow { currentPlayingAudio.value?.id }
-            .distinctUntilChanged()
-            .onEach { newId ->
-                if (previousAudioId != newId && newId != null) {
-                    setLastAudioListenedIdUseCase(newId)
-                    hasTriggeredEightyPercent = false
-                    previousAudioId = newId
-                }
-            }.launchIn(viewModelScope)
-        viewModelScope.launch(dispatcher) {
-            mediaPlayerServiceConnection.progressFlow.collect { progress ->
-                if (progress >= SET_AUDIO_AS_LISTENED) {
-                    markAudioAsListened(currentPlayingAudio.value?.id.orEmpty())
-                }
-            }
+
+        fun getCurrentPlaybackFormattedPosition(): String {
+            KLog.d(
+                "currentPlaybackPosition: $currentPlaybackPosition, ${
+                    formatLong(
+                        currentPlaybackPosition,
+                    )
+                }",
+            )
+            return formatLong(currentPlaybackPosition)
         }
-    }
 
-    fun getCurrentPlaybackFormattedPosition(): String {
-        KLog.d(
-            "currentPlaybackPosition: $currentPlaybackPosition, ${
-                formatLong(
-                    currentPlaybackPosition,
-                )
-            }",
-        )
-        return formatLong(currentPlaybackPosition)
-    }
+        val currentAudioFormattedDuration: String
+            get() =
+                run {
+                    KLog.d(
+                        "currentAudioDuration: $currentAudioDuration, ${
+                            formatLong(
+                                currentAudioDuration,
+                            )
+                        }",
+                    )
+                    formatLong(currentAudioDuration)
+                }
 
-    val currentAudioFormattedDuration: String
-        get() =
-            run {
-                KLog.d(
-                    "currentAudioDuration: $currentAudioDuration, ${
-                        formatLong(
-                            currentAudioDuration,
-                        )
-                    }",
-                )
-                formatLong(currentAudioDuration)
-            }
+        private val currentAudioDuration: Long
+            get() = MediaPlayerService.currentDuration
 
-    private val currentAudioDuration: Long
-        get() = MediaPlayerService.currentDuration
+        override fun onCleared() {
+            super.onCleared()
+            mediaPlayerServiceConnection.unsubscribe(
+                MEDIA_ROOT_ID,
+                object : MediaBrowserCompat.SubscriptionCallback() {},
+            )
+        }
 
-    override fun onCleared() {
-        super.onCleared()
-        mediaPlayerServiceConnection.unsubscribe(
-            MEDIA_ROOT_ID,
-            object : MediaBrowserCompat.SubscriptionCallback() {},
-        )
-    }
+        fun onViewScreen(audio: Audio) {
+            tracker.trackEvent(
+                PlayerTrackerEvent.ViewScreen(audio.toMap()),
+            )
+        }
 
-    fun onViewScreen(audio: Audio) {
-        tracker.trackEvent(
-            PlayerTrackerEvent.ViewScreen(audio.toMap()),
-        )
-    }
-
-    fun playPauseAudio(
-        audios: List<Audio>,
-        currentAudio: Audio,
-    ) {
-        mediaPlayerServiceConnection.playAudios(audios)
-        if (currentAudio.id == currentPlayingAudio.value?.id) {
-            if (podcastIsPlaying) {
-                onPause()
+        fun playPauseAudio(
+            audios: List<Audio>,
+            currentAudio: Audio,
+        ) {
+            mediaPlayerServiceConnection.playAudios(audios)
+            if (currentAudio.id == currentPlayingAudio.value?.id) {
+                if (podcastIsPlaying) {
+                    onPause()
+                } else {
+                    onPlay()
+                }
             } else {
-                onPlay()
+                onPlayFromMediaId(currentAudio)
             }
-        } else {
-            onPlayFromMediaId(currentAudio)
         }
-    }
 
-    fun togglePlaybackState() {
-        when {
-            playbackState.value?.isPlaying == true -> onPause()
-            playbackState.value?.isPlayEnabled == true -> onPlay()
+        fun togglePlaybackState() {
+            when {
+                playbackState.value?.isPlaying == true -> onPause()
+                playbackState.value?.isPlayEnabled == true -> onPlay()
+            }
         }
-    }
 
-    fun onPlayPauseClickedFromPlayer(
-        audio: Audio,
-        playPause: PlayPause,
-    ) {
-        val parameters = audio.toMap()
-        when (playPause) {
-            PlayPause.PLAY ->
-                tracker.trackEvent(
-                    PlayerTrackerEvent.ClickPlayFromPlayer(parameters),
-                )
-
-            PlayPause.PAUSE ->
-                tracker.trackEvent(
-                    PlayerTrackerEvent.ClickPauseFromPlayer(parameters),
-                )
-        }
-    }
-
-    fun onPlayPauseClickedFromAudioBottomBar(
-        audio: Audio,
-        playPause: PlayPause,
-    ) {
-        val parameters = audio.toMap()
-        when (playPause) {
-            PlayPause.PLAY ->
-                tracker.trackEvent(
-                    PlayerTrackerEvent.ClickPlayFromAudioBottomBar(
-                        parameters,
-                    ),
-                )
-
-            PlayPause.PAUSE ->
-                tracker.trackEvent(
-                    PlayerTrackerEvent.ClickPauseFromAudioBottomBar(
-                        parameters,
-                    ),
-                )
-        }
-    }
-
-    fun onAudioBottomBarSwiped() {
-        tracker.trackEvent(PlayerTrackerEvent.Stop(getParameters()))
-    }
-
-    fun stopPlayback() {
-        mediaPlayerServiceConnection.transportControls.stop()
-    }
-
-    fun onRewindClicked() {
-        mediaPlayerServiceConnection.rewind()
-    }
-
-    fun onForwardClicked() {
-        mediaPlayerServiceConnection.fastForward()
-    }
-
-    fun onSkipToPrevious() {
-        mediaPlayerServiceConnection.skipToPrevious()
-    }
-
-    fun onSkipToNext() {
-        mediaPlayerServiceConnection.skipToNext()
-    }
-
-    fun onSpeedControlClicked() {
-        shouldIShowSpeedControls = !shouldIShowSpeedControls
-    }
-
-    fun onSetPlaybackSpeed(speed: PlaybackSpeed) {
-        selectedPlaybackSpeed = speed
-        mediaPlayerServiceConnection.setPlaybackSpeed(speed.speed)
-        onSpeedControlClicked()
-    }
-
-    /**
-     * @param value from 0.0 to 1.0
-     */
-    fun onSliderChangeFinished(value: Float) {
-        val playbackPosition = (currentAudioDuration * value).toLong()
-        val parameters =
-            getParameters() +
-                mapOf(
-                    TRACKER_KEY_AUDIO_PLAYBACK_POSITION to formatLong(playbackPosition),
-                )
-        tracker.trackEvent(PlayerTrackerEvent.SeekTo(parameters))
-        mediaPlayerServiceConnection.transportControls.seekTo(playbackPosition)
-    }
-
-    suspend fun updateCurrentPlaybackPosition() {
-        val currentPosition = playbackState.value?.currentPosition
-        if (currentPosition != null && currentPosition != currentPlaybackPosition) {
-            currentPlaybackPosition = currentPosition
-        }
-        delay(PLAYBACK_POSITION_UPDATE_INTERVAL)
-        updateCurrentPlaybackPosition()
-    }
-
-    private fun markAudioAsListened(audioId: String) {
-        if (hasTriggeredEightyPercent || lastAudioIdListened == audioId) return
-
-        tracker.trackEvent(
-            PlayerTrackerEvent.AudioListened(getParameters()),
-        )
-        hasTriggeredEightyPercent = true
-        lastAudioIdListened = audioId
-
-        viewModelScope.launch(dispatcher) {
-            checkShouldIShowInAppReviewUseCase()
-            when (audioItemTypeDetector(audioId)) {
-                AudioItemType.AUDIO_COURSE -> {
-                    markAudioCourseAsListenedUseCase(
-                        idAudioCourseItem = audioId,
-                        hasBeenListened = true,
+        fun onPlayPauseClickedFromPlayer(
+            audio: Audio,
+            playPause: PlayPause,
+        ) {
+            val parameters = audio.toMap()
+            when (playPause) {
+                PlayPause.PLAY ->
+                    tracker.trackEvent(
+                        PlayerTrackerEvent.ClickPlayFromPlayer(parameters),
                     )
-                }
 
-                AudioItemType.PREMIUM_AUDIO -> {
-                    markPremiumAudioAsListenedUseCase(
-                        premiumAudioId = audioId,
-                        hasBeenListened = true,
+                PlayPause.PAUSE ->
+                    tracker.trackEvent(
+                        PlayerTrackerEvent.ClickPauseFromPlayer(parameters),
                     )
-                }
+            }
+        }
 
-                AudioItemType.PODCAST -> {
-                    markPodcastAsListenedUseCase(
-                        podcastId = audioId,
-                        hasBeenListened = true,
+        fun onPlayPauseClickedFromAudioBottomBar(
+            audio: Audio,
+            playPause: PlayPause,
+        ) {
+            val parameters = audio.toMap()
+            when (playPause) {
+                PlayPause.PLAY ->
+                    tracker.trackEvent(
+                        PlayerTrackerEvent.ClickPlayFromAudioBottomBar(
+                            parameters,
+                        ),
                     )
-                }
 
-                AudioItemType.SENIOR -> {
-                    // Do nothing (at least for now)
+                PlayPause.PAUSE ->
+                    tracker.trackEvent(
+                        PlayerTrackerEvent.ClickPauseFromAudioBottomBar(
+                            parameters,
+                        ),
+                    )
+            }
+        }
+
+        fun onAudioBottomBarSwiped() {
+            tracker.trackEvent(PlayerTrackerEvent.Stop(getParameters()))
+        }
+
+        fun stopPlayback() {
+            mediaPlayerServiceConnection.transportControls.stop()
+        }
+
+        fun onRewindClicked() {
+            mediaPlayerServiceConnection.rewind()
+        }
+
+        fun onForwardClicked() {
+            mediaPlayerServiceConnection.fastForward()
+        }
+
+        fun onSkipToPrevious() {
+            mediaPlayerServiceConnection.skipToPrevious()
+        }
+
+        fun onSkipToNext() {
+            mediaPlayerServiceConnection.skipToNext()
+        }
+
+        fun onSpeedControlClicked() {
+            shouldIShowSpeedControls = !shouldIShowSpeedControls
+        }
+
+        fun onSetPlaybackSpeed(speed: PlaybackSpeed) {
+            selectedPlaybackSpeed = speed
+            mediaPlayerServiceConnection.setPlaybackSpeed(speed.speed)
+            onSpeedControlClicked()
+        }
+
+        /**
+         * @param value from 0.0 to 1.0
+         */
+        fun onSliderChangeFinished(value: Float) {
+            val playbackPosition = (currentAudioDuration * value).toLong()
+            val parameters =
+                getParameters() +
+                    mapOf(
+                        TRACKER_KEY_AUDIO_PLAYBACK_POSITION to formatLong(playbackPosition),
+                    )
+            tracker.trackEvent(PlayerTrackerEvent.SeekTo(parameters))
+            mediaPlayerServiceConnection.transportControls.seekTo(playbackPosition)
+        }
+
+        suspend fun updateCurrentPlaybackPosition() {
+            val currentPosition = playbackState.value?.currentPosition
+            if (currentPosition != null && currentPosition != currentPlaybackPosition) {
+                currentPlaybackPosition = currentPosition
+            }
+            delay(PLAYBACK_POSITION_UPDATE_INTERVAL)
+            updateCurrentPlaybackPosition()
+        }
+
+        private fun markAudioAsListened(audioId: String) {
+            if (hasTriggeredEightyPercent || lastAudioIdListened == audioId) return
+
+            tracker.trackEvent(
+                PlayerTrackerEvent.AudioListened(getParameters()),
+            )
+            hasTriggeredEightyPercent = true
+            lastAudioIdListened = audioId
+
+            viewModelScope.launch(dispatcher) {
+                checkShouldIShowInAppReviewUseCase()
+                when (audioItemTypeDetector(audioId)) {
+                    AudioItemType.AUDIO_COURSE -> {
+                        markAudioCourseAsListenedUseCase(
+                            idAudioCourseItem = audioId,
+                            hasBeenListened = true,
+                        )
+                    }
+
+                    AudioItemType.PREMIUM_AUDIO -> {
+                        markPremiumAudioAsListenedUseCase(
+                            premiumAudioId = audioId,
+                            hasBeenListened = true,
+                        )
+                    }
+
+                    AudioItemType.PODCAST -> {
+                        markPodcastAsListenedUseCase(
+                            podcastId = audioId,
+                            hasBeenListened = true,
+                        )
+                    }
+
+                    AudioItemType.SENIOR -> {
+                        // Do nothing (at least for now)
+                    }
                 }
             }
         }
-    }
 
-    private fun formatLong(value: Long): String {
-        val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-        dateFormat.timeZone = TimeZone.getTimeZone("GMT+0")
-        return dateFormat.format(value)
-    }
+        private fun formatLong(value: Long): String {
+            val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+            dateFormat.timeZone = TimeZone.getTimeZone("GMT+0")
+            return dateFormat.format(value)
+        }
 
-    private fun onPlay() {
-        tracker.trackEvent(PlayerTrackerEvent.Play(getParameters()))
-        mediaPlayerServiceConnection.transportControls.play()
-    }
+        private fun onPlay() {
+            tracker.trackEvent(PlayerTrackerEvent.Play(getParameters()))
+            mediaPlayerServiceConnection.transportControls.play()
+        }
 
-    private fun onPause() {
-        mediaPlayerServiceConnection.transportControls.pause()
-    }
+        private fun onPause() {
+            mediaPlayerServiceConnection.transportControls.pause()
+        }
 
-    private fun onPlayFromMediaId(currentAudio: Audio) {
-        val parameters = currentAudio.toMap()
-        tracker.trackEvent(
-            PlayerTrackerEvent.PlayFromMediaId(parameters),
-        )
-        mediaPlayerServiceConnection
-            .transportControls
-            .playFromMediaId(currentAudio.id, null)
-    }
+        private fun onPlayFromMediaId(currentAudio: Audio) {
+            val parameters = currentAudio.toMap()
+            tracker.trackEvent(
+                PlayerTrackerEvent.PlayFromMediaId(parameters),
+            )
+            mediaPlayerServiceConnection
+                .transportControls
+                .playFromMediaId(currentAudio.id, null)
+        }
 
-    private fun getParameters(): Map<String, String> =
-        currentPlayingAudio.value?.toMap() ?: mapOf()
-}
+        private fun getParameters(): Map<String, String> =
+            currentPlayingAudio.value?.toMap() ?: mapOf()
+    }
 
 private const val DEFAULT_LAST_AUDIO_LISTENED_ID = "0"
 private const val PLAYBACK_POSITION_UPDATE_INTERVAL = 1_000L
