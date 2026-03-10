@@ -1,6 +1,6 @@
 # Los ANDROIDES
 
-App for listening audios.
+App for listening Android Development audios.
 
 Download it from [Google Play](https://gabimoreno.soy/app).
 
