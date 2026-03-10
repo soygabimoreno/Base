@@ -190,7 +190,7 @@ private fun parseTimeFormatDuration(duration: String): Int {
 private val rssDateFormat =
     SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US)
 
-internal const val LOS_ANDROIDES = "Los androides"
+internal const val LOS_ANDROIDES = "Los ANDROIDES"
 internal const val ANCHOR_MESSAGE =
     "\n\n" +
         "--- \n" +

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Los androides</string>
+    <string name="app_name">ANDROIDES</string>
 
     <string name="nav_item_senior">Senior</string>
     <string name="nav_item_podcast">Podcast</string>
@@ -7,7 +7,7 @@
     <string name="nav_item_courses">Audiocursos</string>
     <string name="nav_item_profile">Perfil</string>
 
-    <string name="playback_notification_channel_name">Los androides</string>
+    <string name="playback_notification_channel_name">Los ANDROIDES</string>
     <string name="playback_notification_channel_description">Te ayudo a CRECER en tu carrera profesional como DESARROLLADOR ANDROID. 💪🏼</string>
 
     <string name="unexpected_error">Ha sucedido un error. Please, inténtalo de nuevo más tarde</string>
@@ -36,7 +36,7 @@
     <string name="premium_logout">Salir</string>
     <string name="premium_email">Email</string>
     <string name="premium_password">Password</string>
-    <string name="non_premium_image_cd">Logotipo comunidad Los Androides Premium</string>
+    <string name="non_premium_image_cd">Logotipo comunidad Los ANDROIDES Premium</string>
     <string name="non_premium_title">Consigue un mejor trabajo como </string>
     <string name="non_premium_title_span">Android Developer</string>
     <string name="non_premium_text">Si ya eres miembro, accede a los audios premium logueándote desde el perfil.</string>
