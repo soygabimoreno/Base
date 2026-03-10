@@ -34,17 +34,18 @@ class DefaultRemoteSeniorDatasource(
             }
         }
 
-    private suspend fun parseFeedSafely(
-        podcastUrl: PodcastUrl,
-    ): RssChannel =
-        okHttpClient.newCall(
-            Request.Builder()
-                .url(podcastUrl)
-                .build(),
-        ).execute().use { response ->
-            val xml = requireNotNull(response.body).string().sanitizeFeedXml()
-            rssParser.parse(xml)
-        }
+    private suspend fun parseFeedSafely(podcastUrl: PodcastUrl): RssChannel =
+        okHttpClient
+            .newCall(
+                Request
+                    .Builder()
+                    .url(podcastUrl)
+                    .build(),
+            ).execute()
+            .use { response ->
+                val xml = requireNotNull(response.body).string().sanitizeFeedXml()
+                rssParser.parse(xml)
+            }
 }
 
 private fun String.sanitizeFeedXml(): String =

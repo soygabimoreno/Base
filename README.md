@@ -7,17 +7,19 @@ Download it from [Google Play](https://gabimoreno.soy/app).
 ### Stack
 It's using:
 
-- MVVM with coroutines
+- MVVM
 - Clean Architecture
+- Coroutines
 - Jetpack Compose
 - Firebase
 - Hilt
+- KSP
 - Arrow
 - Retrofit
 - Moshi
 - ExoPlayer
 - Glide
-- Datastore
+- DataStore
 - MockK
 - Kluent
 - MockWebServer

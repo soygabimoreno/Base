@@ -27,8 +27,8 @@ constructor(
     private val remotePodcastRepository: PodcastDatasource,
     @param:IOScope private val scope: CoroutineScope,
 ) : PodcastRepository {
-    override fun getEpisodesStream(email: String): Either<Throwable, Flow<List<Episode>>> {
-        return when (val remoteResult = remotePodcastRepository.getEpisodesStream(podcastUrl)) {
+    override fun getEpisodesStream(email: String): Either<Throwable, Flow<List<Episode>>> =
+        when (val remoteResult = remotePodcastRepository.getEpisodesStream(podcastUrl)) {
             is Either.Left -> Either.Right(localPodcastDatasource.getPodcasts())
             is Either.Right -> {
                 remoteResult.value
@@ -45,7 +45,6 @@ constructor(
                 Either.Right(localPodcastDatasource.getPodcasts())
             }
         }
-    }
 
     override suspend fun getPodcastById(podcastId: String): Either<Throwable, Episode> =
         localPodcastDatasource.getPodcastById(podcastId).let { podcast ->

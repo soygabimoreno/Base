@@ -25,9 +25,11 @@ constructor(
     private val remoteConfigProvider: RemoteConfigProvider,
     @param:IOScope private val scope: CoroutineScope,
 ) : SeniorRepository {
-    override fun getEpisodesStream(email: String): Either<Throwable, Flow<List<Episode>>> {
-        return when (val remoteResult =
-            remoteSeniorDataSource.getEpisodesStream(remoteConfigProvider.getSeniorRssUrl())) {
+    override fun getEpisodesStream(email: String): Either<Throwable, Flow<List<Episode>>> =
+        when (
+            val remoteResult =
+                remoteSeniorDataSource.getEpisodesStream(remoteConfigProvider.getSeniorRssUrl())
+        ) {
             is Either.Left -> Either.Right(localSeniorDataSource.getPodcasts())
             is Either.Right -> {
                 remoteResult.value
@@ -38,7 +40,6 @@ constructor(
                 Either.Right(localSeniorDataSource.getPodcasts())
             }
         }
-    }
 
     override suspend fun getPodcastById(podcastId: String): Either<Throwable, Episode> =
         localSeniorDataSource.getPodcastById(podcastId).let { podcast ->

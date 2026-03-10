@@ -52,9 +52,7 @@ object TestRemoteDataModule {
         retrofit.create(PostService::class.java)
 
     @Provides
-    fun provideRSSParser(
-        okHttpClient: OkHttpClient,
-    ): RssParser =
+    fun provideRSSParser(okHttpClient: OkHttpClient): RssParser =
         RssParserBuilder(
             callFactory = okHttpClient,
         ).build()
