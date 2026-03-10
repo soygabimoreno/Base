@@ -31,6 +31,7 @@ import soy.gabimoreno.domain.usecase.GetAudioCourseItemByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPlaylistByPlaylistItemIdUseCase
 import soy.gabimoreno.domain.usecase.GetPodcastByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPremiumAudioByIdUseCase
+import soy.gabimoreno.domain.usecase.GetSeniorByIdUseCase
 import soy.gabimoreno.domain.usecase.SetPlaylistItemsUseCase
 import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildPlaylist
@@ -42,6 +43,7 @@ class PlaylistAudioItemViewModelTest {
     private val getAudioCourseItemByIdUseCase = mockk<GetAudioCourseItemByIdUseCase>()
     private val getPlaylistByPlaylistItemIdUseCase = mockk<GetPlaylistByPlaylistItemIdUseCase>()
     private val getPodcastByIdUseCase = mockk<GetPodcastByIdUseCase>()
+    private val getSeniorByIdUseCase: GetSeniorByIdUseCase = mockk()
     private val getPremiumAudioByIdUseCase = mockk<GetPremiumAudioByIdUseCase>()
     private val setPlaylistItemsUseCase = mockk<SetPlaylistItemsUseCase>()
     private val tracker: Tracker = relaxedMockk()
@@ -59,6 +61,7 @@ class PlaylistAudioItemViewModelTest {
                 getAudioCourseItemByIdUseCase = getAudioCourseItemByIdUseCase,
                 getPlaylistByPlaylistItemIdUseCase = getPlaylistByPlaylistItemIdUseCase,
                 getPodcastByIdUseCase = getPodcastByIdUseCase,
+                getSeniorByIdUseCase = getSeniorByIdUseCase,
                 getPremiumAudioByIdUseCase = getPremiumAudioByIdUseCase,
                 setPlaylistItemsUseCase = setPlaylistItemsUseCase,
                 tracker = tracker,

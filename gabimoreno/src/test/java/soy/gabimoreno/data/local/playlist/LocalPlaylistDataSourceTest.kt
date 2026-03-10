@@ -36,7 +36,9 @@ import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistWithItems
 import soy.gabimoreno.data.local.podcast.LocalPodcastDataSource
+import soy.gabimoreno.data.local.podcast.LocalSeniorDataSource
 import soy.gabimoreno.data.local.podcast.dao.PodcastDbModelDao
+import soy.gabimoreno.data.local.podcast.dao.SeniorDbModelDao
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
 import soy.gabimoreno.fake.buildPlaylist
@@ -52,11 +54,13 @@ class LocalPlaylistDataSourceTest {
     private val playlistItemDbModelDao: PlaylistItemDbModelDao = relaxedMockk<PlaylistItemDbModelDao>()
     private val playlistTransactionDao: PlaylistTransactionDao = relaxedMockk<PlaylistTransactionDao>()
     private val podcastDbModelDao: PodcastDbModelDao = relaxedMockk<PodcastDbModelDao>()
+    private val seniorDbModelDao: SeniorDbModelDao = relaxedMockk<SeniorDbModelDao>()
     private val premiumAudioDbModelDao: PremiumAudioDbModelDao = relaxedMockk<PremiumAudioDbModelDao>()
 
     private lateinit var audioCoursesDataSource: LocalAudioCoursesDataSource
     private lateinit var playlistDataSource: LocalPlaylistDataSource
     private lateinit var podcastDataSource: LocalPodcastDataSource
+    private lateinit var seniorDataSource: LocalSeniorDataSource
     private lateinit var premiumAudiosDataSource: LocalPremiumAudiosDataSource
 
     private val gabiMorenoDatabase: ApplicationDatabase = createMockedDatabase()
@@ -68,6 +72,7 @@ class LocalPlaylistDataSourceTest {
         audioCoursesDataSource = LocalAudioCoursesDataSource(gabiMorenoDatabase, dispatcher)
         playlistDataSource = LocalPlaylistDataSource(gabiMorenoDatabase, dispatcher)
         podcastDataSource = LocalPodcastDataSource(gabiMorenoDatabase, dispatcher)
+        seniorDataSource = LocalSeniorDataSource(gabiMorenoDatabase, dispatcher)
         premiumAudiosDataSource = LocalPremiumAudiosDataSource(gabiMorenoDatabase, dispatcher)
     }
 
@@ -292,6 +297,7 @@ class LocalPlaylistDataSourceTest {
             every { audioCourseItemDbModelDao() } returns audioCourseItemDbModelDao
             every { audioCourseTransactionDao() } returns audioCourseTransactionDao
             every { podcastDbModelDao() } returns podcastDbModelDao
+            every { seniorDbModelDao() } returns seniorDbModelDao
             every { playlistDbModelDao() } returns playlistDbModelDao
             every { playlistItemDbModelDao() } returns playlistItemDbModelDao
             every { playlistTransactionDao() } returns playlistTransactionDao
