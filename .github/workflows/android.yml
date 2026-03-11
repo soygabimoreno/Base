@@ -10,6 +10,8 @@ concurrency:
   group: android-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+#  TEST
+
 jobs:
   build:
     runs-on: ubuntu-latest
