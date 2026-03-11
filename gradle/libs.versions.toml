@@ -34,7 +34,7 @@ hilt-android = "2.57.2"
 secrets-gradle-plugin = "2.0.1"
 ktlint = "14.1.0"
 
-firebaseBom = "34.3.0"
+firebaseBom = "34.10.0"
 
 junit = "4.13.2"
 kluent-android = "1.73"
