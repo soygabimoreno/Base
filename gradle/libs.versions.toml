@@ -32,7 +32,7 @@ google-services = "4.4.4"
 gson = "2.13.2"
 hilt-android = "2.57.2"
 secrets-gradle-plugin = "2.0.1"
-ktlint = "13.1.0"
+ktlint = "14.1.0"
 
 firebaseBom = "34.3.0"
 
