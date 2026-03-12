@@ -53,12 +53,13 @@ fun PlaylistScreenRoot(
     viewModel: PlaylistViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
     val state by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is PlaylistEvent.Error -> {
-                    context.toast(context.getString(R.string.unexpected_error))
+                    context.toast(unexpectedErrorMessage)
                 }
             }
         }

@@ -56,6 +56,11 @@ fun ProfileScreenRoot(
     onToggleBottomSheet: () -> Unit,
 ) {
     val context = LocalContext.current
+    val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
+    val profileResetSuccessAudioCoursesMessage =
+        stringResource(R.string.profile_reset_success_audio_courses)
+    val profileResetSuccessPodcastMessage = stringResource(R.string.profile_reset_success_podcast)
+    val profileResetSuccessPremiumMessage = stringResource(R.string.unexpected_error)
     val profileViewModel = ViewModelProvider.profileViewModel
     LaunchedEffect(Unit) {
         launch {
@@ -70,19 +75,23 @@ fun ProfileScreenRoot(
             profileViewModel.events.collect { event ->
                 when (event) {
                     is ProfileEvent.Error -> {
-                        context.toast(context.getString(R.string.unexpected_error))
+                        context.toast(unexpectedErrorMessage)
                     }
 
                     is ProfileEvent.ResetSuccess -> {
-                        val message =
-                            when (event.type) {
-                                TypeDialog.AUDIOCOURSES ->
-                                    R.string.profile_reset_success_audiocurses
-
-                                TypeDialog.PODCAST -> R.string.profile_reset_success_podcast
-                                TypeDialog.PREMIUM -> R.string.profile_reset_success_premium
+                        when (event.type) {
+                            TypeDialog.AUDIOCOURSES -> {
+                                context.toast(profileResetSuccessAudioCoursesMessage)
                             }
-                        context.toast(context.getString(message))
+
+                            TypeDialog.PODCAST -> {
+                                context.toast(profileResetSuccessPodcastMessage)
+                            }
+
+                            TypeDialog.PREMIUM -> {
+                                context.toast(profileResetSuccessPremiumMessage)
+                            }
+                        }
                     }
                 }
             }

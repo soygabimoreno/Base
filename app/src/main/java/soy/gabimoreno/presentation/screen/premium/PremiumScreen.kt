@@ -98,6 +98,8 @@ fun PremiumScreenRoot(
     onPlaylistClicked: () -> Unit,
 ) {
     val context = LocalContext.current
+    val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
+    val premiumErrorTokenExpiredMessage = stringResource(R.string.premium_error_token_expired)
     val premiumViewModel = ViewModelProvider.premiumViewModel
     val state by premiumViewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
@@ -115,11 +117,11 @@ fun PremiumScreenRoot(
             premiumViewModel.events.collect { event ->
                 when (event) {
                     is PremiumEvent.Error -> {
-                        context.toast(context.getString(R.string.unexpected_error))
+                        context.toast(unexpectedErrorMessage)
                     }
 
                     PremiumEvent.ShowTokenExpiredError -> {
-                        context.toast(context.getString(R.string.premium_error_token_expired))
+                        context.toast(premiumErrorTokenExpiredMessage)
                     }
 
                     is PremiumEvent.ShowDetail -> {
@@ -134,14 +136,23 @@ fun PremiumScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                is PremiumAction.OnLoginClicked -> onRequireAuth()
-                is PremiumAction.OnPlaylistClicked -> onPlaylistClicked()
-                is PremiumAction.OnAddToPlaylistClicked ->
+                is PremiumAction.OnLoginClicked -> {
+                    onRequireAuth()
+                }
+
+                is PremiumAction.OnPlaylistClicked -> {
+                    onPlaylistClicked()
+                }
+
+                is PremiumAction.OnAddToPlaylistClicked -> {
                     onAddToPlaylistClicked(
                         action.premiumAudioId,
                     )
+                }
 
-                else -> Unit
+                else -> {
+                    Unit
+                }
             }
             premiumViewModel.onAction(action)
         },
@@ -327,7 +338,7 @@ fun PremiumContent(
                 )
             }
 
-            else ->
+            else -> {
                 LazyColumn {
                     items(premiumAudios.itemCount) {
                         premiumAudios[it]?.let { premiumAudio ->
@@ -341,6 +352,7 @@ fun PremiumContent(
                         }
                     }
                 }
+            }
         }
         PullRefreshIndicator(
             refreshing = refreshing,

@@ -48,13 +48,15 @@ fun AudioCoursesListScreenRoot(
     onPlaylistClicked: () -> Unit,
 ) {
     val context = LocalContext.current
+    val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
+    val premiumErrorTokenExpiredMessage = stringResource(R.string.premium_error_token_expired)
     val coursesListViewModel = ViewModelProvider.audioCoursesListViewModel
     val state by coursesListViewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         coursesListViewModel.events.collect { event ->
             when (event) {
                 is AudioCoursesListEvent.Error -> {
-                    context.toast(context.getString(R.string.unexpected_error))
+                    context.toast(unexpectedErrorMessage)
                 }
 
                 is AudioCoursesListEvent.ShowDetail -> {
@@ -62,7 +64,7 @@ fun AudioCoursesListScreenRoot(
                 }
 
                 AudioCoursesListEvent.ShowTokenExpiredError -> {
-                    context.toast(context.getString(R.string.premium_error_token_expired))
+                    context.toast(premiumErrorTokenExpiredMessage)
                 }
             }
         }

@@ -52,16 +52,18 @@ fun PlaylistAudioItemRoot(
     viewModel: PlaylistAudioItemViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
+    val playlistsSuccessMessage = stringResource(R.string.unexpected_error)
     LaunchedEffect(Unit) {
         viewModel.onViewScreen(playlistAudioId)
         viewModel.events.collect { event ->
             when (event) {
                 is PlaylistAudioItemEvent.Error -> {
-                    context.toast(context.getString(R.string.unexpected_error))
+                    context.toast(unexpectedErrorMessage)
                 }
 
                 is PlaylistAudioItemEvent.Success -> {
-                    context.toast(context.getString(R.string.playlists_success_message))
+                    context.toast(playlistsSuccessMessage)
                 }
             }
         }

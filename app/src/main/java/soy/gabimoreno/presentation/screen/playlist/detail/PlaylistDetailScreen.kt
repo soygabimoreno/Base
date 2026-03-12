@@ -63,6 +63,7 @@ fun PlaylistDetailScreenRoot(
     viewModel: PlaylistDetailViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
     val playerViewModel = ViewModelProvider.playerViewModel
     LaunchedEffect(Unit) {
         viewModel.onScreenView(playlistId.toInt())
@@ -71,7 +72,7 @@ fun PlaylistDetailScreenRoot(
         viewModel.events.collect { event ->
             when (event) {
                 is PlaylistDetailEvent.Error -> {
-                    context.toast(context.getString(R.string.unexpected_error))
+                    context.toast(unexpectedErrorMessage)
                 }
 
                 PlaylistDetailEvent.PlayAudio -> {

@@ -64,7 +64,7 @@
     <string name="profile_reset_podcast">Resetear podcast escuchados</string>
     <string name="profile_reset_premium">Resetear audios premium escuchados</string>
     <string name="profile_reset_success_premium">Reseteados audios premium escuchados.</string>
-    <string name="profile_reset_success_audiocurses">Reseteados audios cursos escuchados.</string>
+    <string name="profile_reset_success_audio_courses">Reseteados audios cursos escuchados.</string>
     <string name="profile_reset_success_podcast">Reseteados podcast escuchados.</string>
     <string name="profile_reset_dialog_title">¿Estás seguro?</string>
     <string name="profile_reset_dialog_text">Se resetearan todos las marcas de los audios escuchados.</string>
