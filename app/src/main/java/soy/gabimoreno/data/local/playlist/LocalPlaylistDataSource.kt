@@ -252,10 +252,9 @@ class LocalPlaylistDataSource
                                                 .substringBefore(AUDIO_COURSE_DELIMITER),
                                         ]
                                     val courseItem = resources.audioCourseItems[item.audioItemId]
-                                    if (audioCourse == null ||
-                                        courseItem == null
-                                    )
+                                    if (audioCourse == null || courseItem == null) {
                                         return@mapNotNull null
+                                    }
                                     courseItem
                                         .toPlaylistAudioItem(audioCourse, position)
                                 }
