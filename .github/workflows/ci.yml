@@ -13,6 +13,7 @@ concurrency:
 jobs:
   lint:
     uses: ./.github/workflows/lint.yml
+    secrets: inherit
 
   build:
     uses: ./.github/workflows/build.yml
@@ -21,5 +22,5 @@ jobs:
 
   test:
     uses: ./.github/workflows/test.yml
-    needs: lint
+    needs: build
     secrets: inherit
