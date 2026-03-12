@@ -7,6 +7,12 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        tool:
+          - ktlintCheck
+          - detekt
 
     steps:
       - name: Checkout
@@ -14,10 +20,13 @@ jobs:
 
       - name: Android setup
         uses: ./.github/actions/android-setup
+        with:
+          needs-secrets: "true"
+        env:
+          CLARITY_PROJECT_ID: ${{ secrets.CLARITY_PROJECT_ID }}
+          MASTER_KEY: ${{ secrets.MASTER_KEY }}
+          GOOGLE_SERVICES_JSON_BASE_64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE_64 }}
 
-      - name: Run ktlintCheck
-        run: ./gradlew ktlintCheck
-
-      - name: Run Detekt
-        run: ./gradlew detekt
+      - name: Run ${{ matrix.tool }}
+        run: ./gradlew ${{ matrix.tool }}
 
