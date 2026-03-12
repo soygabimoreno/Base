@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Android setup
+        uses: ./.github/actions/android-setup
+        with:
+          needs-secrets: "true"
+        env:
+          CLARITY_PROJECT_ID: ${{ secrets.CLARITY_PROJECT_ID }}
+          MASTER_KEY: ${{ secrets.MASTER_KEY }}
+          GOOGLE_SERVICES_JSON_BASE_64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE_64 }}
+
+      - name: Assemble DEBUG APK
+        run: ./gradlew assembleDebug
+

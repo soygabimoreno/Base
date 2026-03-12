@@ -1,0 +1,25 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint.yml
+
+  build:
+    uses: ./.github/workflows/build.yml
+    needs: lint
+    secrets: inherit
+
+  test:
+    uses: ./.github/workflows/test.yml
+    needs: lint
+    secrets: inherit

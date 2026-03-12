@@ -1,0 +1,44 @@
+name: Android setup
+description: Common Android CI setup
+
+inputs:
+  needs-secrets:
+    description: Whether Android secrets files should be created
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - name: Setup JDK 21
+      uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: "21"
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
+
+    - name: Create local.properties
+      shell: bash
+      run: |
+        printf 'sdk.dir=/usr/local/lib/android/sdk\n' > ./local.properties
+
+    - name: Add Android secrets to local.properties
+      if: ${{ inputs.needs-secrets == 'true' }}
+      shell: bash
+      run: |
+        printf 'CLARITY_PROJECT_ID=%s\n' "${CLARITY_PROJECT_ID}" >> ./local.properties
+        printf 'MASTER_KEY=%s\n' "${MASTER_KEY}" >> ./local.properties
+
+    - name: Decode google-services.json
+      if: ${{ inputs.needs-secrets == 'true' }}
+      shell: bash
+      run: |
+        printf '%s' "${GOOGLE_SERVICES_JSON_BASE_64}" \
+          | base64 --decode > ./app/google-services.json
+
+    - name: Grant execute permission for gradlew
+      shell: bash
+      run: chmod +x gradlew
+
