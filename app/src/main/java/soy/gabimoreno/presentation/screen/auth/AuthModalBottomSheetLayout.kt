@@ -58,7 +58,8 @@ fun AuthModalBottomSheetRoot(
 ) {
     val context = LocalContext.current
     val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
-    val premiumErrorGenerateAuthCookieMessage = stringResource(R.string.premium_error_generate_auth_cookie)
+    val premiumErrorGenerateAuthCookieMessage =
+        stringResource(R.string.premium_error_generate_auth_cookie)
     val premiumErrorTokenExpiredMessage = stringResource(R.string.premium_error_token_expired)
     val authViewModel = ViewModelProvider.authViewModel
 
