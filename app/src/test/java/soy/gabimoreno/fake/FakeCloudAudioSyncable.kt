@@ -1,11 +1,11 @@
 package soy.gabimoreno.fake
 
-import soy.gabimoreno.data.cloud.audiosync.response.SyncableAudiocourseResponse
+import soy.gabimoreno.data.cloud.audiosync.response.SyncableAudioCourseResponse
 import soy.gabimoreno.data.cloud.audiosync.response.SyncablePodcastResponse
 import soy.gabimoreno.data.cloud.audiosync.response.SyncablePremiumAudioResponse
 import soy.gabimoreno.domain.model.content.AudioCourse
 
-fun buildCloudAudiocourseResponseList(hasBeenListened: Boolean = false): List<SyncableAudiocourseResponse> =
+fun buildCloudAudiocourseResponseList(hasBeenListened: Boolean = false): List<SyncableAudioCourseResponse> =
     (1..3).map { index ->
         buildCloudAudiocourseResponse("1-$index", hasBeenListened)
     }
@@ -13,7 +13,7 @@ fun buildCloudAudiocourseResponseList(hasBeenListened: Boolean = false): List<Sy
 fun buildCloudAudiocourseResponse(
     id: String,
     hasBeenListened: Boolean,
-) = SyncableAudiocourseResponse(
+) = SyncableAudioCourseResponse(
     id = id,
     hasBeenListened = hasBeenListened,
     markedAsFavorite = false,
@@ -23,10 +23,10 @@ fun buildCloudAudioCourseResponses(
     remoteCourses: List<AudioCourse>,
     hasBeenListened: Boolean = false,
     markedAsFavorite: Boolean = false,
-): List<SyncableAudiocourseResponse> =
+): List<SyncableAudioCourseResponse> =
     remoteCourses.flatMap { course ->
         course.audios.map { audio ->
-            SyncableAudiocourseResponse(
+            SyncableAudioCourseResponse(
                 id = audio.id,
                 hasBeenListened = hasBeenListened,
                 markedAsFavorite = markedAsFavorite,

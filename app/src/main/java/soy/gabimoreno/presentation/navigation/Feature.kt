@@ -6,7 +6,7 @@ enum class Feature(
     SENIOR("senior"),
     PODCAST("podcast"),
     PREMIUM("premium"),
-    AUDIOCOURSES("audiocourses"),
+    AUDIO_COURSES("audiocourses"),
     PROFILE("profile"),
     PLAYLISTS("playlists"),
 }

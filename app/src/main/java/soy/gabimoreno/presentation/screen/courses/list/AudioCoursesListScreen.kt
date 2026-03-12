@@ -148,20 +148,20 @@ private fun CoursesListScreenScreen(
                     verticalArrangement = Arrangement.spacedBy(Spacing.s16),
                 ) {
                     items(
-                        count = state.audiocourses.size,
-                        key = { state.audiocourses[it].id },
+                        count = state.audioCourses.size,
+                        key = { state.audioCourses[it].id },
                     ) { index ->
                         ItemListCourse(
-                            audioCourse = state.audiocourses[index],
+                            audioCourse = state.audioCourses[index],
                             onItemClick = {
                                 onAction(
                                     AudioCoursesListAction.OnItemClicked(
-                                        state.audiocourses[index].id,
+                                        state.audioCourses[index].id,
                                     ),
                                 )
                             },
                         )
-                        if (state.audiocourses.size == index + 1) {
+                        if (state.audioCourses.size == index + 1) {
                             Spacer(modifier = Modifier.padding(bottom = Spacing.s16))
                         }
                     }

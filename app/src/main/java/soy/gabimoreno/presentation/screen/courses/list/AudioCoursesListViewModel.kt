@@ -85,7 +85,7 @@ class AudioCoursesListViewModel
                         _state.update { currentState ->
                             currentState.copy(
                                 isLoading = false,
-                                audiocourses = audioCourses,
+                                audioCourses = audioCourses,
                             )
                         }
                     }.onLeft { throwable: Throwable ->

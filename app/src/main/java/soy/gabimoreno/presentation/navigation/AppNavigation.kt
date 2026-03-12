@@ -193,11 +193,11 @@ private fun NavGraphBuilder.audioCoursesNav(
     appState: AppState,
 ) {
     navigation(
-        startDestination = NavCommand.ContentType(Feature.AUDIOCOURSES).route,
-        route = Feature.AUDIOCOURSES.route,
+        startDestination = NavCommand.ContentType(Feature.AUDIO_COURSES).route,
+        route = Feature.AUDIO_COURSES.route,
     ) {
-        composable(navCommand = NavCommand.ContentType(Feature.AUDIOCOURSES)) {
-            appState.setStartDestination(Feature.AUDIOCOURSES)
+        composable(navCommand = NavCommand.ContentType(Feature.AUDIO_COURSES)) {
+            appState.setStartDestination(Feature.AUDIO_COURSES)
             AudioCoursesListScreenRoot(
                 onItemClicked = { audioCourseId ->
                     navController.navigateToAudioCourseDetailFromAudiocourses(audioCourseId)
@@ -210,7 +210,7 @@ private fun NavGraphBuilder.audioCoursesNav(
             )
         }
         val command =
-            NavCommand.ContentCoursesDetail(Feature.AUDIOCOURSES, listOf(NavArg.AudioCourseId))
+            NavCommand.ContentCoursesDetail(Feature.AUDIO_COURSES, listOf(NavArg.AudioCourseId))
         composable(
             route = command.route,
             arguments = command.arguments,

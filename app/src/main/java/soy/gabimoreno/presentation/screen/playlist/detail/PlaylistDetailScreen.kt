@@ -150,7 +150,7 @@ private fun PlaylistDetailHeader(
 ) {
     Box(contentAlignment = Alignment.TopStart) {
         Image(
-            painter = painterResource(R.drawable.ic_audiocourses_header),
+            painter = painterResource(R.drawable.ic_audio_courses_header),
             contentDescription = stringResource(R.string.playlist_detail_header),
             contentScale = ContentScale.Crop,
             modifier =

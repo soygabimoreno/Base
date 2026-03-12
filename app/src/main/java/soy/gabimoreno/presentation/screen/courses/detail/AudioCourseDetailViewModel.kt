@@ -56,7 +56,7 @@ class AudioCourseDetailViewModel
         fun onAction(action: AudioCourseDetailAction) {
             when (action) {
                 is AudioCourseDetailAction.OnAudioCourseItemClicked -> {
-                    prepateToPlayAudio(action.audioCourseItem.id)
+                    prepareToPlayAudio(action.audioCourseItem.id)
                     viewModelScope.launch {
                         eventChannel.emit(AudioCourseDetailEvent.PlayAudio)
                     }
@@ -118,7 +118,7 @@ class AudioCourseDetailViewModel
             }
         }
 
-        private fun prepateToPlayAudio(audioCourseId: String) {
+        private fun prepareToPlayAudio(audioCourseId: String) {
             var audio: Episode? = null
             val audios: List<Episode> =
                 state.audioCourse?.let { audioCourse ->

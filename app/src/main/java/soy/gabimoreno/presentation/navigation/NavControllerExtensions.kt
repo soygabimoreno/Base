@@ -33,7 +33,7 @@ internal fun NavController.navigateToAudioCourseDetailFromAudiocourses(audioCour
     navigate(
         route =
             NavCommand
-                .ContentCoursesDetail(Feature.AUDIOCOURSES, listOf(NavArg.AudioCourseId))
+                .ContentCoursesDetail(Feature.AUDIO_COURSES, listOf(NavArg.AudioCourseId))
                 .createRoute(audioCourseId),
     )
 }

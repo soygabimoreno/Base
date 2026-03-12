@@ -90,7 +90,7 @@ class AudioCoursesListViewModelTest {
             val stateJob = launch { viewModel.state.toList(states) }
             advanceUntilIdle()
 
-            states.last().audiocourses shouldBe expectedCourses
+            states.last().audioCourses shouldBe expectedCourses
             states.last().isLoading shouldBe false
             stateJob.cancel()
         }
@@ -127,7 +127,7 @@ class AudioCoursesListViewModelTest {
             val stateJob = launch { viewModel.state.collect {} }
             advanceUntilIdle()
 
-            viewModel.state.value.audiocourses shouldBe dummyCourses
+            viewModel.state.value.audioCourses shouldBe dummyCourses
             coVerifyOnce {
                 refreshBearerTokenUseCase()
             }

@@ -85,13 +85,19 @@ fun AudioCoursesDetailScreenRoot(
         state = coursesDetailViewModel.state,
         onAction = { action ->
             when (action) {
-                is AudioCourseDetailAction.OnBackClicked -> onBackClicked()
-                is AudioCourseDetailAction.OnAddToPlaylistClicked ->
+                is AudioCourseDetailAction.OnBackClicked -> {
+                    onBackClicked()
+                }
+
+                is AudioCourseDetailAction.OnAddToPlaylistClicked -> {
                     onAddToPlaylistClicked(
                         action.audioCourseId,
                     )
+                }
 
-                else -> Unit
+                else -> {
+                    Unit
+                }
             }
             coursesDetailViewModel.onAction(action)
         },
@@ -128,8 +134,8 @@ fun AudioCourseDetailScreen(
                         Modifier
                             .fillMaxWidth()
                             .height(200.dp),
-                    error = painterResource(R.drawable.ic_audiocourses_header),
-                    placeholder = painterResource(R.drawable.ic_audiocourses_header),
+                    error = painterResource(R.drawable.ic_audio_courses_header),
+                    placeholder = painterResource(R.drawable.ic_audio_courses_header),
                 )
                 Box(
                     modifier =

@@ -1,6 +1,6 @@
 package soy.gabimoreno.data.cloud.audiosync.response
 
-data class SyncableAudiocourseResponse(
+data class SyncableAudioCourseResponse(
     override val id: String = EMPTY_STRING,
     override val hasBeenListened: Boolean = false,
     override val markedAsFavorite: Boolean = false,

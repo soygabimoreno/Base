@@ -60,7 +60,7 @@
     <string name="course_link">Accede al audiocurso completo</string>
     <string name="profile_info_email">Sesión iniciada con el</string>
     <string name="profile_no_session">No se ha iniciado sesión</string>
-    <string name="profile_reset_audiocourses">Resetear audiocursos escuchados</string>
+    <string name="profile_reset_audio_courses">Resetear audiocursos escuchados</string>
     <string name="profile_reset_podcast">Resetear podcast escuchados</string>
     <string name="profile_reset_premium">Resetear audios premium escuchados</string>
     <string name="profile_reset_success_premium">Reseteados audios premium escuchados.</string>

@@ -165,7 +165,7 @@ fun ProfileScreen(
                 )
             }
             ProfileItem(
-                text = stringResource(R.string.profile_reset_audiocourses),
+                text = stringResource(R.string.profile_reset_audio_courses),
                 onItemClicked = {
                     onAction(ProfileAction.OnResetAudioCoursesClicked)
                 },

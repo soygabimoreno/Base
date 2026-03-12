@@ -75,19 +75,9 @@ class CloudDataSource<T : SyncableAudio>
                 .document(itemId)
                 .delete()
         }
-
-        suspend inline fun <reified T : SyncableAudio> deleteAllAudioItems(
-            email: String,
-            collectionPath: String,
-        ) {
-            val items = getAudioItems<T>(email, collectionPath)
-            items.forEach { item ->
-                deleteAudioItem(email, collectionPath, item.id)
-            }
-        }
     }
 
-const val AUDIOCOURSES_PATH = "audiocourses"
+const val AUDIO_COURSES_PATH = "audiocourses"
 const val PODCAST_PATH = "podcast"
 const val PREMIUM_AUDIOS_PATH = "premium_audios"
 const val USERS_PATH = "base_users"
