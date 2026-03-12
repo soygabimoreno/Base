@@ -13,6 +13,7 @@ jobs:
         tool:
           - ktlintCheck
           - detekt
+          - lintDebug
 
     steps:
       - name: Checkout
