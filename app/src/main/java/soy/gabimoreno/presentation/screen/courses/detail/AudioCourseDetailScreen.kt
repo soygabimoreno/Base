@@ -59,6 +59,7 @@ fun AudioCoursesDetailScreenRoot(
     onAddToPlaylistClicked: (audioCourseId: String) -> Unit,
 ) {
     val context = LocalContext.current
+    val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
     val coursesDetailViewModel = ViewModelProvider.audioCourseDetailViewModel
     val playerViewModel = ViewModelProvider.playerViewModel
     LaunchedEffect(Unit) {
@@ -66,7 +67,7 @@ fun AudioCoursesDetailScreenRoot(
         coursesDetailViewModel.events.collect { event ->
             when (event) {
                 is AudioCourseDetailEvent.Error -> {
-                    context.toast(context.getString(R.string.unexpected_error))
+                    context.toast(unexpectedErrorMessage)
                 }
 
                 AudioCourseDetailEvent.PlayAudio -> {
