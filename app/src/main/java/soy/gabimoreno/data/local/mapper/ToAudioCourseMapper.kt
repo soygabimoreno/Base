@@ -34,19 +34,19 @@ fun AudioCourseItemDbModel.toAudioCourseItem(): AudioCourseItem =
 
 fun AudioCourseWithItems.toAudioCourse(): AudioCourse =
     AudioCourse(
-        id = course.id,
-        title = course.title,
-        description = course.description,
-        excerpt = course.excerpt,
-        saga = course.saga,
-        url = course.url,
-        videoUrl = course.videoUrl,
-        thumbnailUrl = course.thumbnailUrl,
-        pubDateMillis = course.pubDateMillis,
-        audioLengthInSeconds = course.audioLengthInSeconds,
-        category = course.category,
-        isPurchased = course.isPurchased,
-        audios = audios.map { it.toAudioCourseItem() },
+        id = audioCourseDbModel.id,
+        title = audioCourseDbModel.title,
+        description = audioCourseDbModel.description,
+        excerpt = audioCourseDbModel.excerpt,
+        saga = audioCourseDbModel.saga,
+        url = audioCourseDbModel.url,
+        videoUrl = audioCourseDbModel.videoUrl,
+        thumbnailUrl = audioCourseDbModel.thumbnailUrl,
+        pubDateMillis = audioCourseDbModel.pubDateMillis,
+        audioLengthInSeconds = audioCourseDbModel.audioLengthInSeconds,
+        category = audioCourseDbModel.category,
+        isPurchased = audioCourseDbModel.isPurchased,
+        audios = audioCourseItemDbModels.map { it.toAudioCourseItem() },
     )
 
 fun AudioCourseItemDbModel.toPlaylistAudioItem(

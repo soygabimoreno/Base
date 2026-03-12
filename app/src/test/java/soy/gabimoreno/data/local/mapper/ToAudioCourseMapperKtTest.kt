@@ -45,25 +45,25 @@ class ToAudioCourseMapperKtTest {
 
         val result = audioCourseWithItems.toAudioCourse()
 
-        result.id shouldBe audioCourseWithItems.course.id
-        result.title shouldBe audioCourseWithItems.course.title
-        result.description shouldBe audioCourseWithItems.course.description
-        result.excerpt shouldBeEqualTo audioCourseWithItems.course.excerpt
-        result.saga shouldBe audioCourseWithItems.course.saga
-        result.url shouldBe audioCourseWithItems.course.url
-        result.videoUrl shouldBe audioCourseWithItems.course.videoUrl
-        result.thumbnailUrl shouldBe audioCourseWithItems.course.thumbnailUrl
-        result.pubDateMillis shouldBe audioCourseWithItems.course.pubDateMillis
-        result.audioLengthInSeconds shouldBeEqualTo audioCourseWithItems.course.audioLengthInSeconds
-        result.category shouldBeEqualTo audioCourseWithItems.course.category
-        result.isPurchased shouldBe audioCourseWithItems.course.isPurchased
-        result.audios.size shouldBe audioCourseWithItems.audios.size
-        result.audios[0].id shouldBe audioCourseWithItems.audios[0].id
-        result.audios[0].title shouldBe audioCourseWithItems.audios[0].title
-        result.audios[0].url shouldBe audioCourseWithItems.audios[0].url
-        result.audios[1].id shouldBe audioCourseWithItems.audios[1].id
-        result.audios[1].title shouldBe audioCourseWithItems.audios[1].title
-        result.audios[1].url shouldBe audioCourseWithItems.audios[1].url
+        result.id shouldBe audioCourseWithItems.audioCourseDbModel.id
+        result.title shouldBe audioCourseWithItems.audioCourseDbModel.title
+        result.description shouldBe audioCourseWithItems.audioCourseDbModel.description
+        result.excerpt shouldBeEqualTo audioCourseWithItems.audioCourseDbModel.excerpt
+        result.saga shouldBe audioCourseWithItems.audioCourseDbModel.saga
+        result.url shouldBe audioCourseWithItems.audioCourseDbModel.url
+        result.videoUrl shouldBe audioCourseWithItems.audioCourseDbModel.videoUrl
+        result.thumbnailUrl shouldBe audioCourseWithItems.audioCourseDbModel.thumbnailUrl
+        result.pubDateMillis shouldBe audioCourseWithItems.audioCourseDbModel.pubDateMillis
+        result.audioLengthInSeconds shouldBeEqualTo audioCourseWithItems.audioCourseDbModel.audioLengthInSeconds
+        result.category shouldBeEqualTo audioCourseWithItems.audioCourseDbModel.category
+        result.isPurchased shouldBe audioCourseWithItems.audioCourseDbModel.isPurchased
+        result.audios.size shouldBe audioCourseWithItems.audioCourseItemDbModels.size
+        result.audios[0].id shouldBe audioCourseWithItems.audioCourseItemDbModels[0].id
+        result.audios[0].title shouldBe audioCourseWithItems.audioCourseItemDbModels[0].title
+        result.audios[0].url shouldBe audioCourseWithItems.audioCourseItemDbModels[0].url
+        result.audios[1].id shouldBe audioCourseWithItems.audioCourseItemDbModels[1].id
+        result.audios[1].title shouldBe audioCourseWithItems.audioCourseItemDbModels[1].title
+        result.audios[1].url shouldBe audioCourseWithItems.audioCourseItemDbModels[1].url
     }
 
     @Test

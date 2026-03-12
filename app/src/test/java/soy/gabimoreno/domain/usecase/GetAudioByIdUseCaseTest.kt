@@ -8,7 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.domain.repository.senior.SeniorRepository
@@ -18,7 +18,7 @@ import soy.gabimoreno.fake.buildEpisode
 import soy.gabimoreno.fake.buildPremiumAudio
 
 class GetAudioByIdUseCaseTest {
-    private val audioCoursesRepository: AudioCoursesRepository = mockk()
+    private val audioCourseRepository: AudioCourseRepository = mockk()
     private val podcastRepository: PodcastRepository = mockk()
     private val seniorRepository: SeniorRepository = mockk()
     private val premiumAudiosRepository: PremiumAudiosRepository = mockk()
@@ -29,7 +29,7 @@ class GetAudioByIdUseCaseTest {
     fun setUp() {
         useCase =
             GetAudioByIdUseCase(
-                audioCoursesRepository,
+                audioCourseRepository,
                 podcastRepository,
                 seniorRepository,
                 premiumAudiosRepository,
@@ -42,13 +42,13 @@ class GetAudioByIdUseCaseTest {
             val audioId = "123-1"
             val audioCourseItem = buildAudioItem(audioId)
             val expected = right(audioCourseItem)
-            coEvery { audioCoursesRepository.getAudioCourseItemById(audioId) } returns expected
+            coEvery { audioCourseRepository.getAudioCourseItemById(audioId) } returns expected
 
             val result = useCase(audioId)
 
             result shouldBeEqualTo expected
             coVerifyOnce {
-                audioCoursesRepository.getAudioCourseItemById(audioId)
+                audioCourseRepository.getAudioCourseItemById(audioId)
             }
             coVerifyNever {
                 premiumAudiosRepository.getPremiumAudioById(any())
@@ -71,7 +71,7 @@ class GetAudioByIdUseCaseTest {
                 premiumAudiosRepository.getPremiumAudioById(audioId)
             }
             coVerifyNever {
-                audioCoursesRepository.getAudioCourseItemById(any())
+                audioCourseRepository.getAudioCourseItemById(any())
                 podcastRepository.getPodcastById(any())
             }
         }
@@ -91,7 +91,7 @@ class GetAudioByIdUseCaseTest {
                 podcastRepository.getPodcastById(audioId)
             }
             coVerifyNever {
-                audioCoursesRepository.getAudioCourseItemById(any())
+                audioCourseRepository.getAudioCourseItemById(any())
                 premiumAudiosRepository.getPremiumAudioById(any())
             }
         }

@@ -15,13 +15,13 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.framework.datastore.getEmail
 
 class GetAudioCoursesUseCaseTest {
     private val context = mockk<Context>()
 
-    private val repository = mockk<AudioCoursesRepository>()
+    private val repository = mockk<AudioCourseRepository>()
     private lateinit var useCase: GetAudioCoursesUseCase
 
     @Before
@@ -36,7 +36,7 @@ class GetAudioCoursesUseCaseTest {
         runTest {
             val expectedCourses = listOf(relaxedMockk<AudioCourse>())
             coEvery {
-                repository.getCourses(categories = CATEGORIES, email = EMAIL, forceRefresh = false)
+                repository.getAudioCourses(categories = CATEGORIES, email = EMAIL, forceRefresh = false)
             } returns expectedCourses.right()
 
             val result = useCase(CATEGORIES)
@@ -49,7 +49,7 @@ class GetAudioCoursesUseCaseTest {
         runTest {
             val error = Throwable("Network error")
             coEvery {
-                repository.getCourses(categories = CATEGORIES, email = EMAIL, forceRefresh = false)
+                repository.getAudioCourses(categories = CATEGORIES, email = EMAIL, forceRefresh = false)
             } returns error.left()
 
             val result = useCase(CATEGORIES)

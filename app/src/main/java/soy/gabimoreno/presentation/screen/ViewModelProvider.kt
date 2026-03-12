@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.viewmodel.compose.viewModel
+import soy.gabimoreno.presentation.screen.audiocourses.detail.AudioCourseDetailViewModel
+import soy.gabimoreno.presentation.screen.audiocourses.list.AudioCoursesViewModel
 import soy.gabimoreno.presentation.screen.auth.AuthViewModel
-import soy.gabimoreno.presentation.screen.courses.detail.AudioCourseDetailViewModel
-import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListViewModel
 import soy.gabimoreno.presentation.screen.detail.DetailViewModel
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
 import soy.gabimoreno.presentation.screen.player.PlayerViewModel
@@ -40,9 +40,9 @@ object ViewModelProvider {
         @Composable
         get() = localPremiumViewModel.current
 
-    val audioCoursesListViewModel: AudioCoursesListViewModel
+    val audioCoursesViewModel: AudioCoursesViewModel
         @Composable
-        get() = localAudioCoursesListViewModel.current
+        get() = localAudioCoursesViewModel.current
 
     val audioCourseDetailViewModel: AudioCourseDetailViewModel
         @Composable
@@ -66,7 +66,7 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     val playerViewModel: PlayerViewModel = viewModel()
     val webViewViewModel: WebViewViewModel = viewModel()
     val premiumViewModel: PremiumViewModel = viewModel()
-    val audioCoursesListViewModel: AudioCoursesListViewModel = viewModel()
+    val audioCoursesViewModel: AudioCoursesViewModel = viewModel()
     val audioCourseDetailViewModel: AudioCourseDetailViewModel = viewModel()
     val profileViewModel: ProfileViewModel = viewModel()
 
@@ -76,7 +76,7 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
         localSeniorViewModel provides seniorViewModel,
         localWebViewViewModel provides webViewViewModel,
         localPremiumViewModel provides premiumViewModel,
-        localAudioCoursesListViewModel provides audioCoursesListViewModel,
+        localAudioCoursesViewModel provides audioCoursesViewModel,
         localAudioCourseDetailViewModel provides audioCourseDetailViewModel,
         localProfileViewModel provides profileViewModel,
     ) {
@@ -122,8 +122,8 @@ private val localPremiumViewModel =
         error("No PremiumViewModel provided")
     }
 
-private val localAudioCoursesListViewModel =
-    staticCompositionLocalOf<AudioCoursesListViewModel> {
+private val localAudioCoursesViewModel =
+    staticCompositionLocalOf<AudioCoursesViewModel> {
         error("No CoursesListViewModel provided")
     }
 

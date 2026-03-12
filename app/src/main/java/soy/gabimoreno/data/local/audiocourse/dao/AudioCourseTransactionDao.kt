@@ -26,8 +26,8 @@ interface AudioCourseTransactionDao {
     suspend fun upsertAudioCoursesWithItems(audioCourses: List<AudioCourse>) {
         val courses = audioCourses.map { it.toAudioCourseDbModelMapper() }
         val items =
-            audioCourses.flatMap { course ->
-                course.audios.map { it.toAudioCourseItemDbModelMapper(course.id) }
+            audioCourses.flatMap { audioCourse ->
+                audioCourse.audios.map { it.toAudioCourseItemDbModelMapper(audioCourse.id) }
             }
 
         upsertCourses(courses)

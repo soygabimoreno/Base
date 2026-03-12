@@ -4,9 +4,9 @@ import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Test
 import soy.gabimoreno.core.removeHtmlTags
-import soy.gabimoreno.data.remote.model.course.CourseApiModel
-import soy.gabimoreno.data.remote.model.course.OgImageApiModel
-import soy.gabimoreno.data.remote.model.course.YoastHeadJsonApiModel
+import soy.gabimoreno.data.remote.model.audiocourse.AudioCourseApiModel
+import soy.gabimoreno.data.remote.model.audiocourse.OgImageApiModel
+import soy.gabimoreno.data.remote.model.audiocourse.YoastHeadJsonApiModel
 import soy.gabimoreno.data.remote.model.post.ContentApiModel
 import soy.gabimoreno.data.remote.model.post.ExcerptApiModel
 import soy.gabimoreno.data.remote.model.post.TitleApiModel
@@ -100,7 +100,7 @@ class AudioCourseMapperTest {
     }
 
     @Test
-    fun `GIVEN string with audio items WHEN extractAudioItems THEN returns audio course items`() {
+    fun `GIVEN string with audio items WHEN extractAudioItems THEN returns audio audioCourse items`() {
         val input = CONTENT.trimIndent()
 
         val result = input.extractAudioItems(ID.toString())
@@ -121,8 +121,8 @@ class AudioCourseMapperTest {
     }
 }
 
-private fun buildApiModel(id: Long = ID): CourseApiModel =
-    CourseApiModel(
+private fun buildApiModel(id: Long = ID): AudioCourseApiModel =
+    AudioCourseApiModel(
         id = id,
         titleApiModel = TitleApiModel(TITLE),
         excerptApiModel = ExcerptApiModel(EXCERPT),

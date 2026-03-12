@@ -2,7 +2,7 @@ package soy.gabimoreno.domain.usecase
 
 import arrow.core.Either
 import soy.gabimoreno.domain.model.audio.Audio
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.domain.repository.senior.SeniorRepository
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class GetAudioByIdUseCase
     @Inject
     constructor(
-        private val audioCoursesRepository: AudioCoursesRepository,
+        private val audioCourseRepository: AudioCourseRepository,
         private val podcastRepository: PodcastRepository,
         private val seniorRepository: SeniorRepository,
         private val premiumAudiosRepository: PremiumAudiosRepository,
@@ -21,7 +21,7 @@ class GetAudioByIdUseCase
         suspend operator fun invoke(audioId: String): Either<Throwable, Audio> =
             when (audioItemTypeDetector(audioId)) {
                 AudioItemType.AUDIO_COURSE -> {
-                    audioCoursesRepository.getAudioCourseItemById(audioId)
+                    audioCourseRepository.getAudioCourseItemById(audioId)
                 }
 
                 AudioItemType.PREMIUM_AUDIO -> {

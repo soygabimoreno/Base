@@ -23,7 +23,7 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.local.ApplicationDatabase
-import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
+import soy.gabimoreno.data.local.audiocourse.LocalAudioCourseDataSource
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseDbModelDao
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseItemDbModelDao
 import soy.gabimoreno.data.local.audiocourse.dao.AudioCourseTransactionDao
@@ -57,7 +57,7 @@ class LocalPlaylistDataSourceTest {
     private val seniorDbModelDao: SeniorDbModelDao = relaxedMockk<SeniorDbModelDao>()
     private val premiumAudioDbModelDao: PremiumAudioDbModelDao = relaxedMockk<PremiumAudioDbModelDao>()
 
-    private lateinit var audioCoursesDataSource: LocalAudioCoursesDataSource
+    private lateinit var audioCoursesDataSource: LocalAudioCourseDataSource
     private lateinit var playlistDataSource: LocalPlaylistDataSource
     private lateinit var podcastDataSource: LocalPodcastDataSource
     private lateinit var seniorDataSource: LocalSeniorDataSource
@@ -69,7 +69,7 @@ class LocalPlaylistDataSourceTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        audioCoursesDataSource = LocalAudioCoursesDataSource(gabiMorenoDatabase, dispatcher)
+        audioCoursesDataSource = LocalAudioCourseDataSource(gabiMorenoDatabase, dispatcher)
         playlistDataSource = LocalPlaylistDataSource(gabiMorenoDatabase, dispatcher)
         podcastDataSource = LocalPodcastDataSource(gabiMorenoDatabase, dispatcher)
         seniorDataSource = LocalSeniorDataSource(gabiMorenoDatabase, dispatcher)

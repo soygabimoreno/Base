@@ -2,7 +2,7 @@ package soy.gabimoreno.data.remote.service
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import soy.gabimoreno.data.remote.model.course.CourseApiModel
+import soy.gabimoreno.data.remote.model.audiocourse.AudioCourseApiModel
 import soy.gabimoreno.data.remote.model.post.PostApiModel
 
 interface PostService {
@@ -20,7 +20,7 @@ interface PostService {
         @Query("_fields") fieldsQuery: String = "$FIELDS,$IMAGE_FIELD",
         @Query("per_page") postsPerPage: Int = POSTS_PER_PAGE,
         @Query("page") page: Int = POSTS_PAGE,
-    ): List<CourseApiModel>
+    ): List<AudioCourseApiModel>
 }
 
 internal const val POSTS_PER_PAGE = 20

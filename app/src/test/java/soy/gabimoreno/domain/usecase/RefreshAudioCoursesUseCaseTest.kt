@@ -5,10 +5,10 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
-import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCourseRepository
 
 class RefreshAudioCoursesUseCaseTest {
-    private val repository = mockk<DefaultAudioCoursesRepository>(relaxed = true)
+    private val repository = mockk<DefaultAudioCourseRepository>(relaxed = true)
 
     private lateinit var useCase: RefreshAudioCoursesUseCase
 

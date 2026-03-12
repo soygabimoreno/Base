@@ -2,14 +2,14 @@ package soy.gabimoreno.domain.usecase
 
 import arrow.core.Either
 import soy.gabimoreno.domain.model.content.AudioCourseItem
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import javax.inject.Inject
 
 class GetAudioCourseItemByIdUseCase
     @Inject
     constructor(
-        private val audioCoursesRepository: AudioCoursesRepository,
+        private val audioCourseRepository: AudioCourseRepository,
     ) {
         suspend operator fun invoke(audioCourseItemId: String): Either<Throwable, AudioCourseItem> =
-            audioCoursesRepository.getAudioCourseItem(audioCourseItemId)
+            audioCourseRepository.getAudioCourseItem(audioCourseItemId)
     }

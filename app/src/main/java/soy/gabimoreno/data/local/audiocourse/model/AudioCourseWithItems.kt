@@ -4,10 +4,10 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class AudioCourseWithItems(
-    @Embedded val course: AudioCourseDbModel,
+    @Embedded val audioCourseDbModel: AudioCourseDbModel,
     @Relation(
         parentColumn = "id",
         entityColumn = "idAudioCourse",
     )
-    val audios: List<AudioCourseItemDbModel>,
+    val audioCourseItemDbModels: List<AudioCourseItemDbModel>,
 )

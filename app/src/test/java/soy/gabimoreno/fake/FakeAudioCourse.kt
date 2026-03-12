@@ -102,6 +102,6 @@ fun buildAudioCourseItemDbModel(
 
 fun buildAudioCourseWithItems() =
     AudioCourseWithItems(
-        course = buildAudioCourseDbModel(),
-        audios = buildAudioCourseDbItems(),
+        audioCourseDbModel = buildAudioCourseDbModel(),
+        audioCourseItemDbModels = buildAudioCourseDbItems(),
     )

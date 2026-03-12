@@ -10,11 +10,11 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Test
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.fake.buildAudioCourse
 
 class GetAudioCourseByIdUseCaseTest {
-    private val repository = mockk<AudioCoursesRepository>()
+    private val repository = mockk<AudioCourseRepository>()
     private lateinit var useCase: GetAudioCourseByIdUseCase
 
     @Before
@@ -26,7 +26,7 @@ class GetAudioCourseByIdUseCaseTest {
     fun `GIVEN repository returns Right WHEN invoked THEN returns AudioCourse`() =
         runTest {
             val audioCourse = buildAudioCourse()
-            coEvery { repository.getCourseById(audioCourse.id) } returns flowOf(audioCourse).right()
+            coEvery { repository.getAudioCourseById(audioCourse.id) } returns flowOf(audioCourse).right()
 
             val result = useCase(audioCourse.id)
 
@@ -39,7 +39,7 @@ class GetAudioCourseByIdUseCaseTest {
         runTest {
             val audioCourse = buildAudioCourse()
             val error = Throwable("Network error")
-            coEvery { repository.getCourseById(audioCourse.id) } returns error.left()
+            coEvery { repository.getAudioCourseById(audioCourse.id) } returns error.left()
 
             val result = useCase(audioCourse.id)
 

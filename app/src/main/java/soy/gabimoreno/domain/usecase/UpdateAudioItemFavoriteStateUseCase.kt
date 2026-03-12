@@ -2,7 +2,7 @@ package soy.gabimoreno.domain.usecase
 
 import android.content.Context
 import kotlinx.coroutines.flow.first
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.domain.util.AudioItemType
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class UpdateAudioItemFavoriteStateUseCase
     @Inject
     constructor(
-        private val audioCoursesRepository: AudioCoursesRepository,
+        private val audioCourseRepository: AudioCourseRepository,
         private val context: Context,
         private val podcastRepository: PodcastRepository,
         private val premiumAudioCoursesRepository: PremiumAudiosRepository,
@@ -24,12 +24,13 @@ class UpdateAudioItemFavoriteStateUseCase
         ) {
             val email = context.getEmail().first()
             when (audioItemTypeDetector(idAudioItem)) {
-                AudioItemType.AUDIO_COURSE ->
-                    audioCoursesRepository.updateMarkedAsFavorite(
+                AudioItemType.AUDIO_COURSE -> {
+                    audioCourseRepository.updateMarkedAsFavorite(
                         audioCourseId = idAudioItem,
                         email = email,
                         isFavorite = markedAsFavorite,
                     )
+                }
 
                 AudioItemType.PREMIUM_AUDIO ->
                     premiumAudioCoursesRepository.markPremiumAudioAsFavorite(

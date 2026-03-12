@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.domain.repository.senior.SeniorRepository
@@ -45,12 +45,12 @@ class HomeModule {
     @Provides
     @Singleton
     fun provideGetAudioByIdUseCase(
-        audioCoursesRepository: AudioCoursesRepository,
+        audioCourseRepository: AudioCourseRepository,
         podcastRepository: PodcastRepository,
         seniorRepository: SeniorRepository,
         premiumAudiosRepository: PremiumAudiosRepository,
     ) = GetAudioByIdUseCase(
-        audioCoursesRepository = audioCoursesRepository,
+        audioCourseRepository = audioCourseRepository,
         podcastRepository = podcastRepository,
         seniorRepository = seniorRepository,
         premiumAudiosRepository = premiumAudiosRepository,

@@ -5,24 +5,24 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
-import soy.gabimoreno.data.cloud.audiosync.datasource.AudioCoursesCloudDataSource
+import soy.gabimoreno.data.cloud.audiosync.datasource.AudioCourseCloudDataSource
 import soy.gabimoreno.data.cloud.audiosync.datasource.PodcastCloudDataSource
 import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
 import soy.gabimoreno.data.cloud.playlist.datasource.CloudPlaylistDataSource
-import soy.gabimoreno.data.local.audiocourse.LocalAudioCoursesDataSource
+import soy.gabimoreno.data.local.audiocourse.LocalAudioCourseDataSource
 import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.data.local.podcast.LocalPodcastDataSource
 import soy.gabimoreno.data.local.podcast.LocalSeniorDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
-import soy.gabimoreno.data.remote.datasource.audiocourses.RemoteAudioCoursesDataSource
+import soy.gabimoreno.data.remote.datasource.audiocourse.RemoteAudioCourseDataSource
 import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
 import soy.gabimoreno.data.remote.datasource.podcast.PodcastDatasource
 import soy.gabimoreno.data.remote.datasource.premiumaudios.RemotePremiumAudiosDataSource
 import soy.gabimoreno.data.remote.datasource.senior.RemoteSeniorDatasource
 import soy.gabimoreno.data.repository.podcast.DefaultPodcastRepository
 import soy.gabimoreno.data.repository.podcast.DefaultSeniorRepository
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
-import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCourseRepository
 import soy.gabimoreno.domain.repository.login.LoginRepository
 import soy.gabimoreno.domain.repository.login.RemoteLoginRepository
 import soy.gabimoreno.domain.repository.playlist.DefaultPlaylistRepository
@@ -97,14 +97,14 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideAudioCoursesRepository(
-        cloudDataSource: AudioCoursesCloudDataSource,
-        localAudioCoursesDataSource: LocalAudioCoursesDataSource,
-        remoteAudioCoursesDataSource: RemoteAudioCoursesDataSource,
+        cloudDataSource: AudioCourseCloudDataSource,
+        localAudioCourseDataSource: LocalAudioCourseDataSource,
+        remoteAudioCoursesDataSource: RemoteAudioCourseDataSource,
         refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
-    ): AudioCoursesRepository =
-        DefaultAudioCoursesRepository(
+    ): AudioCourseRepository =
+        DefaultAudioCourseRepository(
             cloudDataSource,
-            localAudioCoursesDataSource,
+            localAudioCourseDataSource,
             remoteAudioCoursesDataSource,
             refreshPremiumAudiosFromRemoteUseCase,
         )

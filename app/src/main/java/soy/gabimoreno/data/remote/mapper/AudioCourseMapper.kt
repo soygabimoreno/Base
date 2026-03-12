@@ -6,15 +6,15 @@ import soy.gabimoreno.data.local.audiocourse.model.AudioCourseItemDbModel
 import soy.gabimoreno.data.remote.mapper.category.toCategory
 import soy.gabimoreno.data.remote.mapper.category.toSubcategory
 import soy.gabimoreno.data.remote.model.Category
-import soy.gabimoreno.data.remote.model.course.CourseApiModel
+import soy.gabimoreno.data.remote.model.audiocourse.AudioCourseApiModel
 import soy.gabimoreno.domain.model.audio.Saga
 import soy.gabimoreno.domain.model.content.AudioCourse
 import soy.gabimoreno.domain.model.content.AudioCourseItem
 import soy.gabimoreno.domain.model.content.findAuthorDisplayNameById
 
-fun List<CourseApiModel>.toDomain(): List<AudioCourse> = map { it.toDomain() }
+fun List<AudioCourseApiModel>.toDomain(): List<AudioCourse> = map { it.toDomain() }
 
-fun CourseApiModel.toDomain(): AudioCourse {
+fun AudioCourseApiModel.toDomain(): AudioCourse {
     val excerpt = excerptApiModel.rendered
     val content = contentApiModel.rendered
     return AudioCourse(

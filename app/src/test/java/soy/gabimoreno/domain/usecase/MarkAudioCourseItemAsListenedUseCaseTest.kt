@@ -10,13 +10,13 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.fake.buildAudioCourse
 import soy.gabimoreno.framework.datastore.getEmail
 
 class MarkAudioCourseItemAsListenedUseCaseTest {
     private val context: Context = mockk()
-    private val repository = relaxedMockk<AudioCoursesRepository>()
+    private val repository = relaxedMockk<AudioCourseRepository>()
 
     private lateinit var useCase: MarkAudioCourseItemAsListenedUseCase
 

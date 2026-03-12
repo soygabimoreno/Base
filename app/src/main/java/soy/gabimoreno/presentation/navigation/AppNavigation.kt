@@ -9,8 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import soy.gabimoreno.presentation.AppState
-import soy.gabimoreno.presentation.screen.courses.detail.AudioCoursesDetailScreenRoot
-import soy.gabimoreno.presentation.screen.courses.list.AudioCoursesListScreenRoot
+import soy.gabimoreno.presentation.screen.audiocourses.detail.AudioCoursesDetailScreenRoot
+import soy.gabimoreno.presentation.screen.audiocourses.list.AudioCoursesScreenRoot
 import soy.gabimoreno.presentation.screen.detail.DetailScreen
 import soy.gabimoreno.presentation.screen.home.HomeScreen
 import soy.gabimoreno.presentation.screen.playlist.audio.PlaylistAudioItemRoot
@@ -198,7 +198,7 @@ private fun NavGraphBuilder.audioCoursesNav(
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.AUDIO_COURSES)) {
             appState.setStartDestination(Feature.AUDIO_COURSES)
-            AudioCoursesListScreenRoot(
+            AudioCoursesScreenRoot(
                 onItemClicked = { audioCourseId ->
                     navController.navigateToAudioCourseDetailFromAudiocourses(audioCourseId)
                 },

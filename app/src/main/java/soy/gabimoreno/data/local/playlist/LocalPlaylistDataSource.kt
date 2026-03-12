@@ -246,15 +246,18 @@ class LocalPlaylistDataSource
                         val audioItem =
                             when (audioItemTypeDetector(item.audioItemId)) {
                                 AudioItemType.AUDIO_COURSE -> {
-                                    val course =
+                                    val audioCourse =
                                         resources.audioCourses[
                                             item.audioItemId
                                                 .substringBefore(AUDIO_COURSE_DELIMITER),
                                         ]
                                     val courseItem = resources.audioCourseItems[item.audioItemId]
-                                    if (course == null || courseItem == null) return@mapNotNull null
+                                    if (audioCourse == null ||
+                                        courseItem == null
+                                    )
+                                        return@mapNotNull null
                                     courseItem
-                                        .toPlaylistAudioItem(course, position)
+                                        .toPlaylistAudioItem(audioCourse, position)
                                 }
 
                                 AudioItemType.PREMIUM_AUDIO -> {

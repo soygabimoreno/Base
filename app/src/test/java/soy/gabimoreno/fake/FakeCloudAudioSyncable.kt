@@ -24,8 +24,8 @@ fun buildCloudAudioCourseResponses(
     hasBeenListened: Boolean = false,
     markedAsFavorite: Boolean = false,
 ): List<SyncableAudioCourseResponse> =
-    remoteCourses.flatMap { course ->
-        course.audios.map { audio ->
+    remoteCourses.flatMap { audioCourse ->
+        audioCourse.audios.map { audio ->
             SyncableAudioCourseResponse(
                 id = audio.id,
                 hasBeenListened = hasBeenListened,

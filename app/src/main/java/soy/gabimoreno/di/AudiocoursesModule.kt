@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.domain.usecase.GetAudioCoursesUseCase
@@ -35,21 +35,21 @@ object AudiocoursesModule {
     @Provides
     @Singleton
     fun provideGetAudioCoursesUseCase(
-        audioCoursesRepository: AudioCoursesRepository,
+        audioCourseRepository: AudioCourseRepository,
         @ApplicationContext context: Context,
     ): GetAudioCoursesUseCase =
-        GetAudioCoursesUseCase(context = context, audioCoursesRepository = audioCoursesRepository)
+        GetAudioCoursesUseCase(context = context, audioCourseRepository = audioCourseRepository)
 
     @Provides
     @Singleton
     fun provideUpdateAudioItemFavoriteStateUseCase(
-        audioCoursesRepository: AudioCoursesRepository,
+        audioCourseRepository: AudioCourseRepository,
         premiumAudiosRepository: PremiumAudiosRepository,
         podcastRepository: PodcastRepository,
         @ApplicationContext context: Context,
     ): UpdateAudioItemFavoriteStateUseCase =
         UpdateAudioItemFavoriteStateUseCase(
-            audioCoursesRepository = audioCoursesRepository,
+            audioCourseRepository = audioCourseRepository,
             context = context,
             premiumAudioCoursesRepository = premiumAudiosRepository,
             podcastRepository = podcastRepository,
@@ -58,22 +58,22 @@ object AudiocoursesModule {
     @Provides
     @Singleton
     fun provideMarkAudioCourseItemAsListenedUseCase(
-        audioCoursesRepository: AudioCoursesRepository,
+        audioCourseRepository: AudioCourseRepository,
         @ApplicationContext context: Context,
     ): MarkAudioCourseItemAsListenedUseCase =
         MarkAudioCourseItemAsListenedUseCase(
             context = context,
-            audioCoursesRepository = audioCoursesRepository,
+            audioCourseRepository = audioCourseRepository,
         )
 
     @Provides
     @Singleton
     fun provideSetAllAudiocoursesAsUnlistenedUseCase(
-        audioCoursesRepository: AudioCoursesRepository,
+        audioCourseRepository: AudioCourseRepository,
         @ApplicationContext context: Context,
     ): SetAllAudiocoursesAsUnlistenedUseCase =
         SetAllAudiocoursesAsUnlistenedUseCase(
             context = context,
-            audioCoursesRepository = audioCoursesRepository,
+            audioCourseRepository = audioCourseRepository,
         )
 }

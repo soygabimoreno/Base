@@ -11,7 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
 import soy.gabimoreno.fake.buildAudioCourseItem
@@ -20,7 +20,7 @@ import soy.gabimoreno.fake.buildPremiumAudio
 import soy.gabimoreno.framework.datastore.getEmail
 
 class UpdateAudioItemFavoriteStateUseCaseTest {
-    private val audioRepository = mockk<AudioCoursesRepository>()
+    private val audioRepository = mockk<AudioCourseRepository>()
     private val context: Context = mockk()
     private val podcastRepository = mockk<PodcastRepository>()
     private val premiumRepository = mockk<PremiumAudiosRepository>()

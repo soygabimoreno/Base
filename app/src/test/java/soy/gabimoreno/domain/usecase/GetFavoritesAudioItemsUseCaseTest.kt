@@ -7,13 +7,13 @@ import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Test
-import soy.gabimoreno.domain.repository.audiocourses.AudioCoursesRepository
+import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
 import soy.gabimoreno.ext.left
 import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildAudioCourseItem
 
 class GetFavoritesAudioItemsUseCaseTest {
-    private val repository = mockk<AudioCoursesRepository>()
+    private val repository = mockk<AudioCourseRepository>()
     private lateinit var useCase: GetFavoritesAudioItemsUseCase
 
     @Before
