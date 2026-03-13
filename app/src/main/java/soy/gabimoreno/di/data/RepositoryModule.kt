@@ -13,7 +13,7 @@ import soy.gabimoreno.data.local.audiocourse.LocalAudioCourseDataSource
 import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.data.local.podcast.LocalPodcastDataSource
 import soy.gabimoreno.data.local.podcast.LocalSeniorDataSource
-import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
 import soy.gabimoreno.data.remote.datasource.audiocourse.RemoteAudioCourseDataSource
 import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
 import soy.gabimoreno.data.remote.datasource.podcast.PodcastDatasource
@@ -48,7 +48,7 @@ object RepositoryModule {
     @Singleton
     fun provideContentRepository(
         cloudDataSource: PremiumAudiosCloudDataSource,
-        localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
+        localPremiumAudioDataSource: LocalPremiumAudioDataSource,
         remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
         refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
         saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
@@ -56,7 +56,7 @@ object RepositoryModule {
     ): PremiumAudiosRepository =
         DefaultPremiumAudiosRepository(
             cloudDataSource,
-            localPremiumAudiosDataSource,
+            localPremiumAudioDataSource,
             remotePremiumAudiosDataSource,
             refreshPremiumAudiosFromRemoteUseCase,
             saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,

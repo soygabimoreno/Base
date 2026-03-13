@@ -8,7 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import soy.gabimoreno.data.local.ApplicationDatabase
-import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
 import soy.gabimoreno.di.IO
 
 @Module
@@ -28,8 +28,8 @@ object LocalDataModule {
     fun provideLocalPremiumAudioDataSource(
         gabiMorenoDatabase: ApplicationDatabase,
         @IO dispatcher: CoroutineDispatcher,
-    ): LocalPremiumAudiosDataSource =
-        LocalPremiumAudiosDataSource(
+    ): LocalPremiumAudioDataSource =
+        LocalPremiumAudioDataSource(
             gabiMorenoDatabase,
             dispatcher,
         )

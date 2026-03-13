@@ -75,7 +75,7 @@ fun DetailScreen(
     val seniorViewModel = ViewModelProvider.seniorViewModel
     val detailViewModel = ViewModelProvider.detailViewModel
     val playerViewModel = ViewModelProvider.playerViewModel
-    val premiumViewModel = ViewModelProvider.premiumViewModel
+    val premiumViewModel = ViewModelProvider.premiumAudiosViewModel
 
     var audios: List<Audio>? = null
     var audio: Audio? = null

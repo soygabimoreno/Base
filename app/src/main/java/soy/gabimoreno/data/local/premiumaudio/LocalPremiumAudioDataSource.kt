@@ -13,7 +13,7 @@ import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.content.PremiumAudio
 import javax.inject.Inject
 
-class LocalPremiumAudiosDataSource
+class LocalPremiumAudioDataSource
     @Inject
     constructor(
         gabiMorenoDatabase: ApplicationDatabase,

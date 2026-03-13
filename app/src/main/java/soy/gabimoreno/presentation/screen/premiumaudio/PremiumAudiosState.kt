@@ -1,11 +1,11 @@
-package soy.gabimoreno.presentation.screen.premium
+package soy.gabimoreno.presentation.screen.premiumaudio
 
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import soy.gabimoreno.domain.model.content.PremiumAudio
 
-data class PremiumState(
+data class PremiumAudiosState(
     val isLoading: Boolean = true,
     val selectedPremiumAudio: PremiumAudio? = null,
     val premiumAudioFlow: Flow<PagingData<PremiumAudio>> =

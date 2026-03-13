@@ -1,4 +1,4 @@
-package soy.gabimoreno.presentation.screen.premium
+package soy.gabimoreno.presentation.screen.premiumaudio
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,7 +21,7 @@ import soy.gabimoreno.domain.usecase.RefreshBearerTokenUseCase
 import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 
 @ExperimentalCoroutinesApi
-class PremiumViewModelTest {
+class PremiumAudiosViewModelTest {
     private val getPremiumAudiosMediatorUseCase = relaxedMockk<GetPremiumAudiosManagedUseCase>()
     private val getPremiumAudioByIdUseCase = relaxedMockk<GetPremiumAudioByIdUseCase>()
     private val markPremiumAudioAsListenedUseCase =
@@ -45,7 +45,7 @@ class PremiumViewModelTest {
     fun `GIVEN shouldIAccessPremium true WHEN onViewScreen THEN state is updated with access granted`() =
         runTest {
             val viewModel =
-                PremiumViewModel(
+                PremiumAudiosViewModel(
                     getPremiumAudiosMediatorUseCase,
                     getPremiumAudioByIdUseCase,
                     markPremiumAudioAsListenedUseCase,
@@ -53,7 +53,7 @@ class PremiumViewModelTest {
                     updateAudioItemFavoriteStateUseCase,
                     testDispatcher,
                 )
-            val states = mutableListOf<PremiumState>()
+            val states = mutableListOf<PremiumAudiosState>()
             val stateJob = launch { viewModel.state.toList(states) }
             viewModel.onViewScreen(true)
             advanceUntilIdle()
@@ -66,7 +66,7 @@ class PremiumViewModelTest {
     fun `GIVEN shouldIAccessPremium false WHEN onViewScreen THEN state is updated with access denied`() =
         runTest {
             val viewModel =
-                PremiumViewModel(
+                PremiumAudiosViewModel(
                     getPremiumAudiosMediatorUseCase,
                     getPremiumAudioByIdUseCase,
                     markPremiumAudioAsListenedUseCase,
@@ -74,7 +74,7 @@ class PremiumViewModelTest {
                     updateAudioItemFavoriteStateUseCase,
                     testDispatcher,
                 )
-            val states = mutableListOf<PremiumState>()
+            val states = mutableListOf<PremiumAudiosState>()
             val stateJob = launch { viewModel.state.toList(states) }
             viewModel.onViewScreen(false)
             advanceUntilIdle()

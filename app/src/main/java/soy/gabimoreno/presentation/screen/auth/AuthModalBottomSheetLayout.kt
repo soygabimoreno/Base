@@ -42,7 +42,7 @@ import soy.gabimoreno.framework.datastore.getEmail
 import soy.gabimoreno.framework.datastore.getPassword
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
-import soy.gabimoreno.presentation.screen.premium.view.LoginOutlinedTextField
+import soy.gabimoreno.presentation.screen.premiumaudio.view.LoginOutlinedTextField
 import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.PurpleDark

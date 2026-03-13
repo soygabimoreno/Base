@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
 import soy.gabimoreno.data.local.mapper.toPremiumAudio
-import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
 import soy.gabimoreno.data.remote.datasource.premiumaudios.PremiumAudiosRemoteMediator
 import soy.gabimoreno.data.remote.datasource.premiumaudios.RemotePremiumAudiosDataSource
 import soy.gabimoreno.data.remote.model.Category
@@ -27,7 +27,7 @@ class DefaultPremiumAudiosRepository
     @Inject
     constructor(
         private val cloudDataSource: PremiumAudiosCloudDataSource,
-        private val localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
+        private val localPremiumAudioDataSource: LocalPremiumAudioDataSource,
         private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
         private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
         private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
@@ -51,7 +51,7 @@ class DefaultPremiumAudiosRepository
                             PremiumAudiosRemoteMediator(
                                 cloudDataSource = cloudDataSource,
                                 email = email,
-                                localPremiumAudiosDataSource = localPremiumAudiosDataSource,
+                                localPremiumAudioDataSource = localPremiumAudioDataSource,
                                 remotePremiumAudiosDataSource = remotePremiumAudiosDataSource,
                                 refreshPremiumAudiosFromRemoteUseCase =
                                 refreshPremiumAudiosFromRemoteUseCase,
@@ -59,7 +59,7 @@ class DefaultPremiumAudiosRepository
                                 saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase,
                             ),
                         pagingSourceFactory = {
-                            localPremiumAudiosDataSource.getPremiumAudiosPagingSource()
+                            localPremiumAudioDataSource.getPremiumAudiosPagingSource()
                         },
                     )
 
@@ -87,13 +87,13 @@ class DefaultPremiumAudiosRepository
                     ),
                 )
             }
-            localPremiumAudiosDataSource.updateHasBeenListened(premiumAudioId, hasBeenListened)
+            localPremiumAudioDataSource.updateHasBeenListened(premiumAudioId, hasBeenListened)
         }
 
         override suspend fun getPremiumAudioById(
             premiumAudioId: String,
         ): Either<Throwable, PremiumAudio> =
-            localPremiumAudiosDataSource.getPremiumAudioById(premiumAudioId)?.right()
+            localPremiumAudioDataSource.getPremiumAudioById(premiumAudioId)?.right()
                 ?: Throwable("PremiumAudio not found").left()
 
         override suspend fun markAllPremiumAudiosAsUnlistened(email: String) {
@@ -103,11 +103,11 @@ class DefaultPremiumAudiosRepository
                     mapOf(HAS_BEEN_LISTENED to false),
                 )
             }
-            return localPremiumAudiosDataSource.markAllPremiumAudiosAsUnlistened()
+            return localPremiumAudioDataSource.markAllPremiumAudiosAsUnlistened()
         }
 
         override suspend fun getAllFavoritePremiumAudios(): Either<Throwable, List<PremiumAudio>> =
-            localPremiumAudiosDataSource.getAllFavoritePremiumAudios()?.let { premiumAudios ->
+            localPremiumAudioDataSource.getAllFavoritePremiumAudios()?.let { premiumAudios ->
                 premiumAudios.map { it.toPremiumAudio() }.right()
             } ?: Throwable("PremiumAudios not found").left()
 
@@ -126,11 +126,11 @@ class DefaultPremiumAudiosRepository
                     ),
                 )
             }
-            return localPremiumAudiosDataSource.updateMarkedAsFavorite(premiumAudioId, isFavorite)
+            return localPremiumAudioDataSource.updateMarkedAsFavorite(premiumAudioId, isFavorite)
         }
 
         suspend fun reset() {
-            localPremiumAudiosDataSource.reset()
+            localPremiumAudioDataSource.reset()
         }
     }
 

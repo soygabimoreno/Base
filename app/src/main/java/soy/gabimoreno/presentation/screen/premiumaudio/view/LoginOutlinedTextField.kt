@@ -1,4 +1,4 @@
-package soy.gabimoreno.presentation.screen.premium.view
+package soy.gabimoreno.presentation.screen.premiumaudio.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth

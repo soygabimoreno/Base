@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package soy.gabimoreno.presentation.screen.premium
+package soy.gabimoreno.presentation.screen.premiumaudio
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -91,7 +91,7 @@ import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
 
 @Composable
-fun PremiumScreenRoot(
+fun PremiumAudiosScreenRoot(
     onRequireAuth: () -> Unit,
     onItemClicked: (premiumAudioId: String) -> Unit,
     onAddToPlaylistClicked: (premiumAudioId: String) -> Unit,
@@ -100,7 +100,7 @@ fun PremiumScreenRoot(
     val context = LocalContext.current
     val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
     val premiumErrorTokenExpiredMessage = stringResource(R.string.premium_error_token_expired)
-    val premiumViewModel = ViewModelProvider.premiumViewModel
+    val premiumViewModel = ViewModelProvider.premiumAudiosViewModel
     val state by premiumViewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         launch {
@@ -116,15 +116,15 @@ fun PremiumScreenRoot(
         launch {
             premiumViewModel.events.collect { event ->
                 when (event) {
-                    is PremiumEvent.Error -> {
+                    is PremiumAudiosEvent.Error -> {
                         context.toast(unexpectedErrorMessage)
                     }
 
-                    PremiumEvent.ShowTokenExpiredError -> {
+                    PremiumAudiosEvent.ShowTokenExpiredError -> {
                         context.toast(premiumErrorTokenExpiredMessage)
                     }
 
-                    is PremiumEvent.ShowDetail -> {
+                    is PremiumAudiosEvent.ShowDetail -> {
                         onItemClicked(event.premiumAudioId)
                     }
                 }
@@ -136,15 +136,15 @@ fun PremiumScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                is PremiumAction.OnLoginClicked -> {
+                is PremiumAudiosAction.OnLoginClicked -> {
                     onRequireAuth()
                 }
 
-                is PremiumAction.OnPlaylistClicked -> {
+                is PremiumAudiosAction.OnPlaylistClicked -> {
                     onPlaylistClicked()
                 }
 
-                is PremiumAction.OnAddToPlaylistClicked -> {
+                is PremiumAudiosAction.OnAddToPlaylistClicked -> {
                     onAddToPlaylistClicked(
                         action.premiumAudioId,
                     )
@@ -161,8 +161,8 @@ fun PremiumScreenRoot(
 
 @Composable
 fun PremiumScreen(
-    state: PremiumState,
-    onAction: (PremiumAction) -> Unit,
+    state: PremiumAudiosState,
+    onAction: (PremiumAudiosAction) -> Unit,
 ) {
     val premiumAudiosFlow = state.premiumAudioFlow.collectAsLazyPagingItems()
 
@@ -194,7 +194,7 @@ fun PremiumScreen(
                     Modifier
                         .padding(end = Spacing.s16)
                         .clickable {
-                            onAction(PremiumAction.OnPlaylistClicked)
+                            onAction(PremiumAudiosAction.OnPlaylistClicked)
                         },
             )
             Icon(
@@ -216,7 +216,7 @@ fun PremiumScreen(
                     Modifier
                         .clip(CircleShape)
                         .clickable {
-                            onAction(PremiumAction.OnLoginClicked)
+                            onAction(PremiumAudiosAction.OnLoginClicked)
                         },
             )
         }
@@ -228,13 +228,23 @@ fun PremiumScreen(
             if (state.shouldIAccessPremium) {
                 PremiumContent(
                     premiumAudios = premiumAudiosFlow,
-                    onItemClicked = { onAction(PremiumAction.OnPremiumItemClicked(it)) },
-                    onListenedToggled = { onAction(PremiumAction.OnListenedToggled(it)) },
-                    onPullRefreshTriggered = { onAction(PremiumAction.OnRefreshContent) },
-                    onAddToPlaylistClicked = { onAction(PremiumAction.OnAddToPlaylistClicked(it)) },
+                    onItemClicked = {
+                        onAction(
+                            PremiumAudiosAction.OnPremiumAudiosItemClicked(it),
+                        )
+                    },
+                    onListenedToggled = { onAction(PremiumAudiosAction.OnListenedToggled(it)) },
+                    onPullRefreshTriggered = { onAction(PremiumAudiosAction.OnRefreshContent) },
+                    onAddToPlaylistClicked = {
+                        onAction(
+                            PremiumAudiosAction.OnAddToPlaylistClicked(
+                                it,
+                            ),
+                        )
+                    },
                     onFavoriteStatusChanged = {
                         onAction(
-                            PremiumAction.OnFavoriteStatusChanged(it),
+                            PremiumAudiosAction.OnFavoriteStatusChanged(it),
                         )
                     },
                 )
@@ -396,7 +406,8 @@ fun PremiumItem(
                 .fillMaxWidth()
                 .clickable {
                     onItemClicked(premiumAudio.id)
-                }.background(
+                }
+                .background(
                     brush =
                         run {
                             // TODO: This is a provisional patch for visualization
@@ -409,7 +420,8 @@ fun PremiumItem(
                             SolidColor(backgroundColor)
                         },
                     alpha = 0.5f,
-                ).padding(horizontal = Spacing.s16, vertical = Spacing.s16),
+                )
+                .padding(horizontal = Spacing.s16, vertical = Spacing.s16),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {

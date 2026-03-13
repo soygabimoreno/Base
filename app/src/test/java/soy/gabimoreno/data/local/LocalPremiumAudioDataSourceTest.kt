@@ -16,24 +16,24 @@ import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.verifyOnce
 import soy.gabimoreno.data.local.mapper.toPremiumAudioDbModel
-import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
 import soy.gabimoreno.fake.buildPremiumAudioDbModel
 import soy.gabimoreno.fake.buildPremiumAudios
 
 @ExperimentalCoroutinesApi
-class LocalPremiumAudiosDataSourceTest {
+class LocalPremiumAudioDataSourceTest {
     private val premiumAudioDbModelDao: PremiumAudioDbModelDao = mockk()
     private val gabiMorenoDatabase: ApplicationDatabase = mockk()
     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
-    private lateinit var datasource: LocalPremiumAudiosDataSource
+    private lateinit var datasource: LocalPremiumAudioDataSource
 
     @Before
     fun setUp() {
         every { gabiMorenoDatabase.premiumAudioDbModelDao() } returns premiumAudioDbModelDao
         datasource =
-            LocalPremiumAudiosDataSource(
+            LocalPremiumAudioDataSource(
                 gabiMorenoDatabase,
                 testDispatcher,
             )

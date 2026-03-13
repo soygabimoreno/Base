@@ -1,4 +1,4 @@
-package soy.gabimoreno.presentation.screen.premium
+package soy.gabimoreno.presentation.screen.premiumaudio
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +23,7 @@ import soy.gabimoreno.domain.usecase.UpdateAudioItemFavoriteStateUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class PremiumViewModel
+class PremiumAudiosViewModel
     @Inject
     constructor(
         private val getPremiumAudiosMediatorUseCase: GetPremiumAudiosManagedUseCase,
@@ -33,16 +33,16 @@ class PremiumViewModel
         private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
         @param:IO private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
-        private val _state = MutableStateFlow(PremiumState())
+        private val _state = MutableStateFlow(PremiumAudiosState())
         val state =
             _state
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
-                    initialValue = PremiumState(),
+                    initialValue = PremiumAudiosState(),
                 )
 
-        private val eventChannel = MutableSharedFlow<PremiumEvent>()
+        private val eventChannel = MutableSharedFlow<PremiumAudiosEvent>()
         val events = eventChannel.asSharedFlow()
 
         fun onViewScreen(shouldIAccessPremium: Boolean) {
@@ -58,14 +58,17 @@ class PremiumViewModel
             }
         }
 
-        fun onAction(action: PremiumAction) {
+        fun onAction(action: PremiumAudiosAction) {
             when (action) {
-                is PremiumAction.OnPremiumItemClicked -> {
+                is PremiumAudiosAction.OnPremiumAudiosItemClicked -> {
                     loadSelectedPremiumAudio(action.premiumAudioId)
                 }
 
-                PremiumAction.OnRefreshContent -> refreshContent()
-                is PremiumAction.OnListenedToggled -> {
+                PremiumAudiosAction.OnRefreshContent -> {
+                    refreshContent()
+                }
+
+                is PremiumAudiosAction.OnListenedToggled -> {
                     viewModelScope.launch(dispatcher) {
                         markPremiumAudioAsListenedUseCase(
                             premiumAudioId = action.premiumAudio.id,
@@ -87,7 +90,7 @@ class PremiumViewModel
                     }
                 }
 
-                is PremiumAction.OnFavoriteStatusChanged -> {
+                is PremiumAudiosAction.OnFavoriteStatusChanged -> {
                     _state.update { currentState ->
                         currentState.copy(
                             premiumAudios =
@@ -130,7 +133,7 @@ class PremiumViewModel
                     )
                 }
 
-                eventChannel.emit(PremiumEvent.ShowDetail(premiumAudioId))
+                eventChannel.emit(PremiumAudiosEvent.ShowDetail(premiumAudioId))
             }
         }
 
@@ -163,7 +166,7 @@ class PremiumViewModel
                 throwable is HttpException && throwable.code() == TOKEN_EXPIRED_CODE ->
                     refreshToken()
 
-                else -> eventChannel.emit(PremiumEvent.Error(throwable))
+                else -> eventChannel.emit(PremiumAudiosEvent.Error(throwable))
             }
         }
 
@@ -194,7 +197,7 @@ class PremiumViewModel
             }
 
             viewModelScope.launch {
-                eventChannel.emit(PremiumEvent.ShowTokenExpiredError)
+                eventChannel.emit(PremiumAudiosEvent.ShowTokenExpiredError)
             }
         }
 

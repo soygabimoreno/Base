@@ -10,7 +10,7 @@ import soy.gabimoreno.presentation.screen.auth.AuthViewModel
 import soy.gabimoreno.presentation.screen.detail.DetailViewModel
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
 import soy.gabimoreno.presentation.screen.player.PlayerViewModel
-import soy.gabimoreno.presentation.screen.premium.PremiumViewModel
+import soy.gabimoreno.presentation.screen.premiumaudio.PremiumAudiosViewModel
 import soy.gabimoreno.presentation.screen.profile.ProfileViewModel
 import soy.gabimoreno.presentation.screen.senior.SeniorViewModel
 import soy.gabimoreno.presentation.screen.webview.WebViewViewModel
@@ -36,9 +36,9 @@ object ViewModelProvider {
         @Composable
         get() = localWebViewViewModel.current
 
-    val premiumViewModel: PremiumViewModel
+    val premiumAudiosViewModel: PremiumAudiosViewModel
         @Composable
-        get() = localPremiumViewModel.current
+        get() = localPremiumAudiosViewModel.current
 
     val audioCoursesViewModel: AudioCoursesViewModel
         @Composable
@@ -65,7 +65,7 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
     val detailViewModel: DetailViewModel = viewModel()
     val playerViewModel: PlayerViewModel = viewModel()
     val webViewViewModel: WebViewViewModel = viewModel()
-    val premiumViewModel: PremiumViewModel = viewModel()
+    val premiumAudiosViewModel: PremiumAudiosViewModel = viewModel()
     val audioCoursesViewModel: AudioCoursesViewModel = viewModel()
     val audioCourseDetailViewModel: AudioCourseDetailViewModel = viewModel()
     val profileViewModel: ProfileViewModel = viewModel()
@@ -75,7 +75,7 @@ fun ProvideMultiViewModel(content: @Composable () -> Unit) {
         localHomeViewModel provides homeViewModel,
         localSeniorViewModel provides seniorViewModel,
         localWebViewViewModel provides webViewViewModel,
-        localPremiumViewModel provides premiumViewModel,
+        localPremiumAudiosViewModel provides premiumAudiosViewModel,
         localAudioCoursesViewModel provides audioCoursesViewModel,
         localAudioCourseDetailViewModel provides audioCourseDetailViewModel,
         localProfileViewModel provides profileViewModel,
@@ -117,8 +117,8 @@ private val localWebViewViewModel =
         error("No WebViewViewModel provided")
     }
 
-private val localPremiumViewModel =
-    staticCompositionLocalOf<PremiumViewModel> {
+private val localPremiumAudiosViewModel =
+    staticCompositionLocalOf<PremiumAudiosViewModel> {
         error("No PremiumViewModel provided")
     }
 

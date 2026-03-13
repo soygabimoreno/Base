@@ -5,7 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
-import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.PremiumAudio
@@ -19,7 +19,7 @@ import kotlin.math.ceil
 class PremiumAudiosRemoteMediator(
     private val cloudDataSource: PremiumAudiosCloudDataSource,
     private val email: String,
-    private val localPremiumAudiosDataSource: LocalPremiumAudiosDataSource,
+    private val localPremiumAudioDataSource: LocalPremiumAudioDataSource,
     private val remotePremiumAudiosDataSource: RemotePremiumAudiosDataSource,
     private val refreshPremiumAudiosFromRemoteUseCase: RefreshPremiumAudiosFromRemoteUseCase,
     private val saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase:
@@ -51,7 +51,7 @@ class PremiumAudiosRemoteMediator(
                     )
 
                     LoadType.APPEND -> {
-                        val totalAudios = localPremiumAudiosDataSource.getTotalPremiumAudios()
+                        val totalAudios = localPremiumAudioDataSource.getTotalPremiumAudios()
                         ceil(totalAudios.toDouble() / state.config.pageSize.toDouble()).toInt() + 1
                     }
                 }
@@ -71,7 +71,7 @@ class PremiumAudiosRemoteMediator(
                     val finalPremiumAudios =
                         if (loadType == LoadType.REFRESH) {
                             val mergedPremiumAudios = mergeWithCloudData(premiumAudios, email)
-                            localPremiumAudiosDataSource.reset()
+                            localPremiumAudioDataSource.reset()
                             saveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase(
                                 System.currentTimeMillis(),
                             )
@@ -80,7 +80,7 @@ class PremiumAudiosRemoteMediator(
                             mergeWithCloudData(premiumAudios, email)
                         }
 
-                    localPremiumAudiosDataSource.savePremiumAudios(finalPremiumAudios)
+                    localPremiumAudioDataSource.savePremiumAudios(finalPremiumAudios)
                     MediatorResult.Success(
                         endOfPaginationReached = premiumAudios.isEmpty(),
                     )

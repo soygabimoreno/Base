@@ -8,7 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.CoroutineDispatcher
 import soy.gabimoreno.data.local.ApplicationDatabase
-import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudiosDataSource
+import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
 import soy.gabimoreno.di.data.LocalDataModule
 import javax.inject.Named
 
@@ -33,8 +33,8 @@ object TestLocalDataModule {
         @Named(DB_TEST_NAME)
         gabiMorenoDatabase: ApplicationDatabase,
         @IO dispatcher: CoroutineDispatcher,
-    ): LocalPremiumAudiosDataSource =
-        LocalPremiumAudiosDataSource(
+    ): LocalPremiumAudioDataSource =
+        LocalPremiumAudioDataSource(
             gabiMorenoDatabase,
             dispatcher,
         )

@@ -16,7 +16,7 @@ import soy.gabimoreno.presentation.screen.home.HomeScreen
 import soy.gabimoreno.presentation.screen.playlist.audio.PlaylistAudioItemRoot
 import soy.gabimoreno.presentation.screen.playlist.detail.PlaylistDetailScreenRoot
 import soy.gabimoreno.presentation.screen.playlist.list.PlaylistScreenRoot
-import soy.gabimoreno.presentation.screen.premium.PremiumScreenRoot
+import soy.gabimoreno.presentation.screen.premiumaudio.PremiumAudiosScreenRoot
 import soy.gabimoreno.presentation.screen.profile.ProfileScreenRoot
 import soy.gabimoreno.presentation.screen.senior.SeniorScreen
 import soy.gabimoreno.presentation.screen.webview.WebViewScreen
@@ -152,7 +152,7 @@ private fun NavGraphBuilder.premiumNav(
     ) {
         composable(navCommand = NavCommand.ContentType(Feature.PREMIUM)) {
             appState.setStartDestination(Feature.PREMIUM)
-            PremiumScreenRoot(
+            PremiumAudiosScreenRoot(
                 onRequireAuth = onRequireAuth,
                 onItemClicked = { premiumAudioId ->
                     navController.navigateToDetailFromPremium(premiumAudioId)
