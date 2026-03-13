@@ -30,7 +30,7 @@ import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
         PodcastDbModel::class,
         SeniorAudioDbModel::class,
     ],
-    version = 8,
+    version = 9,
 )
 @TypeConverters(Converters::class)
 abstract class ApplicationDatabase : RoomDatabase() {
