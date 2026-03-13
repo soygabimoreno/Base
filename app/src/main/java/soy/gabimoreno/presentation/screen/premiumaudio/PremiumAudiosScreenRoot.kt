@@ -420,8 +420,7 @@ fun PremiumItem(
                             SolidColor(backgroundColor)
                         },
                     alpha = 0.5f,
-                )
-                .padding(horizontal = Spacing.s16, vertical = Spacing.s16),
+                ).padding(horizontal = Spacing.s16, vertical = Spacing.s16),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {

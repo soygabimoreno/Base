@@ -20,7 +20,7 @@ import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistWithItems
 import soy.gabimoreno.data.local.podcast.model.PodcastDbModel
-import soy.gabimoreno.data.local.podcast.model.SeniorDbModel
+import soy.gabimoreno.data.local.podcast.model.SeniorAudioDbModel
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.content.Playlist
@@ -288,7 +288,7 @@ class LocalPlaylistDataSource
             val audioCourses: Map<String, AudioCourseDbModel>,
             val audioCourseItems: Map<String, AudioCourseItemDbModel>,
             val podcasts: Map<String, PodcastDbModel>,
-            val seniors: Map<String, SeniorDbModel>,
+            val seniors: Map<String, SeniorAudioDbModel>,
         )
     }
 

@@ -16,7 +16,7 @@ import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 import soy.gabimoreno.data.local.podcast.dao.PodcastDbModelDao
 import soy.gabimoreno.data.local.podcast.dao.SeniorDbModelDao
 import soy.gabimoreno.data.local.podcast.model.PodcastDbModel
-import soy.gabimoreno.data.local.podcast.model.SeniorDbModel
+import soy.gabimoreno.data.local.podcast.model.SeniorAudioDbModel
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
 
@@ -28,7 +28,7 @@ import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
         PlaylistDbModel::class,
         PlaylistItemsDbModel::class,
         PodcastDbModel::class,
-        SeniorDbModel::class,
+        SeniorAudioDbModel::class,
     ],
     version = 8,
 )

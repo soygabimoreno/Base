@@ -1,7 +1,7 @@
 package soy.gabimoreno.data.local.mapper
 
 import soy.gabimoreno.data.local.podcast.model.PodcastDbModel
-import soy.gabimoreno.data.local.podcast.model.SeniorDbModel
+import soy.gabimoreno.data.local.podcast.model.SeniorAudioDbModel
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.PlaylistAudioItem
 import soy.gabimoreno.domain.model.podcast.Episode
@@ -23,7 +23,7 @@ fun Episode.toPodcastDbModel() =
     )
 
 fun Episode.toSeniorDbModel() =
-    SeniorDbModel(
+    SeniorAudioDbModel(
         id = id,
         title = title,
         description = description,
@@ -58,7 +58,7 @@ fun PodcastDbModel.toPlaylistAudioItem(position: Int) =
         category = Category.PODCAST,
     )
 
-fun SeniorDbModel.toPlaylistAudioItem(position: Int) =
+fun SeniorAudioDbModel.toPlaylistAudioItem(position: Int) =
     PlaylistAudioItem(
         id = id,
         title = title,

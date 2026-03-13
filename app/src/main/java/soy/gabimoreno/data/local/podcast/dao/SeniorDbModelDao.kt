@@ -4,25 +4,25 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import soy.gabimoreno.data.local.podcast.model.SeniorDbModel
+import soy.gabimoreno.data.local.podcast.model.SeniorAudioDbModel
 
 @Dao
 interface SeniorDbModelDao {
-    @Query("SELECT * FROM SeniorDbModel ORDER BY pubDateMillis DESC")
-    fun getSeniorDbModels(): Flow<List<SeniorDbModel>>
+    @Query("SELECT * FROM SeniorAudioDbModel ORDER BY pubDateMillis DESC")
+    fun getSeniorDbModels(): Flow<List<SeniorAudioDbModel>>
 
-    @Query("SELECT * FROM SeniorDbModel WHERE id = :id")
-    fun getSeniorDbModelById(id: String): SeniorDbModel?
+    @Query("SELECT * FROM SeniorAudioDbModel WHERE id = :id")
+    fun getSeniorDbModelById(id: String): SeniorAudioDbModel?
 
-    @Query("SELECT * FROM SeniorDbModel WHERE id IN (:ids)")
-    suspend fun getSeniorDbModelByIds(ids: Set<String>): List<SeniorDbModel>
+    @Query("SELECT * FROM SeniorAudioDbModel WHERE id IN (:ids)")
+    suspend fun getSeniorDbModelByIds(ids: Set<String>): List<SeniorAudioDbModel>
 
-    @Query("SELECT COUNT(id) FROM SeniorDbModel")
+    @Query("SELECT COUNT(id) FROM SeniorAudioDbModel")
     fun count(): Int
 
     @Upsert
-    fun upsertSeniorDbModels(seniorDbModels: List<SeniorDbModel>)
+    fun upsertSeniorDbModels(seniorAudioDbModels: List<SeniorAudioDbModel>)
 
-    @Query("DELETE FROM SeniorDbModel")
+    @Query("DELETE FROM SeniorAudioDbModel")
     fun deleteAllSeniorDbModels()
 }

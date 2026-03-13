@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import soy.gabimoreno.domain.model.audio.Saga
 
 @Entity
-data class SeniorDbModel(
+data class SeniorAudioDbModel(
     @PrimaryKey
     val id: String,
     val title: String,

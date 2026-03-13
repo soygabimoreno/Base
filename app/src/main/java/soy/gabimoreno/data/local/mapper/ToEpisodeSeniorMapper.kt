@@ -1,9 +1,9 @@
 package soy.gabimoreno.data.local.mapper
 
-import soy.gabimoreno.data.local.podcast.model.SeniorDbModel
+import soy.gabimoreno.data.local.podcast.model.SeniorAudioDbModel
 import soy.gabimoreno.domain.model.podcast.Episode
 
-fun SeniorDbModel.toEpisode() =
+fun SeniorAudioDbModel.toEpisode() =
     Episode(
         id = id,
         title = title,
