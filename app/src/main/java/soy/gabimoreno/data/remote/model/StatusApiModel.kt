@@ -9,7 +9,7 @@ enum class StatusApiModel {
     @Json(name = "expired")
     EXPIRED,
 
-    @Json(name = "canceled")
+    @Json(name = "cancelled")
     CANCELED,
 
     @Json(name = "pending")
