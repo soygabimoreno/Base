@@ -60,7 +60,7 @@ fun ProfileScreenRoot(
     val profileResetSuccessAudioCoursesMessage =
         stringResource(R.string.profile_reset_success_audio_courses)
     val profileResetSuccessPodcastMessage = stringResource(R.string.profile_reset_success_podcast)
-    val profileResetSuccessPremiumMessage = stringResource(R.string.unexpected_error)
+    val profileResetSuccessPremiumMessage = stringResource(R.string.profile_reset_success_premium)
     val profileViewModel = ViewModelProvider.profileViewModel
     LaunchedEffect(Unit) {
         launch {
