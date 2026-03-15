@@ -18,6 +18,7 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.SeniorTrackerEvent
 import soy.gabimoreno.di.Main
 import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 import soy.gabimoreno.domain.usecase.GetSeniorAudioStreamUseCase
 import javax.inject.Inject
 
@@ -27,6 +28,7 @@ class SeniorAudiosViewModel
     constructor(
         private val getSeniorAudioStreamUseCase: GetSeniorAudioStreamUseCase,
         private val tracker: Tracker,
+        val getAppVersionNameUseCase: GetAppVersionNameUseCase,
         @param:Main private val dispatcher: CoroutineDispatcher,
     ) : ViewModel() {
         var viewState by mutableStateOf<ViewState>(ViewState.Loading)
@@ -39,7 +41,10 @@ class SeniorAudiosViewModel
         private val _viewEventFlow = MutableSharedFlow<ViewEvent>()
         val viewEventFlow = _viewEventFlow.asSharedFlow()
 
+        var appVersionName by mutableStateOf("")
+
         init {
+            appVersionName = getAppVersionNameUseCase()
             searchPodcasts()
         }
 
@@ -92,12 +97,15 @@ class SeniorAudiosViewModel
 
         fun findEpisodeFromId(id: String): Episode? =
             when (viewState) {
-                is ViewState.Success ->
+                is ViewState.Success -> {
                     (viewState as ViewState.Success).episodes.find {
                         it.id == id
                     }
+                }
 
-                else -> null
+                else -> {
+                    null
+                }
             }
 
         sealed class ViewEvent {

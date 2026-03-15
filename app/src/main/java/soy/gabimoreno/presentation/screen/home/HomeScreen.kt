@@ -81,7 +81,7 @@ fun HomeScreen(
 
     Surface {
         Column {
-            Header(homeViewModel.appVersionName)
+            Header()
             SearchRow(
                 searchText = searchTextState,
                 onSearchTextChanged = { searchTextState = it },
@@ -288,9 +288,9 @@ private fun SpacerWithBottomPadding(playerHasAudio: Boolean) {
 }
 
 @Composable
-private fun Header(appVersionName: String) {
+private fun Header() {
     Text(
-        appVersionName,
+        "",
         modifier =
             Modifier
                 .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))

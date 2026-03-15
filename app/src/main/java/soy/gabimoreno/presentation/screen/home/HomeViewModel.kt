@@ -36,8 +36,6 @@ class HomeViewModel
         var shouldIReversePodcastOrder by mutableStateOf(false)
             private set
 
-        var appVersionName by mutableStateOf("")
-
         var isRefreshing by mutableStateOf(false)
             private set
 
@@ -45,7 +43,6 @@ class HomeViewModel
         val viewEventFlow = _viewEventFlow.asSharedFlow()
 
         init {
-            appVersionName = homeUseCases.getAppVersionName()
             searchPodcasts()
             viewModelScope.launch(dispatcher) {
                 shouldIReversePodcastOrder = homeUseCases.getShouldIReversePodcastOrder()

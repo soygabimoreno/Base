@@ -71,7 +71,7 @@ fun SeniorAudiosScreen(
 
     Surface {
         Column {
-            Header("Audios Senior") // TODO
+            Header(seniorViewModel.appVersionName)
             SearchRow(
                 searchText = searchTextState,
                 onSearchTextChanged = { searchTextState = it },

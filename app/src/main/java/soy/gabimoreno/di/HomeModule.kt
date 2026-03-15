@@ -9,7 +9,6 @@ import soy.gabimoreno.domain.repository.podcast.PodcastRepository
 import soy.gabimoreno.domain.repository.premiumaudio.PremiumAudiosRepository
 import soy.gabimoreno.domain.repository.senioraudio.SeniorAudioRepository
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
-import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 import soy.gabimoreno.domain.usecase.GetAudioByIdUseCase
 import soy.gabimoreno.domain.usecase.GetPodcastStreamUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReversePodcastOrderUseCase
@@ -29,7 +28,6 @@ class HomeModule {
         markPodcastAsListenedUseCase: MarkPodcastAsListenedUseCase,
         updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase,
         encodeUrlUseCase: EncodeUrlUseCase,
-        getAppVersionNameUseCase: GetAppVersionNameUseCase,
         getShouldIReversePodcastOrderUseCase: GetShouldIReversePodcastOrderUseCase,
         setShouldIReversePodcastOrderUseCase: SetShouldIReversePodcastOrderUseCase,
     ) = HomeUseCases(
@@ -37,7 +35,6 @@ class HomeModule {
         markPodcastAsListenedUseCase = markPodcastAsListenedUseCase,
         updateAudioItemFavoriteStateUseCase = updateAudioItemFavoriteStateUseCase,
         encodeUrl = encodeUrlUseCase,
-        getAppVersionName = getAppVersionNameUseCase,
         getShouldIReversePodcastOrder = getShouldIReversePodcastOrderUseCase,
         setShouldIReversePodcastOrder = setShouldIReversePodcastOrderUseCase,
     )
