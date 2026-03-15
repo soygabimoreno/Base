@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.ProvideWindowInsets
 import soy.gabimoreno.presentation.navigation.AppBottomNavigation
 import soy.gabimoreno.presentation.navigation.AppNavigation
 import soy.gabimoreno.presentation.navigation.navigatePoppingUpToStartDestination
@@ -45,43 +44,41 @@ fun AppUi(
         remember { AuthBottomSheetController(stateModalBottomSheet, coroutineScope) }
 
     GabiMorenoScreen {
-        ProvideWindowInsets {
-            ProvideMultiViewModel {
-                AuthModalBottomSheetRoot(
-                    modalBottomSheetState = stateModalBottomSheet,
-                    onHideBottomSheet = { authBottomSheetController.hide() },
-                ) {
-                    Scaffold(
-                        bottomBar = {
-                            AppBottomNavigation(currentRoute) { item ->
-                                navController.navigatePoppingUpToStartDestination(
-                                    item.navCommand.route,
-                                )
-                            }
-                        },
-                    ) { padding ->
-                        Box(
-                            modifier =
-                                Modifier
-                                    .fillMaxHeight()
-                                    .padding(padding),
-                        ) {
-                            AppNavigation(
-                                navController = navController,
-                                appState = appState,
-                                onRequireAuth = { authBottomSheetController.show() },
-                            )
-                            AudioBottomBar(
-                                modifier = Modifier.align(Alignment.BottomCenter),
+        ProvideMultiViewModel {
+            AuthModalBottomSheetRoot(
+                modalBottomSheetState = stateModalBottomSheet,
+                onHideBottomSheet = { authBottomSheetController.hide() },
+            ) {
+                Scaffold(
+                    bottomBar = {
+                        AppBottomNavigation(currentRoute) { item ->
+                            navController.navigatePoppingUpToStartDestination(
+                                item.navCommand.route,
                             )
                         }
+                    },
+                ) { padding ->
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxHeight()
+                                .padding(padding),
+                    ) {
+                        AppNavigation(
+                            navController = navController,
+                            appState = appState,
+                            onRequireAuth = { authBottomSheetController.show() },
+                        )
+                        AudioBottomBar(
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                        )
                     }
                 }
-                Box {
-                    PlayerScreen(backDispatcher)
-                    ReviewDialog()
-                    SurveyDialogRoot()
-                }
+            }
+            Box {
+                PlayerScreen(backDispatcher)
+                ReviewDialog()
+                SurveyDialogRoot()
             }
         }
     }
