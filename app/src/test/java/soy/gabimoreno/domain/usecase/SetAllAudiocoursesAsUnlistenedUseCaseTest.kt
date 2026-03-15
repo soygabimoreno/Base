@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
-import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourse.AudioCourseRepository
 import soy.gabimoreno.framework.datastore.getEmail
 
 class SetAllAudiocoursesAsUnlistenedUseCaseTest {

@@ -1,6 +1,6 @@
 package soy.gabimoreno.domain.usecase
 
-import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourse.DefaultAudioCourseRepository
 import javax.inject.Inject
 
 class RefreshAudioCoursesUseCase

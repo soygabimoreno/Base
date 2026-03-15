@@ -75,9 +75,9 @@ class PlaylistAudioItemViewModel
                             podcast.getOrNull()?.title.orEmpty()
                         }
 
-                        AudioItemType.SENIOR -> {
-                            val senior = getSeniorByIdUseCase(audioItemId)
-                            senior.getOrNull()?.title.orEmpty()
+                        AudioItemType.SENIOR_AUDIO -> {
+                            val seniorAudio = getSeniorByIdUseCase(audioItemId)
+                            seniorAudio.getOrNull()?.title.orEmpty()
                         }
                     }
 

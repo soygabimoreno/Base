@@ -16,9 +16,9 @@ import soy.gabimoreno.presentation.screen.home.HomeScreen
 import soy.gabimoreno.presentation.screen.playlist.audio.PlaylistAudioItemRoot
 import soy.gabimoreno.presentation.screen.playlist.detail.PlaylistDetailScreenRoot
 import soy.gabimoreno.presentation.screen.playlist.list.PlaylistScreenRoot
-import soy.gabimoreno.presentation.screen.premiumaudio.PremiumAudiosScreenRoot
+import soy.gabimoreno.presentation.screen.premiumaudios.PremiumAudiosScreenRoot
 import soy.gabimoreno.presentation.screen.profile.ProfileScreenRoot
-import soy.gabimoreno.presentation.screen.senior.SeniorScreen
+import soy.gabimoreno.presentation.screen.senioraudios.SeniorAudiosScreen
 import soy.gabimoreno.presentation.screen.webview.WebViewScreen
 
 @Composable
@@ -45,12 +45,12 @@ private fun NavGraphBuilder.seniorNav(
     appState: AppState,
 ) {
     navigation(
-        startDestination = NavCommand.ContentType(Feature.SENIOR).route,
-        route = Feature.SENIOR.route,
+        startDestination = NavCommand.ContentType(Feature.SENIOR_AUDIOS).route,
+        route = Feature.SENIOR_AUDIOS.route,
     ) {
-        composable(navCommand = NavCommand.ContentType(Feature.SENIOR)) {
-            appState.setStartDestination(Feature.SENIOR)
-            SeniorScreen(
+        composable(navCommand = NavCommand.ContentType(Feature.SENIOR_AUDIOS)) {
+            appState.setStartDestination(Feature.SENIOR_AUDIOS)
+            SeniorAudiosScreen(
                 onItemClicked = { episodeId ->
                     navController.navigateToDetailFromSenior(episodeId)
                 },
@@ -60,7 +60,7 @@ private fun NavGraphBuilder.seniorNav(
             )
         }
 
-        val command = NavCommand.ContentDetail(Feature.SENIOR, listOf(NavArg.EpisodeId))
+        val command = NavCommand.ContentDetail(Feature.SENIOR_AUDIOS, listOf(NavArg.EpisodeId))
         composable(
             route = command.route,
             arguments = command.arguments,
@@ -68,7 +68,7 @@ private fun NavGraphBuilder.seniorNav(
         ) {
             DetailScreen(
                 audioId = it.findArg<String>(NavArg.EpisodeId),
-                Feature.SENIOR,
+                Feature.SENIOR_AUDIOS,
                 onBackClicked = {
                     navController.goBack()
                 },
@@ -78,7 +78,7 @@ private fun NavGraphBuilder.seniorNav(
             )
         }
 
-        composable(navCommand = NavCommand.ContentWebView(Feature.SENIOR)) {
+        composable(navCommand = NavCommand.ContentWebView(Feature.SENIOR_AUDIOS)) {
             WebViewScreen(
                 url = it.findArg(NavArg.EncodedUrl),
                 onBackClicked = {
@@ -147,11 +147,11 @@ private fun NavGraphBuilder.premiumNav(
     onRequireAuth: () -> Unit,
 ) {
     navigation(
-        startDestination = NavCommand.ContentType(Feature.PREMIUM).route,
-        route = Feature.PREMIUM.route,
+        startDestination = NavCommand.ContentType(Feature.PREMIUM_AUDIOS).route,
+        route = Feature.PREMIUM_AUDIOS.route,
     ) {
-        composable(navCommand = NavCommand.ContentType(Feature.PREMIUM)) {
-            appState.setStartDestination(Feature.PREMIUM)
+        composable(navCommand = NavCommand.ContentType(Feature.PREMIUM_AUDIOS)) {
+            appState.setStartDestination(Feature.PREMIUM_AUDIOS)
             PremiumAudiosScreenRoot(
                 onRequireAuth = onRequireAuth,
                 onItemClicked = { premiumAudioId ->
@@ -168,7 +168,8 @@ private fun NavGraphBuilder.premiumNav(
             )
         }
 
-        val command = NavCommand.ContentDetail(Feature.PREMIUM, listOf(NavArg.PremiumAudioId))
+        val command =
+            NavCommand.ContentDetail(Feature.PREMIUM_AUDIOS, listOf(NavArg.PremiumAudioId))
         composable(
             route = command.route,
             arguments = command.arguments,
@@ -176,7 +177,7 @@ private fun NavGraphBuilder.premiumNav(
         ) {
             DetailScreen(
                 audioId = it.findArg<String>(NavArg.PremiumAudioId),
-                Feature.PREMIUM,
+                Feature.PREMIUM_AUDIOS,
                 onBackClicked = {
                     navController.goBack()
                 },

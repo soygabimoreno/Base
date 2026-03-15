@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
 import soy.gabimoreno.core.testing.relaxedMockk
+import soy.gabimoreno.data.remote.datasource.premiumaudio.RemotePremiumAudiosDataSource
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.data.remote.model.post.PostApiModel
 import soy.gabimoreno.data.remote.model.toQueryValue

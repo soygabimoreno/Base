@@ -11,9 +11,9 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
-import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourse.AudioCourseRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
-import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
+import soy.gabimoreno.domain.repository.premiumaudio.PremiumAudiosRepository
 import soy.gabimoreno.fake.buildAudioCourseItem
 import soy.gabimoreno.fake.buildEpisode
 import soy.gabimoreno.fake.buildPremiumAudio

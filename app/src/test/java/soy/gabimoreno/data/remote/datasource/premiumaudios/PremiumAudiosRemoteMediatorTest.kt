@@ -24,8 +24,10 @@ import soy.gabimoreno.core.testing.relaxedMockk
 import soy.gabimoreno.data.cloud.audiosync.datasource.PremiumAudiosCloudDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModel
+import soy.gabimoreno.data.remote.datasource.premiumaudio.PremiumAudiosRemoteMediator
+import soy.gabimoreno.data.remote.datasource.premiumaudio.RemotePremiumAudiosDataSource
 import soy.gabimoreno.data.remote.model.Category
-import soy.gabimoreno.domain.repository.premiumaudios.TWELVE_HOURS_IN_MILLIS
+import soy.gabimoreno.domain.repository.premiumaudio.TWELVE_HOURS_IN_MILLIS
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import soy.gabimoreno.domain.usecase.SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
 import soy.gabimoreno.fake.buildCloudPremiumAudiosResponseList

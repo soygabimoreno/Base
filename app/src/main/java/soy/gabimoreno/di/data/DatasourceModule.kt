@@ -9,10 +9,10 @@ import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
 import soy.gabimoreno.data.remote.datasource.login.RemoteLoginDatasource
 import soy.gabimoreno.data.remote.datasource.podcast.PodcastDatasource
 import soy.gabimoreno.data.remote.datasource.podcast.RemotePodcastDatasource
-import soy.gabimoreno.data.remote.datasource.premiumaudios.PremiumAudiosDataSource
-import soy.gabimoreno.data.remote.datasource.premiumaudios.RemotePremiumAudiosDataSource
-import soy.gabimoreno.data.remote.datasource.senior.DefaultRemoteSeniorDatasource
-import soy.gabimoreno.data.remote.datasource.senior.RemoteSeniorDatasource
+import soy.gabimoreno.data.remote.datasource.premiumaudio.PremiumAudiosDataSource
+import soy.gabimoreno.data.remote.datasource.premiumaudio.RemotePremiumAudiosDataSource
+import soy.gabimoreno.data.remote.datasource.senioraudio.DefaultRemoteSeniorAudioDatasource
+import soy.gabimoreno.data.remote.datasource.senioraudio.RemoteSeniorAudioDatasource
 import soy.gabimoreno.data.remote.service.LoginService
 import soy.gabimoreno.data.remote.service.PostService
 import javax.inject.Singleton
@@ -50,8 +50,8 @@ object DatasourceModule {
     fun provideRemoteSeniorDatasource(
         rssParser: RssParser,
         okkHttpClient: okhttp3.OkHttpClient,
-    ): RemoteSeniorDatasource =
-        DefaultRemoteSeniorDatasource(
+    ): RemoteSeniorAudioDatasource =
+        DefaultRemoteSeniorAudioDatasource(
             rssParser,
             okkHttpClient,
         )

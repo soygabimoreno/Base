@@ -10,7 +10,7 @@ import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Test
-import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourse.AudioCourseRepository
 import soy.gabimoreno.fake.buildAudioCourse
 
 class GetAudioCourseByIdUseCaseTest {

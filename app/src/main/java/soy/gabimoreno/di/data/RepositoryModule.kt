@@ -12,25 +12,25 @@ import soy.gabimoreno.data.cloud.playlist.datasource.CloudPlaylistDataSource
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCourseDataSource
 import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.data.local.podcast.LocalPodcastDataSource
-import soy.gabimoreno.data.local.podcast.LocalSeniorDataSource
+import soy.gabimoreno.data.local.podcast.LocalSeniorAudioDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
 import soy.gabimoreno.data.remote.datasource.audiocourse.RemoteAudioCourseDataSource
 import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
 import soy.gabimoreno.data.remote.datasource.podcast.PodcastDatasource
-import soy.gabimoreno.data.remote.datasource.premiumaudios.RemotePremiumAudiosDataSource
-import soy.gabimoreno.data.remote.datasource.senior.RemoteSeniorDatasource
+import soy.gabimoreno.data.remote.datasource.premiumaudio.RemotePremiumAudiosDataSource
+import soy.gabimoreno.data.remote.datasource.senioraudio.RemoteSeniorAudioDatasource
 import soy.gabimoreno.data.repository.podcast.DefaultPodcastRepository
-import soy.gabimoreno.data.repository.podcast.DefaultSeniorRepository
-import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
-import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCourseRepository
+import soy.gabimoreno.data.repository.senioraudio.DefaultSeniorAudioAudioRepository
+import soy.gabimoreno.domain.repository.audiocourse.AudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourse.DefaultAudioCourseRepository
 import soy.gabimoreno.domain.repository.login.LoginRepository
 import soy.gabimoreno.domain.repository.login.RemoteLoginRepository
 import soy.gabimoreno.domain.repository.playlist.DefaultPlaylistRepository
 import soy.gabimoreno.domain.repository.playlist.PlaylistRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
-import soy.gabimoreno.domain.repository.premiumaudios.DefaultPremiumAudiosRepository
-import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
-import soy.gabimoreno.domain.repository.senior.SeniorRepository
+import soy.gabimoreno.domain.repository.premiumaudio.DefaultPremiumAudiosRepository
+import soy.gabimoreno.domain.repository.premiumaudio.PremiumAudiosRepository
+import soy.gabimoreno.domain.repository.senioraudio.SeniorAudioRepository
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import soy.gabimoreno.domain.usecase.SaveLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
@@ -82,14 +82,14 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideDefaultSeniorRepository(
-        localSeniorDataSource: LocalSeniorDataSource,
-        remoteSeniorDatasource: RemoteSeniorDatasource,
+        localSeniorAudioDataSource: LocalSeniorAudioDataSource,
+        remoteSeniorAudioDatasource: RemoteSeniorAudioDatasource,
         remoteConfigProvider: RemoteConfigProvider,
         scope: CoroutineScope,
-    ): SeniorRepository =
-        DefaultSeniorRepository(
-            localSeniorDataSource = localSeniorDataSource,
-            remoteSeniorDataSource = remoteSeniorDatasource,
+    ): SeniorAudioRepository =
+        DefaultSeniorAudioAudioRepository(
+            localSeniorAudioDataSource = localSeniorAudioDataSource,
+            remoteSeniorAudioDataSource = remoteSeniorAudioDatasource,
             remoteConfigProvider = remoteConfigProvider,
             scope = scope,
         )

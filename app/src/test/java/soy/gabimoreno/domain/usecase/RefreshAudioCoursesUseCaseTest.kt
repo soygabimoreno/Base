@@ -5,7 +5,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyOnce
-import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourse.DefaultAudioCourseRepository
 
 class RefreshAudioCoursesUseCaseTest {
     private val repository = mockk<DefaultAudioCourseRepository>(relaxed = true)

@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
+import soy.gabimoreno.domain.repository.premiumaudio.PremiumAudiosRepository
 import soy.gabimoreno.domain.usecase.GetLastPremiumAudiosFromRemoteRequestTimeMillisInDataStoreUseCase
 import soy.gabimoreno.domain.usecase.GetPremiumAudiosManagedUseCase
 import soy.gabimoreno.domain.usecase.MarkPremiumAudioAsListenedUseCase

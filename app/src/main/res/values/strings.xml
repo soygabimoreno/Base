@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">ANDROIDES</string>
 
-    <string name="nav_item_senior">Senior</string>
+    <string name="nav_item_senior_audios">Senior</string>
     <string name="nav_item_podcast">Podcast</string>
-    <string name="nav_item_premium">Premium</string>
-    <string name="nav_item_courses">Audiocursos</string>
+    <string name="nav_item_premium_audios">Premium</string>
+    <string name="nav_item_audio_courses">Audiocursos</string>
     <string name="nav_item_profile">Perfil</string>
 
     <string name="playback_notification_channel_name">Los ANDROIDES</string>

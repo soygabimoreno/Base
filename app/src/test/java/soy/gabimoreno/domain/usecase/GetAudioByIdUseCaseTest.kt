@@ -8,10 +8,10 @@ import org.junit.Before
 import org.junit.Test
 import soy.gabimoreno.core.testing.coVerifyNever
 import soy.gabimoreno.core.testing.coVerifyOnce
-import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourse.AudioCourseRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
-import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
-import soy.gabimoreno.domain.repository.senior.SeniorRepository
+import soy.gabimoreno.domain.repository.premiumaudio.PremiumAudiosRepository
+import soy.gabimoreno.domain.repository.senioraudio.SeniorAudioRepository
 import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildAudioItem
 import soy.gabimoreno.fake.buildEpisode
@@ -20,7 +20,7 @@ import soy.gabimoreno.fake.buildPremiumAudio
 class GetAudioByIdUseCaseTest {
     private val audioCourseRepository: AudioCourseRepository = mockk()
     private val podcastRepository: PodcastRepository = mockk()
-    private val seniorRepository: SeniorRepository = mockk()
+    private val seniorAudioRepository: SeniorAudioRepository = mockk()
     private val premiumAudiosRepository: PremiumAudiosRepository = mockk()
 
     private lateinit var useCase: GetAudioByIdUseCase
@@ -31,7 +31,7 @@ class GetAudioByIdUseCaseTest {
             GetAudioByIdUseCase(
                 audioCourseRepository,
                 podcastRepository,
-                seniorRepository,
+                seniorAudioRepository,
                 premiumAudiosRepository,
             )
     }

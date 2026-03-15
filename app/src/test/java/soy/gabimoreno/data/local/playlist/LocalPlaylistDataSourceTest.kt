@@ -36,7 +36,7 @@ import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistWithItems
 import soy.gabimoreno.data.local.podcast.LocalPodcastDataSource
-import soy.gabimoreno.data.local.podcast.LocalSeniorDataSource
+import soy.gabimoreno.data.local.podcast.LocalSeniorAudioDataSource
 import soy.gabimoreno.data.local.podcast.dao.PodcastDbModelDao
 import soy.gabimoreno.data.local.podcast.dao.SeniorDbModelDao
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
@@ -60,7 +60,7 @@ class LocalPlaylistDataSourceTest {
     private lateinit var audioCoursesDataSource: LocalAudioCourseDataSource
     private lateinit var playlistDataSource: LocalPlaylistDataSource
     private lateinit var podcastDataSource: LocalPodcastDataSource
-    private lateinit var seniorDataSource: LocalSeniorDataSource
+    private lateinit var seniorDataSource: LocalSeniorAudioDataSource
     private lateinit var premiumAudiosDataSource: LocalPremiumAudioDataSource
 
     private val gabiMorenoDatabase: ApplicationDatabase = createMockedDatabase()
@@ -72,7 +72,7 @@ class LocalPlaylistDataSourceTest {
         audioCoursesDataSource = LocalAudioCourseDataSource(gabiMorenoDatabase, dispatcher)
         playlistDataSource = LocalPlaylistDataSource(gabiMorenoDatabase, dispatcher)
         podcastDataSource = LocalPodcastDataSource(gabiMorenoDatabase, dispatcher)
-        seniorDataSource = LocalSeniorDataSource(gabiMorenoDatabase, dispatcher)
+        seniorDataSource = LocalSeniorAudioDataSource(gabiMorenoDatabase, dispatcher)
         premiumAudiosDataSource = LocalPremiumAudioDataSource(gabiMorenoDatabase, dispatcher)
     }
 

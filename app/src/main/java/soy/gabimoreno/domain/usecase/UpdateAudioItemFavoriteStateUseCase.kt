@@ -2,9 +2,9 @@ package soy.gabimoreno.domain.usecase
 
 import android.content.Context
 import kotlinx.coroutines.flow.first
-import soy.gabimoreno.domain.repository.audiocourses.AudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourse.AudioCourseRepository
 import soy.gabimoreno.domain.repository.podcast.PodcastRepository
-import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
+import soy.gabimoreno.domain.repository.premiumaudio.PremiumAudiosRepository
 import soy.gabimoreno.domain.util.AudioItemType
 import soy.gabimoreno.domain.util.audioItemTypeDetector
 import soy.gabimoreno.framework.datastore.getEmail
@@ -46,7 +46,7 @@ class UpdateAudioItemFavoriteStateUseCase
                         isFavorite = markedAsFavorite,
                     )
 
-                AudioItemType.SENIOR -> {
+                AudioItemType.SENIOR_AUDIO -> {
                     // Do nothing (at least for now)
                 }
             }

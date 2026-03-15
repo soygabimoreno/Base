@@ -315,7 +315,7 @@ class PlayerViewModel
                         )
                     }
 
-                    AudioItemType.SENIOR -> {
+                    AudioItemType.SENIOR_AUDIO -> {
                         // Do nothing (at least for now)
                     }
                 }

@@ -2,7 +2,7 @@ package soy.gabimoreno.domain.usecase
 
 import android.content.Context
 import kotlinx.coroutines.flow.first
-import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
+import soy.gabimoreno.domain.repository.premiumaudio.PremiumAudiosRepository
 import soy.gabimoreno.framework.datastore.getEmail
 import javax.inject.Inject
 

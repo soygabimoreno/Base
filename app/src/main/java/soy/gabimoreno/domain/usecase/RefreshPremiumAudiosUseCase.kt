@@ -1,6 +1,6 @@
 package soy.gabimoreno.domain.usecase
 
-import soy.gabimoreno.domain.repository.premiumaudios.DefaultPremiumAudiosRepository
+import soy.gabimoreno.domain.repository.premiumaudio.DefaultPremiumAudiosRepository
 import javax.inject.Inject
 
 class RefreshPremiumAudiosUseCase

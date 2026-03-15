@@ -271,7 +271,7 @@ class LocalPlaylistDataSource
                                     )
                                 }
 
-                                AudioItemType.SENIOR -> {
+                                AudioItemType.SENIOR_AUDIO -> {
                                     resources.seniors[item.audioItemId]?.toPlaylistAudioItem(
                                         position,
                                     )

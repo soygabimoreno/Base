@@ -26,7 +26,7 @@ import soy.gabimoreno.data.local.mapper.toPlaylistAudioItem
 import soy.gabimoreno.data.remote.datasource.audiocourse.RemoteAudioCourseDataSource
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.AudioCourse
-import soy.gabimoreno.domain.repository.audiocourses.DefaultAudioCourseRepository
+import soy.gabimoreno.domain.repository.audiocourse.DefaultAudioCourseRepository
 import soy.gabimoreno.domain.usecase.RefreshPremiumAudiosFromRemoteUseCase
 import soy.gabimoreno.ext.right
 import soy.gabimoreno.fake.buildAudioCourse

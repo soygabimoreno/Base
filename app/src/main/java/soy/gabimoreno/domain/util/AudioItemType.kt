@@ -4,9 +4,10 @@ enum class AudioItemType {
     AUDIO_COURSE,
     PREMIUM_AUDIO,
     PODCAST,
-    SENIOR,
+    SENIOR_AUDIO,
 }
 
+// TODO: AudioItemType.SENIOR_AUDIO
 fun audioItemTypeDetector(id: String): AudioItemType =
     when {
         Regex("^\\d+-\\d+$").matches(id) -> AudioItemType.AUDIO_COURSE

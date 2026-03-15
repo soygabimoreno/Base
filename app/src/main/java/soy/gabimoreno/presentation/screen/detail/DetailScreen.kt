@@ -49,7 +49,7 @@ import soy.gabimoreno.framework.parseFromHtmlFormat
 import soy.gabimoreno.presentation.navigation.Feature
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.screen.home.HomeViewModel
-import soy.gabimoreno.presentation.screen.senior.SeniorViewModel
+import soy.gabimoreno.presentation.screen.senioraudios.SeniorAudiosViewModel
 import soy.gabimoreno.presentation.theme.PinkBright
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.theme.White
@@ -72,7 +72,7 @@ fun DetailScreen(
     val currentContext = LocalContext.current
     val scrollState = rememberScrollState()
     val homeViewModel = ViewModelProvider.homeViewModel
-    val seniorViewModel = ViewModelProvider.seniorViewModel
+    val seniorViewModel = ViewModelProvider.seniorAudiosViewModel
     val detailViewModel = ViewModelProvider.detailViewModel
     val playerViewModel = ViewModelProvider.playerViewModel
     val premiumViewModel = ViewModelProvider.premiumAudiosViewModel
@@ -88,15 +88,15 @@ fun DetailScreen(
             }
         }
 
-        Feature.SENIOR -> {
+        Feature.SENIOR_AUDIOS -> {
             val viewState = seniorViewModel.viewState
-            if (viewState is SeniorViewModel.ViewState.Success) {
+            if (viewState is SeniorAudiosViewModel.ViewState.Success) {
                 audios = viewState.episodes
                 audio = seniorViewModel.findEpisodeFromId(audioId)
             }
         }
 
-        Feature.PREMIUM -> {
+        Feature.PREMIUM_AUDIOS -> {
             val viewState by premiumViewModel.state.collectAsStateWithLifecycle()
             audios = viewState.premiumAudios
             premiumViewModel.state.value.selectedPremiumAudio?.let { premiumAudio ->

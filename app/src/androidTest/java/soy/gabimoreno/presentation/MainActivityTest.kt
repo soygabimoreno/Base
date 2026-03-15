@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 import soy.gabimoreno.data.MockWebServerRule
 import soy.gabimoreno.data.fromJson
 import soy.gabimoreno.data.remote.model.Category
-import soy.gabimoreno.domain.repository.premiumaudios.PremiumAudiosRepository
+import soy.gabimoreno.domain.repository.premiumaudio.PremiumAudiosRepository
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi

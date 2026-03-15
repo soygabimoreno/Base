@@ -109,7 +109,7 @@ private fun AudioCoursesScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(id = R.string.nav_item_courses).uppercase(),
+                text = stringResource(id = R.string.nav_item_audio_courses).uppercase(),
                 style = MaterialTheme.typography.h5,
                 modifier =
                     Modifier

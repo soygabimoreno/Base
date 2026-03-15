@@ -6,7 +6,7 @@ internal fun NavController.navigateToDetailFromSenior(episodeId: String) {
     navigate(
         route =
             NavCommand
-                .ContentDetail(Feature.SENIOR, listOf(NavArg.EpisodeId))
+                .ContentDetail(Feature.SENIOR_AUDIOS, listOf(NavArg.EpisodeId))
                 .createRoute(episodeId),
     )
 }
@@ -24,7 +24,7 @@ internal fun NavController.navigateToDetailFromPremium(premiumAudioId: String) {
     navigate(
         route =
             NavCommand
-                .ContentDetail(Feature.PREMIUM, listOf(NavArg.PremiumAudioId))
+                .ContentDetail(Feature.PREMIUM_AUDIOS, listOf(NavArg.PremiumAudioId))
                 .createRoute(premiumAudioId),
     )
 }

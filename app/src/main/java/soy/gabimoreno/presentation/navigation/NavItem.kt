@@ -16,9 +16,9 @@ enum class NavItem(
     @param:StringRes val titleResId: Int,
 ) {
     SENIOR(
-        navCommand = NavCommand.ContentType(Feature.SENIOR),
+        navCommand = NavCommand.ContentType(Feature.SENIOR_AUDIOS),
         icon = Icons.Default.Mic,
-        titleResId = R.string.nav_item_senior,
+        titleResId = R.string.nav_item_senior_audios,
     ),
     PODCAST(
         navCommand = NavCommand.ContentType(Feature.PODCAST),
@@ -26,14 +26,14 @@ enum class NavItem(
         titleResId = R.string.nav_item_podcast,
     ),
     PREMIUM(
-        navCommand = NavCommand.ContentType(Feature.PREMIUM),
+        navCommand = NavCommand.ContentType(Feature.PREMIUM_AUDIOS),
         icon = Icons.Default.WorkspacePremium,
-        titleResId = R.string.nav_item_premium,
+        titleResId = R.string.nav_item_premium_audios,
     ),
     COURSES(
         navCommand = NavCommand.ContentType(Feature.AUDIO_COURSES),
         icon = Icons.Default.Diamond,
-        titleResId = R.string.nav_item_courses,
+        titleResId = R.string.nav_item_audio_courses,
     ),
     PROFILE(
         navCommand = NavCommand.ContentType(Feature.PROFILE),
