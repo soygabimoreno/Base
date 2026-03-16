@@ -24,7 +24,6 @@ import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
 import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
 import soy.gabimoreno.data.tracker.main.HomeTrackerEvent
 import soy.gabimoreno.domain.usecase.EncodeUrlUseCase
-import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 import soy.gabimoreno.domain.usecase.GetPodcastStreamUseCase
 import soy.gabimoreno.domain.usecase.GetShouldIReversePodcastOrderUseCase
 import soy.gabimoreno.domain.usecase.HomeUseCases
@@ -37,7 +36,6 @@ class HomeViewModelTest {
     private val getPodcastStreamUseCase: GetPodcastStreamUseCase = relaxedMockk()
     private val markPodcastAsListenedUseCase: MarkPodcastAsListenedUseCase = mockk()
     private val updateAudioItemFavoriteStateUseCase: UpdateAudioItemFavoriteStateUseCase = mockk()
-    private val getAppVersionNameUseCase: GetAppVersionNameUseCase = relaxedMockk()
     private val encodeUrlUseCase: EncodeUrlUseCase = relaxedMockk()
     private val getShouldIReversePodcastOrderUseCase: GetShouldIReversePodcastOrderUseCase = relaxedMockk()
     private val setShouldIReversePodcastOrderUseCase: SetShouldIReversePodcastOrderUseCase = relaxedMockk()
@@ -53,7 +51,6 @@ class HomeViewModelTest {
                 getPodcastStreamUseCase = getPodcastStreamUseCase,
                 markPodcastAsListenedUseCase = markPodcastAsListenedUseCase,
                 updateAudioItemFavoriteStateUseCase = updateAudioItemFavoriteStateUseCase,
-                getAppVersionName = getAppVersionNameUseCase,
                 encodeUrl = encodeUrlUseCase,
                 getShouldIReversePodcastOrder = getShouldIReversePodcastOrderUseCase,
                 setShouldIReversePodcastOrder = setShouldIReversePodcastOrderUseCase,
@@ -69,12 +66,6 @@ class HomeViewModelTest {
     @After
     fun tearDownDispatcher() {
         Dispatchers.resetMain()
-    }
-
-    @Test
-    fun `WHEN init THEN appVersionName is loaded`() {
-        verifyOnce { getAppVersionNameUseCase() }
-        viewModel.appVersionName.isNotBlank()
     }
 
     @Ignore
