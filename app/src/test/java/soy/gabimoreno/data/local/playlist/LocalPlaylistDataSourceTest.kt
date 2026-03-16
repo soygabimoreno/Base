@@ -36,11 +36,11 @@ import soy.gabimoreno.data.local.playlist.model.PlaylistDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistItemsDbModel
 import soy.gabimoreno.data.local.playlist.model.PlaylistWithItems
 import soy.gabimoreno.data.local.podcast.LocalPodcastDataSource
-import soy.gabimoreno.data.local.podcast.LocalSeniorAudioDataSource
 import soy.gabimoreno.data.local.podcast.dao.PodcastDbModelDao
 import soy.gabimoreno.data.local.podcast.dao.SeniorDbModelDao
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
 import soy.gabimoreno.data.local.premiumaudio.PremiumAudioDbModelDao
+import soy.gabimoreno.data.local.senioraudio.LocalSeniorAudioDataSource
 import soy.gabimoreno.fake.buildPlaylist
 import soy.gabimoreno.fake.buildPlaylistDbModel
 import soy.gabimoreno.fake.buildPlaylistItemsDbModel

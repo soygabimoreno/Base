@@ -1,4 +1,4 @@
-package soy.gabimoreno.data.local.podcast
+package soy.gabimoreno.data.local.senioraudio
 
 import com.google.common.annotations.VisibleForTesting
 import kotlinx.coroutines.CoroutineDispatcher
@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import soy.gabimoreno.data.local.ApplicationDatabase
-import soy.gabimoreno.data.local.mapper.toEpisode
+import soy.gabimoreno.data.local.mapper.toSeniorAudio
 import soy.gabimoreno.data.local.mapper.toSeniorDbModel
 import soy.gabimoreno.di.IO
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.content.SeniorAudio
 import javax.inject.Inject
 
 class LocalSeniorAudioDataSource
@@ -31,21 +31,21 @@ class LocalSeniorAudioDataSource
                 seniorDbModelDao.count()
             }
 
-        fun getseniorAudios(): Flow<List<Episode>> =
+        fun getSeniorAudios(): Flow<List<SeniorAudio>> =
             seniorDbModelDao.getSeniorDbModels().map { podcastDbModels ->
                 podcastDbModels.map { podcastDbModel ->
-                    podcastDbModel.toEpisode()
+                    podcastDbModel.toSeniorAudio()
                 }
             }
 
-        suspend fun getPodcastById(id: String): Episode? =
+        suspend fun getSeniorAudioById(id: String): SeniorAudio? =
             withContext(dispatcher) {
-                seniorDbModelDao.getSeniorDbModelById(id)?.toEpisode()
+                seniorDbModelDao.getSeniorDbModelById(id)?.toSeniorAudio()
             }
 
-        suspend fun upsertPodcasts(podcasts: List<Episode>) =
+        suspend fun upsertSeniorAudios(seniorAudios: List<SeniorAudio>) =
             withContext(dispatcher) {
-                seniorDbModelDao.upsertSeniorDbModels(podcasts.map { it.toSeniorDbModel() })
+                seniorDbModelDao.upsertSeniorDbModels(seniorAudios.map { it.toSeniorDbModel() })
             }
 
         suspend fun reset() =

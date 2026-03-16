@@ -1,4 +1,4 @@
-package soy.gabimoreno.data.remote.mapper
+package soy.gabimoreno.data.remote.mapper.podcast
 
 import androidx.annotation.VisibleForTesting
 import com.prof18.rssparser.model.ItunesItemData
@@ -12,20 +12,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-// fun Channel.toDomain(): EpisodesWrapper {
-//    val numberOfEpisodes = articles.size.toLong()
-//    val title = title ?: LOS_ANDROIDES
-//    val podcastAuthor = title.uppercase()
-//    val podcastTitle = title
-//    return EpisodesWrapper(
-//        count = numberOfEpisodes,
-//        total = numberOfEpisodes,
-//        episodes = articles.toDomain(podcastAuthor, podcastTitle),
-//    )
-// }
 fun RssChannel.toDomain(): EpisodesWrapper {
     val numberOfEpisodes = items.size.toLong()
-    val podcastTitle = title ?: LOS_ANDROIDES
+    val podcastTitle = title ?: PODCAST_TITLE
     val podcastAuthor = podcastTitle.uppercase()
 
     return EpisodesWrapper(
@@ -39,10 +28,6 @@ fun RssChannel.toDomain(): EpisodesWrapper {
     )
 }
 
-// fun List<Article>.toDomain(
-//    podcastAuthor: String,
-//    podcastTitle: String,
-// ): List<Episode> = map { it.toDomain(podcastAuthor, podcastTitle) }
 fun List<RssItem>.toDomain(
     podcastAuthor: String,
     podcastTitle: String,
@@ -54,32 +39,6 @@ fun List<RssItem>.toDomain(
         )
     }
 
-// fun Article.toDomain(
-//    podcastAuthor: String,
-//    podcastTitle: String,
-// ): Episode =
-//    run {
-//        val description = description?.removeAnchorMessage() ?: ""
-//        val imageUrl = getEpisodeCoverUrl()
-//        Episode(
-//            id = getEpisodeId(),
-//            url = getEpisodeUrl(),
-//            audioUrl = audio!!,
-//            imageUrl = imageUrl,
-//            saga =
-//                Saga(
-//                    author = podcastAuthor,
-//                    title = podcastTitle,
-//                ),
-//            thumbnailUrl = imageUrl,
-//            pubDateMillis = Date(pubDate).time,
-//            title = title ?: "",
-//            audioLengthInSeconds = itunesArticleData.getAudioLengthInSeconds(),
-//            description = description,
-//            hasBeenListened = false,
-//            markedAsFavorite = false,
-//        )
-//    }
 fun RssItem.toDomain(
     podcastAuthor: String,
     podcastTitle: String,
@@ -112,50 +71,14 @@ fun RssItem.toDomain(
 
 private fun String.removeAnchorMessage() = replace(ANCHOR_MESSAGE, "")
 
-// private fun Article.getEpisodeId(): String =
-//    requireNotNull(guid)
-//        .removePrefix(SPREAKER_URL)
-//        .removePrefix(IVOOX_URL)
 private fun RssItem.getEpisodeId(): String =
     requireNotNull(guid)
-        .removePrefix(SPREAKER_URL)
         .removePrefix(IVOOX_URL)
 
-// private fun Article.getEpisodeUrl(): String = "$GABI_MORENO_WEB_BASE_URL/${getEpisodeNumber()}"
 private fun RssItem.getEpisodeUrl(): String = "$GABI_MORENO_WEB_BASE_URL/${getEpisodeNumber()}"
 
-// private fun Article.getEpisodeCoverUrl(): String = itunesArticleData?.image.orEmpty()
 private fun RssItem.getEpisodeCoverUrl(): String = itunesItemData?.image.orEmpty()
 
-// private fun Article.getEpisodeNumber(): String {
-//    val episodeNumber =
-//        if (itunesArticleData != null && itunesArticleData?.episode != null) {
-//            itunesArticleData?.episode
-//        } else {
-//            title?.let { title ->
-//                val index = title.indexOfFirst { it == '.' }
-//                if (index == -1) return INVALID_EPISODE_NUMBER
-//                title.substring(0, index)
-//            } ?: ""
-//        }
-//    return episodeNumber.toString()
-// }
-// private fun RssItem.getEpisodeNumber(): String {
-//    val episodeNumber = when {
-//        itunesItemData?.episode != null -> itunesItemData?.episode
-//        title != null -> {
-//            val index = title.indexOfFirst { it == '.' }
-//            if (index == -1) {
-//                return INVALID_EPISODE_NUMBER
-//            }
-//            title.substring(0, index)
-//        }
-//
-//        else -> ""
-//    }
-//
-//    return episodeNumber.toString()
-// }
 private fun RssItem.getEpisodeNumber(): String {
     itunesItemData?.episode?.let { return it }
     val titleValue = title ?: return ""
@@ -166,11 +89,6 @@ private fun RssItem.getEpisodeNumber(): String {
     return titleValue.substring(0, index)
 }
 
-// private fun ItunesArticleData?.getAudioLengthInSeconds(): Int {
-//    val duration = this?.duration ?: return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
-//
-//    return duration.toIntOrNull() ?: parseTimeFormatDuration(duration)
-// }
 private fun ItunesItemData?.getAudioLengthInSeconds(): Int {
     val duration = this?.duration ?: return EPISODE_AUDIO_LENGTH_DEFAULT_DURATION
     return duration.toIntOrNull() ?: parseTimeFormatDuration(duration)
@@ -191,22 +109,18 @@ private fun parseTimeFormatDuration(duration: String): Int {
 private val rssDateFormat =
     SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US)
 
-internal const val LOS_ANDROIDES = "Los ANDROIDES"
-internal const val ANCHOR_MESSAGE =
+private const val PODCAST_TITLE = "Los ANDROIDES"
+private const val ANCHOR_MESSAGE =
     "\n\n" +
         "--- \n" +
         "\n" +
         "Send in a voice message: https://anchor.fm/losandroides/message"
-internal const val IVOOX_URL = "https://www.ivoox.com/"
-internal const val SPREAKER_URL = "https://api.spreaker.com/episode/"
-internal const val EPISODE_AUDIO_LENGTH_DEFAULT_DURATION = 0
+private const val IVOOX_URL = "https://www.ivoox.com/"
+private const val EPISODE_AUDIO_LENGTH_DEFAULT_DURATION = 0
 
 private const val HOURS_MINUTES_SECONDS_PATTERN = "HH:mm:ss"
 private const val ONE_MINUTE_IN_SECONDS = 60
 private const val ONE_HOUR_IN_SECONDS = 60 * ONE_MINUTE_IN_SECONDS
-
-@VisibleForTesting
-internal const val PODCAST_COVER_SUFFIX = ".png"
 
 @VisibleForTesting
 internal const val INVALID_EPISODE_NUMBER = "-1"

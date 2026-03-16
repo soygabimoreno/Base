@@ -3,7 +3,7 @@ package soy.gabimoreno.data.local.mapper
 import soy.gabimoreno.data.local.podcast.model.PodcastDbModel
 import soy.gabimoreno.domain.model.podcast.Episode
 
-fun PodcastDbModel.toEpisode() =
+fun PodcastDbModel.toSeniorAudio() =
     Episode(
         id = id,
         title = title,

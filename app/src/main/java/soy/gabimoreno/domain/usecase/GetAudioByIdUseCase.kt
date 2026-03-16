@@ -33,7 +33,7 @@ class GetAudioByIdUseCase
                 }
 
                 AudioItemType.SENIOR_AUDIO -> {
-                    seniorAudioRepository.getPodcastById(audioId)
+                    seniorAudioRepository.getSeniorAudioById(audioId)
                 }
             }
     }

@@ -91,8 +91,8 @@ fun DetailScreen(
         Feature.SENIOR_AUDIOS -> {
             val viewState = seniorViewModel.viewState
             if (viewState is SeniorAudiosViewModel.ViewState.Success) {
-                audios = viewState.episodes
-                audio = seniorViewModel.findEpisodeFromId(audioId)
+                audios = viewState.seniorAudios
+                audio = seniorViewModel.findSeniorAudioFromId(audioId)
             }
         }
 

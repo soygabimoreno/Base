@@ -1,7 +1,7 @@
 package soy.gabimoreno.domain.usecase
 
 import arrow.core.Either
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.content.SeniorAudio
 import soy.gabimoreno.domain.repository.senioraudio.SeniorAudioRepository
 import javax.inject.Inject
 
@@ -10,6 +10,6 @@ class GetSeniorByIdUseCase
     constructor(
         private val seniorAudioRepository: SeniorAudioRepository,
     ) {
-        suspend operator fun invoke(podcastId: String): Either<Throwable, Episode> =
-            seniorAudioRepository.getPodcastById(podcastId)
+        suspend operator fun invoke(podcastId: String): Either<Throwable, SeniorAudio> =
+            seniorAudioRepository.getSeniorAudioById(podcastId)
     }

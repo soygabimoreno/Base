@@ -6,7 +6,7 @@ sealed class SeniorTrackerEvent(
     override val parameters: Map<String, Any> = mapOf(),
 ) : TrackerEvent {
     object ViewScreen : SeniorTrackerEvent()
-    data class ClickEpisode(
+    data class ClickSeniorAudio(
         override val parameters: Map<String, Any>,
     ) : SeniorTrackerEvent(parameters)
 

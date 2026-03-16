@@ -1,12 +1,12 @@
 package soy.gabimoreno.data.local.mapper
 
-import soy.gabimoreno.data.local.podcast.model.PodcastDbModel
+import soy.gabimoreno.data.local.podcast.model.SeniorAudioDbModel
 import soy.gabimoreno.data.remote.model.Category
 import soy.gabimoreno.domain.model.content.PlaylistAudioItem
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.content.SeniorAudio
 
-fun Episode.toPodcastDbModel() =
-    PodcastDbModel(
+fun SeniorAudio.toSeniorDbModel() =
+    SeniorAudioDbModel(
         id = id,
         title = title,
         description = description,
@@ -21,11 +21,11 @@ fun Episode.toPodcastDbModel() =
         markedAsFavorite = markedAsFavorite,
     )
 
-fun PodcastDbModel.toPlaylistAudioItem(position: Int) =
+fun SeniorAudioDbModel.toPlaylistAudioItem(position: Int) =
     PlaylistAudioItem(
         id = id,
         title = title,
-        description = Category.PODCAST.title,
+        description = description,
         saga = saga,
         url = url,
         audioUrl = audioUrl,
@@ -38,7 +38,7 @@ fun PodcastDbModel.toPlaylistAudioItem(position: Int) =
         playlistItemId = null,
         markedAsFavorite = markedAsFavorite,
         excerpt = DEFAULT_EXCERPT,
-        category = Category.PODCAST,
+        category = Category.PODCAST, // TODO: Should we have a different category for seniors?
     )
 
 private const val DEFAULT_EXCERPT = ""

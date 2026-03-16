@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import soy.gabimoreno.R
 import soy.gabimoreno.domain.model.audio.Saga
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.content.SeniorAudio
 import soy.gabimoreno.presentation.theme.GabiMorenoTheme
 import soy.gabimoreno.presentation.theme.Orange
 import soy.gabimoreno.presentation.theme.Percent
@@ -38,13 +38,13 @@ import soy.gabimoreno.presentation.theme.White
 import soy.gabimoreno.presentation.ui.AudioImage
 
 @Composable
-fun EpisodeView(
-    episode: Episode,
+fun SeniorAudioView(
+    seniorAudio: SeniorAudio,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    onFavoriteStatusChanged: (episode: Episode) -> Unit,
-    onListenedToggled: (episode: Episode) -> Unit,
-    onAddToPlaylistClicked: (episodeId: String) -> Unit,
+    onFavoriteStatusChanged: (seniorAudio: SeniorAudio) -> Unit,
+    onListenedToggled: (seniorAudio: SeniorAudio) -> Unit,
+    onAddToPlaylistClicked: (seniorAudioId: String) -> Unit,
 ) {
     Column(
         modifier =
@@ -54,7 +54,7 @@ fun EpisodeView(
                 .clickable(onClick = onClick),
     ) {
         AudioImage(
-            url = episode.thumbnailUrl,
+            url = seniorAudio.thumbnailUrl,
             aspectRatio = 1f,
         )
         Row(
@@ -65,20 +65,20 @@ fun EpisodeView(
             horizontalArrangement = Arrangement.End,
         ) {
             ListenedIcon(
-                episode = episode,
-                onListenedToggled = { onListenedToggled(episode) },
+                seniorAudio = seniorAudio,
+                onListenedToggled = { onListenedToggled(seniorAudio) },
             )
             FavoriteIcon(
-                episode = episode,
-                onFavoriteStatusChanged = { onFavoriteStatusChanged(episode) },
+                seniorAudio = seniorAudio,
+                onFavoriteStatusChanged = { onFavoriteStatusChanged(seniorAudio) },
             )
             PlaylistIcon(
-                episodeId = episode.id,
-                onAddToPlaylistClicked = { onAddToPlaylistClicked(episode.id) },
+                seniorAudioId = seniorAudio.id,
+                onAddToPlaylistClicked = { onAddToPlaylistClicked(seniorAudio.id) },
             )
         }
         Text(
-            episode.title,
+            seniorAudio.title,
             style = MaterialTheme.typography.body1,
             modifier = Modifier.padding(horizontal = Spacing.s8),
         )
@@ -87,11 +87,11 @@ fun EpisodeView(
 
 @Composable
 private fun PlaylistIcon(
-    episodeId: String,
-    onAddToPlaylistClicked: (episodeId: String) -> Unit,
+    seniorAudioId: String,
+    onAddToPlaylistClicked: (seniorAudioId: String) -> Unit,
 ) {
     IconButton(
-        onClick = { onAddToPlaylistClicked(episodeId) },
+        onClick = { onAddToPlaylistClicked(seniorAudioId) },
     ) {
         Icon(
             modifier =
@@ -106,12 +106,12 @@ private fun PlaylistIcon(
 
 @Composable
 private fun FavoriteIcon(
-    episode: Episode,
-    onFavoriteStatusChanged: (episode: Episode) -> Unit,
+    seniorAudio: SeniorAudio,
+    onFavoriteStatusChanged: (seniorAudio: SeniorAudio) -> Unit,
 ) {
     val iconFavoriteColor by animateColorAsState(
         targetValue =
-            if (episode.markedAsFavorite) {
+            if (seniorAudio.markedAsFavorite) {
                 PinkBright
             } else {
                 White.copy(alpha = Percent.TWENTY)
@@ -120,14 +120,14 @@ private fun FavoriteIcon(
         label = "favoriteIconColorAnimation",
     )
     IconButton(
-        onClick = { onFavoriteStatusChanged(episode) },
+        onClick = { onFavoriteStatusChanged(seniorAudio) },
     ) {
         Icon(
             modifier =
                 Modifier
                     .size(Spacing.s32),
             imageVector =
-                if (episode.markedAsFavorite) {
+                if (seniorAudio.markedAsFavorite) {
                     Icons.Default.Favorite
                 } else {
                     Icons.Default.FavoriteBorder
@@ -140,12 +140,12 @@ private fun FavoriteIcon(
 
 @Composable
 private fun ListenedIcon(
-    episode: Episode,
-    onListenedToggled: (episode: Episode) -> Unit,
+    seniorAudio: SeniorAudio,
+    onListenedToggled: (seniorAudio: SeniorAudio) -> Unit,
 ) {
     val iconColor by animateColorAsState(
         targetValue =
-            if (episode.hasBeenListened) {
+            if (seniorAudio.hasBeenListened) {
                 Orange
             } else {
                 White.copy(alpha = Percent.TWENTY)
@@ -154,7 +154,7 @@ private fun ListenedIcon(
         label = "checkIconColorAnimation",
     )
     IconButton(
-        onClick = { onListenedToggled(episode) },
+        onClick = { onListenedToggled(seniorAudio) },
     ) {
         Icon(
             modifier =
@@ -171,9 +171,9 @@ private fun ListenedIcon(
 @Composable
 private fun Preview() {
     GabiMorenoTheme {
-        EpisodeView(
-            episode =
-                Episode(
+        SeniorAudioView(
+            seniorAudio =
+                SeniorAudio(
                     id = "id",
                     url = "",
                     audioUrl = "",

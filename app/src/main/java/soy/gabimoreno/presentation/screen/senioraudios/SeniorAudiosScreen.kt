@@ -42,11 +42,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.google.accompanist.insets.navigationBarsPadding
 import soy.gabimoreno.R
 import soy.gabimoreno.core.normalizeText
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.content.SeniorAudio
 import soy.gabimoreno.presentation.screen.ViewModelProvider
-import soy.gabimoreno.presentation.screen.home.view.EpisodeView
 import soy.gabimoreno.presentation.screen.home.view.ErrorView
 import soy.gabimoreno.presentation.screen.home.view.LoadingPlaceholder
+import soy.gabimoreno.presentation.screen.home.view.SeniorAudioView
 import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
@@ -55,7 +55,7 @@ import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 @Composable
 fun SeniorAudiosScreen(
     onGoToWebClicked: (encodedUrl: String) -> Unit,
-    onItemClicked: (episodeId: String) -> Unit,
+    onItemClicked: (seniorAudioId: String) -> Unit,
 ) {
     val scrollState = rememberLazyListState()
     val seniorViewModel = ViewModelProvider.seniorAudiosViewModel
@@ -76,18 +76,18 @@ fun SeniorAudiosScreen(
                 searchText = searchTextState,
                 onSearchTextChanged = { searchTextState = it },
             )
-            EpisodeListContent(
+            SeniorAudioListContent(
                 viewState = viewState,
                 scrollState = scrollState,
                 searchText = searchTextState.text,
                 isRefreshing = seniorViewModel.isRefreshing,
                 pullRefreshState = pullRefreshState,
                 playerHasAudio = playerViewModel.currentPlayingAudio.value != null,
-                onEpisodeClicked = { episode ->
-                    seniorViewModel.onEpisodeClicked(episode.id, episode.title)
-                    onItemClicked(episode.id)
+                onSeniorAudioClick = { seniorAudio ->
+                    seniorViewModel.onSeniorAudioClick(seniorAudio.id, seniorAudio.title)
+                    onItemClicked(seniorAudio.id)
                 },
-                onRetry = { seniorViewModel.searchPodcasts() },
+                onRetry = { seniorViewModel.searchSeniorAudios() },
             )
         }
     }
@@ -123,14 +123,14 @@ private fun SearchRow(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun EpisodeListContent(
+private fun SeniorAudioListContent(
     viewState: SeniorAudiosViewModel.ViewState,
     scrollState: LazyListState,
     searchText: String,
     isRefreshing: Boolean,
     pullRefreshState: PullRefreshState,
     playerHasAudio: Boolean,
-    onEpisodeClicked: (Episode) -> Unit,
+    onSeniorAudioClick: (SeniorAudio) -> Unit,
     onRetry: () -> Unit,
 ) {
     Box(
@@ -156,10 +156,10 @@ private fun EpisodeListContent(
 
                 is SeniorAudiosViewModel.ViewState.Success -> {
                     item {
-                        EpisodeGrid(
-                            episodes = viewState.episodes,
+                        SeniorAudioGrid(
+                            seniorAudios = viewState.seniorAudios,
                             searchText = searchText,
-                            onClick = onEpisodeClicked,
+                            onClick = onSeniorAudioClick,
                         )
                     }
                 }
@@ -179,17 +179,17 @@ private fun EpisodeListContent(
 }
 
 @Composable
-private fun EpisodeGrid(
-    episodes: List<Episode>,
+private fun SeniorAudioGrid(
+    seniorAudios: List<SeniorAudio>,
     searchText: String,
-    onClick: (Episode) -> Unit,
+    onClick: (SeniorAudio) -> Unit,
 ) {
-    val filteredEpisodes =
+    val filteredSeniorAudios =
         if (searchText.isBlank()) {
-            episodes
+            seniorAudios
         } else {
             val lowerSearch = searchText.normalizeText()
-            episodes.filter { it.title.normalizeText().contains(lowerSearch) }
+            seniorAudios.filter { it.title.normalizeText().contains(lowerSearch) }
         }
 
     StaggeredVerticalGrid(
@@ -197,11 +197,11 @@ private fun EpisodeGrid(
         spacing = Spacing.s16,
         modifier = Modifier.padding(horizontal = Spacing.s16),
     ) {
-        filteredEpisodes.forEach { episode ->
-            EpisodeView(
-                episode = episode,
+        filteredSeniorAudios.forEach { seniorAudio ->
+            SeniorAudioView(
+                seniorAudio = seniorAudio,
                 modifier = Modifier.padding(bottom = Spacing.s16),
-                onClick = { onClick(episode) },
+                onClick = { onClick(seniorAudio) },
                 onFavoriteStatusChanged = {
                     // TODO: Implement favorite status change
                 },

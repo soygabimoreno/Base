@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import soy.gabimoreno.data.tracker.Tracker
-import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_ID
-import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_EPISODE_TITLE
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_SENIOR_AUDIO_ID
+import soy.gabimoreno.data.tracker.domain.TRACKER_KEY_SENIOR_AUDIO_TITLE
 import soy.gabimoreno.data.tracker.main.SeniorTrackerEvent
 import soy.gabimoreno.di.Main
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.content.SeniorAudio
 import soy.gabimoreno.domain.usecase.GetAppVersionNameUseCase
 import soy.gabimoreno.domain.usecase.GetSeniorAudioStreamUseCase
 import javax.inject.Inject
@@ -33,7 +33,7 @@ class SeniorAudiosViewModel
     ) : ViewModel() {
         var viewState by mutableStateOf<ViewState>(ViewState.Loading)
             private set
-        private val episodes = mutableListOf<Episode>()
+        private val seniorAudios = mutableListOf<SeniorAudio>()
 
         var isRefreshing by mutableStateOf(false)
             private set
@@ -45,23 +45,26 @@ class SeniorAudiosViewModel
 
         init {
             appVersionName = getAppVersionNameUseCase()
-            searchPodcasts()
+            searchSeniorAudios()
         }
 
-        fun searchPodcasts() {
+        fun searchSeniorAudios() {
             viewModelScope.launch(dispatcher) {
                 viewState = ViewState.Loading
                 getSeniorAudioStreamUseCase().fold(
                     { failure ->
                         viewState = ViewState.Error(failure)
                     },
-                    { episodesFlow ->
-                        episodesFlow
+                    { seniorAudiosFlow ->
+                        seniorAudiosFlow
                             .distinctUntilChanged()
-                            .collect { incomingEpisodes ->
-                                episodes.clear()
-                                episodes.addAll(incomingEpisodes)
-                                viewState = ViewState.Success(episodes.toList())
+                            .collect { incomingSeniorAudios ->
+                                this@SeniorAudiosViewModel.seniorAudios.clear()
+                                this@SeniorAudiosViewModel.seniorAudios.addAll(incomingSeniorAudios)
+                                viewState =
+                                    ViewState.Success(
+                                        this@SeniorAudiosViewModel.seniorAudios.toList(),
+                                    )
                             }
                     },
                 )
@@ -72,15 +75,15 @@ class SeniorAudiosViewModel
             tracker.trackEvent(SeniorTrackerEvent.ViewScreen)
         }
 
-        fun onEpisodeClicked(
-            episodeId: String,
-            episodeTitle: String,
+        fun onSeniorAudioClick(
+            seniorAudioId: String,
+            seniorAudioTitle: String,
         ) {
             tracker.trackEvent(
-                SeniorTrackerEvent.ClickEpisode(
+                SeniorTrackerEvent.ClickSeniorAudio(
                     mapOf(
-                        TRACKER_KEY_EPISODE_ID to episodeId,
-                        TRACKER_KEY_EPISODE_TITLE to episodeTitle,
+                        TRACKER_KEY_SENIOR_AUDIO_ID to seniorAudioId,
+                        TRACKER_KEY_SENIOR_AUDIO_TITLE to seniorAudioTitle,
                     ),
                 ),
             )
@@ -89,16 +92,16 @@ class SeniorAudiosViewModel
         fun pullToRefresh() {
             viewModelScope.launch(dispatcher) {
                 isRefreshing = true
-                searchPodcasts()
+                searchSeniorAudios()
                 delay(REFRESH_DELAY)
                 isRefreshing = false
             }
         }
 
-        fun findEpisodeFromId(id: String): Episode? =
+        fun findSeniorAudioFromId(id: String): SeniorAudio? =
             when (viewState) {
                 is ViewState.Success -> {
-                    (viewState as ViewState.Success).episodes.find {
+                    (viewState as ViewState.Success).seniorAudios.find {
                         it.id == id
                     }
                 }
@@ -121,7 +124,7 @@ class SeniorAudiosViewModel
             ) : ViewState()
 
             data class Success(
-                val episodes: List<Episode>,
+                val seniorAudios: List<SeniorAudio>,
             ) : ViewState()
         }
     }

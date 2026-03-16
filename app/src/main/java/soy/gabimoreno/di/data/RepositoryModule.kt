@@ -12,8 +12,8 @@ import soy.gabimoreno.data.cloud.playlist.datasource.CloudPlaylistDataSource
 import soy.gabimoreno.data.local.audiocourse.LocalAudioCourseDataSource
 import soy.gabimoreno.data.local.playlist.LocalPlaylistDataSource
 import soy.gabimoreno.data.local.podcast.LocalPodcastDataSource
-import soy.gabimoreno.data.local.podcast.LocalSeniorAudioDataSource
 import soy.gabimoreno.data.local.premiumaudio.LocalPremiumAudioDataSource
+import soy.gabimoreno.data.local.senioraudio.LocalSeniorAudioDataSource
 import soy.gabimoreno.data.remote.datasource.audiocourse.RemoteAudioCourseDataSource
 import soy.gabimoreno.data.remote.datasource.login.LoginDatasource
 import soy.gabimoreno.data.remote.datasource.podcast.PodcastDatasource

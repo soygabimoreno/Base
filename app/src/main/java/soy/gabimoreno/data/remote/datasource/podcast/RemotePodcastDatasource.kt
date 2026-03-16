@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import soy.gabimoreno.data.remote.mapper.toDomain
+import soy.gabimoreno.data.remote.mapper.podcast.toDomain
 import soy.gabimoreno.di.data.PodcastUrl
 import soy.gabimoreno.domain.model.podcast.Episode
 

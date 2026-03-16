@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import soy.gabimoreno.data.remote.mapper.toDomain
+import soy.gabimoreno.data.remote.mapper.senioraudio.toDomain
 import soy.gabimoreno.di.data.PodcastUrl
-import soy.gabimoreno.domain.model.podcast.Episode
+import soy.gabimoreno.domain.model.content.SeniorAudio
 
 class DefaultRemoteSeniorAudioDatasource(
     private val rssParser: RssParser,
@@ -18,11 +18,11 @@ class DefaultRemoteSeniorAudioDatasource(
 ) : RemoteSeniorAudioDatasource {
     override fun getSeniorAudiosStream(
         podcastUrl: PodcastUrl,
-    ): Either<Throwable, Flow<List<Episode>>> =
+    ): Either<Throwable, Flow<List<SeniorAudio>>> =
         Either.catch {
             flow {
                 val feed = parseFeedSafely(podcastUrl)
-                val episodes = feed.toDomain().episodes
+                val episodes = feed.toDomain().seniorAudios
 
                 val chunkSize = CHUNK_SIZE
                 val totalChunks = (episodes.size + chunkSize - 1) / chunkSize

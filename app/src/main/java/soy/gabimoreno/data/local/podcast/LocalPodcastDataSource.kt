@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import soy.gabimoreno.data.local.ApplicationDatabase
-import soy.gabimoreno.data.local.mapper.toEpisode
 import soy.gabimoreno.data.local.mapper.toPodcastDbModel
+import soy.gabimoreno.data.local.mapper.toSeniorAudio
 import soy.gabimoreno.di.IO
 import soy.gabimoreno.domain.model.podcast.Episode
 import javax.inject.Inject
@@ -34,13 +34,13 @@ class LocalPodcastDataSource
         fun getPodcasts(): Flow<List<Episode>> =
             podcastDbModelDao.getPodcastDbModels().map { podcastDbModels ->
                 podcastDbModels.map { podcastDbModel ->
-                    podcastDbModel.toEpisode()
+                    podcastDbModel.toSeniorAudio()
                 }
             }
 
         suspend fun getPodcastById(id: String): Episode? =
             withContext(dispatcher) {
-                podcastDbModelDao.getPodcastDbModelById(id)?.toEpisode()
+                podcastDbModelDao.getPodcastDbModelById(id)?.toSeniorAudio()
             }
 
         suspend fun upsertPodcasts(podcasts: List<Episode>) =
