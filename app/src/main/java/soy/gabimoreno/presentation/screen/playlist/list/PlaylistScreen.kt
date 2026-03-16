@@ -48,7 +48,7 @@ import soy.gabimoreno.presentation.ui.dialog.TypeDialog
 
 @Composable
 fun PlaylistScreenRoot(
-    onBackClicked: () -> Unit,
+    onBackClick: () -> Unit,
     onItemClick: (playlistId: String) -> Unit,
     viewModel: PlaylistViewModel = hiltViewModel(),
 ) {
@@ -69,8 +69,8 @@ fun PlaylistScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                PlaylistAction.OnBackClicked -> onBackClicked()
-                is PlaylistAction.OnItemClicked -> onItemClick(action.playlistId.toString())
+                PlaylistAction.OnBackClick -> onBackClick()
+                is PlaylistAction.OnItemClick -> onItemClick(action.playlistId.toString())
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -90,7 +90,7 @@ fun PlaylistScreen(
                 .fillMaxSize(),
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            PlaylistToolbar { onAction(PlaylistAction.OnBackClicked) }
+            PlaylistToolbar { onAction(PlaylistAction.OnBackClick) }
 
             Spacer(modifier = Modifier.padding(vertical = Spacing.s8))
 
@@ -98,7 +98,7 @@ fun PlaylistScreen(
         }
 
         FloatingActionButton(
-            onClick = { onAction(PlaylistAction.OnAddNewPlaylistClicked) },
+            onClick = { onAction(PlaylistAction.OnAddNewPlaylistClick) },
             modifier =
                 Modifier
                     .align(Alignment.BottomEnd)
@@ -221,13 +221,13 @@ private fun PlaylistContentList(
     ReorderablePlaylistColumn(
         playlists = state.playlists,
         onItemClick = { playlistId ->
-            onAction(PlaylistAction.OnItemClicked(playlistId))
+            onAction(PlaylistAction.OnItemClick(playlistId))
         },
         onDragFinish = { playlists ->
             onAction(PlaylistAction.OnItemDragFinish(playlists))
         },
-        onRemovePlaylistClicked = { playlistId ->
-            onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
+        onRemovePlaylistClick = { playlistId ->
+            onAction(PlaylistAction.OnRemovePlaylistClick(playlistId))
         },
     )
 }

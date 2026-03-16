@@ -147,12 +147,12 @@ fun PodcastPlayerBody(
         playbackProgress = sliderProgress,
         currentTime = playerViewModel.getCurrentPlaybackFormattedPosition(),
         totalTime = playerViewModel.currentAudioFormattedDuration,
-        onRewind = { playerViewModel.onRewindClicked() },
-        onForward = { playerViewModel.onForwardClicked() },
+        onRewind = { playerViewModel.onRewindClick() },
+        onForward = { playerViewModel.onForwardClick() },
         onSkipToPrevious = { playerViewModel.onSkipToPrevious() },
         onSkipToNext = { playerViewModel.onSkipToNext() },
         onTooglePlayback = {
-            playerViewModel.onPlayPauseClickedFromPlayer(
+            playerViewModel.onPlayPauseClickFromPlayer(
                 audio,
                 playerViewModel.podcastIsPlaying.toPlayPause(),
             )
@@ -168,7 +168,7 @@ fun PodcastPlayerBody(
         },
         shouldIShowSpeedControls = playerViewModel.shouldIShowSpeedControls,
         selectedPlaybackSpeed = playerViewModel.selectedPlaybackSpeed,
-        onSpeedControlClicked = { playerViewModel.onSpeedControlClicked() },
+        onSpeedControlClick = { playerViewModel.onSpeedControlClick() },
         onSetPlaybackSpeed = { playerViewModel.onSetPlaybackSpeed(it) },
     ) { playerViewModel.showPlayerFullScreen = false }
 
@@ -259,7 +259,7 @@ fun PodcastPlayerStatelessContent(
     onSliderChangeFinished: () -> Unit,
     shouldIShowSpeedControls: Boolean,
     selectedPlaybackSpeed: PlaybackSpeed,
-    onSpeedControlClicked: () -> Unit,
+    onSpeedControlClick: () -> Unit,
     onSetPlaybackSpeed: (PlaybackSpeed) -> Unit,
     onClose: () -> Unit,
 ) {
@@ -274,7 +274,7 @@ fun PodcastPlayerStatelessContent(
                         .align(Alignment.CenterHorizontally),
                 shouldIShowSpeedControls = shouldIShowSpeedControls,
                 selectedPlaybackSpeed = selectedPlaybackSpeed,
-                onSpeedControlClicked = onSpeedControlClicked,
+                onSpeedControlClick = onSpeedControlClick,
                 onSetPlaybackSpeed = onSetPlaybackSpeed,
             )
             PodcastPlayerTitle(audio)
@@ -345,7 +345,7 @@ private fun PodcastPlayerImage(
     modifier: Modifier = Modifier,
     shouldIShowSpeedControls: Boolean,
     selectedPlaybackSpeed: PlaybackSpeed,
-    onSpeedControlClicked: () -> Unit,
+    onSpeedControlClick: () -> Unit,
     onSetPlaybackSpeed: (PlaybackSpeed) -> Unit,
 ) {
     Box(
@@ -373,7 +373,7 @@ private fun PodcastPlayerImage(
         PlaybackSpeedSelector(
             shouldIShowSpeedControls = shouldIShowSpeedControls,
             selectedPlaybackSpeed = selectedPlaybackSpeed,
-            onSpeedControlClicked = onSpeedControlClicked,
+            onSpeedControlClick = onSpeedControlClick,
             onSetPlaybackSpeed = onSetPlaybackSpeed,
         )
     }
@@ -383,7 +383,7 @@ private fun PodcastPlayerImage(
 private fun BoxScope.PlaybackSpeedSelector(
     shouldIShowSpeedControls: Boolean,
     selectedPlaybackSpeed: PlaybackSpeed,
-    onSpeedControlClicked: () -> Unit,
+    onSpeedControlClick: () -> Unit,
     onSetPlaybackSpeed: (PlaybackSpeed) -> Unit,
 ) {
     Box(
@@ -396,7 +396,7 @@ private fun BoxScope.PlaybackSpeedSelector(
                 ).animateContentSize()
                 .align(Alignment.BottomEnd)
                 .clickable {
-                    onSpeedControlClicked()
+                    onSpeedControlClick()
                 },
     ) {
         if (!shouldIShowSpeedControls) {
@@ -408,7 +408,7 @@ private fun BoxScope.PlaybackSpeedSelector(
                     Modifier
                         .padding(Spacing.s8)
                         .clickable {
-                            onSpeedControlClicked()
+                            onSpeedControlClick()
                         },
             )
         } else {
@@ -599,7 +599,7 @@ fun PodcastPlayerPreview() {
             onSliderChangeFinished = { },
             shouldIShowSpeedControls = true,
             selectedPlaybackSpeed = PlaybackSpeed.SPEED_1X,
-            onSpeedControlClicked = { },
+            onSpeedControlClick = { },
             onSetPlaybackSpeed = { },
         )
     }

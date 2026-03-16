@@ -76,7 +76,7 @@ class PlaylistViewModel
 
         fun onAction(action: PlaylistAction) {
             when (action) {
-                PlaylistAction.OnAddNewPlaylistClicked -> {
+                PlaylistAction.OnAddNewPlaylistClick -> {
                     _state.update { currentState ->
                         currentState.copy(shouldIShowAddPlaylistDialog = true)
                     }
@@ -131,7 +131,7 @@ class PlaylistViewModel
                     }
                 }
 
-                is PlaylistAction.OnRemovePlaylistClicked -> {
+                is PlaylistAction.OnRemovePlaylistClick -> {
                     _state.update { currentState ->
                         currentState.copy(
                             selectedPlaylistId = action.playlistId,

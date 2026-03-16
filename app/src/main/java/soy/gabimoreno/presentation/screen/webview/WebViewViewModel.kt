@@ -17,7 +17,7 @@ class WebViewViewModel
             tracker.trackEvent(WebViewTrackerEvent.ViewScreen(url.toMap()))
         }
 
-        fun onBackClicked(url: String) {
+        fun onBackClick(url: String) {
             tracker.trackEvent(WebViewTrackerEvent.ClickBack(url.toMap()))
         }
 

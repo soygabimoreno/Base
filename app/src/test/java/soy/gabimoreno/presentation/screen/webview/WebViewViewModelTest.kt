@@ -39,9 +39,9 @@ class WebViewViewModelTest {
     }
 
     @Test
-    fun `WHEN onBackClicked THEN track event`() {
+    fun `WHEN onBackClick THEN track event`() {
         val url = URL
-        viewModel.onBackClicked(url)
+        viewModel.onBackClick(url)
 
         verifyOnce {
             tracker.trackEvent(

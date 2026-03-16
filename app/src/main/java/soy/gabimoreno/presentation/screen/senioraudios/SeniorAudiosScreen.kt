@@ -54,8 +54,8 @@ import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SeniorAudiosScreen(
-    onGoToWebClicked: (encodedUrl: String) -> Unit,
-    onItemClicked: (seniorAudioId: String) -> Unit,
+    onGoToWebClick: (encodedUrl: String) -> Unit,
+    onItemClick: (seniorAudioId: String) -> Unit,
 ) {
     val scrollState = rememberLazyListState()
     val seniorViewModel = ViewModelProvider.seniorAudiosViewModel
@@ -85,7 +85,7 @@ fun SeniorAudiosScreen(
                 playerHasAudio = playerViewModel.currentPlayingAudio.value != null,
                 onSeniorAudioClick = { seniorAudio ->
                     seniorViewModel.onSeniorAudioClick(seniorAudio.id, seniorAudio.title)
-                    onItemClicked(seniorAudio.id)
+                    onItemClick(seniorAudio.id)
                 },
                 onRetry = { seniorViewModel.searchSeniorAudios() },
             )
@@ -97,7 +97,7 @@ fun SeniorAudiosScreen(
             if (viewEvent is SeniorAudiosViewModel.ViewEvent.ShowWebView) {
                 val encodedUrl = viewEvent.encodedUrl
                 if (encodedUrl.isNotBlank()) {
-                    onGoToWebClicked(encodedUrl)
+                    onGoToWebClick(encodedUrl)
                 }
             }
         }
@@ -208,7 +208,7 @@ private fun SeniorAudioGrid(
                 onListenedToggled = {
                     // TODO: Implement listened toggled
                 },
-                onAddToPlaylistClicked = {
+                onAddToPlaylistClick = {
                     // TODO: Implement add to playlist
                 },
             )

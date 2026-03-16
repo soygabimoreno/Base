@@ -63,9 +63,9 @@ import soy.gabimoreno.presentation.ui.StaggeredVerticalGrid
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
-    onAddToPlaylistClicked: (podcastId: String) -> Unit,
-    onGoToWebClicked: (encodedUrl: String) -> Unit,
-    onItemClicked: (episodeId: String) -> Unit,
+    onAddToPlaylistClick: (podcastId: String) -> Unit,
+    onGoToWebClick: (encodedUrl: String) -> Unit,
+    onItemClick: (episodeId: String) -> Unit,
 ) {
     val scrollState = rememberLazyListState()
     val homeViewModel = ViewModelProvider.homeViewModel
@@ -95,9 +95,9 @@ fun HomeScreen(
                 isRefreshing = homeViewModel.isRefreshing,
                 pullRefreshState = pullRefreshState,
                 playerHasAudio = playerViewModel.currentPlayingAudio.value != null,
-                onEpisodeClicked = { episode ->
-                    homeViewModel.onEpisodeClicked(episode.id, episode.title)
-                    onItemClicked(episode.id)
+                onEpisodeClick = { episode ->
+                    homeViewModel.onEpisodeClick(episode.id, episode.title)
+                    onItemClick(episode.id)
                 },
                 onRetry = { homeViewModel.searchPodcasts() },
                 onFavoriteStatusChanged = { episode ->
@@ -106,8 +106,8 @@ fun HomeScreen(
                 onListenedToggled = { episode ->
                     homeViewModel.onListenedToggled(episode)
                 },
-                onAddToPlaylistClicked = { podcastId ->
-                    onAddToPlaylistClicked(podcastId)
+                onAddToPlaylistClick = { podcastId ->
+                    onAddToPlaylistClick(podcastId)
                 },
             )
         }
@@ -118,7 +118,7 @@ fun HomeScreen(
             if (viewEvent is HomeViewModel.ViewEvent.ShowWebView) {
                 val encodedUrl = viewEvent.encodedUrl
                 if (encodedUrl.isNotBlank()) {
-                    onGoToWebClicked(encodedUrl)
+                    onGoToWebClick(encodedUrl)
                 }
             }
         }
@@ -180,11 +180,11 @@ private fun EpisodeListContent(
     isRefreshing: Boolean,
     pullRefreshState: PullRefreshState,
     playerHasAudio: Boolean,
-    onEpisodeClicked: (Episode) -> Unit,
+    onEpisodeClick: (Episode) -> Unit,
     onRetry: () -> Unit,
     onFavoriteStatusChanged: (Episode) -> Unit,
     onListenedToggled: (Episode) -> Unit,
-    onAddToPlaylistClicked: (episodeId: String) -> Unit,
+    onAddToPlaylistClick: (episodeId: String) -> Unit,
 ) {
     Box(
         Modifier
@@ -212,10 +212,10 @@ private fun EpisodeListContent(
                         EpisodeGrid(
                             episodes = viewState.episodes,
                             searchText = searchText,
-                            onClick = onEpisodeClicked,
+                            onClick = onEpisodeClick,
                             onFavoriteStatusChanged = onFavoriteStatusChanged,
                             onListenedToggled = onListenedToggled,
-                            onAddToPlaylistClicked = onAddToPlaylistClicked,
+                            onAddToPlaylistClick = onAddToPlaylistClick,
                         )
                     }
                 }
@@ -241,7 +241,7 @@ private fun EpisodeGrid(
     onClick: (Episode) -> Unit,
     onFavoriteStatusChanged: (Episode) -> Unit,
     onListenedToggled: (Episode) -> Unit,
-    onAddToPlaylistClicked: (episodeId: String) -> Unit,
+    onAddToPlaylistClick: (episodeId: String) -> Unit,
 ) {
     val filteredEpisodes =
         if (searchText.isBlank()) {
@@ -263,7 +263,7 @@ private fun EpisodeGrid(
                 onClick = { onClick(episode) },
                 onFavoriteStatusChanged = { onFavoriteStatusChanged(episode) },
                 onListenedToggled = { onListenedToggled(episode) },
-                onAddToPlaylistClicked = { onAddToPlaylistClicked(episode.id) },
+                onAddToPlaylistClick = { onAddToPlaylistClick(episode.id) },
             )
         }
     }

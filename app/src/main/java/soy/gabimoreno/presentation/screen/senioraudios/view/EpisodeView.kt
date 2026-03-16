@@ -44,7 +44,7 @@ fun EpisodeView(
     onClick: () -> Unit,
     onFavoriteStatusChanged: (episode: Episode) -> Unit,
     onListenedToggled: (episode: Episode) -> Unit,
-    onAddToPlaylistClicked: (episodeId: String) -> Unit,
+    onAddToPlaylistClick: (episodeId: String) -> Unit,
 ) {
     Column(
         modifier =
@@ -74,7 +74,7 @@ fun EpisodeView(
             )
             PlaylistIcon(
                 episodeId = episode.id,
-                onAddToPlaylistClicked = { onAddToPlaylistClicked(episode.id) },
+                onAddToPlaylistClick = { onAddToPlaylistClick(episode.id) },
             )
         }
         Text(
@@ -88,10 +88,10 @@ fun EpisodeView(
 @Composable
 fun PlaylistIcon(
     episodeId: String,
-    onAddToPlaylistClicked: (episodeId: String) -> Unit,
+    onAddToPlaylistClick: (episodeId: String) -> Unit,
 ) {
     IconButton(
-        onClick = { onAddToPlaylistClicked(episodeId) },
+        onClick = { onAddToPlaylistClick(episodeId) },
     ) {
         Icon(
             modifier =
@@ -190,7 +190,7 @@ fun EpisodeViewPreview() {
             onClick = {},
             onFavoriteStatusChanged = {},
             onListenedToggled = {},
-            onAddToPlaylistClicked = {},
+            onAddToPlaylistClick = {},
         )
     }
 }

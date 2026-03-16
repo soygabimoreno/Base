@@ -14,6 +14,6 @@ sealed interface AuthAction {
         val password: String,
     ) : AuthAction
 
-    data object OnLoginClicked : AuthAction
-    data object OnLogoutClicked : AuthAction
+    data object OnLoginClick : AuthAction
+    data object OnLogoutClick : AuthAction
 }

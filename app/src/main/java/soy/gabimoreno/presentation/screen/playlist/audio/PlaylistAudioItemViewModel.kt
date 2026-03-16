@@ -132,7 +132,7 @@ class PlaylistAudioItemViewModel
                         )
                 }
 
-                PlaylistAudioItemAction.OnSaveClicked -> {
+                PlaylistAudioItemAction.OnSaveClick -> {
                     viewModelScope.launch(dispatcher) {
                         val playlistsToInsert = mutableListOf<Int>()
                         val playlistsToRemove = mutableListOf<Int>()

@@ -66,8 +66,8 @@ import soy.gabimoreno.util.toDurationMinutes
 fun DetailScreen(
     audioId: String,
     feature: Feature,
-    onAddToPlaylistClicked: (audioId: String) -> Unit,
-    onBackClicked: () -> Unit,
+    onAddToPlaylistClick: (audioId: String) -> Unit,
+    onBackClick: () -> Unit,
 ) {
     val currentContext = LocalContext.current
     val scrollState = rememberScrollState()
@@ -125,9 +125,9 @@ fun DetailScreen(
             Row {
                 BackButton {
                     audio?.let {
-                        detailViewModel.onBackClicked(audio)
+                        detailViewModel.onBackClick(audio)
                     }
-                    onBackClicked()
+                    onBackClick()
                 }
             }
 
@@ -206,7 +206,7 @@ fun DetailScreen(
                             text = playButtonText,
                             height = Spacing.s48,
                         ) {
-                            detailViewModel.onPlayPauseClicked(audio, isPlaying.toPlayPause())
+                            detailViewModel.onPlayPauseClick(audio, isPlaying.toPlayPause())
                             audios?.let {
                                 playerViewModel.playPauseAudio(audios, audio)
                             }
@@ -242,7 +242,7 @@ fun DetailScreen(
                             IconButton(
                                 modifier = Modifier.size(Spacing.s32),
                                 onClick = {
-                                    onAddToPlaylistClicked(
+                                    onAddToPlaylistClick(
                                         detailViewModel.audioState?.id ?: "",
                                     )
                                 },
@@ -271,7 +271,7 @@ fun DetailScreen(
                             tint = White,
                             padding = Spacing.s16,
                         ) {
-                            detailViewModel.onShareClicked(currentContext, audio)
+                            detailViewModel.onShareClick(currentContext, audio)
                         }
                     }
                     Spacer(modifier = Modifier.height(Spacing.s16))

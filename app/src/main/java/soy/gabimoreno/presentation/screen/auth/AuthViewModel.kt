@@ -58,8 +58,11 @@ class AuthViewModel
                     state = state.copy(password = action.password)
                 }
 
-                AuthAction.OnLoginClicked -> onLoginClicked()
-                AuthAction.OnLogoutClicked -> onLogoutClicked()
+                AuthAction.OnLoginClick -> {
+                    onLoginClick()
+                }
+
+                AuthAction.OnLogoutClick -> onLogoutClick()
             }
         }
 
@@ -109,7 +112,7 @@ class AuthViewModel
                 )
         }
 
-        private fun onLoginClicked() {
+        private fun onLoginClick() {
             val parameters = mapOf(TRACKER_KEY_EMAIL to state.email)
             tracker.trackEvent(PremiumTrackerEvent.ClickLogin(parameters))
             login(state.email, state.password)
@@ -210,7 +213,7 @@ class AuthViewModel
             }
         }
 
-        private fun onLogoutClicked() {
+        private fun onLogoutClick() {
             viewModelScope.launch(dispatcher) {
                 memberSession.setActive(false)
                 memberSession.setEmail(email = null)

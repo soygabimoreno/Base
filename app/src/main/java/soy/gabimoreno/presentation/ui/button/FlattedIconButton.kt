@@ -20,12 +20,12 @@ fun FlatIconButton(
     modifier: Modifier = Modifier,
     text: String,
     icon: ImageVector,
-    onItemClicked: () -> Unit = {},
+    onItemClick: () -> Unit = {},
 ) {
     Row(
         modifier =
             modifier
-                .clickable { onItemClicked() },
+                .clickable { onItemClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {

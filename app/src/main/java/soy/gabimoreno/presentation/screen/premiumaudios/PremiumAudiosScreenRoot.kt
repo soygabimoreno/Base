@@ -93,9 +93,9 @@ import soy.gabimoreno.presentation.theme.White
 @Composable
 fun PremiumAudiosScreenRoot(
     onRequireAuth: () -> Unit,
-    onItemClicked: (premiumAudioId: String) -> Unit,
-    onAddToPlaylistClicked: (premiumAudioId: String) -> Unit,
-    onPlaylistClicked: () -> Unit,
+    onItemClick: (premiumAudioId: String) -> Unit,
+    onAddToPlaylistClick: (premiumAudioId: String) -> Unit,
+    onPlaylistClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
@@ -125,7 +125,7 @@ fun PremiumAudiosScreenRoot(
                     }
 
                     is PremiumAudiosEvent.ShowDetail -> {
-                        onItemClicked(event.premiumAudioId)
+                        onItemClick(event.premiumAudioId)
                     }
                 }
             }
@@ -136,16 +136,16 @@ fun PremiumAudiosScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                is PremiumAudiosAction.OnLoginClicked -> {
+                is PremiumAudiosAction.OnLoginClick -> {
                     onRequireAuth()
                 }
 
-                is PremiumAudiosAction.OnPlaylistClicked -> {
-                    onPlaylistClicked()
+                is PremiumAudiosAction.OnPlaylistClick -> {
+                    onPlaylistClick()
                 }
 
-                is PremiumAudiosAction.OnAddToPlaylistClicked -> {
-                    onAddToPlaylistClicked(
+                is PremiumAudiosAction.OnAddToPlaylistClick -> {
+                    onAddToPlaylistClick(
                         action.premiumAudioId,
                     )
                 }
@@ -194,7 +194,7 @@ fun PremiumScreen(
                     Modifier
                         .padding(end = Spacing.s16)
                         .clickable {
-                            onAction(PremiumAudiosAction.OnPlaylistClicked)
+                            onAction(PremiumAudiosAction.OnPlaylistClick)
                         },
             )
             Icon(
@@ -216,7 +216,7 @@ fun PremiumScreen(
                     Modifier
                         .clip(CircleShape)
                         .clickable {
-                            onAction(PremiumAudiosAction.OnLoginClicked)
+                            onAction(PremiumAudiosAction.OnLoginClick)
                         },
             )
         }
@@ -228,16 +228,16 @@ fun PremiumScreen(
             if (state.shouldIAccessPremium) {
                 PremiumContent(
                     premiumAudios = premiumAudiosFlow,
-                    onItemClicked = {
+                    onItemClick = {
                         onAction(
-                            PremiumAudiosAction.OnPremiumAudiosItemClicked(it),
+                            PremiumAudiosAction.OnPremiumAudiosItemClick(it),
                         )
                     },
                     onListenedToggled = { onAction(PremiumAudiosAction.OnListenedToggled(it)) },
                     onPullRefreshTriggered = { onAction(PremiumAudiosAction.OnRefreshContent) },
-                    onAddToPlaylistClicked = {
+                    onAddToPlaylistClick = {
                         onAction(
-                            PremiumAudiosAction.OnAddToPlaylistClicked(
+                            PremiumAudiosAction.OnAddToPlaylistClick(
                                 it,
                             ),
                         )
@@ -314,10 +314,10 @@ fun NonPremiumContent() {
 @Composable
 fun PremiumContent(
     premiumAudios: LazyPagingItems<PremiumAudio>,
-    onItemClicked: (premiumAudioId: String) -> Unit,
+    onItemClick: (premiumAudioId: String) -> Unit,
     onListenedToggled: (premiumAudio: PremiumAudio) -> Unit,
     onPullRefreshTriggered: () -> Unit,
-    onAddToPlaylistClicked: (premiumAudioId: String) -> Unit,
+    onAddToPlaylistClick: (premiumAudioId: String) -> Unit,
     onFavoriteStatusChanged: (premiumAudio: PremiumAudio) -> Unit,
 ) {
     val refreshScope = rememberCoroutineScope()
@@ -354,9 +354,9 @@ fun PremiumContent(
                         premiumAudios[it]?.let { premiumAudio ->
                             PremiumItem(
                                 premiumAudio = premiumAudio,
-                                onItemClicked = onItemClicked,
+                                onItemClick = onItemClick,
                                 onListenedToggled = onListenedToggled,
-                                onAddToPlaylistClicked = onAddToPlaylistClicked,
+                                onAddToPlaylistClick = onAddToPlaylistClick,
                                 onFavoriteStatusChanged = onFavoriteStatusChanged,
                             )
                         }
@@ -375,9 +375,9 @@ fun PremiumContent(
 @Composable
 fun PremiumItem(
     premiumAudio: PremiumAudio,
-    onItemClicked: (premiumAudioId: String) -> Unit,
+    onItemClick: (premiumAudioId: String) -> Unit,
     onListenedToggled: (premiumAudio: PremiumAudio) -> Unit,
-    onAddToPlaylistClicked: (premiumAudioId: String) -> Unit,
+    onAddToPlaylistClick: (premiumAudioId: String) -> Unit,
     onFavoriteStatusChanged: (premiumAudio: PremiumAudio) -> Unit,
 ) {
     val iconColor by animateColorAsState(
@@ -405,7 +405,7 @@ fun PremiumItem(
             Modifier
                 .fillMaxWidth()
                 .clickable {
-                    onItemClicked(premiumAudio.id)
+                    onItemClick(premiumAudio.id)
                 }.background(
                     brush =
                         run {
@@ -473,7 +473,7 @@ fun PremiumItem(
         Spacer(modifier = Modifier.width(Spacing.s16))
         IconButton(
             modifier = Modifier.weight(Percent.EIGHT),
-            onClick = { onAddToPlaylistClicked(premiumAudio.id) },
+            onClick = { onAddToPlaylistClick(premiumAudio.id) },
         ) {
             Icon(
                 modifier =
@@ -530,9 +530,9 @@ private fun PremiumItemPreview() {
                     hasBeenListened = false,
                     markedAsFavorite = false,
                 ),
-            onItemClicked = {},
+            onItemClick = {},
             onListenedToggled = {},
-            onAddToPlaylistClicked = {},
+            onAddToPlaylistClick = {},
             onFavoriteStatusChanged = {},
         )
     }

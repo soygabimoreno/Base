@@ -47,8 +47,8 @@ import soy.gabimoreno.presentation.ui.button.SecondaryButton
 @Composable
 fun PlaylistAudioItemRoot(
     playlistAudioId: String,
-    onBackClicked: () -> Unit,
-    onNewPlaylistClicked: () -> Unit,
+    onBackClick: () -> Unit,
+    onNewPlaylistClick: () -> Unit,
     viewModel: PlaylistAudioItemViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -73,8 +73,8 @@ fun PlaylistAudioItemRoot(
         state = viewModel.state,
         onAction = { action ->
             when (action) {
-                PlaylistAudioItemAction.OnBackClicked -> onBackClicked()
-                PlaylistAudioItemAction.OnNewPlaylistClicked -> onNewPlaylistClicked()
+                PlaylistAudioItemAction.OnBackClick -> onBackClick()
+                PlaylistAudioItemAction.OnNewPlaylistClick -> onNewPlaylistClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -94,13 +94,13 @@ fun PlaylistAudioItem(
                 .fillMaxSize(),
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Header(onBackClick = { onAction(PlaylistAudioItemAction.OnBackClicked) })
+            Header(onBackClick = { onAction(PlaylistAudioItemAction.OnBackClick) })
             AudioTitle(state.selectedAudioTitle)
             Spacer(modifier = Modifier.padding(vertical = Spacing.s8))
             SecondaryButton(
                 text = stringResource(R.string.playlists_create_title),
                 height = Spacing.s48,
-                onClick = { onAction(PlaylistAudioItemAction.OnNewPlaylistClicked) },
+                onClick = { onAction(PlaylistAudioItemAction.OnNewPlaylistClick) },
             )
             Spacer(modifier = Modifier.padding(vertical = Spacing.s8))
             PlaylistContent(
@@ -180,7 +180,7 @@ private fun PlaylistContent(
                 Modifier
                     .padding(bottom = Spacing.s64)
                     .align(Alignment.BottomCenter),
-            onClick = { onAction(PlaylistAudioItemAction.OnSaveClicked) },
+            onClick = { onAction(PlaylistAudioItemAction.OnSaveClick) },
         )
     }
 }

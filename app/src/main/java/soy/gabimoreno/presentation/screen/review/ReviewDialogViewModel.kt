@@ -76,7 +76,7 @@ class ReviewDialogViewModel
 
                 is ReviewDialogAction.SetOnReviewDialog -> {
                     viewModelScope.launch(dispatcher) {
-                        inAppReviewManager.onInAppReviewClicked(action.activity)
+                        inAppReviewManager.onInAppReviewClick(action.activity)
                     }
                 }
             }

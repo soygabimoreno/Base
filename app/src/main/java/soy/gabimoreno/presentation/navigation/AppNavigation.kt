@@ -51,10 +51,10 @@ private fun NavGraphBuilder.seniorNav(
         composable(navCommand = NavCommand.ContentType(Feature.SENIOR_AUDIOS)) {
             appState.setStartDestination(Feature.SENIOR_AUDIOS)
             SeniorAudiosScreen(
-                onItemClicked = { episodeId ->
+                onItemClick = { episodeId ->
                     navController.navigateToDetailFromSenior(episodeId)
                 },
-                onGoToWebClicked = { encodedUrl ->
+                onGoToWebClick = { encodedUrl ->
                     navController.navigateToWebView(encodedUrl)
                 },
             )
@@ -69,10 +69,10 @@ private fun NavGraphBuilder.seniorNav(
             DetailScreen(
                 audioId = it.findArg<String>(NavArg.EpisodeId),
                 Feature.SENIOR_AUDIOS,
-                onBackClicked = {
+                onBackClick = {
                     navController.goBack()
                 },
-                onAddToPlaylistClicked = { audioItemId ->
+                onAddToPlaylistClick = { audioItemId ->
                     navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
                 },
             )
@@ -81,7 +81,7 @@ private fun NavGraphBuilder.seniorNav(
         composable(navCommand = NavCommand.ContentWebView(Feature.SENIOR_AUDIOS)) {
             WebViewScreen(
                 url = it.findArg(NavArg.EncodedUrl),
-                onBackClicked = {
+                onBackClick = {
                     navController.goBack()
                 },
             )
@@ -100,13 +100,13 @@ private fun NavGraphBuilder.podcastNav(
         composable(navCommand = NavCommand.ContentType(Feature.PODCAST)) {
             appState.setStartDestination(Feature.PODCAST)
             HomeScreen(
-                onItemClicked = { episodeId ->
+                onItemClick = { episodeId ->
                     navController.navigateToDetailFromPodcast(episodeId)
                 },
-                onGoToWebClicked = { encodedUrl ->
+                onGoToWebClick = { encodedUrl ->
                     navController.navigateToWebView(encodedUrl)
                 },
-                onAddToPlaylistClicked = { audioItemId ->
+                onAddToPlaylistClick = { audioItemId ->
                     navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
                 },
             )
@@ -121,10 +121,10 @@ private fun NavGraphBuilder.podcastNav(
             DetailScreen(
                 audioId = it.findArg<String>(NavArg.EpisodeId),
                 Feature.PODCAST,
-                onBackClicked = {
+                onBackClick = {
                     navController.goBack()
                 },
-                onAddToPlaylistClicked = { audioItemId ->
+                onAddToPlaylistClick = { audioItemId ->
                     navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
                 },
             )
@@ -133,7 +133,7 @@ private fun NavGraphBuilder.podcastNav(
         composable(navCommand = NavCommand.ContentWebView(Feature.PODCAST)) {
             WebViewScreen(
                 url = it.findArg(NavArg.EncodedUrl),
-                onBackClicked = {
+                onBackClick = {
                     navController.goBack()
                 },
             )
@@ -154,15 +154,15 @@ private fun NavGraphBuilder.premiumNav(
             appState.setStartDestination(Feature.PREMIUM_AUDIOS)
             PremiumAudiosScreenRoot(
                 onRequireAuth = onRequireAuth,
-                onItemClicked = { premiumAudioId ->
+                onItemClick = { premiumAudioId ->
                     navController.navigateToDetailFromPremium(premiumAudioId)
                 },
-                onPlaylistClicked = {
+                onPlaylistClick = {
                     navController.navigate(
                         route = NavCommand.ContentType(Feature.PLAYLISTS).route,
                     )
                 },
-                onAddToPlaylistClicked = { audioItemId ->
+                onAddToPlaylistClick = { audioItemId ->
                     navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
                 },
             )
@@ -178,10 +178,10 @@ private fun NavGraphBuilder.premiumNav(
             DetailScreen(
                 audioId = it.findArg<String>(NavArg.PremiumAudioId),
                 Feature.PREMIUM_AUDIOS,
-                onBackClicked = {
+                onBackClick = {
                     navController.goBack()
                 },
-                onAddToPlaylistClicked = { audioItemId ->
+                onAddToPlaylistClick = { audioItemId ->
                     navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
                 },
             )
@@ -200,10 +200,10 @@ private fun NavGraphBuilder.audioCoursesNav(
         composable(navCommand = NavCommand.ContentType(Feature.AUDIO_COURSES)) {
             appState.setStartDestination(Feature.AUDIO_COURSES)
             AudioCoursesScreenRoot(
-                onItemClicked = { audioCourseId ->
+                onItemClick = { audioCourseId ->
                     navController.navigateToAudioCourseDetailFromAudiocourses(audioCourseId)
                 },
-                onPlaylistClicked = {
+                onPlaylistClick = {
                     navController.navigate(
                         route = NavCommand.ContentType(Feature.PLAYLISTS).route,
                     )
@@ -219,10 +219,10 @@ private fun NavGraphBuilder.audioCoursesNav(
         ) {
             AudioCoursesDetailScreenRoot(
                 audioCourseId = it.findArg<String>(NavArg.AudioCourseId),
-                onBackClicked = {
+                onBackClick = {
                     navController.goBack()
                 },
-                onAddToPlaylistClicked = { audioItemId ->
+                onAddToPlaylistClick = { audioItemId ->
                     navController.navigateToPlaylistAudioItem(audioItemId = audioItemId)
                 },
             )
@@ -242,7 +242,7 @@ private fun NavGraphBuilder.profileNav(
         composable(navCommand = NavCommand.ContentType(Feature.PROFILE)) {
             appState.setStartDestination(Feature.PROFILE)
             ProfileScreenRoot(
-                onPlaylistClicked = {
+                onPlaylistClick = {
                     navController.navigate(
                         route = NavCommand.ContentType(Feature.PLAYLISTS).route,
                     )
@@ -264,7 +264,7 @@ private fun NavGraphBuilder.playlistNav(
         composable(navCommand = NavCommand.ContentType(Feature.PLAYLISTS)) {
             appState.setStartDestination(Feature.PLAYLISTS)
             PlaylistScreenRoot(
-                onBackClicked = {
+                onBackClick = {
                     navController.goBackOrNavigateTo(Feature.PROFILE.route)
                 },
                 onItemClick = { playlistId ->
@@ -281,7 +281,7 @@ private fun NavGraphBuilder.playlistNav(
         ) {
             PlaylistDetailScreenRoot(
                 playlistId = it.findArg(NavArg.PlaylistId),
-                onBackClicked = {
+                onBackClick = {
                     navController.goBack()
                 },
             )
@@ -295,10 +295,10 @@ private fun NavGraphBuilder.playlistNav(
         ) {
             PlaylistAudioItemRoot(
                 playlistAudioId = it.findArg(NavArg.AudioItemId),
-                onBackClicked = {
+                onBackClick = {
                     navController.goBack()
                 },
-                onNewPlaylistClicked = {
+                onNewPlaylistClick = {
                     navController.navigate(
                         route = NavCommand.ContentType(Feature.PLAYLISTS).route,
                     )

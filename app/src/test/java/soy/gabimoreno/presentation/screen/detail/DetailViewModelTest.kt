@@ -63,10 +63,10 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `WHEN onBackClicked THEN track event`() {
+    fun `WHEN onBackClick THEN track event`() {
         val audio = buildAudio()
 
-        viewModel.onBackClicked(audio)
+        viewModel.onBackClick(audio)
 
         verifyOnce {
             tracker.trackEvent(
@@ -81,33 +81,33 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `WHEN onPlayPauseClicked on play THEN track the corresponding event`() {
+    fun `WHEN onPlayPauseClick on play THEN track the corresponding event`() {
         val audio = buildAudio()
         val playPause = PlayPause.PLAY
 
-        viewModel.onPlayPauseClicked(audio, playPause)
+        viewModel.onPlayPauseClick(audio, playPause)
 
         val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPlay(parameters)) }
     }
 
     @Test
-    fun `WHEN onPlayPauseClicked on pause THEN track the corresponding event`() {
+    fun `WHEN onPlayPauseClick on pause THEN track the corresponding event`() {
         val audio = buildAudio()
         val playPause = PlayPause.PAUSE
 
-        viewModel.onPlayPauseClicked(audio, playPause)
+        viewModel.onPlayPauseClick(audio, playPause)
 
         val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(DetailTrackerEvent.ClickPause(parameters)) }
     }
 
     @Test
-    fun `WHEN onShareClicked THEN track the corresponding event`() {
+    fun `WHEN onShareClick THEN track the corresponding event`() {
         val context: Context = relaxedMockk()
         val audio = buildAudio()
 
-        viewModel.onShareClicked(context, audio)
+        viewModel.onShareClick(context, audio)
 
         verifyOnce {
             tracker.trackEvent(DetailTrackerEvent.ClickShare(audio.toMap()))

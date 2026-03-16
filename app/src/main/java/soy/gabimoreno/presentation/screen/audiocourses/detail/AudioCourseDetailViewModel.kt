@@ -55,7 +55,7 @@ class AudioCourseDetailViewModel
 
         fun onAction(action: AudioCourseDetailAction) {
             when (action) {
-                is AudioCourseDetailAction.OnAudioCourseItemClicked -> {
+                is AudioCourseDetailAction.OnAudioCourseItemClick -> {
                     prepareToPlayAudio(action.audioCourseItem.id)
                     viewModelScope.launch {
                         eventChannel.emit(AudioCourseDetailEvent.PlayAudio)

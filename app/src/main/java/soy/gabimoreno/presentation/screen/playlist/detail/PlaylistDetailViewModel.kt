@@ -66,8 +66,12 @@ class PlaylistDetailViewModel
 
         fun onAction(action: PlaylistDetailAction) {
             when (action) {
-                is PlaylistDetailAction.OnAudioItemClicked -> handleAudioItemClicked(action)
-                PlaylistDetailAction.OnPlayClicked -> handlePlayClicked()
+                is PlaylistDetailAction.OnAudioItemClick -> {
+                    handleAudioItemClick(action)
+                }
+
+                PlaylistDetailAction.OnPlayClick -> handlePlayClick()
+
                 is PlaylistDetailAction.OnAudioItemsReordered -> handleAudioItemsReordered(action)
                 is PlaylistDetailAction.OnRemovePlaylistAudioItem -> handleRemoveAudioItem(action)
                 PlaylistDetailAction.OnConfirmDialog -> handleConfirmDialog()
@@ -77,7 +81,7 @@ class PlaylistDetailViewModel
                         action,
                     )
 
-                PlaylistDetailAction.OnEditPlaylistClicked -> handleEditPlaylistClicked()
+                PlaylistDetailAction.OnEditPlaylistClick -> handleEditPlaylistClick()
                 PlaylistDetailAction.OnEditPlaylistConfirmDialog -> handleEditConfirmDialog()
                 PlaylistDetailAction.OnEditPlaylistDismissDialog -> handleEditDismissDialog()
                 PlaylistDetailAction.OnDismissDialog -> handleDismissDialog()
@@ -85,12 +89,12 @@ class PlaylistDetailViewModel
             }
         }
 
-        private fun handleAudioItemClicked(action: PlaylistDetailAction.OnAudioItemClicked) {
+        private fun handleAudioItemClick(action: PlaylistDetailAction.OnAudioItemClick) {
             updateState { copy(audio = action.playlistAudioItem) }
             emitAudio()
         }
 
-        private fun handlePlayClicked() {
+        private fun handlePlayClick() {
             if (state.playlistAudioItems.isNotEmpty()) {
                 updateState { copy(audio = playlistAudioItems.first()) }
                 emitAudio()
@@ -176,7 +180,7 @@ class PlaylistDetailViewModel
             }
         }
 
-        private fun handleEditPlaylistClicked() {
+        private fun handleEditPlaylistClick() {
             val playlist = state.playlist ?: return
             updateState {
                 copy(

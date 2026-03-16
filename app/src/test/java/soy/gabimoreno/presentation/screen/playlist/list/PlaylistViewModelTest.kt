@@ -126,12 +126,12 @@ class PlaylistViewModelTest {
         }
 
     @Test
-    fun `GIVEN OnAddNewPlaylistClicked WHEN onAction THEN dialog shown`() =
+    fun `GIVEN OnAddNewPlaylistClick WHEN onAction THEN dialog shown`() =
         runTest {
             val states = mutableListOf<PlaylistState>()
             val stateJob = launch { viewModel.state.toList(states) }
 
-            viewModel.onAction(PlaylistAction.OnAddNewPlaylistClicked)
+            viewModel.onAction(PlaylistAction.OnAddNewPlaylistClick)
             advanceUntilIdle()
 
             states.last().shouldIShowAddPlaylistDialog shouldBe true
@@ -289,13 +289,13 @@ class PlaylistViewModelTest {
         }
 
     @Test
-    fun `GIVEN playlistId WHEN OnRemovePlaylistClicked THEN confirm dialog is shown`() =
+    fun `GIVEN playlistId WHEN OnRemovePlaylistClick THEN confirm dialog is shown`() =
         runTest {
             val playlistId = 1
             val states = mutableListOf<PlaylistState>()
             val job = launch { viewModel.state.toList(states) }
 
-            viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
+            viewModel.onAction(PlaylistAction.OnRemovePlaylistClick(playlistId))
             advanceUntilIdle()
 
             states.last().apply {
@@ -313,7 +313,7 @@ class PlaylistViewModelTest {
             val states = mutableListOf<PlaylistState>()
             val job = launch { viewModel.state.toList(states) }
 
-            viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistToDelete.id))
+            viewModel.onAction(PlaylistAction.OnRemovePlaylistClick(playlistToDelete.id))
             advanceUntilIdle()
             viewModel.onAction(PlaylistAction.OnConfirmDeleteDialog)
             advanceUntilIdle()
@@ -340,7 +340,7 @@ class PlaylistViewModelTest {
             val eventJob = launch { viewModel.events.toList(events) }
             val stateJob = launch { viewModel.state.toList(states) }
 
-            viewModel.onAction(PlaylistAction.OnRemovePlaylistClicked(playlistId))
+            viewModel.onAction(PlaylistAction.OnRemovePlaylistClick(playlistId))
             advanceUntilIdle()
             viewModel.onAction(PlaylistAction.OnConfirmDeleteDialog)
             advanceUntilIdle()

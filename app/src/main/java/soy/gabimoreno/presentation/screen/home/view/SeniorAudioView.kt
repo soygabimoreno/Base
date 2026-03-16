@@ -44,7 +44,7 @@ fun SeniorAudioView(
     onClick: () -> Unit,
     onFavoriteStatusChanged: (seniorAudio: SeniorAudio) -> Unit,
     onListenedToggled: (seniorAudio: SeniorAudio) -> Unit,
-    onAddToPlaylistClicked: (seniorAudioId: String) -> Unit,
+    onAddToPlaylistClick: (seniorAudioId: String) -> Unit,
 ) {
     Column(
         modifier =
@@ -74,7 +74,7 @@ fun SeniorAudioView(
             )
             PlaylistIcon(
                 seniorAudioId = seniorAudio.id,
-                onAddToPlaylistClicked = { onAddToPlaylistClicked(seniorAudio.id) },
+                onAddToPlaylistClick = { onAddToPlaylistClick(seniorAudio.id) },
             )
         }
         Text(
@@ -88,10 +88,10 @@ fun SeniorAudioView(
 @Composable
 private fun PlaylistIcon(
     seniorAudioId: String,
-    onAddToPlaylistClicked: (seniorAudioId: String) -> Unit,
+    onAddToPlaylistClick: (seniorAudioId: String) -> Unit,
 ) {
     IconButton(
-        onClick = { onAddToPlaylistClicked(seniorAudioId) },
+        onClick = { onAddToPlaylistClick(seniorAudioId) },
     ) {
         Icon(
             modifier =
@@ -190,7 +190,7 @@ private fun Preview() {
             onClick = {},
             onFavoriteStatusChanged = {},
             onListenedToggled = {},
-            onAddToPlaylistClicked = {},
+            onAddToPlaylistClick = {},
         )
     }
 }

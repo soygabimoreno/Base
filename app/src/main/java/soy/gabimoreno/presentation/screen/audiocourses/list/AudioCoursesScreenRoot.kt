@@ -44,8 +44,8 @@ import soy.gabimoreno.presentation.theme.Spacing
 
 @Composable
 fun AudioCoursesScreenRoot(
-    onItemClicked: (courseId: String) -> Unit,
-    onPlaylistClicked: () -> Unit,
+    onItemClick: (courseId: String) -> Unit,
+    onPlaylistClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
@@ -60,7 +60,7 @@ fun AudioCoursesScreenRoot(
                 }
 
                 is AudioCoursesEvent.ShowDetail -> {
-                    onItemClicked(event.audioCourseId)
+                    onItemClick(event.audioCourseId)
                 }
 
                 AudioCoursesEvent.ShowTokenExpiredError -> {
@@ -74,8 +74,8 @@ fun AudioCoursesScreenRoot(
         state = state,
         onAction = { action ->
             when (action) {
-                is AudioCoursesAction.OnItemClicked -> onItemClicked(action.courseId)
-                AudioCoursesAction.OnPlaylistClicked -> onPlaylistClicked()
+                is AudioCoursesAction.OnItemClick -> onItemClick(action.courseId)
+                AudioCoursesAction.OnPlaylistClick -> onPlaylistClick()
                 else -> Unit
             }
             coursesListViewModel.onAction(action)
@@ -121,7 +121,7 @@ private fun AudioCoursesScreen(
                 modifier =
                     Modifier
                         .clickable {
-                            onAction(AudioCoursesAction.OnPlaylistClicked)
+                            onAction(AudioCoursesAction.OnPlaylistClick)
                         },
             )
         }
@@ -157,7 +157,7 @@ private fun AudioCoursesScreen(
                             audioCourse = state.audioCourses[index],
                             onItemClick = {
                                 onAction(
-                                    AudioCoursesAction.OnItemClicked(
+                                    AudioCoursesAction.OnItemClick(
                                         state.audioCourses[index].id,
                                     ),
                                 )

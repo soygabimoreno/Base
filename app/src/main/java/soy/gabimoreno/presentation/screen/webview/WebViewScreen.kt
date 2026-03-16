@@ -26,7 +26,7 @@ import soy.gabimoreno.presentation.ui.BackButton
 @Composable
 fun WebViewScreen(
     url: String,
-    onBackClicked: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     val webViewViewModel = ViewModelProvider.webViewViewModel
 
@@ -48,8 +48,8 @@ fun WebViewScreen(
                     if (webViewBackEnabled) {
                         webView?.goBack()
                     } else {
-                        webViewViewModel.onBackClicked(url)
-                        onBackClicked()
+                        webViewViewModel.onBackClick(url)
+                        onBackClick()
                     }
                 }
             }

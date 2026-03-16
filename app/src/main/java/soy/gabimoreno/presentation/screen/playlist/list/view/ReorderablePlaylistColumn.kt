@@ -45,7 +45,7 @@ fun ReorderablePlaylistColumn(
     playlists: List<Playlist>,
     onItemClick: (Int) -> Unit,
     onDragFinish: (reorderedPlaylists: List<Playlist>) -> Unit,
-    onRemovePlaylistClicked: (playlistId: Int) -> Unit,
+    onRemovePlaylistClick: (playlistId: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val haptic = rememberReorderHapticFeedback()
@@ -127,7 +127,7 @@ fun ReorderablePlaylistColumn(
                             Modifier
                                 .align(Alignment.BottomEnd),
                         onClick = {
-                            onRemovePlaylistClicked(reorderedPlaylists[index].id)
+                            onRemovePlaylistClick(reorderedPlaylists[index].id)
                         },
                     ) {
                         Icon(

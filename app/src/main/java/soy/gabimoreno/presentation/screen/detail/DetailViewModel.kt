@@ -35,11 +35,11 @@ class DetailViewModel
             tracker.trackEvent(DetailTrackerEvent.ViewScreen(audio.toMap()))
         }
 
-        fun onBackClicked(audio: Audio) {
+        fun onBackClick(audio: Audio) {
             tracker.trackEvent(DetailTrackerEvent.ClickBack(audio.toMap()))
         }
 
-        fun onPlayPauseClicked(
+        fun onPlayPauseClick(
             audio: Audio,
             playPause: PlayPause,
         ) {
@@ -50,7 +50,7 @@ class DetailViewModel
             }
         }
 
-        fun onShareClicked(
+        fun onShareClick(
             context: Context,
             audio: Audio,
         ) {

@@ -60,7 +60,7 @@ class PremiumAudiosViewModel
 
         fun onAction(action: PremiumAudiosAction) {
             when (action) {
-                is PremiumAudiosAction.OnPremiumAudiosItemClicked -> {
+                is PremiumAudiosAction.OnPremiumAudiosItemClick -> {
                     loadSelectedPremiumAudio(action.premiumAudioId)
                 }
 

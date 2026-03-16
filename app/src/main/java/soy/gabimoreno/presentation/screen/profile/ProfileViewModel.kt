@@ -37,7 +37,7 @@ class ProfileViewModel
                     state = state.copy(email = action.email)
                 }
 
-                ProfileAction.OnResetAudioCoursesClicked -> {
+                ProfileAction.OnResetAudioCoursesClick -> {
                     state =
                         state.copy(
                             showResetDialog = true,
@@ -45,7 +45,7 @@ class ProfileViewModel
                         )
                 }
 
-                ProfileAction.OnResetPremiumAudioClicked -> {
+                ProfileAction.OnResetPremiumAudioClick -> {
                     state =
                         state.copy(
                             showResetDialog = true,
@@ -53,7 +53,7 @@ class ProfileViewModel
                         )
                 }
 
-                ProfileAction.OnResetPodcastClicked -> {
+                ProfileAction.OnResetPodcastClick -> {
                     state =
                         state.copy(
                             showResetDialog = true,

@@ -3,9 +3,9 @@ package soy.gabimoreno.presentation.screen.playlist.detail
 import soy.gabimoreno.domain.model.content.PlaylistAudioItem
 
 sealed interface PlaylistDetailAction {
-    data object OnBackClicked : PlaylistDetailAction
-    data object OnPlayClicked : PlaylistDetailAction
-    data class OnAudioItemClicked(
+    data object OnBackClick : PlaylistDetailAction
+    data object OnPlayClick : PlaylistDetailAction
+    data class OnAudioItemClick(
         val playlistAudioItem: PlaylistAudioItem,
     ) : PlaylistDetailAction
 
@@ -17,7 +17,7 @@ sealed interface PlaylistDetailAction {
         val playlistAudioItemId: String,
     ) : PlaylistDetailAction
 
-    data object OnEditPlaylistClicked : PlaylistDetailAction
+    data object OnEditPlaylistClick : PlaylistDetailAction
     data object OnDismissDialog : PlaylistDetailAction
     data object OnConfirmDialog : PlaylistDetailAction
     data class OnDialogTitleChange(

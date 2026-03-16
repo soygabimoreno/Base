@@ -55,8 +55,8 @@ import soy.gabimoreno.presentation.ui.BackButton
 @Composable
 fun AudioCoursesDetailScreenRoot(
     audioCourseId: String,
-    onBackClicked: () -> Unit,
-    onAddToPlaylistClicked: (audioCourseId: String) -> Unit,
+    onBackClick: () -> Unit,
+    onAddToPlaylistClick: (audioCourseId: String) -> Unit,
 ) {
     val context = LocalContext.current
     val unexpectedErrorMessage = stringResource(R.string.unexpected_error)
@@ -85,12 +85,12 @@ fun AudioCoursesDetailScreenRoot(
         state = coursesDetailViewModel.state,
         onAction = { action ->
             when (action) {
-                is AudioCourseDetailAction.OnBackClicked -> {
-                    onBackClicked()
+                is AudioCourseDetailAction.OnBackClick -> {
+                    onBackClick()
                 }
 
-                is AudioCourseDetailAction.OnAddToPlaylistClicked -> {
-                    onAddToPlaylistClicked(
+                is AudioCourseDetailAction.OnAddToPlaylistClick -> {
+                    onAddToPlaylistClick(
                         action.audioCourseId,
                     )
                 }
@@ -146,7 +146,7 @@ fun AudioCourseDetailScreen(
                             .background(PurpleDark.copy(alpha = 0.8f)),
                 ) {
                     BackButton(
-                        onClick = { onAction(AudioCourseDetailAction.OnBackClicked) },
+                        onClick = { onAction(AudioCourseDetailAction.OnBackClick) },
                     )
                 }
             }
@@ -187,9 +187,9 @@ fun AudioCourseDetailScreen(
                     ItemAudioCourse(
                         audioCourseItem = state.audioCourse.audios[index],
                         audioCourseTitle = state.audioCourse.title,
-                        onItemClicked = {
+                        onItemClick = {
                             onAction(
-                                AudioCourseDetailAction.OnAudioCourseItemClicked(
+                                AudioCourseDetailAction.OnAudioCourseItemClick(
                                     state.audioCourse.audios[index],
                                 ),
                             )
@@ -201,9 +201,9 @@ fun AudioCourseDetailScreen(
                                 ),
                             )
                         },
-                        onAddToPlaylistClicked = {
+                        onAddToPlaylistClick = {
                             onAction(
-                                AudioCourseDetailAction.OnAddToPlaylistClicked(
+                                AudioCourseDetailAction.OnAddToPlaylistClick(
                                     state.audioCourse.audios[index].id,
                                 ),
                             )

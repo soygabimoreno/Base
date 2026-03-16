@@ -84,7 +84,7 @@ class HomeViewModel
             tracker.trackEvent(HomeTrackerEvent.ViewScreen)
         }
 
-        fun onShowWebViewClicked(url: String) {
+        fun onShowWebViewClick(url: String) {
             viewModelScope.launch(dispatcher) {
                 _viewEventFlow.emit(
                     ViewEvent.ShowWebView(homeUseCases.encodeUrl(url)),
@@ -92,7 +92,7 @@ class HomeViewModel
             }
         }
 
-        fun onEpisodeClicked(
+        fun onEpisodeClick(
             episodeId: String,
             episodeTitle: String,
         ) {

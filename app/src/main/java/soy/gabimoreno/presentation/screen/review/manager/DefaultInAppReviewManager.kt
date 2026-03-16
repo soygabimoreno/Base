@@ -31,7 +31,7 @@ class DefaultInAppReviewManager
         override val inAppPreviewEvents: SharedFlow<InAppReviewEvent> =
             _inAppPreviewEvents.asSharedFlow()
 
-        override suspend fun onInAppReviewClicked(activity: Activity) {
+        override suspend fun onInAppReviewClick(activity: Activity) {
             val reviewManager =
                 if (BuildConfig.DEBUG) {
                     FakeReviewManager(context)

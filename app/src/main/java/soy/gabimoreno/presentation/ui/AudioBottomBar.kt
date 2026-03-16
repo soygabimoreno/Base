@@ -109,7 +109,7 @@ fun AudioBottomBarContent(audio: Audio) {
             xOffset = swipeableState.offset.value.roundToInt(),
             icon = iconResId,
             onTogglePlaybackState = {
-                playerViewModel.onPlayPauseClickedFromAudioBottomBar(
+                playerViewModel.onPlayPauseClickFromAudioBottomBar(
                     audio,
                     isPlaying.toPlayPause(),
                 )

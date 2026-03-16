@@ -171,7 +171,7 @@ fun AuthModalBottomSheetLayout(
                             KeyboardActions(
                                 onAny = {
                                     focusManager.clearFocus()
-                                    onAction(AuthAction.OnLoginClicked)
+                                    onAction(AuthAction.OnLoginClick)
                                 },
                             ),
                         leadingIcon = Icons.Filled.Password,
@@ -183,7 +183,7 @@ fun AuthModalBottomSheetLayout(
                         height = Spacing.s48,
                         isEnabled = !state.isLoading,
                     ) {
-                        onAction(AuthAction.OnLoginClicked)
+                        onAction(AuthAction.OnLoginClick)
                     }
                     Spacer(modifier = Modifier.height(Spacing.s24))
                 } else {
@@ -196,7 +196,7 @@ fun AuthModalBottomSheetLayout(
                         text = stringResource(id = R.string.close),
                         height = Spacing.s48,
                     ) {
-                        onAction(AuthAction.OnLogoutClicked)
+                        onAction(AuthAction.OnLogoutClick)
                     }
                     Spacer(modifier = Modifier.height(Spacing.s24))
                 }

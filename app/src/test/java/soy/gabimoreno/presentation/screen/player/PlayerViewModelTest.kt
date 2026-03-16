@@ -108,44 +108,44 @@ class PlayerViewModelTest {
     }
 
     @Test
-    fun `WHEN onPlayPauseClickedFromPlayer on play THEN track the corresponding event`() {
+    fun `WHEN onPlayPauseClickFromPlayer on play THEN track the corresponding event`() {
         val audio = buildAudio()
         val playPause = PlayPause.PLAY
 
-        viewModel.onPlayPauseClickedFromPlayer(audio, playPause)
+        viewModel.onPlayPauseClickFromPlayer(audio, playPause)
 
         val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromPlayer(parameters)) }
     }
 
     @Test
-    fun `WHEN onPlayPauseClicked on pause THEN track the corresponding event`() {
+    fun `WHEN onPlayPauseClick on pause THEN track the corresponding event`() {
         val audio = buildAudio()
         val playPause = PlayPause.PAUSE
 
-        viewModel.onPlayPauseClickedFromPlayer(audio, playPause)
+        viewModel.onPlayPauseClickFromPlayer(audio, playPause)
 
         val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromPlayer(parameters)) }
     }
 
     @Test
-    fun `WHEN onPlayPauseClickedFromAudioBottomBar on play THEN track the corresponding event`() {
+    fun `WHEN onPlayPauseClickFromAudioBottomBar on play THEN track the corresponding event`() {
         val audio = buildAudio()
         val playPause = PlayPause.PLAY
 
-        viewModel.onPlayPauseClickedFromAudioBottomBar(audio, playPause)
+        viewModel.onPlayPauseClickFromAudioBottomBar(audio, playPause)
 
         val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPlayFromAudioBottomBar(parameters)) }
     }
 
     @Test
-    fun `WHEN onPlayPauseClickedFromAudioBottomBar on pause THEN track the corresponding event`() {
+    fun `WHEN onPlayPauseClickFromAudioBottomBar on pause THEN track the corresponding event`() {
         val audio = buildAudio()
         val playPause = PlayPause.PAUSE
 
-        viewModel.onPlayPauseClickedFromAudioBottomBar(audio, playPause)
+        viewModel.onPlayPauseClickFromAudioBottomBar(audio, playPause)
 
         val parameters = audio.toMap()
         verifyOnce { tracker.trackEvent(PlayerTrackerEvent.ClickPauseFromAudioBottomBar(parameters)) }
@@ -173,7 +173,7 @@ class PlayerViewModelTest {
         val currentPlayingAudio = buildAudio()
         every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
 
-        viewModel.onRewindClicked()
+        viewModel.onRewindClick()
 
         verifyOnce {
             mediaPlayerServiceConnection.rewind()
@@ -185,7 +185,7 @@ class PlayerViewModelTest {
         val currentPlayingAudio = buildAudio()
         every { viewModel.currentPlayingAudio.value } returns currentPlayingAudio
 
-        viewModel.onForwardClicked()
+        viewModel.onForwardClick()
 
         verifyOnce {
             mediaPlayerServiceConnection.fastForward()
@@ -235,16 +235,16 @@ class PlayerViewModelTest {
     }
 
     @Test
-    fun `GIVEN speed controls hidden WHEN onSpeedControlClicked THEN speed controls are shown`() {
-        viewModel.onSpeedControlClicked()
+    fun `GIVEN speed controls hidden WHEN onSpeedControlClick THEN speed controls are shown`() {
+        viewModel.onSpeedControlClick()
 
         viewModel.shouldIShowSpeedControls shouldBe true
     }
 
     @Test
-    fun `GIVEN speed controls shown WHEN onSpeedControlClicked THEN speed controls are hidden`() {
-        viewModel.onSpeedControlClicked()
-        viewModel.onSpeedControlClicked()
+    fun `GIVEN speed controls shown WHEN onSpeedControlClick THEN speed controls are hidden`() {
+        viewModel.onSpeedControlClick()
+        viewModel.onSpeedControlClick()
 
         viewModel.shouldIShowSpeedControls shouldBe false
     }
@@ -253,7 +253,7 @@ class PlayerViewModelTest {
     fun `GIVEN speed controls are shown WHEN onSetPlaybackSpeed THEN playback speed is updated and speed controls are hidden`() {
         val speed = PlaybackSpeed.SPEED_1_5X
 
-        viewModel.onSpeedControlClicked()
+        viewModel.onSpeedControlClick()
         viewModel.onSetPlaybackSpeed(speed)
 
         viewModel.selectedPlaybackSpeed shouldBe speed

@@ -101,7 +101,7 @@ class PlaylistDetailScreenKtTest {
         }
 
     @Test
-    fun `GIVEN OnPlayClicked WHEN audio items exist THEN audio is set and event is emitted`() =
+    fun `GIVEN OnPlayClick WHEN audio items exist THEN audio is set and event is emitted`() =
         runTest {
             val playlist = buildPlaylist()
             viewModel.onScreenView(playlist.id)
@@ -110,7 +110,7 @@ class PlaylistDetailScreenKtTest {
             val events = mutableListOf<PlaylistDetailEvent>()
             val job = launch { viewModel.events.toList(events) }
 
-            viewModel.onAction(PlaylistDetailAction.OnPlayClicked)
+            viewModel.onAction(PlaylistDetailAction.OnPlayClick)
             advanceUntilIdle()
 
             viewModel.state.audio shouldBeEqualTo playlist.items.first()

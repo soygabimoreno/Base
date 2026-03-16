@@ -59,7 +59,7 @@ import soy.gabimoreno.presentation.ui.dialog.TypeDialog
 @Composable
 fun PlaylistDetailScreenRoot(
     playlistId: String,
-    onBackClicked: () -> Unit,
+    onBackClick: () -> Unit,
     viewModel: PlaylistDetailViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -91,7 +91,7 @@ fun PlaylistDetailScreenRoot(
         state = viewModel.state,
         onAction = { action ->
             when (action) {
-                is PlaylistDetailAction.OnBackClicked -> onBackClicked()
+                is PlaylistDetailAction.OnBackClick -> onBackClick()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -117,9 +117,9 @@ fun PlaylistDetailScreen(
                 if (state.playlistAudioItems.isNotEmpty()) {
                     ReorderablePlaylistItemColumn(
                         playlistAudioItems = state.playlistAudioItems,
-                        onItemClicked = { onAction(PlaylistDetailAction.OnAudioItemClicked(it)) },
+                        onItemClick = { onAction(PlaylistDetailAction.OnAudioItemClick(it)) },
                         onDragFinish = { onAction(PlaylistDetailAction.OnAudioItemsReordered(it)) },
-                        onRemoveClicked = {
+                        onRemoveClick = {
                             onAction(
                                 PlaylistDetailAction.OnRemovePlaylistAudioItem(
                                     it.id,
@@ -161,7 +161,7 @@ private fun PlaylistDetailHeader(
         )
 
         BackButton(
-            onClick = { onAction(PlaylistDetailAction.OnBackClicked) },
+            onClick = { onAction(PlaylistDetailAction.OnBackClick) },
             modifier =
                 Modifier
                     .windowInsetsPadding(
@@ -173,7 +173,7 @@ private fun PlaylistDetailHeader(
             IconOverlay(
                 icon = Icons.Default.PlayCircleOutline,
                 contentDescription = stringResource(R.string.play),
-                onClick = { onAction(PlaylistDetailAction.OnPlayClicked) },
+                onClick = { onAction(PlaylistDetailAction.OnPlayClick) },
                 modifier = Modifier.align(Alignment.TopCenter),
                 size = Spacing.s96,
             )
@@ -182,7 +182,7 @@ private fun PlaylistDetailHeader(
         IconOverlay(
             icon = Icons.Rounded.Edit,
             contentDescription = stringResource(R.string.playlist_edit),
-            onClick = { onAction(PlaylistDetailAction.OnEditPlaylistClicked) },
+            onClick = { onAction(PlaylistDetailAction.OnEditPlaylistClick) },
             modifier = Modifier.align(Alignment.TopEnd),
             size = Spacing.s48,
         )

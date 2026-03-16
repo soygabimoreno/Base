@@ -52,7 +52,7 @@ import soy.gabimoreno.presentation.ui.dialog.CustomDialog
 
 @Composable
 fun ProfileScreenRoot(
-    onPlaylistClicked: () -> Unit,
+    onPlaylistClick: () -> Unit,
     onToggleBottomSheet: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -102,7 +102,7 @@ fun ProfileScreenRoot(
         state = profileViewModel.state,
         onAction = { action ->
             when (action) {
-                is ProfileAction.OnPlaylistClicked -> onPlaylistClicked()
+                is ProfileAction.OnPlaylistClick -> onPlaylistClick()
                 is ProfileAction.OnToggleBottomSheet -> onToggleBottomSheet()
                 else -> Unit
             }
@@ -168,21 +168,21 @@ fun ProfileScreen(
             if (state.email.isNotBlank()) {
                 ProfileItem(
                     text = stringResource(R.string.profile_reset_premium),
-                    onItemClicked = {
-                        onAction(ProfileAction.OnResetPremiumAudioClicked)
+                    onItemClick = {
+                        onAction(ProfileAction.OnResetPremiumAudioClick)
                     },
                 )
             }
             ProfileItem(
                 text = stringResource(R.string.profile_reset_audio_courses),
-                onItemClicked = {
-                    onAction(ProfileAction.OnResetAudioCoursesClicked)
+                onItemClick = {
+                    onAction(ProfileAction.OnResetAudioCoursesClick)
                 },
             )
             ProfileItem(
                 text = stringResource(R.string.profile_reset_podcast),
-                onItemClicked = {
-                    onAction(ProfileAction.OnResetPodcastClicked)
+                onItemClick = {
+                    onAction(ProfileAction.OnResetPodcastClick)
                 },
             )
             Box(modifier = Modifier.weight(Percent.TEN))
@@ -195,7 +195,7 @@ fun ProfileScreen(
                         .padding(horizontal = Spacing.s16),
                 text = stringResource(R.string.playlists_title),
                 icon = Icons.AutoMirrored.Filled.PlaylistAdd,
-                onItemClicked = { onAction(ProfileAction.OnPlaylistClicked) },
+                onItemClick = { onAction(ProfileAction.OnPlaylistClick) },
             )
             Box(modifier = Modifier.weight(Percent.FIFTY))
             PrimaryButton(
@@ -232,7 +232,7 @@ private fun ProfileItem(
     modifier: Modifier = Modifier,
     text: String,
     icon: ImageVector = Icons.Default.DeleteSweep,
-    onItemClicked: () -> Unit = {},
+    onItemClick: () -> Unit = {},
 ) {
     Row(
         modifier =
@@ -244,7 +244,7 @@ private fun ProfileItem(
     ) {
         Text(text)
         IconButton(
-            onClick = { onItemClicked() },
+            onClick = { onItemClick() },
         ) {
             Icon(
                 imageVector = icon,

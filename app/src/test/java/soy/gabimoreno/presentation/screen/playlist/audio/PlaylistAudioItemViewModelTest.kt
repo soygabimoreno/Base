@@ -138,7 +138,7 @@ class PlaylistAudioItemViewModelTest {
             viewModel.onViewScreen(premiumAudio.id)
             advanceUntilIdle()
             viewModel.onAction(PlaylistAudioItemAction.OnTogglePlaylist(playlistId = 1))
-            viewModel.onAction(PlaylistAudioItemAction.OnSaveClicked)
+            viewModel.onAction(PlaylistAudioItemAction.OnSaveClick)
             advanceUntilIdle()
 
             events shouldHaveSize 1
@@ -171,7 +171,7 @@ class PlaylistAudioItemViewModelTest {
             viewModel.onViewScreen(premiumAudio.id)
             advanceUntilIdle()
             viewModel.onAction(PlaylistAudioItemAction.OnTogglePlaylist(playlistId = 1))
-            viewModel.onAction(PlaylistAudioItemAction.OnSaveClicked)
+            viewModel.onAction(PlaylistAudioItemAction.OnSaveClick)
             advanceUntilIdle()
 
             events shouldHaveSize 1

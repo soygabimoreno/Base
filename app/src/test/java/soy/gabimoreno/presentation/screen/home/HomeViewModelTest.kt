@@ -84,10 +84,10 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `WHEN onEpisodeClicked THEN track event`() {
+    fun `WHEN onEpisodeClick THEN track event`() {
         val episodeId = "episodeId"
         val episodeTitle = "episodeTitle"
-        viewModel.onEpisodeClicked(episodeId, episodeTitle)
+        viewModel.onEpisodeClick(episodeId, episodeTitle)
 
         verifyOnce {
             tracker.trackEvent(
@@ -121,13 +121,13 @@ class HomeViewModelTest {
 
     @Ignore
     @Test
-    fun `GIVEN encodeUrlUseCase returns a url WHEN onShowWebViewClicked THEN ShowWebView`() =
+    fun `GIVEN encodeUrlUseCase returns a url WHEN onShowWebViewClick THEN ShowWebView`() =
         runTest(testDispatcher) {
             val url = "url"
             every { encodeUrlUseCase(url) } returns url
 
             viewModel.viewEventFlow.test {
-                viewModel.onShowWebViewClicked(url)
+                viewModel.onShowWebViewClick(url)
 
                 awaitItem() shouldBeEqualTo HomeViewModel.ViewEvent.ShowWebView(url)
             }

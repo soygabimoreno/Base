@@ -51,9 +51,9 @@ import soy.gabimoreno.presentation.theme.White
 @Composable
 fun ReorderablePlaylistItemColumn(
     playlistAudioItems: List<PlaylistAudioItem>,
-    onItemClicked: (playlistAudioItem: PlaylistAudioItem) -> Unit,
+    onItemClick: (playlistAudioItem: PlaylistAudioItem) -> Unit,
     onDragFinish: (reorderedAudioItems: List<PlaylistAudioItem>) -> Unit,
-    onRemoveClicked: (playlistAudioItem: PlaylistAudioItem) -> Unit,
+    onRemoveClick: (playlistAudioItem: PlaylistAudioItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val haptic = rememberReorderHapticFeedback()
@@ -104,7 +104,7 @@ fun ReorderablePlaylistItemColumn(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .clickable { onItemClicked(reorderedAudioItems[index]) }
+                                .clickable { onItemClick(reorderedAudioItems[index]) }
                                 .background(White.copy(alpha = Percent.NINETY_FIVE))
                                 .padding(
                                     start = Spacing.s8,
@@ -160,7 +160,7 @@ fun ReorderablePlaylistItemColumn(
                             Modifier
                                 .align(Alignment.BottomEnd),
                         onClick = {
-                            onRemoveClicked(reorderedAudioItems[index])
+                            onRemoveClick(reorderedAudioItems[index])
                         },
                     ) {
                         Icon(

@@ -5,11 +5,11 @@ sealed interface ProfileAction {
         val email: String,
     ) : ProfileAction
 
-    data object OnPlaylistClicked : ProfileAction
+    data object OnPlaylistClick : ProfileAction
     data object OnToggleBottomSheet : ProfileAction
-    data object OnResetAudioCoursesClicked : ProfileAction
-    data object OnResetPremiumAudioClicked : ProfileAction
-    data object OnResetPodcastClicked : ProfileAction
+    data object OnResetAudioCoursesClick : ProfileAction
+    data object OnResetPremiumAudioClick : ProfileAction
+    data object OnResetPodcastClick : ProfileAction
     data object OnDismissDialog : ProfileAction
     data object OnConfirmDialog : ProfileAction
 }

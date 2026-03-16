@@ -48,9 +48,9 @@ import soy.gabimoreno.presentation.theme.White
 fun ItemAudioCourse(
     audioCourseItem: AudioCourseItem,
     audioCourseTitle: String,
-    onItemClicked: (audioCourseItem: AudioCourseItem) -> Unit,
+    onItemClick: (audioCourseItem: AudioCourseItem) -> Unit,
     onItemListenedToggled: (audioCourseItem: AudioCourseItem) -> Unit,
-    onAddToPlaylistClicked: (audioCourseItemId: String) -> Unit,
+    onAddToPlaylistClick: (audioCourseItemId: String) -> Unit,
     onFavoriteStatusChanged: (audioCourseItem: AudioCourseItem) -> Unit,
 ) {
     val iconColor by animateColorAsState(
@@ -87,7 +87,7 @@ fun ItemAudioCourse(
         Column(
             modifier =
                 Modifier
-                    .clickable { onItemClicked(audioCourseItem) }
+                    .clickable { onItemClick(audioCourseItem) }
                     .weight(Percent.EIGHTY),
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
@@ -135,7 +135,7 @@ fun ItemAudioCourse(
         Spacer(modifier = Modifier.width(Spacing.s8))
         IconButton(
             modifier = Modifier.weight(Percent.TEN),
-            onClick = { onAddToPlaylistClicked(audioCourseItem.id) },
+            onClick = { onAddToPlaylistClick(audioCourseItem.id) },
         ) {
             Icon(
                 modifier =
@@ -173,9 +173,9 @@ fun ItemAudioCoursePreview() {
                         url = "item url",
                         hasBeenListened = true,
                     ),
-                onItemClicked = {},
+                onItemClick = {},
                 onItemListenedToggled = {},
-                onAddToPlaylistClicked = {},
+                onAddToPlaylistClick = {},
                 onFavoriteStatusChanged = {},
             )
             Spacer(
@@ -195,9 +195,9 @@ fun ItemAudioCoursePreview() {
                         hasBeenListened = false,
                         markedAsFavorite = true,
                     ),
-                onItemClicked = {},
+                onItemClick = {},
                 onItemListenedToggled = {},
-                onAddToPlaylistClicked = {},
+                onAddToPlaylistClick = {},
                 onFavoriteStatusChanged = {},
             )
         }

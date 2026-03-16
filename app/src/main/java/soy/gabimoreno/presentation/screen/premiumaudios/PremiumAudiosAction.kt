@@ -3,9 +3,9 @@ package soy.gabimoreno.presentation.screen.premiumaudios
 import soy.gabimoreno.domain.model.content.PremiumAudio
 
 sealed interface PremiumAudiosAction {
-    data object OnLoginClicked : PremiumAudiosAction
+    data object OnLoginClick : PremiumAudiosAction
     data object OnRefreshContent : PremiumAudiosAction
-    data class OnPremiumAudiosItemClicked(
+    data class OnPremiumAudiosItemClick(
         val premiumAudioId: String,
     ) : PremiumAudiosAction
 
@@ -13,8 +13,8 @@ sealed interface PremiumAudiosAction {
         val premiumAudio: PremiumAudio,
     ) : PremiumAudiosAction
 
-    data object OnPlaylistClicked : PremiumAudiosAction
-    data class OnAddToPlaylistClicked(
+    data object OnPlaylistClick : PremiumAudiosAction
+    data class OnAddToPlaylistClick(
         val premiumAudioId: String,
     ) : PremiumAudiosAction
 

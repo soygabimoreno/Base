@@ -3,12 +3,12 @@ package soy.gabimoreno.presentation.screen.playlist.list
 import soy.gabimoreno.domain.model.content.Playlist
 
 sealed interface PlaylistAction {
-    data object OnBackClicked : PlaylistAction
-    data class OnItemClicked(
+    data object OnBackClick : PlaylistAction
+    data class OnItemClick(
         val playlistId: Int,
     ) : PlaylistAction
 
-    data object OnAddNewPlaylistClicked : PlaylistAction
+    data object OnAddNewPlaylistClick : PlaylistAction
     data object OnAddPlaylistDismissDialog : PlaylistAction
     data object OnAddPlaylistConfirmDialog : PlaylistAction
     data class OnDialogTitleChange(
@@ -23,7 +23,7 @@ sealed interface PlaylistAction {
         val reorderedPlaylists: List<Playlist>,
     ) : PlaylistAction
 
-    data class OnRemovePlaylistClicked(
+    data class OnRemovePlaylistClick(
         val playlistId: Int,
     ) : PlaylistAction
 

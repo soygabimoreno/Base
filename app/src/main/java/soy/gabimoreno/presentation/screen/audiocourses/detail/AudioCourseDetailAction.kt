@@ -3,7 +3,7 @@ package soy.gabimoreno.presentation.screen.audiocourses.detail
 import soy.gabimoreno.domain.model.content.AudioCourseItem
 
 sealed interface AudioCourseDetailAction {
-    data class OnAudioCourseItemClicked(
+    data class OnAudioCourseItemClick(
         val audioCourseItem: AudioCourseItem,
     ) : AudioCourseDetailAction
 
@@ -11,8 +11,8 @@ sealed interface AudioCourseDetailAction {
         val audioCourseItem: AudioCourseItem,
     ) : AudioCourseDetailAction
 
-    data object OnBackClicked : AudioCourseDetailAction
-    data class OnAddToPlaylistClicked(
+    data object OnBackClick : AudioCourseDetailAction
+    data class OnAddToPlaylistClick(
         val audioCourseId: String,
     ) : AudioCourseDetailAction
 

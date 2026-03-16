@@ -185,7 +185,7 @@ class PlayerViewModel
             }
         }
 
-        fun onPlayPauseClickedFromPlayer(
+        fun onPlayPauseClickFromPlayer(
             audio: Audio,
             playPause: PlayPause,
         ) {
@@ -203,7 +203,7 @@ class PlayerViewModel
             }
         }
 
-        fun onPlayPauseClickedFromAudioBottomBar(
+        fun onPlayPauseClickFromAudioBottomBar(
             audio: Audio,
             playPause: PlayPause,
         ) {
@@ -233,11 +233,11 @@ class PlayerViewModel
             mediaPlayerServiceConnection.transportControls.stop()
         }
 
-        fun onRewindClicked() {
+        fun onRewindClick() {
             mediaPlayerServiceConnection.rewind()
         }
 
-        fun onForwardClicked() {
+        fun onForwardClick() {
             mediaPlayerServiceConnection.fastForward()
         }
 
@@ -249,14 +249,14 @@ class PlayerViewModel
             mediaPlayerServiceConnection.skipToNext()
         }
 
-        fun onSpeedControlClicked() {
+        fun onSpeedControlClick() {
             shouldIShowSpeedControls = !shouldIShowSpeedControls
         }
 
         fun onSetPlaybackSpeed(speed: PlaybackSpeed) {
             selectedPlaybackSpeed = speed
             mediaPlayerServiceConnection.setPlaybackSpeed(speed.speed)
-            onSpeedControlClicked()
+            onSpeedControlClick()
         }
 
         /**
