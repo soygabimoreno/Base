@@ -119,11 +119,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":modules:core"))
-    implementation(project(":modules:core-testing"))
-    implementation(project(":modules:core-view"))
-    implementation(project(":modules:framework"))
-    implementation(project(":modules:remote-config"))
+    implementation(project(":module:core"))
+    implementation(project(":module:core-testing"))
+    implementation(project(":module:core-view"))
+    implementation(project(":module:framework"))
+    implementation(project(":module:remote-config"))
 
     implementation(libs.core.ktx)
     implementation(libs.google.material)

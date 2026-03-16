@@ -27,10 +27,10 @@ dependencyResolutionManagement {
 rootProject.name = "Base"
 include(":app")
 
-include(":modules:core")
-include(":modules:core-testing")
-include(":modules:core-view")
-include(":modules:framework")
-include(":modules:player")
-include(":modules:remote-config")
-include(":modules:raffle")
+include(":module:core")
+include(":module:core-testing")
+include(":module:core-view")
+include(":module:framework")
+include(":module:player")
+include(":module:remote-config")
+include(":module:raffle")
