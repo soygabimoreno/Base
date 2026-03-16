@@ -72,14 +72,14 @@ class DefaultSeniorAudioAudioRepository
             localSeniorAudioDataSource.reset()
         }
 
-    private suspend fun mergeWithLocalData(seniorAudios: List<SeniorAudio>): List<SeniorAudio> {
+        private suspend fun mergeWithLocalData(seniorAudios: List<SeniorAudio>): List<SeniorAudio> {
             val localSnapshot =
                 localSeniorAudioDataSource
                     .getSeniorAudios()
                     .first()
                     .associateBy { it.id }
 
-        return seniorAudios.map { remoteItem ->
+            return seniorAudios.map { remoteItem ->
                 val localItem = localSnapshot[remoteItem.id]
                 remoteItem.copy(
                     hasBeenListened = localItem?.hasBeenListened ?: false,
