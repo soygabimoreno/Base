@@ -119,15 +119,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:core"))
-    implementation(project(":core:core-testing"))
-    implementation(project(":core:core-view"))
+    implementation(projects.core.core)
+    implementation(projects.core.coreTesting)
+    implementation(projects.core.coreView)
 
-    implementation(project(":feature:podcast"))
+    implementation(projects.feature.podcast)
 
-    implementation(project(":library:framework"))
-    implementation(project(":library:remote-config:api"))
-    implementation(project(":library:remote-config:impl"))
+    implementation(projects.library.framework)
+    implementation(projects.library.remoteConfig.api)
+    implementation(projects.library.remoteConfig.impl)
 
     implementation(libs.core.ktx)
     implementation(libs.google.material)

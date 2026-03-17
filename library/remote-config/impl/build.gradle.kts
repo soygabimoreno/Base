@@ -48,7 +48,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":library:remote-config:api"))
+    implementation(projects.library.remoteConfig.api)
 
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
