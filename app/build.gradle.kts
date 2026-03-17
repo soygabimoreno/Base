@@ -123,6 +123,8 @@ dependencies {
     implementation(project(":core:core-testing"))
     implementation(project(":core:core-view"))
 
+    implementation(project(":feature:podcast"))
+
     implementation(project(":library:framework"))
     implementation(project(":library:remote-config"))
 

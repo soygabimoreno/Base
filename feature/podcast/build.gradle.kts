@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "soy.gabimoreno.player"
+    namespace = "soy.gabimoreno.podcast"
     compileSdk =
         libs.versions.sdk.compile
             .get()
@@ -42,8 +42,6 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.google.material)
-    implementation(libs.exoplayer.core)
-    implementation(libs.exoplayer.ui)
 
     testImplementation(libs.junit)
 
