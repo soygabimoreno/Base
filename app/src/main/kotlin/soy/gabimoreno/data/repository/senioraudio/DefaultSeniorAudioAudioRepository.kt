@@ -31,7 +31,7 @@ class DefaultSeniorAudioAudioRepository
             when (
                 val remoteResult =
                     remoteSeniorAudioDataSource.getSeniorAudiosStream(
-                        remoteConfigProvider.getSeniorRssUrl(),
+                        seniorAudiosUrl = remoteConfigProvider.getSeniorRssUrl(),
                     )
             ) {
                 is Either.Left -> {

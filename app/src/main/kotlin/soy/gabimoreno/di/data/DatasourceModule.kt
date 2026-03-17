@@ -58,5 +58,6 @@ object DatasourceModule {
 }
 
 typealias PodcastUrl = String
+typealias SeniorAudiosUrl = String
 
 private const val PODCAST_URL = "https://anchor.fm/s/74bc02a4/podcast/rss"

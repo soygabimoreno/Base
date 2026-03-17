@@ -6,10 +6,12 @@ import com.prof18.rssparser.model.RssChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import soy.gabimoreno.data.remote.mapper.senioraudio.toDomain
-import soy.gabimoreno.di.data.PodcastUrl
+import soy.gabimoreno.di.data.SeniorAudiosUrl
 import soy.gabimoreno.domain.model.content.SeniorAudio
 
 class DefaultRemoteSeniorAudioDatasource(
@@ -17,11 +19,18 @@ class DefaultRemoteSeniorAudioDatasource(
     private val okHttpClient: OkHttpClient,
 ) : RemoteSeniorAudioDatasource {
     override fun getSeniorAudiosStream(
-        podcastUrl: PodcastUrl,
-    ): Either<Throwable, Flow<List<SeniorAudio>>> =
-        Either.catch {
+        seniorAudiosUrl: SeniorAudiosUrl,
+    ): Either<Throwable, Flow<List<SeniorAudio>>> {
+        val seniorAudiosHttpUrl =
+            seniorAudiosUrl
+                .trim()
+                .toHttpUrlOrNull()
+                ?: return Either.Left(
+                    IllegalArgumentException("Invalid podcast url: $seniorAudiosUrl"),
+                )
+        return Either.catch {
             flow {
-                val feed = parseFeedSafely(podcastUrl)
+                val feed = parseFeedSafely(seniorAudiosHttpUrl)
                 val episodes = feed.toDomain().seniorAudios
 
                 val chunkSize = CHUNK_SIZE
@@ -35,13 +44,14 @@ class DefaultRemoteSeniorAudioDatasource(
                 }
             }
         }
+    }
 
-    private suspend fun parseFeedSafely(podcastUrl: PodcastUrl): RssChannel =
+    private suspend fun parseFeedSafely(seniorAudiosHttpUrl: HttpUrl): RssChannel =
         okHttpClient
             .newCall(
                 Request
                     .Builder()
-                    .url(podcastUrl)
+                    .url(seniorAudiosHttpUrl)
                     .build(),
             ).execute()
             .use { response ->
