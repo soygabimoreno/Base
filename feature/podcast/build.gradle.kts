@@ -1,24 +1,9 @@
 plugins {
-    alias(libs.plugins.androidLibrary)
-    id("org.jetbrains.kotlin.android")
+    id("soy.gabimoreno.android.library")
 }
 
 android {
     namespace = "soy.gabimoreno.podcast"
-    compileSdk =
-        libs.versions.sdk.compile
-            .get()
-            .toInt()
-
-    defaultConfig {
-        minSdk =
-            libs.versions.sdk.minimum
-                .get()
-                .toInt()
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
 
     buildTypes {
         release {
@@ -28,13 +13,6 @@ android {
                 "proguard-rules.pro",
             )
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.toString()
     }
 }
 

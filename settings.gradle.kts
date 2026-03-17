@@ -1,6 +1,7 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         gradlePluginPortal()
         google()
@@ -28,7 +29,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Base"
 include(":app")
-
 include(":core:core")
 include(":core:core-testing")
 include(":core:core-view")
