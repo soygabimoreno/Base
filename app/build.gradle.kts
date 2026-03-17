@@ -126,7 +126,8 @@ dependencies {
     implementation(project(":feature:podcast"))
 
     implementation(project(":library:framework"))
-    implementation(project(":library:remote-config"))
+    implementation(project(":library:remote-config:api"))
+    implementation(project(":library:remote-config:impl"))
 
     implementation(libs.core.ktx)
     implementation(libs.google.material)

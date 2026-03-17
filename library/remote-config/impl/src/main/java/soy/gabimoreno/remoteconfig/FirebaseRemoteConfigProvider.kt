@@ -4,6 +4,8 @@ import android.util.Log
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.internal.ConfigFetchHandler
+import soy.gabimoreno.remoteconfig.impl.BuildConfig
+import soy.gabimoreno.remoteconfig.impl.R
 import java.security.GeneralSecurityException
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -5,10 +5,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import soy.gabimoreno.remoteconfig.BuildConfig
 import soy.gabimoreno.remoteconfig.FirebaseRemoteConfigProvider
 import soy.gabimoreno.remoteconfig.RemoteConfigProvider
 import soy.gabimoreno.remoteconfig.SecureEncryptor
+import soy.gabimoreno.remoteconfig.impl.BuildConfig
 import javax.inject.Singleton
 
 @Module

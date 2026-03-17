@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "soy.gabimoreno.remoteconfig"
+    namespace = "soy.gabimoreno.remoteconfig.impl"
     compileSdk =
         libs.versions.sdk.compile
             .get()
@@ -48,6 +48,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":library:remote-config:api"))
+
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.google.material)
