@@ -122,8 +122,9 @@ dependencies {
     implementation(project(":core:core"))
     implementation(project(":core:core-testing"))
     implementation(project(":core:core-view"))
-    implementation(project(":core:framework"))
-    implementation(project(":core:remote-config"))
+
+    implementation(project(":library:framework"))
+    implementation(project(":library:remote-config"))
 
     implementation(libs.core.ktx)
     implementation(libs.google.material)
