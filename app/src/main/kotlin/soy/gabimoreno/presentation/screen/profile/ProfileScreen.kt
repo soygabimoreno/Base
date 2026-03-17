@@ -9,13 +9,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -44,7 +48,6 @@ import soy.gabimoreno.framework.datastore.getEmail
 import soy.gabimoreno.framework.toast
 import soy.gabimoreno.presentation.screen.ViewModelProvider
 import soy.gabimoreno.presentation.theme.Orange
-import soy.gabimoreno.presentation.theme.Percent
 import soy.gabimoreno.presentation.theme.Spacing
 import soy.gabimoreno.presentation.ui.button.FlatIconButton
 import soy.gabimoreno.presentation.ui.button.PrimaryButton
@@ -62,6 +65,7 @@ fun ProfileScreenRoot(
     val profileResetSuccessPodcastMessage = stringResource(R.string.profile_reset_success_podcast)
     val profileResetSuccessPremiumMessage = stringResource(R.string.profile_reset_success_premium)
     val profileViewModel = ViewModelProvider.profileViewModel
+    val playerViewModel = ViewModelProvider.playerViewModel
     LaunchedEffect(Unit) {
         launch {
             context
@@ -100,6 +104,7 @@ fun ProfileScreenRoot(
 
     ProfileScreen(
         state = profileViewModel.state,
+        hasMiniPlayer = playerViewModel.currentPlayingAudio.value != null,
         onAction = { action ->
             when (action) {
                 is ProfileAction.OnPlaylistClick -> onPlaylistClick()
@@ -114,18 +119,20 @@ fun ProfileScreenRoot(
 @Composable
 fun ProfileScreen(
     state: ProfileState,
+    hasMiniPlayer: Boolean,
     onAction: (ProfileAction) -> Unit,
 ) {
     Box(
         modifier =
             Modifier
-                .fillMaxWidth(),
+                .fillMaxSize(),
     ) {
         Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top))
+                    .verticalScroll(rememberScrollState())
                     .padding(Spacing.s16),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -185,7 +192,7 @@ fun ProfileScreen(
                     onAction(ProfileAction.OnResetPodcastClick)
                 },
             )
-            Box(modifier = Modifier.weight(Percent.TEN))
+            Spacer(modifier = Modifier.height(Spacing.s32))
             FlatIconButton(
                 modifier =
                     Modifier
@@ -197,7 +204,7 @@ fun ProfileScreen(
                 icon = Icons.AutoMirrored.Filled.PlaylistAdd,
                 onItemClick = { onAction(ProfileAction.OnPlaylistClick) },
             )
-            Box(modifier = Modifier.weight(Percent.FIFTY))
+            Spacer(modifier = Modifier.height(Spacing.s32))
             PrimaryButton(
                 text =
                     stringResource(
@@ -211,7 +218,7 @@ fun ProfileScreen(
                 onClick = { onAction(ProfileAction.OnToggleBottomSheet) },
                 modifier = Modifier.fillMaxWidth(),
             )
-            Box(modifier = Modifier.weight(Percent.TWENTY_FIVE))
+            ProfileBottomInset(hasMiniPlayer = hasMiniPlayer)
         }
     }
     if (state.showResetDialog) {
@@ -225,6 +232,17 @@ fun ProfileScreen(
             typeDialog = soy.gabimoreno.presentation.ui.dialog.TypeDialog.CONFIRMATION,
         )
     }
+}
+
+@Composable
+private fun ProfileBottomInset(hasMiniPlayer: Boolean) {
+    Box(
+        modifier =
+            Modifier
+                .navigationBarsPadding()
+                .padding(bottom = Spacing.s32)
+                .padding(bottom = if (hasMiniPlayer) Spacing.s64 else Spacing.s0),
+    )
 }
 
 @Composable
