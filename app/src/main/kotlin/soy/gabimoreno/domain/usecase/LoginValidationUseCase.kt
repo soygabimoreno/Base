@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import soy.gabimoreno.core.validator.isAValidEmail
+import soy.gabimoreno.core.validator.isAValidPassword
 import javax.inject.Inject
 
 class LoginValidationUseCase
@@ -14,7 +15,7 @@ class LoginValidationUseCase
             password: String,
         ): Either<Error, Unit> {
             val isAValidEmail = isAValidEmail(email)
-            val isAValidPassword = password.isAValidPassword()
+            val isAValidPassword = isAValidPassword(password)
 
             val error =
                 when {
@@ -31,7 +32,3 @@ class LoginValidationUseCase
             object InvalidPassword : Error()
         }
     }
-
-private fun String.isAValidPassword(): Boolean = length >= MINIMAL_PASSWORD_LENGTH
-
-private const val MINIMAL_PASSWORD_LENGTH = 4
