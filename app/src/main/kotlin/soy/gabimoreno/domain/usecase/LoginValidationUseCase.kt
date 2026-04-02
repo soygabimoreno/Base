@@ -13,7 +13,7 @@ class LoginValidationUseCase
             email: String,
             password: String,
         ): Either<Error, Unit> {
-            val isAValidEmail = email.isAValidEmail()
+            val isAValidEmail = isAValidEmail(email)
             val isAValidPassword = password.isAValidPassword()
 
             val error =

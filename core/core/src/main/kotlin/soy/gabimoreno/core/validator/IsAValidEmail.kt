@@ -2,7 +2,7 @@ package soy.gabimoreno.core.validator
 
 import java.util.regex.Pattern
 
-fun String.isAValidEmail(): Boolean = EMAIL_PATTERN.matcher(this).matches()
+fun isAValidEmail(email: String): Boolean = EMAIL_PATTERN.matcher(email).matches()
 
 private val EMAIL_PATTERN =
     Pattern.compile(
