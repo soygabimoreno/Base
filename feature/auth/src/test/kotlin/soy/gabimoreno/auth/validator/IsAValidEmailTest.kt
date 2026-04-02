@@ -1,4 +1,4 @@
-package soy.gabimoreno.core.validator
+package soy.gabimoreno.auth.validator
 
 import org.amshove.kluent.shouldBe
 import org.junit.Test

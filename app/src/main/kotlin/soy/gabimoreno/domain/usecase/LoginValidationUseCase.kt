@@ -3,8 +3,8 @@ package soy.gabimoreno.domain.usecase
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import soy.gabimoreno.core.validator.isAValidEmail
-import soy.gabimoreno.core.validator.isAValidPassword
+import soy.gabimoreno.auth.validator.isAValidEmail
+import soy.gabimoreno.auth.validator.isAValidPassword
 import javax.inject.Inject
 
 class LoginValidationUseCase

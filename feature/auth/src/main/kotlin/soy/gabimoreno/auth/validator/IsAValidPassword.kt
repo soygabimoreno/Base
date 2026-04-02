@@ -1,4 +1,4 @@
-package soy.gabimoreno.core.validator
+package soy.gabimoreno.auth.validator
 
 fun isAValidPassword(password: String): Boolean = password.length >= MINIMUM_PASSWORD_LENGTH
 

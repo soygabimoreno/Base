@@ -1,4 +1,4 @@
-package soy.gabimoreno.core.validator
+package soy.gabimoreno.auth.validator
 
 import java.util.regex.Pattern
 

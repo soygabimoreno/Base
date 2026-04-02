@@ -123,6 +123,7 @@ dependencies {
     implementation(projects.core.coreTesting)
     implementation(projects.core.coreView)
 
+    implementation(projects.feature.auth)
     implementation(projects.feature.podcast)
 
     implementation(projects.library.framework)
