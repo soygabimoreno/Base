@@ -12,6 +12,7 @@ dependencies {
     implementation(libs.google.material)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kluent.android)
 
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
